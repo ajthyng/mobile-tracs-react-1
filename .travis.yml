@@ -1,0 +1,26 @@
+language: android
+before_install:
+- nvm install 6
+- node --version
+install:
+- npm install
+android:
+  components:
+  - build-tools-23.0.1
+  - android-25
+  - extra-android-m2repository
+  - extra-google-google_play_services
+  - extra-google-m2repository
+  - addon-google_apis-google-16
+script:
+- npm run ci
+- cd android && ./gradlew assembleRelease
+deploy:
+  provider: releases
+  api_key:
+    secure: HwLjtkJhDEK+lE3t/3FYu7hBpawFWeXszvRZSKmADe5ooqk/CeblbV2ffPOw3a6cLzaovHZe5QVEax3EMvZY6uKlk1JyN1K8elS3FPxNK+MrTUo5V4BtrDnJNFi4MgOsGhNwiy+SL8ETEF4GVzFuf+3OYbrlACw4aU0G5Q59UX+Dd53JVX2/eVvWPReRAVnsfGUft2Xpjc743Gu/uuWEUyE0p++TZilJzHzOkLm56MmCXjhXH+HpX4DgLqdQv1guzgJui+Q7sFkogsu+JWcmynJV/Ptc6qcpBuHG75lvg8BcRsYEmblQNYPVg8MVW3N9egEbS/VB1ClAlSOYW9MLqm5JfPKIocyQVueH3s5IXBMhJ26twtMKmkr5hyKj0wODrZISZBsR2mkNHFTfqOQqdR3UwRg0ogRbJWuUtITs5F7ebEVLe01xGBuOe/tiAsBEGLVpYz7nyrAr/v4tgI7EJwHFal0mxRUQL/wJd03LNChJWK+Lzf8mYL2f44aYZ6ybMYyeQOJ3RI3eyKNpUGMfLp901UbdHMzJrw53pof4w41thAatQ/xiQP9bVneCCA8ABeyrNhYCD34M0FRhkRoKjB9BfToT8iVxBgEAL7t8WegqyxlTP394OrdAKYTlYkhKT4Z4oIh40T2D9gnDaFptSY/dIzovi5p3JIxF3wzhRAs=
+  file: "$TRAVIS_BUILD_DIR/android/app/build/outputs/apk/app-release.apk"
+  on:
+    repo: ajthyng/mobile-tracs-react
+  skip_cleanup: true
+  tags: true
