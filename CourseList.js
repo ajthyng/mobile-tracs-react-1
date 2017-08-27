@@ -11,7 +11,7 @@ class CourseList extends Component {
     const { params } = this.props.navigation.state;
     return (
         <WebView
-          source={{uri: "https://tracs.txstate.edu/portal/pda"}}/>
+          source={{uri: "https://tracs.txstate.edu/portal"}}/>
     );
   }
 }
