@@ -6,12 +6,15 @@ install:
 - npm install
 android:
   components:
-  - build-tools-23.0.1
+  - build-tools-25.0.1
   - android-25
   - extra-android-m2repository
   - extra-google-google_play_services
   - extra-google-m2repository
   - addon-google_apis-google-16
+before_script:
+- mkdir -p "$ANDROID_HOME/licenses"
+- cp ./android-licenses "$ANDROID_HOME/licenses"
 script:
 - cd android && ./gradlew assembleRelease
 deploy:
