@@ -1,51 +1,54 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import {View, Text, Button, StyleSheet, TextInput} from 'react-native';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {Actions} from 'react-native-router-flux';
+import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
 
-import { login } from '../../actions/login';
+import {login} from '../../actions/login';
 
 class LoginScreen extends Component {
-  static navigationOptions = {
-    title: 'LoginScreen',
-  };
-
-  constructor(props) {
-  	super(props);
-  	this.state = {
+	constructor(props) {
+		super(props);
+		this.state = {
 			netid: '',
 			password: ''
 		}
 	}
 
-	userLogin (event) {
-  	this.props.onLogin(this.state.netid, this.state.password);
-  	event.preventDefault();
+	componentDidUpdate() {
+		if (this.props.isLoggedIn === true) {
+			Actions.sites();
+		}
 	}
 
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text>Welcome to TRACS Mobile</Text>
-        <TextInput
-          placeholder="Net ID"
+	userLogin(event) {
+		this.props.onLogin(this.state.netid, this.state.password);
+		event.preventDefault();
+	}
+
+	render() {
+		return (
+			<View style={styles.container}>
+				<Text>Welcome to TRACS Mobile</Text>
+				<TextInput
+					placeholder="Net ID"
 					autoCapitalize='none'
 					autoFocus={true}
 					value={this.state.netid}
-					onChangeText={ (text) => this.setState({ netid: text }) } />
-        <TextInput
+					onChangeText={(text) => this.setState({netid: text})}/>
+				<TextInput
 					placeholder="Password"
 					autoCapitalize='none'
 					autoCorrect={false}
-          secureTextEntry={true}
+					secureTextEntry={true}
 					value={this.state.password}
-					onChangeText={ (text) => this.setState({ password: text }) } />
-        <Button
-          onPress={(event) => this.userLogin(event)}
-          title="Login" />
-      </View>
+					onChangeText={(text) => this.setState({password: text})}/>
+				<Button
+					onPress={(event) => this.userLogin(event)}
+					title="Login"/>
+			</View>
 
-    );
-  }
+		);
+	}
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -63,17 +66,14 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    margin: 32,
-  },
-  netid: {
-  },
-  password: {
-  },
-  submit: {
-  }
+	container: {
+		flex: 1,
+		flexDirection: 'column',
+		margin: 32,
+	},
+	netid: {},
+	password: {},
+	submit: {}
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);

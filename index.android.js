@@ -1,6 +1,6 @@
 import {
   AppRegistry,
 } from 'react-native';
-import Nav from './App';
+import App from './App';
 
-AppRegistry.registerComponent('TRACSMobile', () => Nav);
+AppRegistry.registerComponent('TRACSMobile', () => App);

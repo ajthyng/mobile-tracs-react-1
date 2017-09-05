@@ -7,29 +7,39 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { Provider } from 'react-redux';
-import CourseList from './components/CourseList/CourseList';
-import LoginScreen from './components/Login/LoginScreen';
-import {StackNavigator} from 'react-navigation';
+import {Router, Scene} from 'react-native-router-flux';
 import configureStore from './store/configureStore';
-
-const Nav = StackNavigator({
-	Home: { screen: LoginScreen },
-	SiteList: { screen: CourseList }
-});
+import LoginScreen from './components/Login/LoginScreen';
+import CourseList from './components/CourseList/CourseList';
 
 const store = configureStore();
 
 class App extends Component {
-	render () {
+	constructor(props) {
+		super(props);
+	}
+
+	render() {
 		return (
 			<Provider store={store}>
-				<Nav />
+				<Router>
+					<Scene key="root">
+						<Scene key="login"
+									 component={LoginScreen}
+									 title="TRACS Mobile Login"
+									 initial
+						/>
+						<Scene key="sites"
+									 component={CourseList}
+									 title="Sites"
+						/>
+					</Scene>
+				</Router>
 			</Provider>
-		)
+		);
 	}
 }
-
 
 export default App;
