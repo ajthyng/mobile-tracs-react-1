@@ -1,4 +1,4 @@
-package com.tracsmobilepoc;
+package com.tracsmobile;
 
 import android.app.Application;
 
