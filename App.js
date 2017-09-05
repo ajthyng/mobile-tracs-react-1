@@ -9,7 +9,7 @@
  */
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
-import {Router, Scene} from 'react-native-router-flux';
+import {Router, ActionConst, Scene} from 'react-native-router-flux';
 import configureStore from './store/configureStore';
 import LoginScreen from './components/Login/LoginScreen';
 import CourseList from './components/CourseList/CourseList';
@@ -32,7 +32,9 @@ class App extends Component {
 									 initial
 						/>
 						<Scene key="sites"
+									 init={true}
 									 component={CourseList}
+									 type={ActionConst.RESET}
 									 title="Sites"
 						/>
 					</Scene>
