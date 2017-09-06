@@ -20,13 +20,11 @@ export function login(state={netid: defaultState.netid, password: defaultState.p
 	switch (action.type) {
 		case 'LOGIN':
 			return Object.assign({}, state, {
-				isLoggedIn: true,
 				netid: action.netid,
 				password: action.password
 			});
 		case 'LOGOUT':
 			return Object.assign({}, state, {
-				isLoggedIn: false,
 				netid: '',
 				password: ''
 			});

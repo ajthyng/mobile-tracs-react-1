@@ -16,8 +16,8 @@ class CourseList extends Component {
     let webView;
 		if (Platform.OS === 'ios') {
       webView = <WKWebView
-				source={{uri: uri}}
-				sendCookies={true} />;
+				sendCookies={true}
+				source={{uri: uri}}/>;
 		} else {
 		  webView = <WebView
         source={{uri: uri}}/>;

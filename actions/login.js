@@ -36,7 +36,7 @@ export function isLoggedIn(bool) {
 
 export function login(netid, password) {
 	return (dispatch) => {
-		dispatch(isLoggedIn(true));
+		dispatch(isLoggedIn(false));
 
 		let auth64 = `${netid}:${password}`;
 		auth64 = base64.encode(auth64);
@@ -47,11 +47,21 @@ export function login(netid, password) {
 			})
 				.then((res) => {
 					if (res.ok) {
-						dispatch(isLoggedIn(true));
+						res.text().then((data) => {
+							let loggedIn = data.indexOf('"loggedIn": true') >= 0;
+							console.log("Logged in successfully");
+							dispatch(isLoggedIn(loggedIn));
+							//dispatch(loginHasFailed(false));
+							//dispatch(loginIsGuestAccount(false));
+						});
+					} else {
+						console.log("Login failed with response");
+						throw new Error("There was a problem logging in");
 					}
 				})
 				.catch(() => {
-					dispatch(loginHasFailed(false));
+					console.log("Login failed with error");
+					dispatch(loginHasFailed(true));
 				});
 		};
 		fetch("https://dispatch.its.txstate.edu:3000/token.pl", {
@@ -62,6 +72,7 @@ export function login(netid, password) {
 		})
 			.then((res) => {
 				if (res.ok) {
+					console.log("Token retrieved");
 					dispatch(loginIsGuestAccount(false));
 					login(netid, password);
 				}

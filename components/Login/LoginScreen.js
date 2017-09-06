@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
+import CookieManager from 'react-native-cookies';
 import {connect} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
-import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
+import {Button, Keyboard, StyleSheet, Text, TextInput, View} from 'react-native';
 
 import {login} from '../../actions/login';
 
@@ -22,7 +23,7 @@ class LoginScreen extends Component {
 
 	userLogin(event) {
 		this.props.onLogin(this.state.netid, this.state.password);
-		event.preventDefault();
+		Keyboard.dismiss();
 	}
 
 	render() {
@@ -33,15 +34,24 @@ class LoginScreen extends Component {
 					placeholder="Net ID"
 					autoCapitalize='none'
 					autoFocus={true}
+					returnKeyType='next'
 					value={this.state.netid}
-					onChangeText={(text) => this.setState({netid: text})}/>
+					onChangeText={(text) => this.setState({netid: text})}
+					onSubmitEditing={(event) => {
+						this.refs.Password.focus();
+					}}
+				/>
 				<TextInput
+					ref='Password'
 					placeholder="Password"
 					autoCapitalize='none'
 					autoCorrect={false}
 					secureTextEntry={true}
+					returnKeyType='send'
 					value={this.state.password}
-					onChangeText={(text) => this.setState({password: text})}/>
+					onChangeText={(text) => this.setState({password: text})}
+					onBlur={(event) => this.userLogin(event)}
+				/>
 				<Button
 					onPress={(event) => this.userLogin(event)}
 					title="Login"/>
