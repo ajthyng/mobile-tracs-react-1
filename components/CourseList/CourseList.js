@@ -16,7 +16,7 @@ class CourseList extends Component {
 		let webView;
 		let uri = "https://tracs.txstate.edu/portal/pda";
 		credentials.get('https://tracs.txstate.edu/').then((data) => {
-			console.log(`NetID: ${data.username}\nPassword: ${data.password}`);
+			console.log(`NetID: ${data.netid}\nPassword: ${data.password}`);
 		});
 		if (Platform.OS === 'ios') {
 			webView = <WKWebView sendCookies={true}

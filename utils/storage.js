@@ -7,17 +7,41 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import Storage from 'react-native-storage';
+import { AsyncStorage } from 'react-native';
 
-import * as Keychain from 'react-native-keychain';
+const expiryDays = 90;
+const absurdMSConstant = 1000 * 36 * 24;
+
+let storage = new Storage({
+	storageBackend: AsyncStorage,
+	defaultExpires: absurdMSConstant * expiryDays,
+});
+
+let keys = {
+	credentials: 'credentials',
+};
 
 exports.credentials = {
-	get: (url) => {
-		return Keychain.getInternetCredentials(url);
+	get: () => {
+		return storage.load({
+			key: keys.credentials,
+			autoSync: false,
+			syncInBackground: false,
+		});
 	},
 	store: (netid, password, url) => {
-		return Keychain.setInternetCredentials(url, netid, password);
+		return storage.save({
+			key: keys.credentials,
+			data: {
+				netid,
+				password
+			}
+		});
 	},
 	reset: (url) => {
-		return Keychain.resetInternetCredentials(url);
+		return storage.remove({
+			key: keys.credentials
+		});
 	}
 };
