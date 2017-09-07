@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
 import {Button, Keyboard, StyleSheet, Text, TextInput, View} from 'react-native';
 
-import {login} from '../../actions/login';
+import {isLoggedIn, login, logoutUser} from '../../actions/login';
 
 class LoginScreen extends Component {
 	constructor(props) {
@@ -15,15 +15,25 @@ class LoginScreen extends Component {
 		}
 	}
 
-	componentDidUpdate() {
+	componentWillUpdate() {
 		if (this.props.isLoggedIn === true) {
 			Actions.sites();
 		}
 	}
 
-	userLogin(event) {
+	componentDidUpdate() {
+		if (this.props.isLoggedIn === true) {
+			this.userLogout();
+		}
+	}
+
+	userLogin() {
 		this.props.onLogin(this.state.netid, this.state.password);
 		Keyboard.dismiss();
+	}
+
+	userLogout() {
+		this.props.onLogout();
 	}
 
 	render() {
@@ -37,7 +47,7 @@ class LoginScreen extends Component {
 					returnKeyType='next'
 					value={this.state.netid}
 					onChangeText={(text) => this.setState({netid: text})}
-					onSubmitEditing={(event) => {
+					onSubmitEditing={() => {
 						this.refs.Password.focus();
 					}}
 				/>
@@ -50,10 +60,10 @@ class LoginScreen extends Component {
 					returnKeyType='send'
 					value={this.state.password}
 					onChangeText={(text) => this.setState({password: text})}
-					onBlur={(event) => this.userLogin(event)}
+					onBlur={() => this.userLogin()}
 				/>
 				<Button
-					onPress={(event) => this.userLogin(event)}
+					onPress={() => this.userLogin()}
 					title="Login"/>
 			</View>
 
@@ -65,13 +75,14 @@ const mapStateToProps = (state, ownProps) => {
 	return {
 		loginHasFailed: state.loginHasFailed,
 		loginIsGuestAccount: state.loginIsGuestAccount,
-		isLoggedIn: state.isLoggedIn
+		isLoggedIn: state.auth.isLoggedIn
 	}
 };
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		onLogin: (netid, password) => dispatch(login(netid, password))
+		onLogout: () => dispatch(login('','')),
+		onLogin: (netid, password, url) => dispatch(login(netid, password))
 	}
 };
 

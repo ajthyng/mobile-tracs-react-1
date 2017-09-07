@@ -1,31 +1,39 @@
 import React, {Component} from 'react';
-import { Actions } from 'react-native-router-flux';
-import {View, Text, WebView, Platform, StyleSheet} from 'react-native';
-import {StackNavigator} from 'react-navigation';
+import {Platform, WebView} from 'react-native';
+import {connect} from 'react-redux';
+import { credentials } from '../../utils/storage';
 import WKWebView from 'react-native-wkwebview-reborn';
 
-
 class CourseList extends Component {
-  static navigationOptions = {
-    title: "Site List"
-  };
+	constructor(props) {
+		super(props);
+		this.state = {
+			netid: ''
+		};
+	}
 
-  render() {
-    const { params } = this.props.navigation.state;
-    let uri = "https://tracs.txstate.edu/portal/pda";
-    let webView;
+	render() {
+		let webView;
+		let uri = "https://tracs.txstate.edu/portal/pda";
+		credentials.get('https://tracs.txstate.edu/').then((data) => {
+			console.log(`NetID: ${data.username}\nPassword: ${data.password}`);
+		});
 		if (Platform.OS === 'ios') {
-      webView = <WKWebView
-				sendCookies={true}
-				source={{uri: uri}}/>;
+			webView = <WKWebView sendCookies={true}
+													 source={ {uri: uri} } />;
 		} else {
-		  webView = <WebView
-        source={{uri: uri}}/>;
-    }
+			webView = <WebView source={ {uri: uri} } />;
+		}
 		return (
 			webView
 		);
-  }
+	}
 }
 
-export default CourseList;
+const mapStateToProps = (state, ownProps) => {
+	return {
+		netid: state.netid
+	}
+};
+
+export default connect(mapStateToProps)(CourseList);

@@ -9,50 +9,77 @@
  */
 
 import base64 from 'base-64';
+import { credentials } from '../utils/storage'
 
 //Indicates a problem logging into auth system
-export function loginHasFailed(bool) {
+export const LOGIN_HAS_FAILED = 'LOGIN_HAS_FAILED';
+function loginHasFailed(bool) {
 	return {
-		type: 'LOGIN_HAS_FAILED',
+		type: LOGIN_HAS_FAILED,
 		hasFailed: bool
 	};
 }
 
 //Indicates the user is a guest account and won't have notifications
-export function loginIsGuestAccount(bool) {
+export const LOGIN_IS_GUEST = 'LOGIN_IS_GUEST';
+function loginIsGuestAccount(bool) {
 	return {
-		type: 'LOGIN_IS_GUEST',
+		type: LOGIN_IS_GUEST,
 		isGuestAccount: bool
 	};
 }
 
-//Indicates the request to login is still pending
-export function isLoggedIn(bool) {
+export const LOGIN = 'LOGIN';
+export const LOGOUT = 'LOGOUT';
+function auth(netid, password) {
+	let loggedIn = netid.length > 0 && password.length > 0;
+	let type = loggedIn ? LOGIN : LOGOUT;
 	return {
-		type: 'LOGGED_IN',
-		isLoggedIn: bool
+		type: type,
+		netid: netid,
+		password: password,
+		isLoggedIn: loggedIn
 	};
+}
+
+export const LOGGING_IN = 'LOGGING_IN';
+function loggingIn(bool) {
+	return {
+		type: LOGGING_IN,
+		loggingIn: bool,
+	}
 }
 
 export function login(netid, password) {
 	return (dispatch) => {
-		dispatch(isLoggedIn(false));
-
+		dispatch(auth('',''));
+		dispatch(loggingIn(true));
+		const baseUrl = 'https://tracs.txstate.edu/';
 		let auth64 = `${netid}:${password}`;
 		auth64 = base64.encode(auth64);
 
-		const login = (netid, password) => {
-			fetch(`https://tracs.txstate.edu/portal/relogin?eid=${netid}&pw=${password}`, {
+		const netidLogin = (netid, password) => {
+			fetch(`${baseUrl}portal/relogin?eid=${netid}&pw=${password}`, {
 				method: "post"
 			})
 				.then((res) => {
 					if (res.ok) {
 						res.text().then((data) => {
 							let loggedIn = data.indexOf('"loggedIn": true') >= 0;
-							console.log("Logged in successfully");
-							dispatch(isLoggedIn(loggedIn));
-							//dispatch(loginHasFailed(false));
-							//dispatch(loginIsGuestAccount(false));
+							if (loggedIn) {
+								console.log("Logged in successfully");
+								credentials.store(netid, password, baseUrl).then(() => {
+									console.log("Stored credentials");
+									dispatch(auth(netid, password));
+								});
+							} else {
+								console.log("Logged failed with valid response");
+								credentials.reset(baseUrl);
+								dispatch(auth('',''));
+							}
+
+							dispatch(loginHasFailed(!loggedIn));
+							dispatch(loginIsGuestAccount(false));
 						});
 					} else {
 						console.log("Login failed with response");
@@ -74,18 +101,12 @@ export function login(netid, password) {
 				if (res.ok) {
 					console.log("Token retrieved");
 					dispatch(loginIsGuestAccount(false));
-					login(netid, password);
+					netidLogin(netid, password);
 				}
 			})
 			.catch(() => {
 				dispatch(loginIsGuestAccount(true));
-				login(netid, password);
+				netidLogin(netid, password);
 			});
 	}
-}
-
-export function logout() {
-	return {
-		type: 'LOGOUT'
-	};
 }

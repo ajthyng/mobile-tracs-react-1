@@ -8,53 +8,62 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import {LOGGED_IN, LOGGING_IN, LOGIN, LOGIN_HAS_FAILED, LOGIN_IS_GUEST, LOGOUT} from '../actions/login';
+
 const defaultState = {
 	loginHasFailed: false,
 	loginIsGuestAccount: false,
 	isLoggedIn: false,
+	loggingIn: false,
 	netid: '',
 	password: ''
 };
 
-export function login(state={netid: defaultState.netid, password: defaultState.password}, action) {
+export function auth(state = {
+	netid: defaultState.netid,
+	password: defaultState.password,
+	isLoggedIn: defaultState.isLoggedIn
+}, action) {
 	switch (action.type) {
-		case 'LOGIN':
+		case LOGIN:
 			return Object.assign({}, state, {
 				netid: action.netid,
-				password: action.password
+				password: action.password,
+				isLoggedIn: action.isLoggedIn,
 			});
-		case 'LOGOUT':
+		case LOGOUT:
 			return Object.assign({}, state, {
 				netid: '',
-				password: ''
+				password: '',
+				isLoggedIn: action.isLoggedIn
 			});
 		default:
 			return state;
 	}
 }
 
-export function loginHasFailed(state=defaultState.loginHasFailed, action) {
+export function loginHasFailed(state = defaultState.loginHasFailed, action) {
 	switch (action.type) {
-		case 'LOGIN_HAS_FAILED':
+		case LOGIN_HAS_FAILED:
 			return action.hasFailed;
 		default:
 			return state;
 	}
 }
 
-export function loginIsGuestAccount(state=defaultState.loginIsGuestAccount, action) {
+export function loginIsGuestAccount(state = defaultState.loginIsGuestAccount, action) {
 	switch (action.type) {
-		case 'LOGIN_IS_GUEST':
+		case LOGIN_IS_GUEST:
 			return action.isGuestAccount;
 		default:
 			return state;
 	}
 }
 
-export function isLoggedIn(state=defaultState.isLoggedIn, action) {
+export function loggingIn(state = defaultState.loggingIn, action) {
 	switch (action.type) {
-		case 'LOGGED_IN':
-			return action.isLoggedIn;
+		case LOGGING_IN:
+			return action.loggingIn;
 		default:
 			return state;
 	}
