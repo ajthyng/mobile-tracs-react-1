@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import { credentials } from '../../utils/storage';
 import WKWebView from 'react-native-wkwebview-reborn';
 
-class CourseList extends Component {
+class SiteList extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -14,8 +14,8 @@ class CourseList extends Component {
 
 	render() {
 		let webView;
-		let uri = "https://tracs.txstate.edu/portal/pda";
-		credentials.get('https://tracs.txstate.edu/').then((data) => {
+		let uri = "https://staging.tracs.txstate.edu/portal/pda";
+		credentials.get('https://staging.tracs.txstate.edu/').then((data) => {
 			console.log(`NetID: ${data.netid}\nPassword: ${data.password}`);
 		});
 		if (Platform.OS === 'ios') {
@@ -36,4 +36,4 @@ const mapStateToProps = (state, ownProps) => {
 	}
 };
 
-export default connect(mapStateToProps)(CourseList);
+export default connect(mapStateToProps)(SiteList);

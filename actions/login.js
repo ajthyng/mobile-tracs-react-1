@@ -9,10 +9,10 @@
  */
 
 import base64 from 'base-64';
-import { credentials } from '../utils/storage'
 
 //Indicates a problem logging into auth system
 export const LOGIN_HAS_FAILED = 'LOGIN_HAS_FAILED';
+
 function loginHasFailed(bool) {
 	return {
 		type: LOGIN_HAS_FAILED,
@@ -22,7 +22,8 @@ function loginHasFailed(bool) {
 
 //Indicates the user is a guest account and won't have notifications
 export const LOGIN_IS_GUEST = 'LOGIN_IS_GUEST';
-function loginIsGuestAccount(bool) {
+
+export function loginIsGuestAccount(bool) {
 	return {
 		type: LOGIN_IS_GUEST,
 		isGuestAccount: bool
@@ -31,6 +32,7 @@ function loginIsGuestAccount(bool) {
 
 export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT';
+
 function auth(netid, password) {
 	let loggedIn = netid.length > 0 && password.length > 0;
 	let type = loggedIn ? LOGIN : LOGOUT;
@@ -43,6 +45,7 @@ function auth(netid, password) {
 }
 
 export const LOGGING_IN = 'LOGGING_IN';
+
 function loggingIn(bool) {
 	return {
 		type: LOGGING_IN,
@@ -50,63 +53,49 @@ function loggingIn(bool) {
 	}
 }
 
+export function logout() {
+	login('','');
+}
+
 export function login(netid, password) {
 	return (dispatch) => {
-		dispatch(auth('',''));
+		dispatch(auth('', ''));
 		dispatch(loggingIn(true));
-		const baseUrl = 'https://tracs.txstate.edu/';
-		let auth64 = `${netid}:${password}`;
-		auth64 = base64.encode(auth64);
 
-		const netidLogin = (netid, password) => {
-			fetch(`${baseUrl}portal/relogin?eid=${netid}&pw=${password}`, {
-				method: "post"
-			})
-				.then((res) => {
-					if (res.ok) {
-						res.text().then((data) => {
-							let loggedIn = data.indexOf('"loggedIn": true') >= 0;
-							if (loggedIn) {
-								console.log("Logged in successfully");
-								credentials.store(netid, password, baseUrl).then(() => {
-									console.log("Stored credentials");
-									dispatch(auth(netid, password));
-								});
-							} else {
-								console.log("Logged failed with valid response");
-								credentials.reset(baseUrl);
-								dispatch(auth('',''));
-							}
+		if (netid.length <= 0) {
+			dispatch(loggingIn(false));
+			return;
+		}
+		const baseUrl = 'https://staging.tracs.txstate.edu/';
 
-							dispatch(loginHasFailed(!loggedIn));
-							dispatch(loginIsGuestAccount(false));
-						});
-					} else {
-						console.log("Login failed with response");
-						throw new Error("There was a problem logging in");
-					}
-				})
-				.catch(() => {
-					console.log("Login failed with error");
-					dispatch(loginHasFailed(true));
-				});
-		};
-		fetch("https://dispatch.its.txstate.edu:3000/token.pl", {
-			method: "get",
-			headers: {
-				"Authorization": `Basic ${auth64}`
-			}
+		fetch(`${baseUrl}portal/relogin?eid=${netid}&pw=${password}`, {
+			method: "post"
 		})
 			.then((res) => {
 				if (res.ok) {
-					console.log("Token retrieved");
-					dispatch(loginIsGuestAccount(false));
-					netidLogin(netid, password);
+					fetch(`${baseUrl}/direct/session/current.json`, {
+						method: 'get'
+					}).then((res) => {
+						res.text().then((text) => {
+							let session = JSON.parse(text);
+							console.log(session);
+							if (session.userEid === netid) {
+								dispatch(auth(netid, password));
+								dispatch(loginHasFailed(false));
+							} else {
+								dispatch(auth('', ''));
+								dispatch(loginHasFailed(true));
+							}
+						});
+					});
+				} else {
+					console.log("Login failed with response");
+					throw new Error("There was a problem logging in");
 				}
 			})
-			.catch(() => {
-				dispatch(loginIsGuestAccount(true));
-				netidLogin(netid, password);
+			.catch((error) => {
+				console.log(error);
+				dispatch(loginHasFailed(true));
 			});
-	}
+	};
 }

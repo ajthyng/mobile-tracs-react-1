@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
-import CookieManager from 'react-native-cookies';
 import {connect} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
 import {Button, Keyboard, StyleSheet, Text, TextInput, View} from 'react-native';
 
-import {isLoggedIn, login, logoutUser} from '../../actions/login';
+import {register} from '../../actions/registrar';
+import {logout} from '../../actions/login';
+import {token} from '../../utils/storage';
 
 class LoginScreen extends Component {
 	constructor(props) {
@@ -28,7 +29,9 @@ class LoginScreen extends Component {
 	}
 
 	userLogin() {
-		this.props.onLogin(this.state.netid, this.state.password);
+		token.get().then((deviceToken) => {
+			this.props.onLogin(this.state.netid, this.state.password, deviceToken);
+		});
 		Keyboard.dismiss();
 	}
 
@@ -60,7 +63,9 @@ class LoginScreen extends Component {
 					returnKeyType='send'
 					value={this.state.password}
 					onChangeText={(text) => this.setState({password: text})}
-					onBlur={() => this.userLogin()}
+					onSubmitEditing={() => {
+						this.userLogin();
+					}}
 				/>
 				<Button
 					onPress={() => this.userLogin()}
@@ -81,8 +86,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		onLogout: () => dispatch(login('','')),
-		onLogin: (netid, password, url) => dispatch(login(netid, password))
+		onLogout: () => dispatch(logout()),
+		onLogin: (netid, password, deviceToken) => dispatch(register(netid, password, deviceToken))
 	}
 };
 

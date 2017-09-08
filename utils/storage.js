@@ -20,6 +20,7 @@ let storage = new Storage({
 
 let keys = {
 	credentials: 'credentials',
+	token: 'token',
 };
 
 exports.credentials = {
@@ -45,3 +46,24 @@ exports.credentials = {
 		});
 	}
 };
+
+exports.token = {
+	get: () => {
+		return storage.load({
+			key: keys.token,
+			autoSync: false,
+			syncInBackground: false,
+		});
+	},
+	store: (token) => {
+		return storage.save({
+			key: keys.token,
+			data: token
+		});
+	},
+	reset: () => {
+		return storage.remove({
+			key: keys.token
+		})
+	}
+}

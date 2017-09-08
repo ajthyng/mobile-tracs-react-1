@@ -8,16 +8,43 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {combineReducers} from 'redux';
-import {auth, loggingIn, loginHasFailed, loginIsGuestAccount} from './login';
-import {isRegistered, updateToken, updateUser} from './registrar';
+import {Platform} from 'react-native';
+import {IS_REGISTERED, REPLACE_TOKEN, REMOVE_TOKEN, REPLACE_USER, REMOVE_USER} from '../actions/registrar';
 
-export default combineReducers({
-	auth,
-	loginHasFailed,
-	loginIsGuestAccount,
-	loggingIn,
-	updateToken,
-	updateUser,
-	isRegistered,
-})
+const defaultState = {
+	isRegistered: false,
+	deviceToken: '',
+	registeredUser: '',
+	platform: Platform.OS
+};
+
+export function isRegistered(state = defaultState.isRegistered, action) {
+	switch (action.type) {
+		case IS_REGISTERED:
+			return action.isRegistered;
+		default:
+			return state;
+	}
+}
+
+export function updateToken(state = defaultState.deviceToken, action) {
+	switch (action.type) {
+		case REMOVE_TOKEN:
+			return '';
+		case REPLACE_TOKEN:
+			return action.deviceToken;
+		default:
+			return state;
+	}
+}
+
+export function updateUser(state = defaultState.registeredUser, action) {
+	switch (action.type) {
+		case REMOVE_USER:
+			return '';
+		case REPLACE_USER:
+			return action.registeredUser;
+		default:
+			return state;
+	}
+}
