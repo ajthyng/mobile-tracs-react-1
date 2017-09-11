@@ -16,6 +16,7 @@ class LoginScreen extends Component {
 	}
 
 	componentWillUpdate() {
+		console.log(this.props);
 		if (this.props.isLoggedIn === true) {
 			Actions.sites();
 		}
