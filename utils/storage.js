@@ -31,7 +31,7 @@ exports.credentials = {
 			syncInBackground: false,
 		});
 	},
-	store: (netid, password, url) => {
+	store: (netid, password) => {
 		return storage.save({
 			key: keys.credentials,
 			data: {
@@ -40,7 +40,7 @@ exports.credentials = {
 			}
 		});
 	},
-	reset: (url) => {
+	reset: () => {
 		return storage.remove({
 			key: keys.credentials
 		});

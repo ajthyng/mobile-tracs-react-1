@@ -1,10 +1,9 @@
-package com.tracsmobile;
+package edu.txstate.mobile.tracs;
 
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
-import com.oblador.keychain.KeychainPackage;
+import com.evollu.react.fcm.FIRMessagingPackage;
 import com.psykar.cookiemanager.CookieManagerPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -26,8 +25,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new ReactNativePushNotificationPackage(),
-            new KeychainPackage(),
+            new FIRMessagingPackage(),
             new CookieManagerPackage()
       );
     }

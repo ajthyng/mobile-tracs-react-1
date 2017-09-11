@@ -1,4 +1,4 @@
-package com.tracsmobile;
+package edu.txstate.mobile.tracs;
 
 import com.facebook.react.ReactActivity;
 

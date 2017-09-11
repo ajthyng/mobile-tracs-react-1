@@ -5,7 +5,6 @@ import {Button, Keyboard, StyleSheet, Text, TextInput, View} from 'react-native'
 
 import {register} from '../../actions/registrar';
 import {logout} from '../../actions/login';
-import {token} from '../../utils/storage';
 
 class LoginScreen extends Component {
 	constructor(props) {
@@ -29,9 +28,8 @@ class LoginScreen extends Component {
 	}
 
 	userLogin() {
-		token.get().then((deviceToken) => {
-			this.props.onLogin(this.state.netid, this.state.password, deviceToken);
-		});
+		console.log("Fetching token...");
+		this.props.onLogin(this.state.netid, this.state.password);
 		Keyboard.dismiss();
 	}
 
@@ -87,7 +85,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		onLogout: () => dispatch(logout()),
-		onLogin: (netid, password, deviceToken) => dispatch(register(netid, password, deviceToken))
+		onLogin: (netid, password) => dispatch(register(netid, password))
 	}
 };
 

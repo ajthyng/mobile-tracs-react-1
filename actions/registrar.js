@@ -11,6 +11,7 @@ import {Platform} from 'react-native';
 import {login} from './login';
 import {loginIsGuestAccount} from './login';
 import base64 from 'base-64';
+import {token} from '../utils/storage';
 
 export const IS_REGISTERED = 'IS_REGISTERED';
 let isRegistered = (bool) => {
@@ -40,7 +41,7 @@ let updateUser = (netid = '') => {
 	}
 };
 
-export let register = (netid, password, token) => {
+export let register = (netid, password) => {
 	return (dispatch) => {
 		let baseUrl = 'https://dispatchqa1.its.qual.txstate.edu';
 
@@ -53,7 +54,9 @@ export let register = (netid, password, token) => {
 		}).then((res) => {
 			if (res.ok) {
 				res.text().then((jwt) => {
-					postRegistration(jwt);
+					token.get().then(deviceToken => {
+						postRegistration(jwt, deviceToken);
+					});
 				})
 			} else {
 				throw new Error("Could not retrieve JWT");
@@ -64,18 +67,18 @@ export let register = (netid, password, token) => {
 			dispatch(login(netid, password));
 		});
 
-		let postRegistration = (jwtToken) => {
+		let postRegistration = (jwt, deviceToken) => {
 			let registration = {
 				platform: Platform.OS,
 				app_id: 'edu.txstate.mobile.tracs',
 				user_id: netid,
-				token: token,
+				token: deviceToken,
 				settings: {
 					global_disable: false,
 					blacklist: []
 				}
 			};
-			fetch(`${baseUrl}/registrations?jwt=${jwtToken}`, {
+			fetch(`${baseUrl}/registrations?jwt=${jwt}`, {
 				method: 'post',
 				headers: {
 					'Content-Type': 'application/json'
