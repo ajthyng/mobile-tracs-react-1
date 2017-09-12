@@ -9,15 +9,10 @@
  */
 
 import {combineReducers} from 'redux';
-import {auth, loggingIn, loginHasFailed, loginIsGuestAccount} from './login';
-import {isRegistered, updateToken, updateUser} from './registrar';
+import {loginReducer} from './login';
+import {registerReducer} from './registrar';
 
 export default combineReducers({
-	auth,
-	loginHasFailed,
-	loginIsGuestAccount,
-	loggingIn,
-	updateToken,
-	updateUser,
-	isRegistered,
+	login: loginReducer,
+	register: registerReducer,
 })

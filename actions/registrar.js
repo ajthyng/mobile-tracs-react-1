@@ -8,8 +8,7 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import {Platform} from 'react-native';
-import {login} from './login';
-import {loginIsGuestAccount} from './login';
+import {auth, loginIsGuestAccount} from './login';
 import base64 from 'base-64';
 import {token} from '../utils/storage';
 
@@ -24,7 +23,7 @@ let isRegistered = (bool) => {
 export const REMOVE_TOKEN = 'REMOVE_TOKEN';
 export const REPLACE_TOKEN = 'REPLACE_TOKEN';
 let updateToken = (token) => {
-	let type = (typeof token !== 'undefined' || token.length === 0) ? REMOVE_TOKEN : REPLACE_TOKEN;
+	let type = (typeof token === 'undefined' || token.length === 0) ? REMOVE_TOKEN : REPLACE_TOKEN;
 	return {
 		type: type,
 		deviceToken: token
@@ -33,8 +32,8 @@ let updateToken = (token) => {
 
 export const REMOVE_USER = 'REMOVE_USER';
 export const REPLACE_USER = 'REPLACE_USER';
-let updateUser = (netid = '') => {
-	let type = netid.length === 0 ? REMOVE_USER : REPLACE_USER;
+let user = (netid = '') => {
+	let type = (typeof netid === 'undefined' || netid.length === 0) ? REMOVE_USER : REPLACE_USER;
 	return {
 		type: type,
 		registeredUser: netid
@@ -64,7 +63,7 @@ export let register = (netid, password) => {
 		}).catch((error) => {
 			console.log("Error: ", error ? error.message : "JWT Service error");
 			dispatch(loginIsGuestAccount(true));
-			dispatch(login(netid, password));
+			dispatch(auth(netid, password));
 		});
 
 		let postRegistration = (jwt, deviceToken) => {
@@ -86,14 +85,18 @@ export let register = (netid, password) => {
 				body: JSON.stringify(registration)
 			}).then((res) => {
 				if (res.ok) {
-					dispatch(updateUser(netid));
+					console.log("Registered with dispatch using token: ", deviceToken);
+					console.log("NetID: " + netid);
+					dispatch(user(netid));
 					dispatch(isRegistered(true));
-					dispatch(updateToken(token));
+					dispatch(updateToken(deviceToken));
+					dispatch(auth(netid, password));
 				} else {
 					throw new Error("Could not register device");
 				}
 			}).catch((error) => {
 				console.log("Error: ", error ? error.message : "Registration error");
+				dispatch(user());
 				dispatch(loginIsGuestAccount(true));
 			});
 		};

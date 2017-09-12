@@ -4,32 +4,27 @@ import {Actions} from 'react-native-router-flux';
 import {Button, Keyboard, StyleSheet, Text, TextInput, View} from 'react-native';
 
 import {register} from '../../actions/registrar';
-import {logout} from '../../actions/login';
+import {netidLogout} from '../../actions/login';
+import user from '../../config/config.json';
 
 class LoginScreen extends Component {
 	constructor(props) {
 		super(props);
+		let netid = user ? user.netid : '';
+		let password = user ? user.password : '';
 		this.state = {
-			netid: '',
-			password: ''
-		}
-	}
-
-	componentWillUpdate() {
-		console.log(this.props);
-		if (this.props.isLoggedIn === true) {
-			Actions.sites();
+			netid,
+			password
 		}
 	}
 
 	componentDidUpdate() {
 		if (this.props.isLoggedIn === true) {
-			this.userLogout();
+			Actions.sites();
 		}
 	}
 
 	userLogin() {
-		console.log("Fetching token...");
 		this.props.onLogin(this.state.netid, this.state.password);
 		Keyboard.dismiss();
 	}
@@ -77,16 +72,17 @@ class LoginScreen extends Component {
 
 const mapStateToProps = (state, ownProps) => {
 	return {
-		loginHasFailed: state.loginHasFailed,
-		loginIsGuestAccount: state.loginIsGuestAccount,
-		isLoggedIn: state.auth.isLoggedIn
+		loginHasFailed: state.login.loginHasFailed,
+		loginIsGuestAccount: state.login.loginIsGuestAccount,
+		isLoggedIn: state.login.isLoggedIn,
+		loggedInAs: state.login.netid
 	}
 };
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		onLogout: () => dispatch(logout()),
-		onLogin: (netid, password) => dispatch(register(netid, password))
+		onLogout: () => dispatch(netidLogout()),
+		onLogin: (netid, password) => dispatch(register(netid, password)),
 	}
 };
 

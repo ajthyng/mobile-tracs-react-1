@@ -9,41 +9,57 @@
  */
 
 import {Platform} from 'react-native';
-import {IS_REGISTERED, REPLACE_TOKEN, REMOVE_TOKEN, REPLACE_USER, REMOVE_USER} from '../actions/registrar';
+import {IS_REGISTERED, REMOVE_TOKEN, REMOVE_USER, REPLACE_TOKEN, REPLACE_USER} from '../actions/registrar';
 
-const defaultState = {
+const initialState = {
 	isRegistered: false,
 	deviceToken: '',
 	registeredUser: '',
 	platform: Platform.OS
 };
 
-export function isRegistered(state = defaultState.isRegistered, action) {
-	switch (action.type) {
-		case IS_REGISTERED:
-			return action.isRegistered;
-		default:
-			return state;
+function isRegistered(state, action) {
+	return {
+		...state,
+		isRegistered: action.isRegistered
+	};
+}
+
+function removeToken(state, action) {
+	return {
+		...state,
+		deviceToken: ''
 	}
 }
 
-export function updateToken(state = defaultState.deviceToken, action) {
-	switch (action.type) {
-		case REMOVE_TOKEN:
-			return '';
-		case REPLACE_TOKEN:
-			return action.deviceToken;
-		default:
-			return state;
+function replaceToken(state, action) {
+	return {
+		...state,
+		deviceToken: action.deviceToken
 	}
 }
 
-export function updateUser(state = defaultState.registeredUser, action) {
+function removeUser(state, action) {
+	return {
+		...state,
+		registeredUser: ''
+	}
+}
+
+function replaceUser(state, action) {
+	return {
+		...state,
+		registeredUser: action.registeredUser
+	}
+}
+
+export function registerReducer(state = initialState, action) {
 	switch (action.type) {
-		case REMOVE_USER:
-			return '';
-		case REPLACE_USER:
-			return action.registeredUser;
+		case REMOVE_USER: return removeUser(state, action);
+		case REPLACE_USER: return replaceUser(state, action);
+		case REMOVE_TOKEN: return removeToken(state, action);
+		case REPLACE_TOKEN: return replaceToken(state, action);
+		case IS_REGISTERED: return isRegistered(state, action);
 		default:
 			return state;
 	}

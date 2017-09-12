@@ -8,9 +8,9 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {LOGGED_IN, LOGGING_IN, LOGIN, LOGIN_HAS_FAILED, LOGIN_IS_GUEST, LOGOUT} from '../actions/login';
+import {LOGGED_IN, LOGGING_IN, LOGIN, IS_LOGGED_IN, LOGIN_HAS_FAILED, LOGIN_IS_GUEST, LOGOUT} from '../actions/login';
 
-const defaultState = {
+const initialState = {
 	loginHasFailed: false,
 	loginIsGuestAccount: false,
 	isLoggedIn: false,
@@ -19,52 +19,55 @@ const defaultState = {
 	password: ''
 };
 
-export function auth(state = {
-	netid: defaultState.netid,
-	password: defaultState.password,
-	isLoggedIn: defaultState.isLoggedIn
-}, action) {
-	switch (action.type) {
-		case LOGIN:
-			return Object.assign({}, state, {
-				netid: action.netid,
-				password: action.password,
-				isLoggedIn: action.isLoggedIn,
-			});
-		case LOGOUT:
-			return Object.assign({}, state, {
-				netid: '',
-				password: '',
-				isLoggedIn: action.isLoggedIn
-			});
-		default:
-			return state;
+function login(state, action) {
+	return {
+		...state,
+		netid: action.netid,
+		password: action.password
 	}
 }
 
-export function loginHasFailed(state = defaultState.loginHasFailed, action) {
-	switch (action.type) {
-		case LOGIN_HAS_FAILED:
-			return action.hasFailed;
-		default:
-			return state;
+function logout(state, action) {
+	return {
+		...state,
+		netid: '',
+		password: ''
 	}
 }
 
-export function loginIsGuestAccount(state = defaultState.loginIsGuestAccount, action) {
-	switch (action.type) {
-		case LOGIN_IS_GUEST:
-			return action.isGuestAccount;
-		default:
-			return state;
+function isLoggedIn(state, action) {
+	return {
+		... state,
+		isLoggedIn: action.isLoggedIn
 	}
 }
 
-export function loggingIn(state = defaultState.loggingIn, action) {
+function loginHasFailed(state, action) {
+	return {
+		... state,
+		loginHasFailed: action.loginHasFailed
+	}}
+
+function loginIsGuestAccount(state, action) {
+	return {
+		... state,
+		loginIsGuestAccount: action.loginIsGuestAccount
+	}}
+
+function loggingIn(state, action) {
+	return {
+		... state,
+		loggingIn: action.loggingIn
+	}}
+
+export function loginReducer(state = initialState, action) {
 	switch (action.type) {
-		case LOGGING_IN:
-			return action.loggingIn;
-		default:
-			return state;
+		case LOGIN: 						return login(state, action);
+		case LOGOUT: 						return logout(state, action);
+		case LOGIN_HAS_FAILED: 	return loginHasFailed(state, action);
+		case LOGIN_IS_GUEST: 		return loginIsGuestAccount(state, action);
+		case LOGGING_IN: 				return loggingIn(state, action);
+		case IS_LOGGED_IN: 			return isLoggedIn(state, action);
+		default: 								return state;
 	}
 }

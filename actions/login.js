@@ -8,11 +8,10 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import base64 from 'base-64';
+import {credentials} from '../utils/storage';
+import {user} from '../actions/registrar';
 
-//Indicates a problem logging into auth system
 export const LOGIN_HAS_FAILED = 'LOGIN_HAS_FAILED';
-
 function loginHasFailed(bool) {
 	return {
 		type: LOGIN_HAS_FAILED,
@@ -20,9 +19,7 @@ function loginHasFailed(bool) {
 	};
 }
 
-//Indicates the user is a guest account and won't have notifications
 export const LOGIN_IS_GUEST = 'LOGIN_IS_GUEST';
-
 export function loginIsGuestAccount(bool) {
 	return {
 		type: LOGIN_IS_GUEST,
@@ -31,21 +28,21 @@ export function loginIsGuestAccount(bool) {
 }
 
 export const LOGIN = 'LOGIN';
-export const LOGOUT = 'LOGOUT';
-
-function auth(netid, password) {
-	let loggedIn = netid.length > 0 && password.length > 0;
-	let type = loggedIn ? LOGIN : LOGOUT;
+function netidLogin(netid, password) {
 	return {
-		type: type,
+		type: LOGIN,
 		netid: netid,
-		password: password,
-		isLoggedIn: loggedIn
+		password: password
 	};
 }
 
+export const LOGOUT = 'LOGOUT';
+export function netidLogout() {
+	return {
+		type: LOGOUT
+	};
+}
 export const LOGGING_IN = 'LOGGING_IN';
-
 function loggingIn(bool) {
 	return {
 		type: LOGGING_IN,
@@ -53,13 +50,16 @@ function loggingIn(bool) {
 	}
 }
 
-export function logout() {
-	login('','');
+export const IS_LOGGED_IN = 'IS_LOGGED_IN';
+function isLoggedIn(bool) {
+	return {
+		type: IS_LOGGED_IN,
+		isLoggedIn: bool
+	}
 }
 
-export function login(netid, password) {
+export function auth(netid, password) {
 	return (dispatch) => {
-		dispatch(auth('', ''));
 		dispatch(loggingIn(true));
 
 		if (netid.length <= 0) {
@@ -73,29 +73,30 @@ export function login(netid, password) {
 		})
 			.then((res) => {
 				if (res.ok) {
-					fetch(`${baseUrl}/direct/session/current.json`, {
+					fetch(`${baseUrl}direct/session/current.json`, {
 						method: 'get'
 					}).then((res) => {
 						res.text().then((text) => {
 							let session = JSON.parse(text);
-							console.log(session);
 							if (session.userEid === netid) {
-								dispatch(auth(netid, password));
-								dispatch(loginHasFailed(false));
+								console.log(session);
+								credentials.store(netid, password).then(() => {
+									dispatch(netidLogin(netid, password));
+									dispatch(isLoggedIn(true));
+									dispatch(loggingIn(false));
+									dispatch(loginHasFailed(false));
+								});
 							} else {
-								dispatch(auth('', ''));
+								console.log("ELSE BLOCK");
+								dispatch(netidLogout());
 								dispatch(loginHasFailed(true));
 							}
 						});
 					});
 				} else {
 					console.log("Login failed with response");
-					throw new Error("There was a problem logging in");
+					dispatch(loginHasFailed(true));
 				}
-			})
-			.catch((error) => {
-				console.log(error);
-				dispatch(loginHasFailed(true));
 			});
 	};
 }
