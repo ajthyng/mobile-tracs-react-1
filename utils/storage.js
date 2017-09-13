@@ -12,16 +12,17 @@ import * as Keychain from 'react-native-keychain';
 import { AsyncStorage } from 'react-native';
 
 const expiryDays = 90;
-const absurdMSConstant = 1000 * 36 * 24;
+const msPerDay = 1000 * 3600 * 24;
 
 let storage = new Storage({
 	storageBackend: AsyncStorage,
-	defaultExpires: absurdMSConstant * expiryDays,
+	defaultExpires: msPerDay * expiryDays,
 });
 
 let keys = {
 	credentials: 'credentials',
 	token: 'token',
+	sites: 'sites',
 };
 
 exports.credentials = {
@@ -47,12 +48,32 @@ exports.token = {
 	store(token) {
 		return storage.save({
 			key: keys.token,
-			data: token
+			data: token,
+			expires: msPerDay
 		});
 	},
 	reset() {
 		return storage.remove({
 			key: keys.token
-		})
+		});
 	}
-}
+};
+
+exports.sites = {
+	get() {
+		return storage.load({
+			key: keys.sites,
+			autoSync: false,
+			syncInBackground: false
+		});
+	},
+	store(sites) {
+		return storage.save({
+			key: keys.sites,
+			data: sites,
+		});
+	},
+	reset() {
+		return storage.clearMapForKey(key.sites);
+	}
+};

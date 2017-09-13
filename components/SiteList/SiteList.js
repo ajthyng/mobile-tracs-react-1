@@ -3,6 +3,7 @@ import {Platform, WebView} from 'react-native';
 import {connect} from 'react-redux';
 import WKWebView from 'react-native-wkwebview-reborn';
 import {credentials} from '../../utils/storage';
+import {getMemberships} from '../../actions/sites';
 
 class SiteList extends Component {
 	constructor(props) {
@@ -10,8 +11,7 @@ class SiteList extends Component {
 	}
 
 	render() {
-		credentials.get()
-			.then( data => console.log(data) );
+		this.props.getMemberships();
 		let webView;
 		let uri = "https://staging.tracs.txstate.edu/portal/pda";
 		if (Platform.OS === 'ios') {
@@ -34,4 +34,9 @@ const mapStateToProps = (state, ownProps) => {
 	}
 };
 
-export default connect(mapStateToProps)(SiteList);
+const mapDispatchToProps = (dispatch) => {
+	return {
+		getMemberships: () => dispatch(getMemberships())
+	}
+};
+export default connect(mapStateToProps, mapDispatchToProps)(SiteList);
