@@ -34,10 +34,11 @@ let getAllSites = (siteIds, storedSites = {}) => {
 	let userSites = [];
 	let siteTools = [];
 	let allSites = {};
-	console.log(storedSites);
-	let sitePromises = siteIds.map(async siteID => {
+	let promiseStart = new Date().getTime();
+
+	let sitePromises = siteIds.map(siteID => {
 		if (!storedSites.hasOwnProperty(siteID)) {
-			await getSiteName(siteID).then(res => {
+			return getSiteName(siteID).then(res => {
 				return res.json().then((data) => {
 					userSites.push(data);
 				});
@@ -45,18 +46,20 @@ let getAllSites = (siteIds, storedSites = {}) => {
 		}
 	});
 
-	let toolPromises = siteIds.map(async siteID => {
-		if (!storedSites.hasOwnProperty(siteID)) {
-			await getSiteTools(siteID).then(res => {
-				return res.json().then(data => {
-					siteTools.push(data);
+	let allPromises = [
+		...sitePromises,
+		...siteIds.map(siteID => {
+			if (!storedSites.hasOwnProperty(siteID)) {
+				return getSiteTools(siteID).then(res => {
+					return res.json().then(data => {
+						siteTools.push(data);
+					});
 				});
-			});
-		}
-	});
+			}
+		})
+	];
 
-	let promiseStart = new Date().getTime();
-	Promise.all(sitePromises, toolPromises).then(() => {
+	Promise.all(allPromises).then(() => {
 		userSites.forEach((site) => {
 			let contactInfo = {
 				name: 'Not Found',
@@ -81,12 +84,17 @@ let getAllSites = (siteIds, storedSites = {}) => {
 				});
 			});
 		});
-
-		Storage.sites.store(allSites).then((result) => {
-			console.log(`${Object.keys(allSites).length} sites stored.`);
+		Object.keys(allSites).forEach((key) => {
+			console.log(Object.keys(allSites[key].tools).length);
 		});
+		console.log(allSites);
 		const end = new Date().getTime();
 		console.log(`Sites info fetched in ${end - promiseStart} ms.`);
+	});
+
+	Storage.sites.store(allSites).then((result) => {
+		console.log(result);
+		console.log(`${Object.keys(allSites).length} sites stored.`);
 	});
 };
 
@@ -97,7 +105,6 @@ export function getMemberships() {
 			method: "get"
 		};
 
-		const fetchStart = new Date().getTime();
 		fetch(options).then(res => {
 				if (res.ok) {
 					res.json().then(sites => {
@@ -107,8 +114,10 @@ export function getMemberships() {
 							});
 
 							Storage.sites.get()
-								.then(data => getAllSites(siteIds, data))
-								.catch(error => getAllSites(siteIds));
+								.then(data => {
+									let storedSites = JSON.parse(data);
+									getAllSites(siteIds, storedSites);
+								})
 						}
 					);
 				}

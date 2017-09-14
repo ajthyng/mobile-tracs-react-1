@@ -7,22 +7,20 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import Storage from 'react-native-storage';
+//import Storage from 'react-native-storage';
 import * as Keychain from 'react-native-keychain';
-import { AsyncStorage } from 'react-native';
+import {AsyncStorage} from 'react-native';
 
 const expiryDays = 90;
 const msPerDay = 1000 * 3600 * 24;
 
-let storage = new Storage({
-	storageBackend: AsyncStorage,
-	defaultExpires: msPerDay * expiryDays,
-});
-
-let keys = {
-	credentials: 'credentials',
+const keys = {
 	token: 'token',
-	sites: 'sites',
+	sites: 'sites'
+};
+
+let stringify = (obj) => {
+	return JSON.stringify(obj);
 };
 
 exports.credentials = {
@@ -39,41 +37,24 @@ exports.credentials = {
 
 exports.token = {
 	get() {
-		return storage.load({
-			key: keys.token,
-			autoSync: false,
-			syncInBackground: false,
-		});
+		return AsyncStorage.getItem(keys.token);
 	},
 	store(token) {
-		return storage.save({
-			key: keys.token,
-			data: token,
-			expires: msPerDay
-		});
+		return AsyncStorage.setItem(keys.token, token);
 	},
 	reset() {
-		return storage.remove({
-			key: keys.token
-		});
+		return AsyncStorage.removeItem(keys.token);
 	}
 };
 
 exports.sites = {
 	get() {
-		return storage.load({
-			key: keys.sites,
-			autoSync: false,
-			syncInBackground: false
-		});
+		return AsyncStorage.getItem(keys.sites);
 	},
 	store(sites) {
-		return storage.save({
-			key: keys.sites,
-			data: sites,
-		});
+		return AsyncStorage.setItem(keys.sites, stringify(sites));
 	},
 	reset() {
-		return storage.clearMapForKey(key.sites);
+		return AsyncStorage.removeItem(key.sites);
 	}
 };
