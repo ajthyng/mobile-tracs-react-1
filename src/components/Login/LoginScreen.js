@@ -5,7 +5,7 @@ import {Button, Keyboard, StyleSheet, Text, TextInput, View} from 'react-native'
 
 import {register} from '../../actions/registrar';
 import {netidLogout} from '../../actions/login';
-import user from '../../config/config.json';
+import user from '../../../config/config.json';
 
 class LoginScreen extends Component {
 	constructor(props) {

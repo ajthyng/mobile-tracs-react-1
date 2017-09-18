@@ -9,10 +9,10 @@
  */
 
 import {credentials} from '../utils/storage';
-import {user} from '../actions/registrar';
+import {user} from './registrar';
 
 export const LOGIN_HAS_FAILED = 'LOGIN_HAS_FAILED';
-function loginHasFailed(bool) {
+export function loginHasFailed(bool) {
 	return {
 		type: LOGIN_HAS_FAILED,
 		hasFailed: bool
@@ -28,7 +28,7 @@ export function loginIsGuestAccount(bool) {
 }
 
 export const LOGIN = 'LOGIN';
-function netidLogin(netid, password) {
+export function netidLogin(netid, password) {
 	return {
 		type: LOGIN,
 		netid: netid,
@@ -43,7 +43,7 @@ export function netidLogout() {
 	};
 }
 export const LOGGING_IN = 'LOGGING_IN';
-function loggingIn(bool) {
+export function loggingIn(bool) {
 	return {
 		type: LOGGING_IN,
 		loggingIn: bool,
@@ -51,7 +51,7 @@ function loggingIn(bool) {
 }
 
 export const IS_LOGGED_IN = 'IS_LOGGED_IN';
-function isLoggedIn(bool) {
+export function isLoggedIn(bool) {
 	return {
 		type: IS_LOGGED_IN,
 		isLoggedIn: bool

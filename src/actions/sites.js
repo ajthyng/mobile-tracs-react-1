@@ -69,12 +69,14 @@ let getAllSites = (siteIds, storedSites = {}) => {
 				contactInfo.name = site.props['contact-name'];
 				contactInfo.email = site.props['contact-email'];
 			}
+
 			allSites[site.id] = {
 				id: site.id,
 				name: site.title,
 				contactInfo,
 				tools: {}
-			}
+			};
+
 		});
 
 		siteTools.forEach(site => {
@@ -84,17 +86,12 @@ let getAllSites = (siteIds, storedSites = {}) => {
 				});
 			});
 		});
-		Object.keys(allSites).forEach((key) => {
-			console.log(Object.keys(allSites[key].tools).length);
+
+		Storage.sites.store(allSites).then(() => {
+			console.log(`${Object.keys(allSites).length} sites stored.`);
 		});
-		console.log(allSites);
 		const end = new Date().getTime();
 		console.log(`Sites info fetched in ${end - promiseStart} ms.`);
-	});
-
-	Storage.sites.store(allSites).then((result) => {
-		console.log(result);
-		console.log(`${Object.keys(allSites).length} sites stored.`);
 	});
 };
 
@@ -116,6 +113,7 @@ export function getMemberships() {
 							Storage.sites.get()
 								.then(data => {
 									let storedSites = JSON.parse(data);
+									console.log("Stored Sites: ", storedSites);
 									getAllSites(siteIds, storedSites);
 								})
 						}

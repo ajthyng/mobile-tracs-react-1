@@ -12,10 +12,10 @@ import React, {Component} from 'react';
 import {Provider} from 'react-redux';
 import FCM, {FCMEvent} from 'react-native-fcm';
 import {ActionConst, Router, Scene} from 'react-native-router-flux';
-import configureStore from './store/configureStore';
-import LoginScreen from './components/Login/LoginScreen';
-import CourseList from './components/SiteList/SiteList';
-import {token} from './utils/storage';
+import configureStore from './src/store/configureStore';
+import LoginScreen from './src/components/Login/LoginScreen';
+import CourseList from './src/components/SiteList/SiteList';
+import {token} from './src/utils/storage';
 
 const store = configureStore();
 const handleNotification = (notification) => {

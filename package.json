@@ -6,6 +6,7 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "postinstall": "rndebugger-open",
     "test": "jest",
+    "test:watch": "npm test -- --watch"
   },
   "dependencies": {
     "base-64": "^0.1.0",
@@ -31,16 +32,24 @@
     "babel-jest": "20.0.3",
     "babel-preset-react-native": "2.1.0",
     "jest": "20.0.4",
+    "jest-fetch-mock": "^1.2.1",
     "react-native-debugger-open": "^0.3.12",
-    "react-test-renderer": "16.0.0-alpha.12"
+    "react-test-renderer": "16.0.0-alpha.12",
+    "whatwg-fetch": "^2.0.3"
   },
   "jest": {
     "preset": "react-native",
+    "testMatch": ["**/tests/**/*.js?(x)","**/?(*.)(spec|test).js?(x)"],
+    "testPathIgnorePatterns": ["<rootDir>/node_modules/", "<rootDir>/tests/mocks/"],
     "transform": {
       "^.+\\.js$": "babel-jest"
     },
     "transformIgnorePatterns": [
       "node_modules/(?!react-native|react-navigation)/"
+    ],
+    "automock": false,
+    "setupFiles": [
+      "./setupJest.js"
     ]
   }
 }

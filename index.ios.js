@@ -2,11 +2,11 @@ import {AppRegistry,} from 'react-native';
 import React, {Component} from 'react';
 import {Provider} from 'react-redux';
 import {ActionConst, Router, Scene} from 'react-native-router-flux';
-import configureStore from './store/configureStore';
-import LoginScreen from './components/Login/LoginScreen';
-import CourseList from './components/SiteList/SiteList';
+import configureStore from './src/store/configureStore';
+import LoginScreen from './src/components/Login/LoginScreen';
+import CourseList from './src/components/SiteList/SiteList';
 import PushNotification from 'react-native-push-notification';
-import {token} from './utils/storage';
+import {token} from './src/utils/storage';
 
 const store = configureStore();
 const handleNotification = (notification) => {
