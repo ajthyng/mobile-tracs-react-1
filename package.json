@@ -32,24 +32,24 @@
     "babel-jest": "20.0.3",
     "babel-preset-react-native": "2.1.0",
     "jest": "20.0.4",
-    "jest-fetch-mock": "^1.2.1",
     "react-native-debugger-open": "^0.3.12",
-    "react-test-renderer": "16.0.0-alpha.12",
-    "whatwg-fetch": "^2.0.3"
+    "react-test-renderer": "16.0.0-alpha.12"
   },
   "jest": {
     "preset": "react-native",
-    "testMatch": ["**/tests/**/*.js?(x)","**/?(*.)(spec|test).js?(x)"],
-    "testPathIgnorePatterns": ["<rootDir>/node_modules/", "<rootDir>/tests/mocks/"],
+    "testMatch": [
+      "**/tests/**/*.js?(x)",
+      "**/?(*.)(spec|test).js?(x)"
+    ],
+    "testPathIgnorePatterns": [
+      "<rootDir>/node_modules/",
+      "<rootDir>/tests/mocks/"
+    ],
     "transform": {
       "^.+\\.js$": "babel-jest"
     },
     "transformIgnorePatterns": [
       "node_modules/(?!react-native|react-navigation)/"
-    ],
-    "automock": false,
-    "setupFiles": [
-      "./setupJest.js"
     ]
   }
 }

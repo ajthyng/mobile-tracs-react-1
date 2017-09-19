@@ -38,25 +38,23 @@ let getAllSites = (siteIds, storedSites = {}) => {
 
 	let sitePromises = siteIds.map(siteID => {
 		if (!storedSites.hasOwnProperty(siteID)) {
-			return getSiteName(siteID).then(res => {
-				return res.json().then((data) => {
-					userSites.push(data);
-				});
-			});
+			return getSiteName(siteID)
+				.then(res => res.json())
+				.then(site => userSites.push(site));
+		}
+	});
+
+	let toolPromises = siteIds.map(siteID => {
+		if (!storedSites.hasOwnProperty(siteID)) {
+			return getSiteTools(siteID)
+				.then(res => res.json())
+				.then(tools => siteTools.push(tools));
 		}
 	});
 
 	let allPromises = [
 		...sitePromises,
-		...siteIds.map(siteID => {
-			if (!storedSites.hasOwnProperty(siteID)) {
-				return getSiteTools(siteID).then(res => {
-					return res.json().then(data => {
-						siteTools.push(data);
-					});
-				});
-			}
-		})
+		...toolPromises
 	];
 
 	Promise.all(allPromises).then(() => {
@@ -102,25 +100,21 @@ export function getMemberships() {
 			method: "get"
 		};
 
-		fetch(options).then(res => {
-				if (res.ok) {
-					res.json().then(sites => {
-							let siteIds = sites.membership_collection.map((site) => {
-								let parsedId = site.id.split(':');
-								return parsedId[parsedId.length - 1];
-							});
+		fetch(options)
+			.then(res => res.json())
+			.then(sites => {
+				console.log(sites);
+				let siteIds = sites.membership_collection.map((site) => {
+					let parsedId = site.id.split(':');
+					return parsedId[parsedId.length - 1];
+				});
 
-							Storage.sites.get()
-								.then(data => {
-									let storedSites = JSON.parse(data);
-									console.log("Stored Sites: ", storedSites);
-									getAllSites(siteIds, storedSites);
-								})
-						}
-					);
-				}
-			}
-		)
-		;
+				Storage.sites.get()
+					.then(data => {
+						let storedSites = JSON.parse(data);
+						console.log("Stored Sites: ", storedSites);
+						getAllSites(siteIds, storedSites);
+					})
+			}).catch(error => console.log("Sites Error: ", error));
 	}
 }

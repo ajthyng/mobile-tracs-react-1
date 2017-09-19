@@ -4,7 +4,7 @@ import {Actions} from 'react-native-router-flux';
 import {Button, Keyboard, StyleSheet, Text, TextInput, View} from 'react-native';
 
 import {register} from '../../actions/registrar';
-import {netidLogout} from '../../actions/login';
+import {logout} from '../../actions/login';
 import user from '../../../config/config.json';
 
 class LoginScreen extends Component {
@@ -21,6 +21,9 @@ class LoginScreen extends Component {
 	componentDidUpdate() {
 		if (this.props.isLoggedIn === true) {
 			Actions.sites();
+		} else if (this.props.loggingIn === false) {
+			this.props.onLogout();
+			CookieManager.clearAll();
 		}
 	}
 
@@ -75,13 +78,14 @@ const mapStateToProps = (state, ownProps) => {
 		loginHasFailed: state.login.loginHasFailed,
 		loginIsGuestAccount: state.login.loginIsGuestAccount,
 		isLoggedIn: state.login.isLoggedIn,
-		loggedInAs: state.login.netid
+		loggedInAs: state.login.netid,
+		loggingIn: state.login.loggingIn
 	}
 };
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		onLogout: () => dispatch(netidLogout()),
+		onLogout: () => dispatch(logout()),
 		onLogin: (netid, password) => dispatch(register(netid, password)),
 	}
 };

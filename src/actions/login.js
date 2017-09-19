@@ -8,10 +8,19 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {credentials} from '../utils/storage';
 import {user} from './registrar';
+import {authActions} from '../constants/actions';
+import {credentials} from '../utils/storage';
 
-export const LOGIN_HAS_FAILED = 'LOGIN_HAS_FAILED';
+let {
+	LOGIN,
+	LOGOUT,
+	LOGIN_HAS_FAILED,
+	LOGIN_IS_GUEST,
+	LOGGING_IN,
+	IS_LOGGED_IN
+} = authActions;
+
 export function loginHasFailed(bool) {
 	return {
 		type: LOGIN_HAS_FAILED,
@@ -19,7 +28,6 @@ export function loginHasFailed(bool) {
 	};
 }
 
-export const LOGIN_IS_GUEST = 'LOGIN_IS_GUEST';
 export function loginIsGuestAccount(bool) {
 	return {
 		type: LOGIN_IS_GUEST,
@@ -27,7 +35,6 @@ export function loginIsGuestAccount(bool) {
 	};
 }
 
-export const LOGIN = 'LOGIN';
 export function netidLogin(netid, password) {
 	return {
 		type: LOGIN,
@@ -36,13 +43,14 @@ export function netidLogin(netid, password) {
 	};
 }
 
-export const LOGOUT = 'LOGOUT';
 export function netidLogout() {
 	return {
-		type: LOGOUT
+		type: LOGOUT,
+		netid: '',
+		password: ''
 	};
 }
-export const LOGGING_IN = 'LOGGING_IN';
+
 export function loggingIn(bool) {
 	return {
 		type: LOGGING_IN,
@@ -50,13 +58,34 @@ export function loggingIn(bool) {
 	}
 }
 
-export const IS_LOGGED_IN = 'IS_LOGGED_IN';
 export function isLoggedIn(bool) {
 	return {
 		type: IS_LOGGED_IN,
 		isLoggedIn: bool
 	}
 }
+
+const authFailure = (dispatch) => {
+	dispatch(netidLogout());
+	dispatch(loginHasFailed(true));
+};
+
+const compareLogins = (url, creds, dispatch) => {
+	return fetch(`${url}/direct/session/current.json`, {method: 'get'})
+		.then(res => res.json() )
+		.then(session => {
+			if (session.userEid === creds.netid) {
+				credentials.store(creds.netid, creds.password).then(() => {
+					dispatch(netidLogin(session.userEid, creds.password));
+					dispatch(isLoggedIn(true));
+					dispatch(loggingIn(false));
+					dispatch(loginHasFailed(false));
+				});
+			} else {
+				authFailure(dispatch);
+			}
+		});
+};
 
 export function auth(netid, password) {
 	return (dispatch) => {
@@ -66,37 +95,33 @@ export function auth(netid, password) {
 			dispatch(loggingIn(false));
 			return;
 		}
-		const baseUrl = 'https://staging.tracs.txstate.edu/';
+		const baseUrl = 'https://staging.tracs.txstate.edu';
 
-		fetch(`${baseUrl}portal/relogin?eid=${netid}&pw=${password}`, {
-			method: "post"
-		})
-			.then((res) => {
+		return fetch(`${baseUrl}/portal/relogin?eid=${netid}&pw=${password}`, {method: 'post'}).then(res => {
 				if (res.ok) {
-					fetch(`${baseUrl}direct/session/current.json`, {
-						method: 'get'
-					}).then((res) => {
-						res.text().then((text) => {
-							let session = JSON.parse(text);
-							if (session.userEid === netid) {
-								console.log(session);
-								credentials.store(netid, password).then(() => {
-									dispatch(netidLogin(netid, password));
-									dispatch(isLoggedIn(true));
-									dispatch(loggingIn(false));
-									dispatch(loginHasFailed(false));
-								});
-							} else {
-								console.log("ELSE BLOCK");
-								dispatch(netidLogout());
-								dispatch(loginHasFailed(true));
-							}
-						});
-					});
+					let creds = {
+						netid,
+						password
+					};
+					return compareLogins(baseUrl, creds, dispatch);
 				} else {
-					console.log("Login failed with response");
-					dispatch(loginHasFailed(true));
+					authFailure(dispatch);
 				}
 			});
+	};
+}
+
+export function logout() {
+	return (dispatch) => {
+		const baseUrl = 'https://staging.tracs.txstate.edu/';
+
+		fetch(`${baseUrl}/portal/?force.logout=yes`, {
+			method: 'get'
+		}).then(res => {
+			if (res.ok) {
+				dispatch(netidLogout());
+				dispatch(isLoggedIn(false));
+			}
+		});
 	};
 }
