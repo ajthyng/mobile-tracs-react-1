@@ -5,8 +5,7 @@
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "postinstall": "rndebugger-open",
-    "test": "jest",
-    "test:watch": "npm test -- --watch"
+    "test": "jest --watch"
   },
   "dependencies": {
     "base-64": "^0.1.0",

@@ -38,7 +38,8 @@ it('should create a login action', () => {
 	const expectedAction = {
 		type: LOGIN,
 		netid,
-		password
+		password,
+		isLoggedIn: true
 	};
 
 	expect(LoginActions.netidLogin(netid, password)).toEqual(expectedAction);
@@ -48,7 +49,8 @@ it('should create a logout action', () => {
 	const expectedAction = {
 		type: LOGOUT,
 		netid: '',
-		password: ''
+		password: '',
+		isLoggedIn: false
 	};
 
 	expect(LoginActions.netidLogout()).toEqual(expectedAction);
@@ -73,15 +75,6 @@ it('should mark login as failed', () => {
 	expect(LoginActions.loginHasFailed(hasFailed)).toEqual(expectedAction);
 });
 
-it('should mark user as logged in', () => {
-	const isLoggedIn = true;
-	const expectedAction = {
-		type: IS_LOGGED_IN,
-		isLoggedIn
-	};
-
-	expect(LoginActions.isLoggedIn(isLoggedIn)).toEqual(expectedAction);
-});
 
 it('should fail login without netid', () => {
 	const netid = '';
@@ -112,7 +105,7 @@ it('should fail logging in on unauthorized response', async () => {
 
 	const expectedActions = [
 		{type: LOGGING_IN, loggingIn: true},
-		{type: LOGOUT, netid: '', password: ''},
+		{type: LOGOUT, netid: '', password: '', isLoggedIn: false},
 		{type: LOGIN_HAS_FAILED, hasFailed: true},
 	];
 
@@ -154,7 +147,7 @@ it('should fail logging in without password', async () => {
 
 	const expectedActions = [
 		{type: LOGGING_IN, loggingIn: true},
-		{type: LOGOUT, netid: '', password: ''},
+		{type: LOGOUT, netid: '', password: '', isLoggedIn: false},
 		{type: LOGIN_HAS_FAILED, hasFailed: true}
 	];
 
@@ -201,8 +194,7 @@ it('should login successfully with netid and password', async () => {
 
 	const expectedActions = [
 		{type: LOGGING_IN, loggingIn: true},
-		{type: LOGIN, netid, password},
-		{type: IS_LOGGED_IN, isLoggedIn: true},
+		{type: LOGIN, netid, password, isLoggedIn: true},
 		{type: LOGGING_IN, loggingIn: false},
 		{type: LOGIN_HAS_FAILED, hasFailed: false}
 	];

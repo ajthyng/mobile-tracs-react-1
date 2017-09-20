@@ -38,8 +38,9 @@ export function loginIsGuestAccount(bool) {
 export function netidLogin(netid, password) {
 	return {
 		type: LOGIN,
-		netid: netid,
-		password: password
+		netid,
+		password,
+		isLoggedIn: true
 	};
 }
 
@@ -47,7 +48,8 @@ export function netidLogout() {
 	return {
 		type: LOGOUT,
 		netid: '',
-		password: ''
+		password: '',
+		isLoggedIn: false
 	};
 }
 
@@ -65,33 +67,11 @@ export function isLoggedIn(bool) {
 	}
 }
 
-const authFailure = (dispatch) => {
-	dispatch(netidLogout());
-	dispatch(loginHasFailed(true));
-};
-
-const compareLogins = (url, creds, dispatch) => {
-	return fetch(`${url}/direct/session/current.json`, {method: 'get'})
-		.then(res => res.json() )
-		.then(session => {
-			if (session.userEid === creds.netid) {
-				credentials.store(creds.netid, creds.password).then(() => {
-					dispatch(netidLogin(session.userEid, creds.password));
-					dispatch(isLoggedIn(true));
-					dispatch(loggingIn(false));
-					dispatch(loginHasFailed(false));
-				});
-			} else {
-				authFailure(dispatch);
-			}
-		});
-};
-
-export function auth(netid, password) {
+export function auth(netid = '', password) {
 	return (dispatch) => {
 		dispatch(loggingIn(true));
 
-		if (netid.length <= 0) {
+		if (netid.length === 0) {
 			dispatch(loggingIn(false));
 			return;
 		}
@@ -103,9 +83,23 @@ export function auth(netid, password) {
 						netid,
 						password
 					};
-					return compareLogins(baseUrl, creds, dispatch);
+					return fetch(`${baseUrl}/direct/session/current.json`, {method: 'get'})
+						.then(res => res.json())
+						.then(session => {
+							if (session.userEid === creds.netid) {
+								credentials.store(creds.netid, creds.password).then(() => {
+									dispatch(netidLogin(session.userEid, creds.password));
+									dispatch(loggingIn(false));
+									dispatch(loginHasFailed(false));
+								});
+							} else {
+								dispatch(netidLogout());
+								dispatch(loginHasFailed(true));
+							}
+						});
 				} else {
-					authFailure(dispatch);
+					dispatch(netidLogout());
+					dispatch(loginHasFailed(true));
 				}
 			});
 	};

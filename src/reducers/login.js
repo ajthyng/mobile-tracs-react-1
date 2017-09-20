@@ -8,7 +8,7 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import { authActions } from '../constants/actions';
-let { LOGIN, LOGOUT, LOGIN_HAS_FAILED, LOGIN_IS_GUEST, LOGGING_IN, IS_LOGGED_IN } = authActions;
+let { LOGIN, LOGOUT, LOGIN_HAS_FAILED, LOGIN_IS_GUEST, LOGGING_IN } = authActions;
 
 export const initialState = {
 	hasFailed: false,
@@ -19,25 +19,11 @@ export const initialState = {
 	password: ''
 };
 
-function login(state, action) {
+function auth(state, action) {
 	return {
 		...state,
 		netid: action.netid,
-		password: action.password
-	}
-}
-
-function logout(state, action) {
-	return {
-		...state,
-		netid: '',
-		password: ''
-	}
-}
-
-function isLoggedIn(state, action) {
-	return {
-		... state,
+		password: action.password,
 		isLoggedIn: action.isLoggedIn
 	}
 }
@@ -45,7 +31,7 @@ function isLoggedIn(state, action) {
 function loginHasFailed(state, action) {
 	return {
 		... state,
-		loginHasFailed: action.loginHasFailed
+		hasFailed: action.hasFailed
 	}}
 
 function loginIsGuestAccount(state, action) {
@@ -62,12 +48,11 @@ function loggingIn(state, action) {
 
 export function loginReducer(state = initialState, action) {
 	switch (action.type) {
-		case LOGIN: 						return login(state, action);
-		case LOGOUT: 						return logout(state, action);
+		case LOGIN: 						return auth(state, action);
+		case LOGOUT: 						return auth(state, action);
 		case LOGIN_HAS_FAILED: 	return loginHasFailed(state, action);
 		case LOGIN_IS_GUEST: 		return loginIsGuestAccount(state, action);
 		case LOGGING_IN: 				return loggingIn(state, action);
-		case IS_LOGGED_IN: 			return isLoggedIn(state, action);
 		default: 								return state;
 	}
 }
