@@ -21,7 +21,7 @@ beforeEach(() => {
 	currentState = initialState;
 });
 
-it('should return initial state for unrecognized actions', () => {
+it('should return initial state for undefined state', () => {
 	expect(loginReducer(undefined, {})).toEqual(currentState);
 });
 

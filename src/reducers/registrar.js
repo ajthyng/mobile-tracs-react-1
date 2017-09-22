@@ -9,7 +9,9 @@
  */
 
 import {Platform} from 'react-native';
-import {IS_REGISTERED, REMOVE_TOKEN, REMOVE_USER, REPLACE_TOKEN, REPLACE_USER} from '../actions/registrar';
+import * as actions from '../constants/actions';
+
+const {IS_REGISTERED, IS_REGISTERING, REMOVE_TOKEN, REMOVE_USER, REPLACE_TOKEN, REPLACE_USER, REGISTRATION_FAILED} = actions.registrarActions;
 
 export const initialState = {
 	isRegistered: false,
@@ -22,7 +24,7 @@ function isRegistered(state, action) {
 	return {
 		...state,
 		isRegistered: action.isRegistered
-	};
+	}
 }
 
 function isRegistering(state, action) {
@@ -76,7 +78,6 @@ export function registerReducer(state = initialState, action) {
 		case IS_REGISTERED: return isRegistered(state, action);
 		case IS_REGISTERING: return isRegistering(state, action);
 		case REGISTRATION_FAILED: return registrationHasFailed(state, action);
-		default:
-			return state;
+		default: return state;
 	}
 }
