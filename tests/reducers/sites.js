@@ -8,25 +8,31 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-module.exports = {
-	authActions: {
-		LOGIN_HAS_FAILED: 'LOGIN_HAS_FAILED',
-		LOGIN_IS_GUEST: 'LOGIN_IS_GUEST',
-		LOGGING_IN: 'LOGGING_IN',
-		IS_LOGGED_IN: 'IS_LOGGED_IN',
-		LOGIN: 'LOGIN',
-		LOGOUT: 'LOGOUT'
-	},
-	registrarActions: {
-		IS_REGISTERED: 'IS_REGISTERED',
-		IS_REGISTERING: 'IS_REGISTERING',
-		REGISTRATION_FAILED: 'REGISTRATION_FAILED',
-		REMOVE_TOKEN: 'REMOVE_TOKEN',
-		REPLACE_TOKEN: 'REPLACE_TOKEN',
-		REMOVE_USER: 'REMOVE_USER',
-		REPLACE_USER: 'REPLACE_USER'
-	},
-	sitesActions: {
-		GET_MEMBERSHIPS: 'GET_MEMBERSHIPS'
-	}
-};
+import {initialState, sitesReducer} from '../../src/reducers/sites';
+import {sitesActions} from '../../src/constants/actions';
+
+const sites = sitesActions;
+const netid = 'fak103';
+const password = 'password123';
+
+let currentState = initialState;
+
+beforeEach(() => {
+	currentState = initialState;
+});
+
+it('should handle GET_MEMBERSHIPS action', () => {
+	const sites = [
+		{"name":"siteOne"},
+		{"name":"siteTwo"}
+	];
+	const action = {
+		type: sites.GET_MEMBERSHIPS,
+		sites
+	};
+
+	expect(sitesReducer(currentState, action)).toEqual({
+		...currentState,
+		sites
+	});
+});

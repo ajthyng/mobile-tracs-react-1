@@ -9,10 +9,15 @@
  */
 
 import * as Storage from '../utils/storage'
+import * as types from '../constants/actions';
+let {GET_MEMBERSHIPS} = types.sitesActions;
 
-export const CLEAR_SITE_CACHE = 'CLEAR_SITE_CACHE';
-export const UPDATE_SITES_CACHE = 'UPDATE_SITES_CACHE';
-export const GET_MEMBERSHIPS = 'GET_MEMBERSHIPS';
+const getMemberships = (sites) => {
+	return {
+		type: GET_MEMBERSHIPS,
+		sites
+	}
+};
 
 let getSiteName = (siteID) => {
 	let siteNameOptions = {
@@ -93,17 +98,27 @@ let getAllSites = (siteIds, storedSites = {}) => {
 	});
 };
 
-export function getMemberships() {
+export function getSiteInfo() {
 	return (dispatch) => {
 		const options = {
 			url: "https://staging.tracs.txstate.edu/direct/membership.json",
 			method: "get"
 		};
 
-		fetch(options)
-			.then(res => res.json())
+		return fetch(options)
+			.then(res => {
+				if (res.ok) {
+					return res.json()
+				} else {
+					const emptySites = [];
+					dispatch(getMemberships(emptySites));
+				}
+			})
 			.then(sites => {
-				console.log(sites);
+				const userHasSites = sites !== undefined && sites.hasOwnProperty('membership_collection') && sites.membership_collection.length > 0;
+				if (!userHasSites) {
+					return dispatch(getMemberships(sites.membership_collection));
+				}
 				let siteIds = sites.membership_collection.map((site) => {
 					let parsedId = site.id.split(':');
 					return parsedId[parsedId.length - 1];
@@ -112,9 +127,11 @@ export function getMemberships() {
 				Storage.sites.get()
 					.then(data => {
 						let storedSites = JSON.parse(data);
-						console.log("Stored Sites: ", storedSites);
 						getAllSites(siteIds, storedSites);
 					})
-			}).catch(error => console.log("Sites Error: ", error));
+			}).catch(error => {
+				console.log("Sites Error: ", error);
+				dispatch(getMemberships([]));
+			});
 	}
 }

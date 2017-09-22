@@ -7,26 +7,25 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {GET_MEMBERSHIPS} from '../actions/sites';
-
-const initialState = {
+import * as sites from '../constants/actions';
+const {GET_MEMBERSHIPS} = sites;
+export const initialState = {
 	sites: [],
 	haveMembership: false,
 	haveNames: false,
 	haveTools: false,
 };
 
-function getMemberships(state, action) {
+let getMemberships = (state, action) => {
 	return {
 		...state,
 		sites: action.sites
 	}
-}
+};
 
 export function sitesReducer(state = initialState, action) {
 	switch (action.type) {
 		case GET_MEMBERSHIPS: return getMemberships(state, action);
-		default:
-			return state;
+		default: return state;
 	}
 }

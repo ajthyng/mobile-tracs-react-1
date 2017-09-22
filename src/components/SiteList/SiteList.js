@@ -3,7 +3,7 @@ import {Platform, WebView} from 'react-native';
 import {connect} from 'react-redux';
 import WKWebView from 'react-native-wkwebview-reborn';
 import {credentials} from '../../utils/storage';
-import {getMemberships} from '../../actions/sites';
+import {getSiteInfo} from '../../actions/sites';
 
 class SiteList extends Component {
 	constructor(props) {
@@ -36,7 +36,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		getMemberships: () => dispatch(getMemberships())
+		getMemberships: () => dispatch(getSiteInfo())
 	}
 };
 export default connect(mapStateToProps, mapDispatchToProps)(SiteList);
