@@ -1,0 +1,26 @@
+{
+  "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf": {
+    "id": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+    "name": "tracs us1100 site v2.201810",
+    "contactInfo": {
+      "name": "Contact Name Not Found",
+      "email": "Contact Email Not Found"
+    },
+    "tools": {
+      "sakai.iframe.site": "b9dfa409-2b2d-47e7-9aa8-b420f7e5d9f3",
+      "sakai.synoptic.announcement": "b9dfa409-2b2d-47e7-9aa8-b420f7e5d9f3",
+      "sakai.announcements": "2d3e75b2-3253-467c-8196-1cc44d99add4",
+      "sakai.syllabus": "44eb7e50-8d35-4e4d-b6aa-eb9944fccf80",
+      "sakai.lessonbuildertool": "f5375fad-7e18-4abe-9f8b-90d3f5f9f1de",
+      "sakai.samigo":"314b6a88-1c17-432f-a272-a10ce7b3af1d",
+      "sakai.assignment.grades":"ce9638a8-f897-44eb-b049-fe9faa77a340",
+      "sakai.resources": "10fee6b1-406b-4c49-b10c-a4beba2afcfe",
+      "sakai.attendance": "b74c68f7-afe3-46b6-be75-52d436ac644b",
+      "sakai.gradebook.gwt.rpc": "10f830eb-fcde-4ca0-b16d-f8bbdc0fe63a",
+      "sakai.mailtool": "40ca4aba-0937-4812-8446-d8302f531410",
+      "sakai.site.roster2": "c38e6b13-4afd-44cd-a878-7efda4000276",
+      "sakai.sitestats": "b7eafbf3-b9a3-4d88-bda3-fe14e42abb0e",
+      "sakai.siteinfo": "07e20d80-e1f2-447c-9cde-778ae09af13d"
+    }
+  }
+}

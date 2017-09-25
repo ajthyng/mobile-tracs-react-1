@@ -10,12 +10,13 @@
 
 import * as Storage from '../utils/storage'
 import * as types from '../constants/actions';
+
 let {GET_MEMBERSHIPS} = types.sitesActions;
 
 const getMemberships = (sites) => {
 	return {
 		type: GET_MEMBERSHIPS,
-		sites
+		sites: sites,
 	}
 };
 
@@ -35,14 +36,15 @@ let getSiteTools = (siteID) => {
 	return fetch(siteToolOptions);
 };
 
-let getAllSites = (siteIds, storedSites = {}) => {
+let getAllSites = (payload) => {
+	const {siteIds, storedSites} = payload;
 	let userSites = [];
 	let siteTools = [];
 	let allSites = {};
 	let promiseStart = new Date().getTime();
 
 	let sitePromises = siteIds.map(siteID => {
-		if (!storedSites.hasOwnProperty(siteID)) {
+		if (storedSites === null || !storedSites.hasOwnProperty(siteID)) {
 			return getSiteName(siteID)
 				.then(res => res.json())
 				.then(site => userSites.push(site));
@@ -50,10 +52,12 @@ let getAllSites = (siteIds, storedSites = {}) => {
 	});
 
 	let toolPromises = siteIds.map(siteID => {
-		if (!storedSites.hasOwnProperty(siteID)) {
+		if (storedSites === null || !storedSites.hasOwnProperty(siteID)) {
 			return getSiteTools(siteID)
 				.then(res => res.json())
-				.then(tools => siteTools.push(tools));
+				.then(tools => {
+					siteTools.push(tools)
+				});
 		}
 	});
 
@@ -62,15 +66,19 @@ let getAllSites = (siteIds, storedSites = {}) => {
 		...toolPromises
 	];
 
-	Promise.all(allPromises).then(() => {
-		userSites.forEach((site) => {
+	return Promise.all(allPromises).then(() => {
+		userSites.forEach(site => {
 			let contactInfo = {
-				name: 'Not Found',
-				email: 'Not Found'
+				name: "Contact Name Not Found",
+				email: "Contact Email Not Found"
 			};
 			if (site.props) {
-				contactInfo.name = site.props['contact-name'];
-				contactInfo.email = site.props['contact-email'];
+				if (site.props['contact-name']) {
+					contactInfo.name = site.props['contact-name'];
+				}
+				if (site.props['contact-email']) {
+					contactInfo.email = site.props['contact-email'];
+				}
 			}
 
 			allSites[site.id] = {
@@ -84,9 +92,11 @@ let getAllSites = (siteIds, storedSites = {}) => {
 
 		siteTools.forEach(site => {
 			site.forEach(toolList => {
-				toolList.tools.forEach(tool => {
-					allSites[tool.siteId].tools[tool.toolId] = tool.pageId;
-				});
+				if (toolList.hasOwnProperty("tools")) {
+					toolList.tools.forEach(tool => {
+						allSites[tool.siteId].tools[tool.toolId] = tool.pageId;
+					});
+				}
 			});
 		});
 
@@ -95,10 +105,16 @@ let getAllSites = (siteIds, storedSites = {}) => {
 		});
 		const end = new Date().getTime();
 		console.log(`Sites info fetched in ${end - promiseStart} ms.`);
+		return allSites;
 	});
 };
 
 export function getSiteInfo() {
+	if (!Array.prototype.last) {
+		Array.prototype.last = function () {
+			return this[this.length - 1];
+		}
+	}
 	return (dispatch) => {
 		const options = {
 			url: "https://staging.tracs.txstate.edu/direct/membership.json",
@@ -110,28 +126,30 @@ export function getSiteInfo() {
 				if (res.ok) {
 					return res.json()
 				} else {
-					const emptySites = [];
-					dispatch(getMemberships(emptySites));
+					throw new Error(`${res.status} code received`);
 				}
 			})
 			.then(sites => {
 				const userHasSites = sites !== undefined && sites.hasOwnProperty('membership_collection') && sites.membership_collection.length > 0;
 				if (!userHasSites) {
-					return dispatch(getMemberships(sites.membership_collection));
+					throw new Error("User has no sites membership");
 				}
 				let siteIds = sites.membership_collection.map((site) => {
-					let parsedId = site.id.split(':');
-					return parsedId[parsedId.length - 1];
+					return site.id.split(':').last();
 				});
-
-				Storage.sites.get()
-					.then(data => {
+				return Storage.sites.get()
+					.then(async data => {
 						let storedSites = JSON.parse(data);
-						getAllSites(siteIds, storedSites);
+						const payload = {
+							siteIds,
+							storedSites
+						};
+						let userSites = await getAllSites(payload);
+						return dispatch(getMemberships(userSites));
 					})
 			}).catch(error => {
 				console.log("Sites Error: ", error);
-				dispatch(getMemberships([]));
+				return dispatch(getMemberships({}));
 			});
 	}
 }

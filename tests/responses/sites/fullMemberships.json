@@ -1,0 +1,21 @@
+{"entityPrefix": "membership", "membership_collection": [
+  {
+    "id": "29773e20-4daa-41d7-987c-82a5876517a7::site:5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+    "lastLoginTime": 1506092242707,
+    "locationReference": "\/site\/5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+    "memberRole": "student",
+    "userDisplayId": "ajt79",
+    "userDisplayName": "ajt79",
+    "userEid": "ajt79",
+    "userEmail": "ajt79",
+    "userId": "29773e20-4daa-41d7-987c-82a5876517a7",
+    "userSortName": "ajt79",
+    "active": true,
+    "provided": false,
+    "entityReference": "\/membership\/29773e20-4daa-41d7-987c-82a5876517a7::site:5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+    "entityURL": "https:\/\/tracs.txstate.edu:443\/direct\/membership\/29773e20-4daa-41d7-987c-82a5876517a7::site:5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+    "entityId": "29773e20-4daa-41d7-987c-82a5876517a7::site:5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+    "entityTitle": "ajt79",
+    "siteType": "course"
+  }
+]}

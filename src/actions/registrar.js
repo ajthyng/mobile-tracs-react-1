@@ -14,6 +14,7 @@ import {token} from '../utils/storage';
 import {registrarActions} from '../constants/actions';
 
 const {IS_REGISTERED, IS_REGISTERING, REGISTRATION_FAILED, REMOVE_TOKEN, REPLACE_TOKEN, REMOVE_USER, REPLACE_USER} = registrarActions;
+const baseUrl = 'https://dispatchqa1.its.qual.txstate.edu';
 
 const isRegistered = (bool) => {
 	return {
@@ -52,7 +53,8 @@ const user = (netid = '') => {
 	}
 };
 
-const postRegistration = (jwt, deviceToken) => {
+const postRegistration = (payload) => {
+	const {netid, password, jwt, deviceToken, dispatch } = payload;
 	let registration = {
 		platform: Platform.OS,
 		app_id: 'edu.txstate.mobile.tracs',
@@ -93,7 +95,6 @@ export let register = (netid = '', password) => {
 			dispatch(registrationHasFailed(true));
 			return;
 		}
-		let baseUrl = 'https://dispatchqa1.its.qual.txstate.edu';
 		let auth64 = `${netid}:${password}`;
 		let headers = {
 			'Authorization': 'Basic ' + base64.encode(auth64),
@@ -113,7 +114,14 @@ export let register = (netid = '', password) => {
 			}
 		}).then(jwt => {
 			token.get().then(deviceToken => {
-				postRegistration(jwt, deviceToken);
+				const payload = {
+					netid,
+					password,
+					jwt,
+					deviceToken,
+					dispatch
+				};
+				postRegistration(payload);
 			});
 		});
 	}

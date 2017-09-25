@@ -1,0 +1,393 @@
+[
+  {
+    "position": 0,
+    "id": "b9dfa409-2b2d-47e7-9aa8-b420f7e5d9f3",
+    "layoutTitle": "Double Column Layout",
+    "tools": [
+      {
+        "pageOrder": 1,
+        "id": "a9a32741-e40e-463e-8228-bfb27eca3385",
+        "home": null,
+        "title": "Site Information Display",
+        "siteId": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+        "pageId": "b9dfa409-2b2d-47e7-9aa8-b420f7e5d9f3",
+        "description": "For displaying Site information",
+        "context": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+        "placementId": "a9a32741-e40e-463e-8228-bfb27eca3385",
+        "toolId": "sakai.iframe.site",
+        "url": "https:\/\/tracs.txstate.edu:443\/portal\/site\/5aafe18b-2b5b-4d3b-9398-8a81cd62dccf\/page\/b9dfa409-2b2d-47e7-9aa8-b420f7e5d9f3"
+      },
+      {
+        "pageOrder": 2,
+        "id": "c41aea33-73cd-4507-8e15-1927df3a7f51",
+        "home": null,
+        "title": "Recent Announcements",
+        "siteId": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+        "pageId": "b9dfa409-2b2d-47e7-9aa8-b420f7e5d9f3",
+        "description": "Display recent announcements, updated as messages arrive",
+        "context": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+        "placementId": "c41aea33-73cd-4507-8e15-1927df3a7f51",
+        "toolId": "sakai.synoptic.announcement",
+        "url": "https:\/\/tracs.txstate.edu:443\/portal\/site\/5aafe18b-2b5b-4d3b-9398-8a81cd62dccf\/page\/b9dfa409-2b2d-47e7-9aa8-b420f7e5d9f3"
+      }
+    ],
+    "title": "Home",
+    "siteId": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+    "layout": 1,
+    "toolpopup": false,
+    "toolpopupurl": null,
+    "url": "https:\/\/tracs.txstate.edu:443\/portal\/site\/5aafe18b-2b5b-4d3b-9398-8a81cd62dccf\/page\/b9dfa409-2b2d-47e7-9aa8-b420f7e5d9f3",
+    "skin": "neo-tracs-default"
+  },
+  {
+    "position": 1,
+    "id": "2d3e75b2-3253-467c-8196-1cc44d99add4",
+    "layoutTitle": "Single Column Layout",
+    "tools": [
+      {
+        "pageOrder": 1,
+        "id": "0969db31-5328-4d6e-8ad5-025db7a9740a",
+        "home": null,
+        "title": "Announcements",
+        "siteId": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+        "pageId": "2d3e75b2-3253-467c-8196-1cc44d99add4",
+        "description": "For posting current, time-critical information",
+        "context": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+        "placementId": "0969db31-5328-4d6e-8ad5-025db7a9740a",
+        "toolId": "sakai.announcements",
+        "url": "https:\/\/tracs.txstate.edu:443\/portal\/site\/5aafe18b-2b5b-4d3b-9398-8a81cd62dccf\/page\/2d3e75b2-3253-467c-8196-1cc44d99add4"
+      }
+    ],
+    "title": "Announcements",
+    "siteId": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+    "layout": 0,
+    "toolpopup": false,
+    "toolpopupurl": null,
+    "url": "https:\/\/tracs.txstate.edu:443\/portal\/site\/5aafe18b-2b5b-4d3b-9398-8a81cd62dccf\/page\/2d3e75b2-3253-467c-8196-1cc44d99add4",
+    "skin": "neo-tracs-default"
+  },
+  {
+    "position": 2,
+    "id": "44eb7e50-8d35-4e4d-b6aa-eb9944fccf80",
+    "layoutTitle": "Single Column Layout",
+    "tools": [
+      {
+        "pageOrder": 1,
+        "id": "e20e8256-f3f9-4710-9b26-203ba2cf1145",
+        "home": null,
+        "title": "Syllabus",
+        "siteId": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+        "pageId": "44eb7e50-8d35-4e4d-b6aa-eb9944fccf80",
+        "description": "For posting or creating a summary, outline and\/or requirements for a site",
+        "context": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+        "placementId": "e20e8256-f3f9-4710-9b26-203ba2cf1145",
+        "toolId": "sakai.syllabus",
+        "url": "https:\/\/tracs.txstate.edu:443\/portal\/site\/5aafe18b-2b5b-4d3b-9398-8a81cd62dccf\/page\/44eb7e50-8d35-4e4d-b6aa-eb9944fccf80"
+      }
+    ],
+    "title": "Syllabus",
+    "siteId": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+    "layout": 0,
+    "toolpopup": false,
+    "toolpopupurl": null,
+    "url": "https:\/\/tracs.txstate.edu:443\/portal\/site\/5aafe18b-2b5b-4d3b-9398-8a81cd62dccf\/page\/44eb7e50-8d35-4e4d-b6aa-eb9944fccf80",
+    "skin": "neo-tracs-default"
+  },
+  {
+    "position": 3,
+    "id": "e86d9412-9a16-4c6f-9b36-ffca8feaa544",
+    "layoutTitle": "Single Column Layout",
+    "tools": [
+      {
+        "pageOrder": 1,
+        "id": "a079911a-7244-479c-bbd7-82b499c6a80e",
+        "home": null,
+        "title": "Lessons",
+        "siteId": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+        "pageId": "e86d9412-9a16-4c6f-9b36-ffca8feaa544",
+        "description": "For creating content modules and sequences; can be organized by week or unit",
+        "context": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+        "placementId": "a079911a-7244-479c-bbd7-82b499c6a80e",
+        "toolId": "sakai.lessonbuildertool",
+        "url": "https:\/\/tracs.txstate.edu:443\/portal\/site\/5aafe18b-2b5b-4d3b-9398-8a81cd62dccf\/page\/e86d9412-9a16-4c6f-9b36-ffca8feaa544"
+      }
+    ],
+    "title": "Career Exp 1: Focus2",
+    "siteId": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+    "layout": 0,
+    "toolpopup": false,
+    "toolpopupurl": null,
+    "url": "https:\/\/tracs.txstate.edu:443\/portal\/site\/5aafe18b-2b5b-4d3b-9398-8a81cd62dccf\/page\/e86d9412-9a16-4c6f-9b36-ffca8feaa544",
+    "skin": "neo-tracs-default"
+  },
+  {
+    "position": 4,
+    "id": "f5375fad-7e18-4abe-9f8b-90d3f5f9f1de",
+    "layoutTitle": "Single Column Layout",
+    "tools": [
+      {
+        "pageOrder": 1,
+        "id": "899ada0c-d7dd-4a82-84c0-69d488146ad6",
+        "home": null,
+        "title": "Lessons",
+        "siteId": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+        "pageId": "f5375fad-7e18-4abe-9f8b-90d3f5f9f1de",
+        "description": "For creating content modules and sequences; can be organized by week or unit",
+        "context": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+        "placementId": "899ada0c-d7dd-4a82-84c0-69d488146ad6",
+        "toolId": "sakai.lessonbuildertool",
+        "url": "https:\/\/tracs.txstate.edu:443\/portal\/site\/5aafe18b-2b5b-4d3b-9398-8a81cd62dccf\/page\/f5375fad-7e18-4abe-9f8b-90d3f5f9f1de"
+      }
+    ],
+    "title": "Career Exp 2: Intvw",
+    "siteId": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+    "layout": 0,
+    "toolpopup": false,
+    "toolpopupurl": null,
+    "url": "https:\/\/tracs.txstate.edu:443\/portal\/site\/5aafe18b-2b5b-4d3b-9398-8a81cd62dccf\/page\/f5375fad-7e18-4abe-9f8b-90d3f5f9f1de",
+    "skin": "neo-tracs-default"
+  },
+  {
+    "position": 5,
+    "id": "314b6a88-1c17-432f-a272-a10ce7b3af1d",
+    "layoutTitle": "Single Column Layout",
+    "tools": [
+      {
+        "pageOrder": 1,
+        "id": "35b17024-4c95-4a79-abe7-d38fe7173ebc",
+        "home": null,
+        "title": "Assessments",
+        "siteId": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+        "pageId": "314b6a88-1c17-432f-a272-a10ce7b3af1d",
+        "description": "For creating and taking online tests, quizzes and surveys",
+        "context": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+        "placementId": "35b17024-4c95-4a79-abe7-d38fe7173ebc",
+        "toolId": "sakai.samigo",
+        "url": "https:\/\/tracs.txstate.edu:443\/portal\/site\/5aafe18b-2b5b-4d3b-9398-8a81cd62dccf\/page\/314b6a88-1c17-432f-a272-a10ce7b3af1d"
+      }
+    ],
+    "title": "YCE Quizzes",
+    "siteId": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+    "layout": 0,
+    "toolpopup": false,
+    "toolpopupurl": null,
+    "url": "https:\/\/tracs.txstate.edu:443\/portal\/site\/5aafe18b-2b5b-4d3b-9398-8a81cd62dccf\/page\/314b6a88-1c17-432f-a272-a10ce7b3af1d",
+    "skin": "neo-tracs-default"
+  },
+  {
+    "position": 6,
+    "id": "ce9638a8-f897-44eb-b049-fe9faa77a340",
+    "layoutTitle": "Single Column Layout",
+    "tools": [
+      {
+        "pageOrder": 1,
+        "id": "4ff7d06d-1535-45cd-bc70-eb8d7d85cb0f",
+        "home": null,
+        "title": "Assignments",
+        "siteId": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+        "pageId": "ce9638a8-f897-44eb-b049-fe9faa77a340",
+        "description": "For posting, submitting and grading assignment(s) online",
+        "context": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+        "placementId": "4ff7d06d-1535-45cd-bc70-eb8d7d85cb0f",
+        "toolId": "sakai.assignment.grades",
+        "url": "https:\/\/tracs.txstate.edu:443\/portal\/site\/5aafe18b-2b5b-4d3b-9398-8a81cd62dccf\/page\/ce9638a8-f897-44eb-b049-fe9faa77a340"
+      }
+    ],
+    "title": "Assignments",
+    "siteId": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+    "layout": 0,
+    "toolpopup": false,
+    "toolpopupurl": null,
+    "url": "https:\/\/tracs.txstate.edu:443\/portal\/site\/5aafe18b-2b5b-4d3b-9398-8a81cd62dccf\/page\/ce9638a8-f897-44eb-b049-fe9faa77a340",
+    "skin": "neo-tracs-default"
+  },
+  {
+    "position": 7,
+    "id": "10fee6b1-406b-4c49-b10c-a4beba2afcfe",
+    "layoutTitle": "Single Column Layout",
+    "tools": [
+      {
+        "pageOrder": 1,
+        "id": "7d956053-c6c3-47ed-ba57-4a38c60f72db",
+        "home": null,
+        "title": "Resources",
+        "siteId": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+        "pageId": "10fee6b1-406b-4c49-b10c-a4beba2afcfe",
+        "description": "For uploading, posting and organizing documents and other files for download or display",
+        "context": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+        "placementId": "7d956053-c6c3-47ed-ba57-4a38c60f72db",
+        "toolId": "sakai.resources",
+        "url": "https:\/\/tracs.txstate.edu:443\/portal\/site\/5aafe18b-2b5b-4d3b-9398-8a81cd62dccf\/page\/10fee6b1-406b-4c49-b10c-a4beba2afcfe"
+      }
+    ],
+    "title": "Resources",
+    "siteId": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+    "layout": 0,
+    "toolpopup": false,
+    "toolpopupurl": null,
+    "url": "https:\/\/tracs.txstate.edu:443\/portal\/site\/5aafe18b-2b5b-4d3b-9398-8a81cd62dccf\/page\/10fee6b1-406b-4c49-b10c-a4beba2afcfe",
+    "skin": "neo-tracs-default"
+  },
+  {
+    "position": 8,
+    "id": "b74c68f7-afe3-46b6-be75-52d436ac644b",
+    "layoutTitle": "Single Column Layout",
+    "tools": [
+      {
+        "pageOrder": 1,
+        "id": "2fd23104-a3af-4bbb-9c3a-8c010b468b1a",
+        "home": null,
+        "title": "Attendance",
+        "siteId": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+        "pageId": "b74c68f7-afe3-46b6-be75-52d436ac644b",
+        "description": "For tracking attendance.",
+        "context": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+        "placementId": "2fd23104-a3af-4bbb-9c3a-8c010b468b1a",
+        "toolId": "sakai.attendance",
+        "url": "https:\/\/tracs.txstate.edu:443\/portal\/site\/5aafe18b-2b5b-4d3b-9398-8a81cd62dccf\/page\/b74c68f7-afe3-46b6-be75-52d436ac644b"
+      }
+    ],
+    "title": "Attendance",
+    "siteId": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+    "layout": 0,
+    "toolpopup": false,
+    "toolpopupurl": null,
+    "url": "https:\/\/tracs.txstate.edu:443\/portal\/site\/5aafe18b-2b5b-4d3b-9398-8a81cd62dccf\/page\/b74c68f7-afe3-46b6-be75-52d436ac644b",
+    "skin": "neo-tracs-default"
+  },
+  {
+    "position": 9,
+    "id": "10f830eb-fcde-4ca0-b16d-f8bbdc0fe63a",
+    "layoutTitle": "Single Column Layout",
+    "tools": [
+      {
+        "pageOrder": 1,
+        "id": "2be888d6-6630-4780-962e-c0961e8c61b4",
+        "home": null,
+        "title": "Gradebook",
+        "siteId": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+        "pageId": "10f830eb-fcde-4ca0-b16d-f8bbdc0fe63a",
+        "description": "Site gradebook that allows for extra credit and dropped grades as well as display assessment, assignment, and manually entered scores.",
+        "context": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+        "placementId": "2be888d6-6630-4780-962e-c0961e8c61b4",
+        "toolId": "sakai.gradebook.gwt.rpc",
+        "url": "https:\/\/tracs.txstate.edu:443\/portal\/site\/5aafe18b-2b5b-4d3b-9398-8a81cd62dccf\/page\/10f830eb-fcde-4ca0-b16d-f8bbdc0fe63a"
+      }
+    ],
+    "title": "Gradebook",
+    "siteId": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+    "layout": 0,
+    "toolpopup": false,
+    "toolpopupurl": null,
+    "url": "https:\/\/tracs.txstate.edu:443\/portal\/site\/5aafe18b-2b5b-4d3b-9398-8a81cd62dccf\/page\/10f830eb-fcde-4ca0-b16d-f8bbdc0fe63a",
+    "skin": "neo-tracs-default"
+  },
+  {
+    "position": 10,
+    "id": "40ca4aba-0937-4812-8446-d8302f531410",
+    "layoutTitle": "Single Column Layout",
+    "tools": [
+      {
+        "pageOrder": 1,
+        "id": "3c8ce385-410b-4897-b29d-1f604d2d0840",
+        "home": null,
+        "title": "Email",
+        "siteId": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+        "pageId": "40ca4aba-0937-4812-8446-d8302f531410",
+        "description": "Send mail to select individuals or groups (based on role, section, or manually created groups) in your site.",
+        "context": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+        "placementId": "3c8ce385-410b-4897-b29d-1f604d2d0840",
+        "toolId": "sakai.mailtool",
+        "url": "https:\/\/tracs.txstate.edu:443\/portal\/site\/5aafe18b-2b5b-4d3b-9398-8a81cd62dccf\/page\/40ca4aba-0937-4812-8446-d8302f531410"
+      }
+    ],
+    "title": "Email",
+    "siteId": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+    "layout": 0,
+    "toolpopup": false,
+    "toolpopupurl": null,
+    "url": "https:\/\/tracs.txstate.edu:443\/portal\/site\/5aafe18b-2b5b-4d3b-9398-8a81cd62dccf\/page\/40ca4aba-0937-4812-8446-d8302f531410",
+    "skin": "neo-tracs-default"
+  },
+  {
+    "position": 11,
+    "id": "c38e6b13-4afd-44cd-a878-7efda4000276",
+    "layoutTitle": "Single Column Layout",
+    "tools": [
+      {
+        "pageOrder": 1,
+        "id": "51b9f750-e733-4156-933b-f0244f8ce3b1",
+        "home": null,
+        "title": "Roster",
+        "siteId": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+        "pageId": "c38e6b13-4afd-44cd-a878-7efda4000276",
+        "description": "For viewing the site participants list",
+        "context": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+        "placementId": "51b9f750-e733-4156-933b-f0244f8ce3b1",
+        "toolId": "sakai.site.roster2",
+        "url": "https:\/\/tracs.txstate.edu:443\/portal\/site\/5aafe18b-2b5b-4d3b-9398-8a81cd62dccf\/page\/c38e6b13-4afd-44cd-a878-7efda4000276"
+      }
+    ],
+    "title": "Roster",
+    "siteId": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+    "layout": 0,
+    "toolpopup": false,
+    "toolpopupurl": null,
+    "url": "https:\/\/tracs.txstate.edu:443\/portal\/site\/5aafe18b-2b5b-4d3b-9398-8a81cd62dccf\/page\/c38e6b13-4afd-44cd-a878-7efda4000276",
+    "skin": "neo-tracs-default"
+  },
+  {
+    "position": 12,
+    "id": "b7eafbf3-b9a3-4d88-bda3-fe14e42abb0e",
+    "layoutTitle": "Single Column Layout",
+    "tools": [
+      {
+        "pageOrder": 1,
+        "id": "11bde31b-5fec-4a8a-9588-c8bc5abf7dbf",
+        "home": null,
+        "title": "Site Stats",
+        "siteId": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+        "pageId": "b7eafbf3-b9a3-4d88-bda3-fe14e42abb0e",
+        "description": "Administrative tool for showing site statistics by user, event, or resource. Tool is available through Site Info.",
+        "context": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+        "placementId": "11bde31b-5fec-4a8a-9588-c8bc5abf7dbf",
+        "toolId": "sakai.sitestats",
+        "url": "https:\/\/tracs.txstate.edu:443\/portal\/site\/5aafe18b-2b5b-4d3b-9398-8a81cd62dccf\/page\/b7eafbf3-b9a3-4d88-bda3-fe14e42abb0e"
+      }
+    ],
+    "title": "Site Stats",
+    "siteId": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+    "layout": 0,
+    "toolpopup": false,
+    "toolpopupurl": null,
+    "url": "https:\/\/tracs.txstate.edu:443\/portal\/site\/5aafe18b-2b5b-4d3b-9398-8a81cd62dccf\/page\/b7eafbf3-b9a3-4d88-bda3-fe14e42abb0e",
+    "skin": "neo-tracs-default"
+  },
+  {
+    "position": 13,
+    "id": "07e20d80-e1f2-447c-9cde-778ae09af13d",
+    "layoutTitle": "Single Column Layout",
+    "tools": [
+      {
+        "pageOrder": 1,
+        "id": "1f37f7b9-36d2-4145-861a-b4c689db8642",
+        "home": null,
+        "title": "Site Info",
+        "siteId": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+        "pageId": "07e20d80-e1f2-447c-9cde-778ae09af13d",
+        "description": "Administrative management of a site and site participants",
+        "context": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+        "placementId": "1f37f7b9-36d2-4145-861a-b4c689db8642",
+        "toolId": "sakai.siteinfo",
+        "url": "https:\/\/tracs.txstate.edu:443\/portal\/site\/5aafe18b-2b5b-4d3b-9398-8a81cd62dccf\/page\/07e20d80-e1f2-447c-9cde-778ae09af13d"
+      }
+    ],
+    "title": "Site Info",
+    "siteId": "5aafe18b-2b5b-4d3b-9398-8a81cd62dccf",
+    "layout": 0,
+    "toolpopup": false,
+    "toolpopupurl": null,
+    "url": "https:\/\/tracs.txstate.edu:443\/portal\/site\/5aafe18b-2b5b-4d3b-9398-8a81cd62dccf\/page\/07e20d80-e1f2-447c-9cde-778ae09af13d",
+    "skin": "neo-tracs-default"
+  }
+]

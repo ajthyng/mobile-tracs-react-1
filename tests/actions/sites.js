@@ -15,7 +15,11 @@ import {Response} from 'whatwg-fetch';
 import * as SitesActions from '../../src/actions/sites';
 import {initialState} from '../../src/reducers/sites';
 import * as types from '../../src/constants/actions'
-import membershipData from '../responses/sites/memberships.json';
+import emptyMemberships from '../responses/sites/emptyMemberships.json';
+import fullMemberships from '../responses/sites/fullMemberships.json';
+import expectedSites from '../responses/sites/expectedSites.json';
+import expectedTools from '../responses/sites/expectedTools.json';
+import userSites from '../responses/sites/userSites.json';
 
 const {GET_MEMBERSHIPS} = types.sitesActions;
 
@@ -32,9 +36,17 @@ const mockResponse = (status, statusText, response) => {
 	});
 };
 
+let localSites = {};
+
+beforeEach(() => {
+	localSites = {
+		...userSites
+	}
+});
+
 it('should return no sites if cookie is missing/bad', async () => {
 	const expectedActions = [
-		{type: GET_MEMBERSHIPS, sites: []}
+		{type: GET_MEMBERSHIPS, sites: {}}
 	];
 
 	const store = mockStore({
@@ -53,18 +65,16 @@ it('should return no sites if cookie is missing/bad', async () => {
 	expect(store.getActions()).toEqual(expectedActions);
 });
 
-it.only('should return no sites if memberships is empty', async () => {
+it('should return no sites if memberships is empty', async () => {
 	const expectedActions = [
-		{type: GET_MEMBERSHIPS, sites: []}
+		{type: GET_MEMBERSHIPS, sites: {}}
 	];
 
 	const store = mockStore({
 		sites: initialState
 	});
 
-	const emptyMemberships = `{"entityPrefix": "membership", "membership_collection": []}`;
-
-	const noMembershipResponse = mockResponse(200, 'valid session', emptyMemberships);
+	const noMembershipResponse = mockResponse(200, 'valid session', JSON.stringify(emptyMemberships));
 
 	global.fetch = jest.fn().mockImplementation(() => {
 		return Promise.resolve(noMembershipResponse)
@@ -74,13 +84,68 @@ it.only('should return no sites if memberships is empty', async () => {
 	expect(store.getActions()).toEqual(expectedActions);
 });
 
-it('should return an array of sites', () => {
+it('should return an array of sites', async () => {
+	const store = mockStore({
+		sites: initialState
+	});
 
-	let membershipResponse = mockResponse(200, 'membership response', JSON.stringify(membershipData));
-	console.log(membershipData.entityPrefix);
-	let sitesResponse = mockResponse(200, 'sites response', `
-	
-	`)
+	const expectedActions = [
+		{type: GET_MEMBERSHIPS, sites: userSites}
+	];
 
+	let membershipResponse = mockResponse(200, 'membership response', JSON.stringify(fullMemberships));
 
+	let siteResponse = mockResponse(200, 'site response', JSON.stringify(expectedSites));
+
+	let toolResponse = mockResponse(200, 'tool response', JSON.stringify(expectedTools));
+
+	global.fetch = jest.fn().mockImplementation(({url, method}) => {
+		if (url.includes('/direct/membership.json')) {
+			return Promise.resolve(membershipResponse);
+		} else if (url.includes('/pages.json')) {
+			return Promise.resolve(toolResponse);
+		} else if (url.includes('/direct/site/')) {
+			return Promise.resolve(siteResponse);
+		}
+	});
+
+	await store.dispatch(SitesActions.getSiteInfo());
+	expect(store.getActions()).toEqual(expectedActions);
+});
+
+it('should return sites with empty tools', async () => {
+	const store = mockStore({
+		sites: initialState
+	});
+
+	Object.keys(localSites).forEach((site) => {
+		localSites[site]["tools"] = {};
+	});
+
+	const expectedActions = [
+		{type: GET_MEMBERSHIPS, sites: localSites}
+	];
+
+	let membershipResponse = mockResponse(200, 'membership response', JSON.stringify(fullMemberships));
+
+	let siteResponse = mockResponse(200, 'site response', JSON.stringify(expectedSites));
+
+	expectedTools.forEach((tool) => {
+		delete tool["tools"];
+	});
+
+	let toolResponse = mockResponse(200, 'tool response', JSON.stringify(expectedTools));
+
+	global.fetch = jest.fn().mockImplementation(({url, method}) => {
+		if (url.includes('/direct/membership.json')) {
+			return Promise.resolve(membershipResponse);
+		} else if (url.includes('/pages.json')) {
+			return Promise.resolve(toolResponse);
+		} else if (url.includes('/direct/site/')) {
+			return Promise.resolve(siteResponse);
+		}
+	});
+
+	await store.dispatch(SitesActions.getSiteInfo());
+	expect(store.getActions()).toEqual(expectedActions);
 });
