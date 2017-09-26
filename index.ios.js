@@ -7,6 +7,15 @@ import LoginScreen from './src/components/Login/LoginScreen';
 import CourseList from './src/components/SiteList/SiteList';
 import PushNotification from 'react-native-push-notification';
 import {token} from './src/utils/storage';
+import * as urls from './config/urls';
+import env from './config/env.json';
+
+
+if (env.debug) {
+	global.urls = urls.debug;
+} else {
+	global.urls = urls.release;
+}
 
 const store = configureStore();
 const handleNotification = (notification) => {

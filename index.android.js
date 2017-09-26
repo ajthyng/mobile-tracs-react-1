@@ -7,7 +7,7 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {AppRegistry,} from 'react-native';
+import {AppRegistry} from 'react-native';
 import React, {Component} from 'react';
 import {Provider} from 'react-redux';
 import FCM, {FCMEvent} from 'react-native-fcm';
@@ -16,15 +16,24 @@ import configureStore from './src/store/configureStore';
 import LoginScreen from './src/components/Login/LoginScreen';
 import CourseList from './src/components/SiteList/SiteList';
 import {token} from './src/utils/storage';
+import * as urls from './config/urls';
+import env from './config/env.json';
 
 const store = configureStore();
 const handleNotification = (notification) => {
 	console.log("NOTIFICATION: ", notification);
 };
 
+if (env.debug) {
+	global.urls = urls.debug;
+} else {
+	global.urls = urls.release;
+}
+
 class App extends Component {
 	constructor(props) {
 		super(props);
+		console.log("Base URL: ", global.urls.baseUrl);
 		FCM.getFCMToken().then((deviceToken) => {
 			token.store(deviceToken).then(() => {
 				console.log("TOKEN: ", deviceToken);
