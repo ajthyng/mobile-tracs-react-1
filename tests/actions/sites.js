@@ -46,11 +46,11 @@ beforeEach(() => {
 
 it('should return no sites if cookie is missing/bad', async () => {
 	const expectedActions = [
-		{type: GET_MEMBERSHIPS, sites: {}}
+		{type: GET_MEMBERSHIPS, userSites: {}}
 	];
 
 	const store = mockStore({
-		sites: initialState
+		userSites: initialState
 	});
 
 	const badResponse = `<html><head><title>Apache Tomcat/7.0.59 - Error report</title></head><body></body></html>`;
@@ -67,7 +67,7 @@ it('should return no sites if cookie is missing/bad', async () => {
 
 it('should return no sites if memberships is empty', async () => {
 	const expectedActions = [
-		{type: GET_MEMBERSHIPS, sites: {}}
+		{type: GET_MEMBERSHIPS, userSites: {}}
 	];
 
 	const store = mockStore({
@@ -84,13 +84,13 @@ it('should return no sites if memberships is empty', async () => {
 	expect(store.getActions()).toEqual(expectedActions);
 });
 
-it('should return an array of sites', async () => {
+it('should return an object with sites', async () => {
 	const store = mockStore({
-		sites: initialState
+		userSites: initialState
 	});
 
 	const expectedActions = [
-		{type: GET_MEMBERSHIPS, sites: userSites}
+		{type: GET_MEMBERSHIPS, userSites}
 	];
 
 	let membershipResponse = mockResponse(200, 'membership response', JSON.stringify(fullMemberships));
@@ -115,7 +115,7 @@ it('should return an array of sites', async () => {
 
 it('should return sites with empty tools', async () => {
 	const store = mockStore({
-		sites: initialState
+		userSites: initialState
 	});
 
 	Object.keys(localSites).forEach((site) => {
@@ -123,7 +123,7 @@ it('should return sites with empty tools', async () => {
 	});
 
 	const expectedActions = [
-		{type: GET_MEMBERSHIPS, sites: localSites}
+		{type: GET_MEMBERSHIPS, userSites: localSites}
 	];
 
 	let membershipResponse = mockResponse(200, 'membership response', JSON.stringify(fullMemberships));

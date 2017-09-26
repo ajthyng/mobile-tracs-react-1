@@ -12,8 +12,6 @@ import {initialState, sitesReducer} from '../../src/reducers/sites';
 import {sitesActions} from '../../src/constants/actions';
 
 const sites = sitesActions;
-const netid = 'fak103';
-const password = 'password123';
 
 let currentState = initialState;
 
@@ -21,18 +19,34 @@ beforeEach(() => {
 	currentState = initialState;
 });
 
+it('should return initial state for unknown actions', () => {
+	expect(sitesReducer(undefined, {})).toEqual(initialState);
+});
+
 it('should handle GET_MEMBERSHIPS action', () => {
-	const sites = [
-		{"name":"siteOne"},
-		{"name":"siteTwo"}
-	];
+	const userSites = {
+		"518g910h19": {
+			name: "sitename",
+			id: "518g910h19",
+			tools: {
+				"sakai.announcements": "crazyidhere"
+			}
+		},
+		"518g9ga410h19": {
+			name: "anti-sitename",
+			id: "518g9ga410h19",
+			tools: {
+				"sakai.announcements": "evenmorecrazyidhere"
+			}
+		}
+	};
 	const action = {
 		type: sites.GET_MEMBERSHIPS,
-		sites
+		userSites: userSites
 	};
 
 	expect(sitesReducer(currentState, action)).toEqual({
 		...currentState,
-		sites
+		userSites: userSites
 	});
 });

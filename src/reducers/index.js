@@ -16,5 +16,5 @@ import {sitesReducer} from './sites';
 export default combineReducers({
 	login: loginReducer,
 	register: registerReducer,
-	sites: sitesReducer
+	tracsSites: sitesReducer
 })

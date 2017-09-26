@@ -13,12 +13,58 @@ import * as types from '../constants/actions';
 
 let {GET_MEMBERSHIPS} = types.sitesActions;
 
-const getMemberships = (sites) => {
+const getMemberships = (userSites) => {
 	return {
 		type: GET_MEMBERSHIPS,
-		sites: sites,
+		userSites: userSites,
 	}
 };
+
+export function getSiteInfo() {
+	if (!Array.prototype.last) {
+		Array.prototype.last = function () {
+			return this[this.length - 1];
+		}
+	}
+	return (dispatch) => {
+		const options = {
+			url: "https://staging.tracs.txstate.edu/direct/membership.json",
+			method: "get"
+		};
+
+		return fetch(options)
+			.then(res => {
+				if (res.ok) {
+					return res.json()
+				} else {
+					throw new Error(`${res.status} code received`);
+				}
+			})
+			.then(sites => {
+				const userHasSites = sites !== undefined && sites.hasOwnProperty('membership_collection') && sites.membership_collection.length > 0;
+				if (!userHasSites) {
+					throw new Error("User has no sites membership");
+				}
+				let siteIds = sites.membership_collection.map((site) => {
+					return site.id.split(':').last();
+				});
+				return Storage.sites.get()
+					.then(async data => {
+						let storedSites = JSON.parse(data);
+						const payload = {
+							siteIds,
+							storedSites
+						};
+						let userSites = await getAllSites(payload);
+						return dispatch(getMemberships(userSites));
+					})
+			}).catch(error => {
+				console.log("Sites Error: ", error);
+				return dispatch(getMemberships({}));
+			});
+	}
+}
+
 
 let getSiteName = (siteID) => {
 	let siteNameOptions = {
@@ -108,48 +154,3 @@ let getAllSites = (payload) => {
 		return allSites;
 	});
 };
-
-export function getSiteInfo() {
-	if (!Array.prototype.last) {
-		Array.prototype.last = function () {
-			return this[this.length - 1];
-		}
-	}
-	return (dispatch) => {
-		const options = {
-			url: "https://staging.tracs.txstate.edu/direct/membership.json",
-			method: "get"
-		};
-
-		return fetch(options)
-			.then(res => {
-				if (res.ok) {
-					return res.json()
-				} else {
-					throw new Error(`${res.status} code received`);
-				}
-			})
-			.then(sites => {
-				const userHasSites = sites !== undefined && sites.hasOwnProperty('membership_collection') && sites.membership_collection.length > 0;
-				if (!userHasSites) {
-					throw new Error("User has no sites membership");
-				}
-				let siteIds = sites.membership_collection.map((site) => {
-					return site.id.split(':').last();
-				});
-				return Storage.sites.get()
-					.then(async data => {
-						let storedSites = JSON.parse(data);
-						const payload = {
-							siteIds,
-							storedSites
-						};
-						let userSites = await getAllSites(payload);
-						return dispatch(getMemberships(userSites));
-					})
-			}).catch(error => {
-				console.log("Sites Error: ", error);
-				return dispatch(getMemberships({}));
-			});
-	}
-}

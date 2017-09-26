@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {Platform, WebView} from 'react-native';
 import {connect} from 'react-redux';
 import WKWebView from 'react-native-wkwebview-reborn';
-import {credentials} from '../../utils/storage';
 import {getSiteInfo} from '../../actions/sites';
 
 class SiteList extends Component {
@@ -10,8 +9,13 @@ class SiteList extends Component {
 		super(props);
 	}
 
+	componentWillMount() {
+		if (props.isLoggedIn) {
+			props.getMemberships();
+		}
+	}
+
 	render() {
-		this.props.getMemberships();
 		let webView;
 		let uri = "https://staging.tracs.txstate.edu/portal/pda";
 		if (Platform.OS === 'ios') {
@@ -30,7 +34,8 @@ const mapStateToProps = (state, ownProps) => {
 	return {
 		netid: state.register.registeredUser,
 		isLoggedIn: state.login.isLoggedIn,
-		deviceToken: state.register.deviceToken
+		deviceToken: state.register.deviceToken,
+		sites: state.tracsSites.userSites
 	}
 };
 
