@@ -55,7 +55,8 @@ class App extends Component {
 						<Scene key="sites"
 									 init={true}
 									 component={CourseList}
-									 type={ActionConst.RESET}
+									 onEnter={(props) => {props.portalUrl = `${global.urls.baseUrl}${global.urls.portal}`}}
+									 type={ActionConst.REPLACE}
 									 title="Sites"
 						/>
 					</Scene>

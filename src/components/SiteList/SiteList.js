@@ -4,25 +4,23 @@ import {connect} from 'react-redux';
 import WKWebView from 'react-native-wkwebview-reborn';
 import {getSiteInfo} from '../../actions/sites';
 
+
 class SiteList extends Component {
 	constructor(props) {
 		super(props);
 	}
 
-	componentWillMount() {
-		if (props.isLoggedIn) {
-			props.getMemberships();
-		}
+	componentDidMount() {
+		this.props.getMemberships();
 	}
 
 	render() {
 		let webView;
-		let uri = "https://staging.tracs.txstate.edu/portal/pda";
 		if (Platform.OS === 'ios') {
 			webView = <WKWebView sendCookies={true}
-													 source={ {uri: uri} } />;
+													 source={ {uri: this.props.portalUrl} } />;
 		} else {
-			webView = <WebView source={ {uri: uri} } />;
+			webView = <WebView source={ {uri: this.props.portalUrl} } />;
 		}
 		return (
 			webView
@@ -44,4 +42,5 @@ const mapDispatchToProps = (dispatch) => {
 		getMemberships: () => dispatch(getSiteInfo())
 	}
 };
+
 export default connect(mapStateToProps, mapDispatchToProps)(SiteList);

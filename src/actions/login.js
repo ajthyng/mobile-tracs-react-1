@@ -12,7 +12,7 @@ import {user} from './registrar';
 import {authActions} from '../constants/actions';
 import {credentials} from '../utils/storage';
 
-let {
+const {
 	LOGIN,
 	LOGOUT,
 	LOGIN_HAS_FAILED,
@@ -75,15 +75,16 @@ export function auth(netid = '', password) {
 			dispatch(loggingIn(false));
 			return;
 		}
-		const baseUrl = 'https://staging.tracs.txstate.edu';
+		const loginUrl = `${global.urls.baseUrl}${global.urls.login(netid, password)}`;
+		const sessionUrl = `${global.urls.baseUrl}${global.urls.session}`;
 
-		return fetch(`${baseUrl}/portal/relogin?eid=${netid}&pw=${password}`, {method: 'post'}).then(res => {
+		return fetch(loginUrl, {method: 'post'}).then(res => {
 				if (res.ok) {
 					let creds = {
 						netid,
 						password
 					};
-					return fetch(`${baseUrl}/direct/session/current.json`, {method: 'get'})
+					return fetch(sessionUrl, {method: 'get'})
 						.then(res => res.json())
 						.then(session => {
 							if (session.userEid === creds.netid) {
@@ -107,9 +108,9 @@ export function auth(netid = '', password) {
 
 export function logout() {
 	return (dispatch) => {
-		const baseUrl = 'https://staging.tracs.txstate.edu/';
+		const logoutUrl = `${global.urls.baseUrl}${global.urls.logout}`;
 
-		fetch(`${baseUrl}/portal/?force.logout=yes`, {
+		fetch(logoutUrl, {
 			method: 'get'
 		}).then(res => {
 			if (res.ok) {

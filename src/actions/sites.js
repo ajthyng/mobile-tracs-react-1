@@ -13,6 +13,7 @@ import * as types from '../constants/actions';
 
 let {GET_MEMBERSHIPS} = types.sitesActions;
 
+
 const getMemberships = (userSites) => {
 	return {
 		type: GET_MEMBERSHIPS,
@@ -26,12 +27,14 @@ export function getSiteInfo() {
 			return this[this.length - 1];
 		}
 	}
+	const tracsUrl = global.urls.baseUrl;
+
 	return (dispatch) => {
 		const options = {
-			url: "https://staging.tracs.txstate.edu/direct/membership.json",
+			url: `${tracsUrl}${global.urls.membership}`,
 			method: "get"
 		};
-
+		console.log(options.url);
 		return fetch(options)
 			.then(res => {
 				if (res.ok) {
@@ -67,16 +70,18 @@ export function getSiteInfo() {
 
 
 let getSiteName = (siteID) => {
+	const tracsUrl = global.urls.baseUrl;
 	let siteNameOptions = {
-		url: `https://staging.tracs.txstate.edu/direct/site/${siteID}.json`,
+		url: `${tracsUrl}${global.urls.site(siteID)}`,
 		method: 'get',
 	};
 	return fetch(siteNameOptions);
 };
 
 let getSiteTools = (siteID) => {
+	const tracsUrl = global.urls.baseUrl;
 	let siteToolOptions = {
-		url: `https://staging.tracs.txstate.edu/direct/site/${siteID}/pages.json`,
+		url: `${tracsUrl}${global.urls.tools(siteID)}`,
 		method: 'get'
 	};
 	return fetch(siteToolOptions);

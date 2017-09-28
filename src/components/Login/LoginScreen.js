@@ -7,6 +7,17 @@ import {register} from '../../actions/registrar';
 import {logout} from '../../actions/login';
 import user from '../../../config/config.json';
 
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		flexDirection: 'column',
+		margin: 32,
+	},
+	netid: {},
+	password: {},
+	submit: {}
+});
+
 class LoginScreen extends Component {
 	constructor(props) {
 		super(props);
@@ -22,7 +33,7 @@ class LoginScreen extends Component {
 		if (this.props.isLoggedIn === true) {
 			Actions.sites();
 		} else if (this.props.loggingIn === false) {
-			this.props.onLogout();
+			this.userLogout();
 			CookieManager.clearAll();
 		}
 	}
@@ -90,15 +101,5 @@ const mapDispatchToProps = (dispatch) => {
 	}
 };
 
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		flexDirection: 'column',
-		margin: 32,
-	},
-	netid: {},
-	password: {},
-	submit: {}
-});
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);

@@ -14,7 +14,6 @@ import {token} from '../utils/storage';
 import {registrarActions} from '../constants/actions';
 
 const {IS_REGISTERED, IS_REGISTERING, REGISTRATION_FAILED, REMOVE_TOKEN, REPLACE_TOKEN, REMOVE_USER, REPLACE_USER} = registrarActions;
-const baseUrl = 'https://dispatchqa1.its.qual.txstate.edu';
 
 const isRegistered = (bool) => {
 	return {
@@ -65,7 +64,9 @@ const postRegistration = (payload) => {
 			blacklist: []
 		}
 	};
-	return fetch(`${baseUrl}/registrations?jwt=${jwt}`, {
+	const dispatchUrl = global.urls.dispatchUrl;
+	const registrationUrl = `${dispatchUrl}${global.urls.registration(jwt)}`;
+	return fetch(registrationUrl, {
 		method: 'post',
 		headers: {
 			'Content-Type': 'application/json'
@@ -88,6 +89,7 @@ const postRegistration = (payload) => {
 };
 
 export let register = (netid = '', password) => {
+	const dispatchUrl = global.urls.dispatchUrl;
 	return (dispatch) => {
 		dispatch(isRegistering(true));
 		if (netid.length === 0) {
@@ -100,7 +102,7 @@ export let register = (netid = '', password) => {
 			'Authorization': 'Basic ' + base64.encode(auth64),
 		};
 
-		return fetch(`${baseUrl}:3000/token.pl`, {
+		return fetch(`${dispatchUrl}${global.urls.jwt}`, {
 			method: 'get',
 			headers: headers
 		}).then(res => {
