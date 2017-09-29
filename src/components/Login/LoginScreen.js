@@ -31,8 +31,8 @@ class LoginScreen extends Component {
 	}
 
 	componentDidUpdate() {
-		if (this.props.isLoggedIn === true) {
-			Actions.sites();
+		if (this.props.isLoggedIn === true && this.props.loggingIn === false) {
+			Actions.mainApp();
 		} else if (this.props.loggingIn === false) {
 			this.userLogout();
 			CookieManager.clearAll();

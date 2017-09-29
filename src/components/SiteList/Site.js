@@ -17,8 +17,7 @@ class Site extends Component {
 	render() {
 		return (
 			<View style={styles.container}
-						elevation={2}
-			>
+						elevation={2}>
 				<Text>{this.props.siteData.name}</Text>
 				<Text>{this.props.siteData.id}</Text>
 				<Text>{this.props.siteData.contactInfo.name}</Text>

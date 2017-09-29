@@ -7,28 +7,20 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {AppRegistry} from 'react-native';
+import {AppRegistry, Text} from 'react-native';
 import React, {Component} from 'react';
-import {Provider} from 'react-redux';
+import {connect, Provider} from 'react-redux';
 import FCM, {FCMEvent} from 'react-native-fcm';
-import {ActionConst, Router, Scene} from 'react-native-router-flux';
+import {ActionConst, Actions, Router, Scene} from 'react-native-router-flux';
 import configureStore from './src/store/configureStore';
 import LoginScreen from './src/components/Login/LoginScreen';
-import CourseList from './src/components/SiteList/SiteList';
+import SiteList from './src/components/SiteList/SiteList';
+import TabIcon from './src/components/TabBar/TabIcon';
+import Notifications from './src/components/Notifications/Notifications';
+import Settings from './src/components/Settings/Settings';
 import {token} from './src/utils/storage';
 import * as urls from './config/urls';
 import env from './config/env.json';
-
-const store = configureStore();
-const handleNotification = (notification) => {
-	console.log("NOTIFICATION: ", notification);
-};
-
-if (env.debug) {
-	global.urls = urls.debug;
-} else {
-	global.urls = urls.release;
-}
 
 class App extends Component {
 	constructor(props) {
@@ -62,26 +54,59 @@ class App extends Component {
 
 		return (
 			<Provider store={store}>
-				<Router>
-					<Scene key="root">
-						<Scene key="login"
-									 component={LoginScreen}
-									 title="TRACS Mobile Login"
-									 initial={true}
-									 hideNavBar={true}
-						/>
-						<Scene key="sites"
-									 init={true}
-									 component={CourseList}
-									 onEnter={(props) => {props.portalUrl = `${global.urls.baseUrl}${global.urls.portal}`}}
-									 type={ActionConst.REPLACE}
-									 title="Sites"
-						/>
-					</Scene>
-				</Router>
+				<ConnectedRouter scenes={Scenes}/>
 			</Provider>
 		);
 	}
 }
+
+const ConnectedRouter = connect()(Router);
+const store = configureStore();
+const handleNotification = (notification) => {
+	console.log("NOTIFICATION: ", notification);
+};
+
+if (env.debug) {
+	global.urls = urls.debug;
+} else {
+	global.urls = urls.release;
+}
+
+const Scenes = Actions.create(
+	<Scene key="root">
+		<Scene key="login"
+					 component={LoginScreen}
+					 title="TRACS Mobile Login"
+					 initial={true}
+					 hideNavBar={true}
+					 type={ActionConst.REPLACE} />
+		<Scene tabs={true}
+					 key="mainApp"
+					 type={ActionConst.REPLACE}
+					 showLabel={false}
+					 swipe={true}
+					 wrap={true}>
+			<Scene key="announcements"
+						 hideNavBar={true}
+						 title={<Text>Announcements</Text>}
+						 component={Notifications}
+						 icon={TabIcon} />
+			<Scene key="sites"
+						 title={<Text>Sites</Text>}
+						 hideNavBar={true}
+						 component={SiteList}
+						 initial={true}
+						 icon={TabIcon}
+						 onEnter={(props) => {
+							 props.portalUrl = `${global.urls.baseUrl}${global.urls.portal}`
+						 }}/>
+			<Scene key="settings"
+						 hideNavBar={true}
+						 title={<Text>Settings</Text>}
+						 component={Settings}
+						 icon={TabIcon} />
+		</Scene>
+	</Scene>
+);
 
 AppRegistry.registerComponent('TRACSMobile', () => App);

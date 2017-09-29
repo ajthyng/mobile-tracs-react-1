@@ -1,10 +1,13 @@
-import {AppRegistry,} from 'react-native';
+import {AppRegistry, Text} from 'react-native';
 import React, {Component} from 'react';
-import {Provider} from 'react-redux';
-import {ActionConst, Router, Scene} from 'react-native-router-flux';
+import {Provider, connect} from 'react-redux';
+import {ActionConst, Actions, Router, Scene} from 'react-native-router-flux';
 import configureStore from './src/store/configureStore';
 import LoginScreen from './src/components/Login/LoginScreen';
-import CourseList from './src/components/SiteList/SiteList';
+import SiteList from './src/components/SiteList/SiteList';
+import TabIcon from './src/components/TabBar/TabIcon';
+import Notifications from './src/components/Notifications/Notifications';
+import Settings from './src/components/Settings/Settings';
 import PushNotification from 'react-native-push-notification';
 import {token} from './src/utils/storage';
 import * as urls from './config/urls';
@@ -17,10 +20,44 @@ if (env.debug) {
 	global.urls = urls.release;
 }
 
+const ConnectedRouter = connect()(Router);
 const store = configureStore();
 const handleNotification = (notification) => {
 	console.log("NOTIFICATION: ", notification);
 };
+
+const Scenes = Actions.create(
+	<Scene key="root">
+		<Scene key="login"
+					 component={LoginScreen}
+					 title="TRACS Mobile Login"
+					 initial={true}
+					 hideNavBar={true}/>
+		<Scene tabs={true}
+					 key="mainApp"
+					 hideNavBar
+					 type={ActionConst.REPLACE}
+					 wrap={true}
+					 tabBarPosition="bottom">
+			<Scene key="announcements"
+						 title={<Text>Announcements</Text>}
+						 component={Notifications}
+						 icon={TabIcon} />
+			<Scene key="sites"
+						 title={<Text>Sites</Text>}
+						 component={SiteList}
+						 icon={TabIcon}
+						 initial
+						 onEnter={(props) => {
+							 props.portalUrl = `${global.urls.baseUrl}${global.urls.portal}`
+						 }}/>
+			<Scene key="settings"
+						 title={<Text>Settings</Text>}
+						 component={Settings}
+						 icon={TabIcon} />
+		</Scene>
+	</Scene>
+);
 
 class App extends Component {
 	constructor(props) {
@@ -45,22 +82,7 @@ class App extends Component {
 	render() {
 		return (
 			<Provider store={store}>
-				<Router>
-					<Scene key="root">
-						<Scene key="login"
-									 component={LoginScreen}
-									 title="TRACS Mobile Login"
-									 initial
-						/>
-						<Scene key="sites"
-									 init={true}
-									 component={CourseList}
-									 onEnter={(props) => {props.portalUrl = `${global.urls.baseUrl}${global.urls.portal}`}}
-									 type={ActionConst.REPLACE}
-									 title="Sites"
-						/>
-					</Scene>
-				</Router>
+				<ConnectedRouter scenes={Scenes} />
 			</Provider>
 		);
 	}
