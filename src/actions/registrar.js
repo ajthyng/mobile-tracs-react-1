@@ -54,6 +54,7 @@ const user = (netid = '') => {
 
 const postRegistration = (payload) => {
 	const {netid, password, jwt, deviceToken, dispatch } = payload;
+	console.log("Token: ", deviceToken);
 	let registration = {
 		platform: Platform.OS,
 		app_id: 'edu.txstate.mobile.tracs',

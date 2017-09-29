@@ -30,19 +30,19 @@ function auth(state, action) {
 
 function loginHasFailed(state, action) {
 	return {
-		... state,
+		...state,
 		hasFailed: action.hasFailed
 	}}
 
 function loginIsGuestAccount(state, action) {
 	return {
-		... state,
+		...state,
 		loginIsGuestAccount: action.loginIsGuestAccount
 	}}
 
 function loggingIn(state, action) {
 	return {
-		... state,
+		...state,
 		loggingIn: action.loggingIn
 	}}
 

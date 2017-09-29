@@ -34,7 +34,6 @@ export function getSiteInfo() {
 			url: `${tracsUrl}${global.urls.membership}`,
 			method: "get"
 		};
-		console.log(options.url);
 		return fetch(options)
 			.then(res => {
 				if (res.ok) {
@@ -62,7 +61,6 @@ export function getSiteInfo() {
 						return dispatch(getMemberships(userSites));
 					})
 			}).catch(error => {
-				console.log("Sites Error: ", error);
 				return dispatch(getMemberships({}));
 			});
 	}
@@ -152,10 +150,13 @@ let getAllSites = (payload) => {
 		});
 
 		Storage.sites.store(allSites).then(() => {
-			console.log(`${Object.keys(allSites).length} sites stored.`);
+			console.log(`${Object.keys(allSites).length} sites stored`);
 		});
 		const end = new Date().getTime();
 		console.log(`Sites info fetched in ${end - promiseStart} ms.`);
-		return allSites;
+		return {
+			...allSites,
+			...storedSites
+		};
 	});
 };

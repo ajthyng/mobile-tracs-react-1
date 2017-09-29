@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
-import {Platform, WebView} from 'react-native';
+import {ListView} from 'react-native';
 import {connect} from 'react-redux';
 import WKWebView from 'react-native-wkwebview-reborn';
 import {getSiteInfo} from '../../actions/sites';
+
+import Site from './Site';
 
 
 class SiteList extends Component {
@@ -15,25 +17,33 @@ class SiteList extends Component {
 	}
 
 	render() {
-		let webView;
-		if (Platform.OS === 'ios') {
-			webView = <WKWebView sendCookies={true}
-													 source={ {uri: this.props.portalUrl} } />;
-		} else {
-			webView = <WebView source={ {uri: this.props.portalUrl} } />;
-		}
 		return (
-			webView
+			<ListView
+				enableEmptySections={true}
+				dataSource={this.props.dataSource}
+				renderRow={siteData => {
+					return (
+						<Site siteData={siteData}/>
+					);
+				}}
+			/>
 		);
 	}
 }
+
+const dataSource = new ListView.DataSource({
+	rowHasChanged: (prevRowData, nextRowData) => {
+		return prevRowData !== nextRowData;
+	}
+});
 
 const mapStateToProps = (state, ownProps) => {
 	return {
 		netid: state.register.registeredUser,
 		isLoggedIn: state.login.isLoggedIn,
 		deviceToken: state.register.deviceToken,
-		sites: state.tracsSites.userSites
+		sites: state.tracsSites.userSites,
+		dataSource: dataSource.cloneWithRows(state.tracsSites.userSites)
 	}
 };
 

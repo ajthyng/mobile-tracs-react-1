@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
 import {Button, Keyboard, StyleSheet, Text, TextInput, View} from 'react-native';
+import CookieManager from 'react-native-cookies';
 
 import {register} from '../../actions/registrar';
 import {logout} from '../../actions/login';

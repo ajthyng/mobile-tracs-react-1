@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "postinstall": "rndebugger-open",
-    "test": "jest --watch"
+    "test": "jest --watch",
+    "storybook": "storybook start -p 7007"
   },
   "dependencies": {
     "base-64": "^0.1.0",
@@ -32,7 +33,11 @@
     "babel-preset-react-native": "2.1.0",
     "jest": "20.0.4",
     "react-native-debugger-open": "^0.3.12",
-    "react-test-renderer": "16.0.0-alpha.12"
+    "react-test-renderer": "16.0.0-alpha.12",
+    "@storybook/react-native": "^3.2.11",
+    "@storybook/addon-actions": "^3.2.11",
+    "@storybook/addon-links": "^3.2.10",
+    "react-dom": "16.0.0-alpha.12"
   },
   "jest": {
     "preset": "react-native",

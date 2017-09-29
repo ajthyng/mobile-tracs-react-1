@@ -23,7 +23,6 @@
 		140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		215727E052D94574A443CEB5 /* libRNKeychain.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E52F61CD053142D69466EBB4 /* libRNKeychain.a */; };
-		2D09A8A837AD4FB1ABD5CC14 /* libRNFIRMessaging.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CF4B45D4C3044E32AB3B8FDC /* libRNFIRMessaging.a */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		8219AA261F5EDF0500FC489C /* libRCTWKWebView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8219AA251F5EDEE600FC489C /* libRCTWKWebView.a */; };
 		8219AAB91F61B7DD00FC489C /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8219AAB61F61B7BC00FC489C /* libRCTPushNotification.a */; };
@@ -376,7 +375,6 @@
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				A2915F90E4A54DE0942C9521 /* libRNCookieManagerIOS.a in Frameworks */,
 				FBBAC5E4D9884BC59335AB70 /* libRCTWKWebView.a in Frameworks */,
-				2D09A8A837AD4FB1ABD5CC14 /* libRNFIRMessaging.a in Frameworks */,
 				215727E052D94574A443CEB5 /* libRNKeychain.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -562,6 +560,17 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		82BC2B581F7D793600A480A9 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				D8941D885FCE4E179E524F4B /* libRNCookieManagerIOS.a */,
+				43C22FA2323F484CA91C80CE /* libRCTWKWebView.a */,
+				CF4B45D4C3044E32AB3B8FDC /* libRNFIRMessaging.a */,
+				E52F61CD053142D69466EBB4 /* libRNKeychain.a */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
@@ -603,6 +612,7 @@
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* TRACSMobileTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
+				82BC2B581F7D793600A480A9 /* Recovered References */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
