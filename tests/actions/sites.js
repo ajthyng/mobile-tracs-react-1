@@ -20,6 +20,7 @@ import fullMemberships from '../responses/sites/fullMemberships.json';
 import expectedSites from '../responses/sites/expectedSites.json';
 import expectedTools from '../responses/sites/expectedTools.json';
 import userSites from '../responses/sites/userSites.json';
+import * as urls from '../../config/urls';
 
 const {GET_MEMBERSHIPS} = types.sitesActions;
 
@@ -36,6 +37,7 @@ const mockResponse = (status, statusText, response) => {
 	});
 };
 
+global.urls = urls.debug;
 let localSites = {};
 
 beforeEach(() => {

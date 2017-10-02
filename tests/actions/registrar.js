@@ -15,6 +15,7 @@ import * as types from '../../src/constants/actions';
 import * as RegistrarActions from '../../src/actions/registrar';
 import * as registrarReducer from '../../src/reducers/registrar';
 import * as loginReducer from '../../src/reducers/login';
+import * as urls from '../../config/urls';
 
 const registrar = types.registrarActions;
 const auth = types.authActions;
@@ -26,6 +27,8 @@ const password = "password123";
 
 const middleware = [thunk];
 const mockStore = configureMockStore(middleware);
+global.urls = urls.debug;
+
 
 const mockResponse = (status, statusText, response) => {
 	return new Response(response, {

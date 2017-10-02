@@ -15,6 +15,7 @@ import * as LoginActions from '../../src/actions/login';
 import initialState from '../../src/reducers/login';
 import {authActions} from '../../src/constants/actions';
 import {credentials} from '../../src/utils/storage';
+import * as urls from '../../config/urls';
 
 let {LOGIN, LOGOUT, LOGIN_HAS_FAILED, LOGIN_IS_GUEST, LOGGING_IN, IS_LOGGED_IN} = authActions;
 
@@ -23,6 +24,8 @@ const password = "password123";
 
 const middleware = [thunk];
 const mockStore = configureMockStore(middleware);
+
+global.urls = urls.debug;
 
 const mockResponse = (status, statusText, response) => {
 	return new Response(response, {
