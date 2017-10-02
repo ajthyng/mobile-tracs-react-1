@@ -12,11 +12,9 @@ import {combineReducers} from 'redux';
 import {loginReducer} from './login';
 import {registerReducer} from './registrar';
 import {sitesReducer} from './sites';
-import {sceneReducer} from './scene';
 
 export default combineReducers({
 	login: loginReducer,
 	register: registerReducer,
 	tracsSites: sitesReducer,
-	scene: sceneReducer
 })

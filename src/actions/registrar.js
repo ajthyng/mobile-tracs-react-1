@@ -90,7 +90,6 @@ const postRegistration = (payload) => {
 };
 
 export let register = (netid = '', password) => {
-	const dispatchUrl = global.urls.dispatchUrl;
 	return (dispatch) => {
 		dispatch(isRegistering(true));
 		if (netid.length === 0) {
@@ -98,6 +97,7 @@ export let register = (netid = '', password) => {
 			dispatch(registrationHasFailed(true));
 			return;
 		}
+		const dispatchUrl = global.urls.dispatchUrl;
 		let auth64 = `${netid}:${password}`;
 		let headers = {
 			'Authorization': 'Basic ' + base64.encode(auth64),

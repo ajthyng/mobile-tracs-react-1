@@ -13,7 +13,9 @@ class SiteList extends Component {
 	}
 
 	componentDidMount() {
-		this.props.getMemberships();
+		if (!this.props.isFetchingSites) {
+			this.props.getMemberships();
+		}
 	}
 
 	render() {
@@ -43,6 +45,7 @@ const mapStateToProps = (state, ownProps) => {
 		isLoggedIn: state.login.isLoggedIn,
 		deviceToken: state.register.deviceToken,
 		sites: state.tracsSites.userSites,
+		isFetchingSites: state.tracsSites.isFetchingSites,
 		dataSource: dataSource.cloneWithRows(state.tracsSites.userSites)
 	}
 };

@@ -54,13 +54,12 @@ class App extends Component {
 
 		return (
 			<Provider store={store}>
-				<ConnectedRouter scenes={Scenes}/>
+				<Router scenes={Scenes}/>
 			</Provider>
 		);
 	}
 }
 
-const ConnectedRouter = connect()(Router);
 const store = configureStore();
 const handleNotification = (notification) => {
 	console.log("NOTIFICATION: ", notification);
