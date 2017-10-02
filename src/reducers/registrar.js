@@ -17,7 +17,9 @@ export const initialState = {
 	isRegistered: false,
 	deviceToken: '',
 	registeredUser: '',
-	platform: Platform.OS
+	platform: Platform.OS,
+	isRegistering: false,
+	hasFailed: false
 };
 
 function isRegistered(state, action) {
