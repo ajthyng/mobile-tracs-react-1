@@ -11,7 +11,7 @@ class SiteList extends Component {
 
 	}
 
-	componentWillMount() {
+	componentDidMount() {
 		if (!this.props.isFetchingSites) {
 			this.getMemberships();
 		}

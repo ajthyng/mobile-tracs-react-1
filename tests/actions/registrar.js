@@ -53,6 +53,7 @@ it('should fail registration with empty netid', async () => {
 		{type: registrar.IS_REGISTERING, isRegistering: true},
 		{type: registrar.IS_REGISTERING, isRegistering: false},
 		{type: registrar.REGISTRATION_FAILED, hasFailed: true},
+		{type: auth.LOGIN_HAS_FAILED, hasFailed: true}
 	];
 
 	await store.dispatch(RegistrarActions.register(localNetID, password));

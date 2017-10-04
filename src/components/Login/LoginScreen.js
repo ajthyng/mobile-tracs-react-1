@@ -5,8 +5,8 @@ import {Button, Keyboard, StyleSheet, Text, TextInput, View} from 'react-native'
 import CookieManager from 'react-native-cookies';
 
 import * as Storage from '../../utils/storage';
-import {register} from '../../actions/registrar';
-import {logout} from '../../actions/login';
+import {isRegistering, register} from '../../actions/registrar';
+import {loggingIn, logout} from '../../actions/login';
 import user from '../../../config/config.json';
 import ActivityIndicator from '../Helper/ActivityIndicator';
 
@@ -34,7 +34,12 @@ class LoginScreen extends Component {
 
 	componentWillMount() {
 		Storage.credentials.get().then(credentials => {
-			this.autoLogin(credentials.username, credentials.password);
+			if (credentials !== false) {
+				this.autoLogin(credentials.username, credentials.password);
+			} else {
+				this.props.onRegistering(false);
+				this.props.onLoggingIn(false);
+			}
 		});
 	}
 
@@ -43,7 +48,7 @@ class LoginScreen extends Component {
 	}
 
 	checkLoginStatus() {
-		if (this.props.isLoggedIn === true && this.props.loggingIn === false) {
+		if (this.props.isLoggedIn === true) {
 			Keyboard.dismiss();
 			Actions.mainApp();
 		} else if (this.props.loginHasFailed === true) {
@@ -60,7 +65,6 @@ class LoginScreen extends Component {
 		if (this.props.isRegistering === false) {
 			this.baseLogin(netid, password);
 		}
-		Keyboard.dismiss();
 	}
 
 	baseLogin(netid, password) {
@@ -122,6 +126,7 @@ const mapStateToProps = (state, ownProps) => {
 		credentials: { netid: state.login.netid, password: state.login.password },
 		loggingIn: state.login.loggingIn,
 		isRegistering: state.register.isRegistering,
+		registrationHasFailed: state.register.hasFailed
 	}
 };
 
@@ -129,6 +134,8 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		onLogout: () => dispatch(logout()),
 		onLogin: (netid, password) => dispatch(register(netid, password)),
+		onRegistering: (bool) => dispatch(isRegistering(bool)),
+		onLoggingIn: (bool) => dispatch(loggingIn(bool))
 	}
 };
 

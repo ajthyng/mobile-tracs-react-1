@@ -197,9 +197,9 @@ it('should login successfully with netid and password', async () => {
 
 	const expectedActions = [
 		{type: LOGGING_IN, loggingIn: true},
-		{type: LOGIN, netid, password, isLoggedIn: true},
 		{type: LOGGING_IN, loggingIn: false},
-		{type: LOGIN_HAS_FAILED, hasFailed: false}
+		{type: LOGIN_HAS_FAILED, hasFailed: false},
+		{type: LOGIN, netid, password, isLoggedIn: true}
 	];
 
 	await store.dispatch(LoginActions.auth(netid, password));

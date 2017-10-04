@@ -90,9 +90,9 @@ export function auth(netid = '', password) {
 						.then(session => {
 							if (session.userEid === creds.netid) {
 								credentials.store(creds.netid, creds.password).then(() => {
-									dispatch(netidLogin(session.userEid, creds.password));
 									dispatch(loggingIn(false));
 									dispatch(loginHasFailed(false));
+									dispatch(netidLogin(session.userEid, creds.password));
 								});
 							} else {
 								console.log(session);

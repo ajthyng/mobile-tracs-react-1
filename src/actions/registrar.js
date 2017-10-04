@@ -8,7 +8,7 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import {Headers, Platform} from 'react-native';
-import {auth, loginIsGuestAccount} from './login';
+import {auth, loginIsGuestAccount, loginHasFailed} from './login';
 import base64 from 'base-64';
 import {token} from '../utils/storage';
 import {registrarActions} from '../constants/actions';
@@ -22,7 +22,7 @@ const isRegistered = (bool) => {
 	}
 };
 
-const isRegistering = (bool) => {
+export const isRegistering = (bool) => {
 	return {
 		type: IS_REGISTERING,
 		isRegistering: bool
@@ -94,6 +94,7 @@ export let register = (netid = '', password) => {
 		if (netid.length === 0) {
 			dispatch(isRegistering(false));
 			dispatch(registrationHasFailed(true));
+			dispatch(loginHasFailed(true));
 			return;
 		}
 		const dispatchUrl = global.urls.dispatchUrl;

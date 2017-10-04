@@ -3,6 +3,7 @@ import {Button, Text, View} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import {connect} from 'react-redux';
 import {logout} from '../../actions/login';
+import * as Storage from '../../utils/storage';
 
 class Settings extends Component {
 	constructor(props) {
@@ -21,7 +22,10 @@ class Settings extends Component {
 				<Text>Hello from {this.props.title}!</Text>
 				<View style={{margin: 32}}>
 					<Button title="Logout"
-									onPress={() => this.props.userLogout()}/>
+									onPress={() => {
+										Storage.credentials.reset();
+										this.props.userLogout();
+									}}/>
 				</View>
 			</View>
 		);

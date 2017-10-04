@@ -67,7 +67,11 @@ export function getSiteInfo() {
 							storedSites
 						};
 						let userSites = await getAllSites(payload);
-						dispatch(getMemberships(userSites));
+						let allSites = {
+							...userSites,
+							...storedSites
+						};
+						dispatch(getMemberships(allSites));
 						dispatch(isFetchingSites(false));
 					})
 			});
@@ -97,7 +101,7 @@ let getAllSites = (payload) => {
 	const {siteIds, storedSites} = payload;
 	let userSites = [];
 	let siteTools = [];
-	let allSites = {};
+	let fetchedSites = {};
 	let promiseStart = new Date().getTime();
 
 	let sitePromises = siteIds.map(siteID => {
@@ -138,7 +142,7 @@ let getAllSites = (payload) => {
 				}
 			}
 
-			allSites[site.id] = {
+			fetchedSites[site.id] = {
 				id: site.id,
 				name: site.title,
 				contactInfo,
@@ -151,20 +155,17 @@ let getAllSites = (payload) => {
 			site.forEach(toolList => {
 				if (toolList.hasOwnProperty("tools")) {
 					toolList.tools.forEach(tool => {
-						allSites[tool.siteId].tools[tool.toolId] = tool.pageId;
+						fetchedSites[tool.siteId].tools[tool.toolId] = tool.pageId;
 					});
 				}
 			});
 		});
 
-		Storage.sites.store(allSites).then(() => {
-			console.log(`${Object.keys(allSites).length} sites stored`);
+		Storage.sites.store(fetchedSites).then(() => {
+			console.log(`${Object.keys(fetchedSites).length} sites stored`);
 		});
 		const end = new Date().getTime();
 		console.log(`Sites info fetched in ${end - promiseStart} ms.`);
-		return {
-			...allSites,
-			...storedSites
-		};
+		return fetchedSites;
 	});
 };
