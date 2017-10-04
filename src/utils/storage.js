@@ -48,10 +48,11 @@ exports.token = {
 };
 
 exports.sites = {
-	get() {
+	get(netid) {
+		console.log("NETID: ",netid);
 		return AsyncStorage.getItem(keys.sites);
 	},
-	store(sites) {
+	store(sites, netid) {
 		return AsyncStorage.setItem(keys.sites, stringify(sites));
 	},
 	reset() {

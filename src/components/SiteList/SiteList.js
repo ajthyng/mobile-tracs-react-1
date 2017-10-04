@@ -12,13 +12,15 @@ class SiteList extends Component {
 	}
 
 	componentDidMount() {
-		if (!this.props.isFetchingSites) {
-			this.getMemberships();
+		const sitesNotLoaded = !this.props.isFetchingSites && Object.keys(this.props.sites).length === 0;
+		if (sitesNotLoaded) {
+			console.log("Calling memberships...");
+			this.getMemberships(this.props.netid);
 		}
 	}
 
-	getMemberships() {
-		this.props.getMemberships();
+	getMemberships(netid) {
+		this.props.getMemberships(netid);
 	}
 
 	render() {
@@ -55,7 +57,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		getMemberships: () => dispatch(getSiteInfo())
+		getMemberships: (netid) => dispatch(getSiteInfo(netid))
 	}
 };
 

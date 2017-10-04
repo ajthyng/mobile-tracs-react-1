@@ -29,7 +29,7 @@ const isFetchingSites = (bool) => {
 	}
 };
 
-export function getSiteInfo() {
+export function getSiteInfo(netid) {
 	if (!Array.prototype.last) {
 		Array.prototype.last = function () {
 			return this[this.length - 1];
@@ -59,7 +59,7 @@ export function getSiteInfo() {
 				let siteIds = sites.membership_collection.map((site) => {
 					return site.id.split(':').last();
 				});
-				return Storage.sites.get()
+				return Storage.sites.get(netid)
 					.then(async data => {
 						let storedSites = JSON.parse(data);
 						const payload = {

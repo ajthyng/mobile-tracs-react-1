@@ -43,15 +43,22 @@ class LoginScreen extends Component {
 		});
 	}
 
+	componentWillUnmount() {
+		console.log("Unmounting LoginScreen");
+	}
+
+
 	componentDidUpdate() {
 		this.checkLoginStatus();
 	}
 
 	checkLoginStatus() {
 		if (this.props.isLoggedIn === true) {
+			console.log("Loading Main App...");
 			Keyboard.dismiss();
 			Actions.mainApp();
 		} else if (this.props.loginHasFailed === true) {
+			this.props.loginHasFailed(false);
 			this.userLogout();
 			CookieManager.clearAll();
 		}
