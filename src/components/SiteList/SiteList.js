@@ -1,21 +1,24 @@
 import React, {Component} from 'react';
 import {ListView} from 'react-native';
 import {connect} from 'react-redux';
-import WKWebView from 'react-native-wkwebview-reborn';
 import {getSiteInfo} from '../../actions/sites';
 
 import Site from './Site';
 
-
 class SiteList extends Component {
 	constructor(props) {
 		super(props);
+
 	}
 
-	componentDidMount() {
+	componentWillMount() {
 		if (!this.props.isFetchingSites) {
-			this.props.getMemberships();
+			this.getMemberships();
 		}
+	}
+
+	getMemberships() {
+		this.props.getMemberships();
 	}
 
 	render() {

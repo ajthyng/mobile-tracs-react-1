@@ -29,7 +29,6 @@ const middleware = [thunk];
 const mockStore = configureMockStore(middleware);
 global.urls = urls.debug;
 
-
 const mockResponse = (status, statusText, response) => {
 	return new Response(response, {
 		status,
@@ -69,11 +68,27 @@ it('should be marked as guest with invalid ldap credentials', async () => {
 	const tokenResponse = mockResponse(401, 'this is the unauthorized webpage',
 		`<html></html>`);
 
+	const tracsResponse = mockResponse(200, 'this is a tracs session', `{
+		"attributeNames": {},
+		"attributes": null,
+		"creationTime": 1505771455492,
+		"currentTime": 1505825298973,
+		"id": null,
+		"lastAccessedTime": 1505825298972,
+		"maxInactiveInterval": 7200,
+		"userEid": "${netid}",
+		"userId": null,
+		"active": true,
+		"entityReference": "/session",
+		"entityURL": "https://staging.tracs.txstate.edu:443/direct/session",
+		"entityTitle": "current"
+	}`);
+
 	global.fetch = jest.fn().mockImplementation((url) => {
 		if (url.includes(':3000/token.pl')) {
 			return Promise.resolve(tokenResponse);
 		} else {
-			return Promise.resolve();
+			return Promise.resolve(tracsResponse);
 		}
 	});
 

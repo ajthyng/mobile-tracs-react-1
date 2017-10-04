@@ -11,13 +11,21 @@
 import * as Storage from '../utils/storage'
 import * as types from '../constants/actions';
 
-let {GET_MEMBERSHIPS} = types.sitesActions;
+let {GET_MEMBERSHIPS, IS_FETCHING_SITES} = types.sitesActions;
+
 
 
 const getMemberships = (userSites) => {
 	return {
 		type: GET_MEMBERSHIPS,
 		userSites: userSites,
+	}
+};
+
+const isFetchingSites = (bool) => {
+	return {
+		type: IS_FETCHING_SITES,
+		isFetchingSites: bool
 	}
 };
 
@@ -30,6 +38,7 @@ export function getSiteInfo() {
 	const tracsUrl = global.urls.baseUrl;
 
 	return (dispatch) => {
+		dispatch(isFetchingSites(true));
 		const options = {
 			url: `${tracsUrl}${global.urls.membership}`,
 			method: "get"
@@ -38,14 +47,14 @@ export function getSiteInfo() {
 			.then(res => {
 				if (res.ok) {
 					return res.json()
-				} else {
-					throw new Error(`${res.status} code received`);
 				}
 			})
 			.then(sites => {
 				const userHasSites = sites !== undefined && sites.hasOwnProperty('membership_collection') && sites.membership_collection.length > 0;
 				if (!userHasSites) {
-					throw new Error("User has no sites membership");
+					dispatch(getMemberships({}));
+					dispatch(isFetchingSites(false));
+					return;
 				}
 				let siteIds = sites.membership_collection.map((site) => {
 					return site.id.split(':').last();
@@ -58,10 +67,9 @@ export function getSiteInfo() {
 							storedSites
 						};
 						let userSites = await getAllSites(payload);
-						return dispatch(getMemberships(userSites));
+						dispatch(getMemberships(userSites));
+						dispatch(isFetchingSites(false));
 					})
-			}).catch(error => {
-				return dispatch(getMemberships({}));
 			});
 	}
 }

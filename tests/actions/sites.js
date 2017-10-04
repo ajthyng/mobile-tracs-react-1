@@ -22,7 +22,7 @@ import expectedTools from '../responses/sites/expectedTools.json';
 import userSites from '../responses/sites/userSites.json';
 import * as urls from '../../config/urls';
 
-const {GET_MEMBERSHIPS} = types.sitesActions;
+const {GET_MEMBERSHIPS, IS_FETCHING_SITES} = types.sitesActions;
 
 const middleware = [thunk];
 const mockStore = configureMockStore(middleware);
@@ -48,7 +48,9 @@ beforeEach(() => {
 
 it('should return no sites if cookie is missing/bad', async () => {
 	const expectedActions = [
-		{type: GET_MEMBERSHIPS, userSites: {}}
+		{type: IS_FETCHING_SITES, isFetchingSites: true},
+		{type: GET_MEMBERSHIPS, userSites: {}},
+		{type: IS_FETCHING_SITES, isFetchingSites: false}
 	];
 
 	const store = mockStore({
@@ -69,15 +71,15 @@ it('should return no sites if cookie is missing/bad', async () => {
 
 it('should return no sites if memberships is empty', async () => {
 	const expectedActions = [
-		{type: GET_MEMBERSHIPS, userSites: {}}
+		{type: IS_FETCHING_SITES, isFetchingSites: true},
+		{type: GET_MEMBERSHIPS, userSites: {}},
+		{type: IS_FETCHING_SITES, isFetchingSites: false}
 	];
 
 	const store = mockStore({
 		sites: initialState
 	});
-
 	const noMembershipResponse = mockResponse(200, 'valid session', JSON.stringify(emptyMemberships));
-
 	global.fetch = jest.fn().mockImplementation(() => {
 		return Promise.resolve(noMembershipResponse)
 	});
@@ -92,7 +94,9 @@ it('should return an object with sites', async () => {
 	});
 
 	const expectedActions = [
-		{type: GET_MEMBERSHIPS, userSites}
+		{type: IS_FETCHING_SITES, isFetchingSites: true},
+		{type: GET_MEMBERSHIPS, userSites: localSites},
+		{type: IS_FETCHING_SITES, isFetchingSites: false}
 	];
 
 	let membershipResponse = mockResponse(200, 'membership response', JSON.stringify(fullMemberships));
@@ -125,7 +129,9 @@ it('should return sites with empty tools', async () => {
 	});
 
 	const expectedActions = [
-		{type: GET_MEMBERSHIPS, userSites: localSites}
+		{type: IS_FETCHING_SITES, isFetchingSites: true},
+		{type: GET_MEMBERSHIPS, userSites: localSites},
+		{type: IS_FETCHING_SITES, isFetchingSites: false}
 	];
 
 	let membershipResponse = mockResponse(200, 'membership response', JSON.stringify(fullMemberships));

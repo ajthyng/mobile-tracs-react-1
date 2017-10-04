@@ -54,7 +54,6 @@ const user = (netid = '') => {
 
 const postRegistration = (payload) => {
 	const {netid, password, jwt, deviceToken, dispatch } = payload;
-	console.log("Token: ", deviceToken);
 	let registration = {
 		platform: Platform.OS,
 		app_id: 'edu.txstate.mobile.tracs',
@@ -78,13 +77,13 @@ const postRegistration = (payload) => {
 			console.log("Registered with dispatch using token: ", deviceToken);
 			dispatch(user(netid));
 			dispatch(isRegistered(true));
-			dispatch(isRegistering(false));
 			dispatch(updateToken(deviceToken));
 		} else {
 			console.log("Error: Could not register device");
 			dispatch(user());
 			dispatch(loginIsGuestAccount(true));
 		}
+		dispatch(isRegistering(false));
 		dispatch(auth(netid, password));
 	});
 };

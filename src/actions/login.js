@@ -78,7 +78,8 @@ export function auth(netid = '', password) {
 		const loginUrl = `${global.urls.baseUrl}${global.urls.login(netid, password)}`;
 		const sessionUrl = `${global.urls.baseUrl}${global.urls.session}`;
 
-		return fetch(loginUrl, {method: 'post'}).then(res => {
+		return fetch(loginUrl, {method: 'post'})
+			.then(res => {
 				if (res.ok) {
 					let creds = {
 						netid,
@@ -94,14 +95,20 @@ export function auth(netid = '', password) {
 									dispatch(loginHasFailed(false));
 								});
 							} else {
+								console.log(session);
 								dispatch(netidLogout());
 								dispatch(loginHasFailed(true));
 							}
 						});
 				} else {
+					console.log(res);
 					dispatch(netidLogout());
 					dispatch(loginHasFailed(true));
 				}
+			})
+			.catch(error => {
+				dispatch(netidLogout());
+				dispatch(loginHasFailed(true));
 			});
 	};
 }

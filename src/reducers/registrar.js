@@ -18,7 +18,7 @@ export const initialState = {
 	deviceToken: '',
 	registeredUser: '',
 	platform: Platform.OS,
-	isRegistering: false,
+	isRegistering: true,
 	hasFailed: false
 };
 
