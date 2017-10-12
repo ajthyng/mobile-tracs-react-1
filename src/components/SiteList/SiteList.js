@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {ListView} from 'react-native';
 import {connect} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
-import {getSiteInfo, clearSites} from '../../actions/sites';
+import {clearSites, getSiteInfo} from '../../actions/sites';
 import * as location from '../../utils/location';
 import Site from './Site';
 import {setCurrentScene} from '../../actions/routes';
@@ -16,23 +16,19 @@ class SiteList extends Component {
 		this.props.setScene(Actions.currentScene);
 	}
 
-	componentDidMount() {
-		this.checkComponentState();
-	}
-
 	componentDidUpdate() {
-		this.checkComponentState();
+		if (location.compare(Actions.currentScene, this.props.currentScene)) {
+			this.checkComponentState();
+		}
 	}
 
 	checkComponentState() {
-		if (location.compare(Actions.currentScene, this.props.currentScene)) {
-			const sitesNotLoaded = this.props.isFetchingSites === false && Object.keys(this.props.sites).length === 0;
-			if (sitesNotLoaded) {
-				this.getMemberships(this.props.netid);
-			}
-			if (this.props.isLoggedIn === false) {
-				this.clearSites();
-			}
+		const sitesNotLoaded = this.props.isFetchingSites === false && Object.keys(this.props.sites).length === 0;
+		if (sitesNotLoaded) {
+			this.getMemberships(this.props.netid);
+		}
+		if (this.props.isLoggedIn === false) {
+			this.clearSites();
 		}
 	}
 
