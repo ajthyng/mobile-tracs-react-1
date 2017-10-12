@@ -11,7 +11,7 @@
 import * as Storage from '../utils/storage'
 import * as types from '../constants/actions';
 
-let {GET_MEMBERSHIPS, IS_FETCHING_SITES, CLEAR_SITES} = types.sitesActions;
+let {GET_MEMBERSHIPS, IS_FETCHING_SITES, CLEAR_SITES, GET_SITES_FAILED} = types.sitesActions;
 
 
 
@@ -36,6 +36,13 @@ export const clearSites = () => {
 	}
 };
 
+export const getSitesFailed = (bool) => {
+	return {
+		type: GET_SITES_FAILED,
+		hasFailed: true
+	}
+};
+
 export function getSiteInfo(netid) {
 	if (!Array.prototype.last) {
 		Array.prototype.last = function () {
@@ -54,6 +61,8 @@ export function getSiteInfo(netid) {
 			.then(res => {
 				if (res.ok) {
 					return res.json()
+				} else {
+					dispatch(getSitesFailed(true));
 				}
 			})
 			.then(sites => {

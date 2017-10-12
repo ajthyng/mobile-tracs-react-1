@@ -19,6 +19,10 @@ class SiteList extends Component {
 	componentDidUpdate() {
 		if (location.compare(Actions.currentScene, this.props.currentScene)) {
 			this.checkComponentState();
+
+			if (this.props.siteFetchFailed === true) {
+				console.log("Fetching sites failed.");
+			}
 		}
 	}
 

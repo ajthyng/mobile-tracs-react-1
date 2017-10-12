@@ -22,7 +22,7 @@ import expectedTools from '../responses/sites/expectedTools.json';
 import userSites from '../responses/sites/userSites.json';
 import * as urls from '../../config/urls';
 
-const {GET_MEMBERSHIPS, IS_FETCHING_SITES} = types.sitesActions;
+const {GET_MEMBERSHIPS, IS_FETCHING_SITES, GET_SITES_FAILED} = types.sitesActions;
 
 const middleware = [thunk];
 const mockStore = configureMockStore(middleware);
@@ -49,6 +49,7 @@ beforeEach(() => {
 it('should return no sites if cookie is missing/bad', async () => {
 	const expectedActions = [
 		{type: IS_FETCHING_SITES, isFetchingSites: true},
+		{type: GET_SITES_FAILED, hasFailed: true},
 		{type: GET_MEMBERSHIPS, userSites: {}},
 		{type: IS_FETCHING_SITES, isFetchingSites: false}
 	];

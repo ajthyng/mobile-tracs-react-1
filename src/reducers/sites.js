@@ -8,10 +8,11 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import * as sites from '../constants/actions';
-const {GET_MEMBERSHIPS, IS_FETCHING_SITES, CLEAR_SITES} = sites.sitesActions;
+const {GET_MEMBERSHIPS, IS_FETCHING_SITES, CLEAR_SITES, GET_SITES_FAILED} = sites.sitesActions;
 export const initialState = {
 	userSites: {},
-	isFetchingSites: false
+	isFetchingSites: false,
+	hasFailed: false
 };
 
 let getMemberships = (state, action) => {
@@ -28,6 +29,13 @@ let clearSites = (state, action) => {
 	}
 };
 
+let hasFailed = (state, action) => {
+	return {
+		...state,
+		hasFailed: action.hasFailed
+	}
+};
+
 let isFetchingSites = (state, action) => {
 	return {
 		...state,
@@ -40,6 +48,7 @@ export function sitesReducer(state = initialState, action) {
 		case GET_MEMBERSHIPS: return getMemberships(state, action);
 		case IS_FETCHING_SITES: return isFetchingSites(state, action);
 		case CLEAR_SITES: return clearSites(state, action);
+		case GET_SITES_FAILED: return hasFailed(state, action);
 		default: return state;
 	}
 }
