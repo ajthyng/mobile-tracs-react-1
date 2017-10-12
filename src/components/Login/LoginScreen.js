@@ -60,7 +60,7 @@ class LoginScreen extends Component {
 				console.log("Loading Main App...");
 				Keyboard.dismiss();
 				Actions.mainApp();
-			} else if (this.props.loginHasFailed === true && this.props.loggingIn) {
+			} else if (this.props.loginHasFailed === true && this.props.loggingIn === true) {
 				this.props.setLoggingIn(false);
 				this.userLogout();
 				CookieManager.clearAll();

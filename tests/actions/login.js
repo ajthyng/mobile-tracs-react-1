@@ -90,7 +90,8 @@ it('should fail login without netid', () => {
 
 	const expectedActions = [
 		{type: LOGGING_IN, loggingIn: true},
-		{type: LOGGING_IN, loggingIn: false}
+		{type: LOGGING_IN, loggingIn: false},
+		{type: LOGIN_HAS_FAILED, hasFailed: true}
 	];
 
 	store.dispatch(LoginActions.auth(netid, password));

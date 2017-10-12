@@ -81,6 +81,8 @@ const postRegistration = (payload) => {
 		} else {
 			console.log("Error: Could not register device");
 			dispatch(user());
+			dispatch(isRegistered(false));
+			dispatch(registrationHasFailed(true));
 			dispatch(loginIsGuestAccount(true));
 		}
 		dispatch(isRegistering(false));
