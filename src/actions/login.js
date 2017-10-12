@@ -73,6 +73,7 @@ export function auth(netid = '', password) {
 
 		if (netid.length === 0) {
 			dispatch(loggingIn(false));
+			dispatch(loginHasFailed(true));
 			return;
 		}
 		const loginUrl = `${global.urls.baseUrl}${global.urls.login(netid, password)}`;
@@ -95,23 +96,23 @@ export function auth(netid = '', password) {
 									dispatch(netidLogin(session.userEid, creds.password));
 								});
 							} else {
-								console.log(session);
-								dispatch(netidLogout());
-								dispatch(loginHasFailed(true));
+								loginFailure(dispatch);
 							}
 						});
 				} else {
-					console.log(res);
-					dispatch(netidLogout());
-					dispatch(loginHasFailed(true));
+					loginFailure(dispatch);
 				}
 			})
 			.catch(error => {
-				dispatch(netidLogout());
-				dispatch(loginHasFailed(true));
+				loginFailure(dispatch);
 			});
 	};
 }
+
+let loginFailure = (dispatch) => {
+	dispatch(netidLogout());
+	dispatch(loginHasFailed(true));
+};
 
 export function logout() {
 	return (dispatch) => {
