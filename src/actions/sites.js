@@ -11,7 +11,7 @@
 import * as Storage from '../utils/storage'
 import * as types from '../constants/actions';
 
-let {GET_MEMBERSHIPS, IS_FETCHING_SITES} = types.sitesActions;
+let {GET_MEMBERSHIPS, IS_FETCHING_SITES, CLEAR_SITES} = types.sitesActions;
 
 
 
@@ -26,6 +26,13 @@ const isFetchingSites = (bool) => {
 	return {
 		type: IS_FETCHING_SITES,
 		isFetchingSites: bool
+	}
+};
+
+export const clearSites = () => {
+	return {
+		type: CLEAR_SITES,
+		userSites: {}
 	}
 };
 
@@ -60,8 +67,8 @@ export function getSiteInfo(netid) {
 					return site.id.split(':').last();
 				});
 				return Storage.sites.get(netid)
-					.then(async data => {
-						let storedSites = JSON.parse(data);
+					.then(async storedSites => {
+						console.log(storedSites);
 						const payload = {
 							siteIds,
 							storedSites

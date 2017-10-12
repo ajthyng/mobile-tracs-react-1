@@ -3,6 +3,7 @@ import {Button, Text, View} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import {connect} from 'react-redux';
 import {logout} from '../../actions/login';
+import {clearSites} from '../../actions/sites';
 import * as Storage from '../../utils/storage';
 
 class Settings extends Component {
@@ -10,8 +11,8 @@ class Settings extends Component {
 		super(props);
 	}
 
-	componentWillReceiveProps(newProps) {
-		if (!newProps.isLoggedIn) {
+	componentDidUpdate() {
+		if (this.props.isLoggedIn === false) {
 			Actions.login();
 		}
 	}
@@ -24,6 +25,7 @@ class Settings extends Component {
 					<Button title="Logout"
 									onPress={() => {
 										Storage.credentials.reset();
+										this.props.clearSites();
 										this.props.userLogout();
 									}}/>
 				</View>
@@ -34,12 +36,14 @@ class Settings extends Component {
 
 const mapStateToProps = (state, ownProps) => {
 	return {
-		isLoggedIn: state.login.isLoggedIn
+		isLoggedIn: state.login.isLoggedIn,
+		hasSites: state.tracsSites.userSites.length > 0
 	}
 };
 
 const mapDispatchToProps = (dispatch) => {
 	return {
+		clearSites: () => dispatch(clearSites()),
 		userLogout: () => dispatch(logout())
 	}
 };

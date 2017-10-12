@@ -5,10 +5,12 @@ import {Button, Keyboard, StyleSheet, Text, TextInput, View} from 'react-native'
 import CookieManager from 'react-native-cookies';
 
 import * as Storage from '../../utils/storage';
-import {isRegistering, register} from '../../actions/registrar';
+import {register} from '../../actions/registrar';
 import {loggingIn, logout} from '../../actions/login';
 import user from '../../../config/config.json';
+import location from '../../utils/location';
 import ActivityIndicator from '../Helper/ActivityIndicator';
+import {setCurrentScene} from '../../actions/routes';
 
 const styles = StyleSheet.create({
 	container: {
@@ -26,41 +28,43 @@ class LoginScreen extends Component {
 		super(props);
 		let netid = user ? user.netid : '';
 		let password = user ? user.password : '';
+		let netidTwo = user ? user.netidTwo : '';
+		let passwordTwo = user ? user.passwordTwo : '';
 		this.state = {
 			netid,
-			password
+			password,
+			netidTwo,
+			passwordTwo
 		};
 	}
 
 	componentWillMount() {
+		this.props.setScene(Actions.currentScene);
+		this.props.setLoggingIn(true);
 		Storage.credentials.get().then(credentials => {
 			if (credentials !== false) {
 				this.autoLogin(credentials.username, credentials.password);
 			} else {
-				this.props.onRegistering(false);
-				this.props.onLoggingIn(false);
+				this.props.setLoggingIn(false);
 			}
 		});
 	}
-
-	componentWillUnmount() {
-		console.log("Unmounting LoginScreen");
-	}
-
 
 	componentDidUpdate() {
 		this.checkLoginStatus();
 	}
 
 	checkLoginStatus() {
-		if (this.props.isLoggedIn === true) {
-			console.log("Loading Main App...");
-			Keyboard.dismiss();
-			Actions.mainApp();
-		} else if (this.props.loginHasFailed === true) {
-			this.props.loginHasFailed(false);
-			this.userLogout();
-			CookieManager.clearAll();
+		if (location.compare(Actions.currentScene, this.props.currentScene)) {
+			if (this.props.isLoggedIn === true) {
+				console.log("Loading Main App...");
+				Keyboard.dismiss();
+				Actions.mainApp();
+			} else if (this.props.loginHasFailed === true && this.props.loggingIn) {
+				this.props.setLoggingIn(false);
+				this.userLogout();
+				CookieManager.clearAll();
+			}
 		}
 	}
 
@@ -119,6 +123,32 @@ class LoginScreen extends Component {
 					<Button
 						onPress={() => this.userLogin(this.state.netid, this.state.password)}
 						title="Login"/>
+					<TextInput
+						placeholder="Net ID"
+						autoCapitalize='none'
+						returnKeyType='next'
+						value={this.state.netidTwo}
+						onChangeText={(text) => this.setState({netidTwo: text})}
+						onSubmitEditing={() => {
+							this.refs.Password.focus();
+						}}
+					/>
+					<TextInput
+						ref='Password'
+						placeholder="Password"
+						autoCapitalize='none'
+						autoCorrect={false}
+						secureTextEntry={true}
+						returnKeyType='send'
+						value={this.state.passwordTwo}
+						onChangeText={(text) => this.setState({passwordTwo: text})}
+						onSubmitEditing={() => {
+							this.userLogin();
+						}}
+					/>
+					<Button
+						onPress={() => this.userLogin(this.state.netidTwo, this.state.passwordTwo)}
+						title="Login"/>
 				</View>
 			);
 		}
@@ -130,10 +160,11 @@ const mapStateToProps = (state, ownProps) => {
 		loginHasFailed: state.login.hasFailed,
 		loginIsGuestAccount: state.login.loginIsGuestAccount,
 		isLoggedIn: state.login.isLoggedIn,
-		credentials: { netid: state.login.netid, password: state.login.password },
+		credentials: {netid: state.login.netid, password: state.login.password},
 		loggingIn: state.login.loggingIn,
 		isRegistering: state.register.isRegistering,
-		registrationHasFailed: state.register.hasFailed
+		registrationHasFailed: state.register.hasFailed,
+		currentScene: state.routes.scene
 	}
 };
 
@@ -141,10 +172,9 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		onLogout: () => dispatch(logout()),
 		onLogin: (netid, password) => dispatch(register(netid, password)),
-		onRegistering: (bool) => dispatch(isRegistering(bool)),
-		onLoggingIn: (bool) => dispatch(loggingIn(bool))
+		setLoggingIn: (bool) => dispatch(loggingIn(bool)),
+		setScene: (scene) => dispatch(setCurrentScene(scene))
 	}
 };
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);

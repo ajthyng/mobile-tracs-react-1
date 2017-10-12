@@ -49,10 +49,23 @@ exports.token = {
 
 exports.sites = {
 	get(netid) {
-		console.log("NETID: ",netid);
-		return AsyncStorage.getItem(keys.sites);
+		return AsyncStorage.getItem(keys.sites).then(sites => {
+			let filteredSites = {};
+			if (sites !== null) {
+				sites = JSON.parse(sites);
+				for (id in sites) {
+					if (sites.hasOwnProperty(id) && sites[id].owner === netid) {
+						filteredSites[id] = sites[id];
+					}
+				}
+			}
+			return filteredSites;
+		});
 	},
 	store(sites, netid) {
+		Object.keys(sites).map(id => {
+			sites[id].owner = netid;
+		});
 		return AsyncStorage.setItem(keys.sites, stringify(sites));
 	},
 	reset() {

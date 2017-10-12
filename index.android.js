@@ -20,6 +20,7 @@ import Notifications from './src/components/Notifications/Notifications';
 import Settings from './src/components/Settings/Settings';
 import {token} from './src/utils/storage';
 import * as urls from './config/urls';
+import * as scenes from './src/constants/scenes';
 import env from './config/env.json';
 
 class App extends Component {
@@ -54,13 +55,14 @@ class App extends Component {
 
 		return (
 			<Provider store={store}>
-				<Router scenes={Scenes}/>
+				<RouterWithRedux scenes={Scenes}/>
 			</Provider>
 		);
 	}
 }
 
 const store = configureStore();
+const RouterWithRedux = connect()(Router);
 const handleNotification = (notification) => {
 	console.log("NOTIFICATION: ", notification);
 };
@@ -73,24 +75,25 @@ if (env.debug) {
 
 const Scenes = Actions.create(
 	<Scene key="root">
-		<Scene key="login"
+		<Scene key={scenes.login}
 					 component={LoginScreen}
 					 title="TRACS Mobile Login"
 					 initial={true}
 					 hideNavBar={true}
-					 type={ActionConst.REPLACE} />
+					 type={ActionConst.RESET} />
 		<Scene tabs={true}
-					 key="mainApp"
+					 key={scenes.main}
 					 type={ActionConst.RESET}
 					 showLabel={false}
+					 lazy={true}
 					 swipe={true}
 					 wrap={true}>
-			<Scene key="announcements"
+			<Scene key={scenes.announcements}
 						 hideNavBar={true}
 						 title={<Text>Announcements</Text>}
 						 component={Notifications}
 						 icon={TabIcon} />
-			<Scene key="sites"
+			<Scene key={scenes.sites}
 						 title={<Text>Sites</Text>}
 						 hideNavBar={true}
 						 component={SiteList}
@@ -99,7 +102,7 @@ const Scenes = Actions.create(
 						 onEnter={(props) => {
 							 props.portalUrl = `${global.urls.baseUrl}${global.urls.portal}`
 						 }}/>
-			<Scene key="settings"
+			<Scene key={scenes.settings}
 						 hideNavBar={true}
 						 title={<Text>Settings</Text>}
 						 component={Settings}

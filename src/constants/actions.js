@@ -28,6 +28,10 @@ module.exports = {
 	},
 	sitesActions: {
 		GET_MEMBERSHIPS: 'GET_MEMBERSHIPS',
-		IS_FETCHING_SITES: 'IS_FETCHING_SITES'
+		IS_FETCHING_SITES: 'IS_FETCHING_SITES',
+		CLEAR_SITES: 'CLEAR_SITES'
+	},
+	routingActions: {
+		CURRENT_SCENE: 'CURRENT_SCENE'
 	}
 };

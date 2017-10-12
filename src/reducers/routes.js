@@ -7,16 +7,23 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import {routingActions} from '../constants/actions';
+let {CURRENT_SCENE} = routingActions;
 
-import {combineReducers} from 'redux';
-import {loginReducer} from './login';
-import {registerReducer} from './registrar';
-import {sitesReducer} from './sites';
-import {routesReducer} from './routes';
+const initialState = {
+	scene: ""
+};
 
-export default combineReducers({
-	login: loginReducer,
-	register: registerReducer,
-	tracsSites: sitesReducer,
-	routes: routesReducer
-})
+let navigate = (state, action) => {
+	return {
+		...state,
+		scene: action.scene
+	}
+};
+
+export function routesReducer(state = initialState, action) {
+	switch(action.type) {
+		case CURRENT_SCENE: return navigate(state, action);
+		default: return state;
+	}
+}

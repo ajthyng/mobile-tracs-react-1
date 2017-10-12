@@ -8,7 +8,7 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import * as sites from '../constants/actions';
-const {GET_MEMBERSHIPS, IS_FETCHING_SITES} = sites.sitesActions;
+const {GET_MEMBERSHIPS, IS_FETCHING_SITES, CLEAR_SITES} = sites.sitesActions;
 export const initialState = {
 	userSites: {},
 	isFetchingSites: false
@@ -21,10 +21,25 @@ let getMemberships = (state, action) => {
 	}
 };
 
+let clearSites = (state, action) => {
+	return {
+		...state,
+		userSites: action.userSites
+	}
+};
+
+let isFetchingSites = (state, action) => {
+	return {
+		...state,
+		isFetchingSites: action.isFetchingSites
+	}
+};
+
 export function sitesReducer(state = initialState, action) {
 	switch (action.type) {
 		case GET_MEMBERSHIPS: return getMemberships(state, action);
-		case IS_FETCHING_SITES: return { ...state, isFetchingSites: action.isFetchingSites };
+		case IS_FETCHING_SITES: return isFetchingSites(state, action);
+		case CLEAR_SITES: return clearSites(state, action);
 		default: return state;
 	}
 }

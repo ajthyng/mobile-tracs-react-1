@@ -122,7 +122,6 @@ export function logout() {
 		}).then(res => {
 			if (res.ok) {
 				dispatch(netidLogout());
-				dispatch(isLoggedIn(false));
 			}
 		});
 	};

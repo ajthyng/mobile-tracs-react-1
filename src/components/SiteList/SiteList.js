@@ -1,22 +1,43 @@
 import React, {Component} from 'react';
 import {ListView} from 'react-native';
 import {connect} from 'react-redux';
-import {getSiteInfo} from '../../actions/sites';
-
+import {Actions} from 'react-native-router-flux';
+import {getSiteInfo, clearSites} from '../../actions/sites';
+import * as location from '../../utils/location';
 import Site from './Site';
+import {setCurrentScene} from '../../actions/routes';
 
 class SiteList extends Component {
 	constructor(props) {
 		super(props);
+	}
 
+	componentWillMount() {
+		this.props.setScene(Actions.currentScene);
 	}
 
 	componentDidMount() {
-		const sitesNotLoaded = !this.props.isFetchingSites && Object.keys(this.props.sites).length === 0;
-		if (sitesNotLoaded) {
-			console.log("Calling memberships...");
-			this.getMemberships(this.props.netid);
+		this.checkComponentState();
+	}
+
+	componentDidUpdate() {
+		this.checkComponentState();
+	}
+
+	checkComponentState() {
+		if (location.compare(Actions.currentScene, this.props.currentScene)) {
+			const sitesNotLoaded = this.props.isFetchingSites === false && Object.keys(this.props.sites).length === 0;
+			if (sitesNotLoaded) {
+				this.getMemberships(this.props.netid);
+			}
+			if (this.props.isLoggedIn === false) {
+				this.clearSites();
+			}
 		}
+	}
+
+	clearSites() {
+		this.props.clearSites();
 	}
 
 	getMemberships(netid) {
@@ -51,13 +72,16 @@ const mapStateToProps = (state, ownProps) => {
 		deviceToken: state.register.deviceToken,
 		sites: state.tracsSites.userSites,
 		isFetchingSites: state.tracsSites.isFetchingSites,
-		dataSource: dataSource.cloneWithRows(state.tracsSites.userSites)
+		dataSource: dataSource.cloneWithRows(state.tracsSites.userSites),
+		currentScene: state.routes.scene
 	}
 };
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		getMemberships: (netid) => dispatch(getSiteInfo(netid))
+		getMemberships: (netid) => dispatch(getSiteInfo(netid)),
+		clearSites: () => dispatch(clearSites()),
+		setScene: (scene) => dispatch(setCurrentScene(scene))
 	}
 };
 

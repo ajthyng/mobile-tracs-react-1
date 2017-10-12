@@ -14,7 +14,7 @@ export const initialState = {
 	hasFailed: false,
 	loginIsGuestAccount: false,
 	isLoggedIn: false,
-	loggingIn: true,
+	loggingIn: false,
 	netid: '',
 	password: ''
 };
