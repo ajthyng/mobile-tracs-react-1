@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
-import {ListView} from 'react-native';
+import {FlatList} from 'react-native';
 import {connect} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
 import {clearSites, getSiteInfo} from '../../actions/sites';
 import * as location from '../../utils/location';
+import * as Storage from '../../utils/storage';
 import Site from './Site';
 import {setCurrentScene} from '../../actions/routes';
+import {auth, netidLogout} from '../../actions/login';
 
 class SiteList extends Component {
 	constructor(props) {
@@ -21,7 +23,7 @@ class SiteList extends Component {
 			this.checkComponentState();
 
 			if (this.props.siteFetchFailed === true) {
-				console.log("Fetching sites failed.");
+				this.clearSites();
 			}
 		}
 	}
@@ -32,12 +34,20 @@ class SiteList extends Component {
 			this.getMemberships(this.props.netid);
 		}
 		if (this.props.isLoggedIn === false) {
-			this.clearSites();
+			Actions.login();
 		}
 	}
 
 	clearSites() {
 		this.props.clearSites();
+	}
+
+	login(netid, password) {
+		this.props.onLogin(netid, password);
+	}
+
+	logout() {
+		this.props.onLogout();
 	}
 
 	getMemberships(netid) {
@@ -46,12 +56,12 @@ class SiteList extends Component {
 
 	render() {
 		return (
-			<ListView
-				enableEmptySections={true}
-				dataSource={this.props.dataSource}
-				renderRow={siteData => {
+			<FlatList
+				data={this.props.dataSource}
+				renderItem={(site) => {
+					console.log(site);
 					return (
-						<Site siteData={siteData}/>
+						<Site siteData={site.item.info} />
 					);
 				}}
 			/>
@@ -59,20 +69,20 @@ class SiteList extends Component {
 	}
 }
 
-const dataSource = new ListView.DataSource({
-	rowHasChanged: (prevRowData, nextRowData) => {
-		return prevRowData !== nextRowData;
-	}
-});
 
 const mapStateToProps = (state, ownProps) => {
+	let siteData = [];
+	Object.keys(state.tracsSites.userSites).forEach(site => {
+		const userSite = state.tracsSites.userSites[site];
+		siteData.push({key: userSite.id, info: userSite})
+	});
 	return {
 		netid: state.register.registeredUser,
 		isLoggedIn: state.login.isLoggedIn,
 		deviceToken: state.register.deviceToken,
 		sites: state.tracsSites.userSites,
 		isFetchingSites: state.tracsSites.isFetchingSites,
-		dataSource: dataSource.cloneWithRows(state.tracsSites.userSites),
+		dataSource: siteData,
 		currentScene: state.routes.scene
 	}
 };
@@ -81,7 +91,9 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		getMemberships: (netid) => dispatch(getSiteInfo(netid)),
 		clearSites: () => dispatch(clearSites()),
-		setScene: (scene) => dispatch(setCurrentScene(scene))
+		setScene: (scene) => dispatch(setCurrentScene(scene)),
+		onLogin: (netid, password) => dispatch(auth(netid, password)),
+		onLogout: () => dispatch(netidLogout())
 	}
 };
 
