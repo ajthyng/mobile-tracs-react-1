@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
-import {FlatList} from 'react-native';
+import {FlatList, RefreshControl} from 'react-native';
 import {connect} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
 import {clearSites, getSiteInfo} from '../../actions/sites';
 import * as location from '../../utils/location';
-import * as Storage from '../../utils/storage';
 import Site from './Site';
 import {setCurrentScene} from '../../actions/routes';
 import {auth, netidLogout} from '../../actions/login';
@@ -12,6 +11,10 @@ import {auth, netidLogout} from '../../actions/login';
 class SiteList extends Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			...this.state,
+			refreshing: false
+		}
 	}
 
 	componentWillMount() {
@@ -54,6 +57,13 @@ class SiteList extends Component {
 		this.props.getMemberships(netid);
 	}
 
+	onRefresh() {
+		this.setState({refreshing: true});
+		this.props.getMemberships(this.props.netid).then(() => {
+			this.setState({refreshing: false});
+		});
+	}
+
 	render() {
 		return (
 			<FlatList
@@ -61,14 +71,18 @@ class SiteList extends Component {
 				renderItem={(site) => {
 					console.log(site);
 					return (
-						<Site siteData={site.item.info} />
+						<Site siteData={site.item.info}/>
 					);
 				}}
+				refreshControl={
+					<RefreshControl
+						refreshing={this.state.refreshing}
+						onRefresh={this.onRefresh.bind(this)}/>
+				}
 			/>
 		);
 	}
 }
-
 
 const mapStateToProps = (state, ownProps) => {
 	let siteData = [];
