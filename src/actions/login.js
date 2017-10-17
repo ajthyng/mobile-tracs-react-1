@@ -104,6 +104,7 @@ export function auth(netid = '', password) {
 				}
 			})
 			.catch(error => {
+				console.log("Error logging in: ", error);
 				loginFailure(dispatch);
 			});
 	};

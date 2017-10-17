@@ -42,7 +42,7 @@ class LoginScreen extends Component {
 		this.props.setScene(Actions.currentScene);
 		this.props.setLoggingIn(true);
 		Storage.credentials.get().then(credentials => {
-			if (credentials !== false) {
+			if (credentials !== undefined && credentials !== false) {
 				this.autoLogin(credentials.username, credentials.password);
 			} else {
 				this.props.setLoggingIn(false);

@@ -69,7 +69,6 @@ class SiteList extends Component {
 			<FlatList
 				data={this.props.dataSource}
 				renderItem={(site) => {
-					console.log(site);
 					return (
 						<Site siteData={site.item.info}/>
 					);
@@ -79,7 +78,7 @@ class SiteList extends Component {
 						refreshing={this.state.refreshing}
 						onRefresh={this.onRefresh.bind(this)}/>
 				}
-			/>
+		/>
 		);
 	}
 }

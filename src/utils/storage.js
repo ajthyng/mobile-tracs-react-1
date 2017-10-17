@@ -10,6 +10,7 @@
 //import Storage from 'react-native-storage';
 import * as Keychain from 'react-native-keychain';
 import {AsyncStorage} from 'react-native';
+import LockStatus from './lockstatus';
 
 const expiryDays = 90;
 const msPerDay = 1000 * 3600 * 24;
@@ -25,10 +26,26 @@ let stringify = (obj) => {
 
 exports.credentials = {
 	get() {
-		return Keychain.getGenericPassword();
+		return LockStatus.isDeviceSecure().then(secure => {
+			if (secure === true) {
+				console.log("Device Secure, fetching credentials");
+				return Keychain.getGenericPassword();
+			} else {
+				console.log("Device not secure, removing credentials");
+				return Keychain.resetGenericPassword();
+			}
+		});
 	},
 	store(netid, password) {
-		return Keychain.setGenericPassword(netid, password);
+		return LockStatus.isDeviceSecure().then(secure => {
+			if (secure === true) {
+				console.log("Device Secure, saving credentials");
+				return Keychain.setGenericPassword(netid, password);
+			} else {
+				console.log("Device not secure, removing credentials");
+				return Keychain.resetGenericPassword();
+			}
+		});
 	},
 	reset() {
 		return Keychain.resetGenericPassword();
