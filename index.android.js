@@ -85,6 +85,7 @@ const Scenes = Actions.create(
 					 key={scenes.main}
 					 type={ActionConst.RESET}
 					 showLabel={false}
+					 tabBarPosition="bottom"
 					 lazy={true}
 					 swipe={true}
 					 wrap={true}>

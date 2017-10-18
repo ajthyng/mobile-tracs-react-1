@@ -1,8 +1,5 @@
 import React, {Component} from 'react';
-import {Platform, View, Text, StyleSheet} from 'react-native';
-import {connect} from 'react-redux';
-
-
+import {Platform, StyleSheet, Text, View} from 'react-native';
 
 class ActivityIndicator extends Component {
 	constructor(props) {
@@ -21,19 +18,11 @@ class ActivityIndicator extends Component {
 	}
 
 	render() {
-		if (Platform.OS === 'android') {
-			return (
-				<View style={ActivityIndicator.getStyle().container}>
-					<Text>Hello, Android is loading...</Text>
-				</View>
-			)
-		} else {
-			return (
-				<View style={ActivityIndicator.getStyle().container}>
-					<Text>Hello, iOS is loading...</Text>
-				</View>
-			)
-		}
+		return (
+			<View style={ActivityIndicator.getStyle().container}>
+				<Text>Hello, {Platform.OS} is loading...</Text>
+			</View>
+		)
 	}
 }
 
