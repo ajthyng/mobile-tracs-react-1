@@ -26,7 +26,8 @@ let stringify = (obj) => {
 
 exports.credentials = {
 	get() {
-		return LockStatus.isDeviceSecure().then(secure => {
+		return LockStatus().then(secure => {
+			console.log("DEVICE STATUS: ", secure);
 			if (secure === true) {
 				console.log("Device Secure, fetching credentials");
 				return Keychain.getGenericPassword();
@@ -37,7 +38,7 @@ exports.credentials = {
 		});
 	},
 	store(netid, password) {
-		return LockStatus.isDeviceSecure().then(secure => {
+		return LockStatus().then(secure => {
 			if (secure === true) {
 				console.log("Device Secure, saving credentials");
 				return Keychain.setGenericPassword(netid, password);
