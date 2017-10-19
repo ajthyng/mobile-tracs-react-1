@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {View} from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 class TabIcon extends Component {
 	constructor(props) {
@@ -9,7 +10,7 @@ class TabIcon extends Component {
 	render() {
 		return (
 			<View>
-				{this.props.title}
+				<Icon name={this.props.name} size={this.props.size} color={this.props.color}/>
 			</View>
 		);
 	}

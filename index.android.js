@@ -15,7 +15,6 @@ import {ActionConst, Actions, Router, Scene, Stack, Tabs} from 'react-native-rou
 import configureStore from './src/store/configureStore';
 import LoginScreen from './src/components/Login/LoginScreen';
 import SiteList from './src/components/SiteList/SiteList';
-import TabIcon from './src/components/TabBar/TabIcon';
 import Notifications from './src/components/Notifications/Notifications';
 import Settings from './src/components/Settings/Settings';
 import {token} from './src/utils/storage';
@@ -23,6 +22,7 @@ import * as urls from './config/urls';
 import * as scenes from './src/constants/scenes';
 import env from './config/env.json';
 import NotificationSettings from './src/components/NotificationSettings/NotificationSettings';
+import TabIcon from './src/components/TabBar/TabIcon';
 
 class App extends Component {
 	constructor(props) {
@@ -74,6 +74,14 @@ if (env.debug) {
 	global.urls = urls.release;
 }
 
+const tabIconSize = 20;
+const tabIconColor = "#000";
+const TabIcons = {
+	announcements: () => { return (<TabIcon name="bullhorn" size={tabIconSize} color={tabIconColor} />); },
+	sites: () => { return (<TabIcon name="list" size={tabIconSize} color={tabIconColor} />); },
+	settings: () => { return (<TabIcon name="cog" size={tabIconSize} color={tabIconColor} />); }
+};
+
 const Scenes = Actions.create(
 	<Scene key="root">
 		<Scene key={scenes.login}
@@ -82,20 +90,21 @@ const Scenes = Actions.create(
 					 initial={true}
 					 hideNavBar={true}
 					 type={ActionConst.RESET}/>
-		<Tabs
-			key={scenes.main}
-			type={ActionConst.RESET}
-			hideNavBar
-			swipeEnabled
-			backToInitial={true}
-			showLabel={true}
-			tabBarPosition="bottom">
+		<Tabs key={scenes.main}
+					type={ActionConst.RESET}
+					hideNavBar
+					swipeEnabled
+					backToInitial={true}
+					showLabel={true}
+					tabBarPosition="bottom">
 			<Scene key={scenes.announcements}
+						 icon={TabIcons.announcements}
 						 tabBarLabel="Announcements"
 						 hideNavBar={true}
 						 title={<Text>Announcements</Text>}
 						 component={Notifications}/>
 			<Scene key={scenes.sites}
+						 icon={TabIcons.sites}
 						 tabBarLabel="Courses"
 						 title={<Text>Sites</Text>}
 						 hideNavBar={true}
@@ -105,6 +114,7 @@ const Scenes = Actions.create(
 							 props.portalUrl = `${global.urls.baseUrl}${global.urls.portal}`
 						 }}/>
 			<Stack key={scenes.settingsTab}
+						 icon={TabIcons.settings}
 						 tabBarLabel="Settings">
 				<Scene key={scenes.settings}
 							 initial
@@ -114,10 +124,9 @@ const Scenes = Actions.create(
 							 back
 							 title="Notification Settings"
 							 component={NotificationSettings}
-							 />
+				/>
 			</Stack>
 		</Tabs>
-
 	</Scene>
 );
 
