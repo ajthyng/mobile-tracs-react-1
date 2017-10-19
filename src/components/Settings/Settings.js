@@ -30,7 +30,7 @@ class Settings extends Component {
 		this.spacerColor = spacerColor;
 		this.menuItems = [
 			new MenuItem(SPACER, null),
-			new MenuItem(NOTIFICATIONS, function(event) { console.log(this.title); }),
+			new MenuItem(NOTIFICATIONS, function(event) { Actions.notificationSettings(); }),
 			new MenuItem(SPACER, null),
 			new MenuItem(ABOUT, function(event) { console.log(this.title); }),
 			new MenuItem(FEEDBACK, function(event) { console.log(this.title); }),

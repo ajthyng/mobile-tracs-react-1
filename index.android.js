@@ -11,7 +11,7 @@ import {AppRegistry, Text} from 'react-native';
 import React, {Component} from 'react';
 import {connect, Provider} from 'react-redux';
 import FCM, {FCMEvent} from 'react-native-fcm';
-import {ActionConst, Actions, Router, Scene} from 'react-native-router-flux';
+import {ActionConst, Actions, Router, Scene, Stack, Tabs} from 'react-native-router-flux';
 import configureStore from './src/store/configureStore';
 import LoginScreen from './src/components/Login/LoginScreen';
 import SiteList from './src/components/SiteList/SiteList';
@@ -22,6 +22,7 @@ import {token} from './src/utils/storage';
 import * as urls from './config/urls';
 import * as scenes from './src/constants/scenes';
 import env from './config/env.json';
+import NotificationSettings from './src/components/NotificationSettings/NotificationSettings';
 
 class App extends Component {
 	constructor(props) {
@@ -80,35 +81,43 @@ const Scenes = Actions.create(
 					 title="TRACS Mobile Login"
 					 initial={true}
 					 hideNavBar={true}
-					 type={ActionConst.RESET} />
-		<Scene tabs={true}
-					 key={scenes.main}
-					 type={ActionConst.RESET}
-					 showLabel={false}
-					 tabBarPosition="bottom"
-					 lazy={true}
-					 swipe={true}
-					 wrap={true}>
+					 type={ActionConst.RESET}/>
+		<Tabs
+			key={scenes.main}
+			type={ActionConst.RESET}
+			hideNavBar
+			swipeEnabled
+			backToInitial={true}
+			showLabel={true}
+			tabBarPosition="bottom">
 			<Scene key={scenes.announcements}
+						 tabBarLabel="Announcements"
 						 hideNavBar={true}
 						 title={<Text>Announcements</Text>}
-						 component={Notifications}
-						 icon={TabIcon} />
+						 component={Notifications}/>
 			<Scene key={scenes.sites}
+						 tabBarLabel="Courses"
 						 title={<Text>Sites</Text>}
 						 hideNavBar={true}
 						 component={SiteList}
 						 initial={true}
-						 icon={TabIcon}
 						 onEnter={(props) => {
 							 props.portalUrl = `${global.urls.baseUrl}${global.urls.portal}`
 						 }}/>
-			<Scene key={scenes.settings}
-						 hideNavBar={true}
-						 title={<Text>Settings</Text>}
-						 component={Settings}
-						 icon={TabIcon} />
-		</Scene>
+			<Stack key={scenes.settingsTab}
+						 tabBarLabel="Settings">
+				<Scene key={scenes.settings}
+							 initial
+							 title="Settings"
+							 component={Settings}/>
+				<Scene key={scenes.notificationSettings}
+							 back
+							 title="Notification Settings"
+							 component={NotificationSettings}
+							 />
+			</Stack>
+		</Tabs>
+
 	</Scene>
 );
 

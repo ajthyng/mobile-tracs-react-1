@@ -13,5 +13,7 @@ module.exports = {
 	main: 'mainApp',
 	announcements: 'announcements',
 	sites: 'sites',
-	settings: 'settings'
+	settings: 'settings',
+	settingsTab: 'settingsTab',
+	notificationSettings: 'notificationSettings'
 };
