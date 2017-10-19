@@ -12,22 +12,41 @@ const ABOUT = "About the App";
 const FEEDBACK = "Give us Feedback";
 const SUPPORT = "TRACS Support";
 const TXST_MOBILE = "Go to TXST Mobile";
+const spacerColor = "#E9E9EF";
+
+class MenuItem {
+	constructor(title, onPress) {
+		this.title = title;
+		if (onPress !== null) {
+			this.onPress = onPress;
+		}
+	}
+}
 
 class Settings extends Component {
 	constructor(props) {
 		super(props);
 		this.spacerHeight = 25;
-		this.spacerColor = '#e9e9ef';
+		this.spacerColor = spacerColor;
 		this.menuItems = [
-			SPACER,
-			NOTIFICATIONS,
-			SPACER,
-			ABOUT,
-			FEEDBACK,
-			SUPPORT,
-			SPACER,
-			TXST_MOBILE
+			new MenuItem(SPACER, null),
+			new MenuItem(NOTIFICATIONS, function(event) { console.log(this.title); }),
+			new MenuItem(SPACER, null),
+			new MenuItem(ABOUT, function(event) { console.log(this.title); }),
+			new MenuItem(FEEDBACK, function(event) { console.log(this.title); }),
+			new MenuItem(SUPPORT, function(event) { console.log(this.title); }),
+			new MenuItem(SPACER, null),
+			new MenuItem(TXST_MOBILE, function(event) { console.log(this.title); }),
 		];
+	}
+
+	static createMenuDOM(shouldBeTop, index, title, onPress) {
+		return (
+			<SettingsItem key={index}
+										title={title}
+										topItem={shouldBeTop}
+										onPress={onPress}/>
+		)
 	}
 
 	componentDidUpdate() {
@@ -36,61 +55,21 @@ class Settings extends Component {
 		}
 	}
 
-	static createMenuItem(shouldBeTop, index, title, onPress) {
-		return (
-			<SettingsItem key={index}
-										title={title}
-										topItem={shouldBeTop}
-										onPress={onPress} />
-		)
-	}
-
 	render() {
-		let menuItem;
+		let menuDOM, lastItemWasSpacer;
 		const menus = this.menuItems.map((item, index) => {
-			switch(item) {
+			switch (item.title) {
 				case SPACER:
 					lastItemWasSpacer = true;
 					return (
 						<Spacer key={index}
 										height={this.spacerHeight}
-										color={this.spacerColor} />
+										color={this.spacerColor}/>
 					);
-				case NOTIFICATIONS:
-					const notificationOnPress = (event) => {
-						console.log(NOTIFICATIONS);
-					};
-					menuItem = Settings.createMenuItem(lastItemWasSpacer, index, NOTIFICATIONS, notificationOnPress);
+				default:
+					menuDOM = Settings.createMenuDOM(lastItemWasSpacer, index, item.title, item.onPress);
 					lastItemWasSpacer = false;
-					return menuItem;
-				case ABOUT:
-					const aboutOnPress = (event) => {
-						console.log(ABOUT);
-					};
-					menuItem = Settings.createMenuItem(lastItemWasSpacer, index, ABOUT, aboutOnPress);
-					lastItemWasSpacer = false;
-					return menuItem;
-				case FEEDBACK:
-					const feedbackOnPress = (event) => {
-						console.log(FEEDBACK);
-					};
-					menuItem = Settings.createMenuItem(lastItemWasSpacer, index, FEEDBACK, feedbackOnPress);
-					lastItemWasSpacer = false;
-					return menuItem;
-				case SUPPORT:
-					const supportOnPress = (event) => {
-						console.log(SUPPORT);
-					};
-					menuItem = Settings.createMenuItem(lastItemWasSpacer, index, SUPPORT, supportOnPress);
-					lastItemWasSpacer = false;
-					return menuItem;
-				case TXST_MOBILE:
-					const txstOnPress = (event) => {
-						console.log(TXST_MOBILE);
-					};
-					menuItem = Settings.createMenuItem(lastItemWasSpacer, index, TXST_MOBILE, txstOnPress);
-					lastItemWasSpacer = false;
-					return menuItem;
+					return menuDOM;
 			}
 		});
 		return (
@@ -102,7 +81,7 @@ class Settings extends Component {
 										Storage.credentials.reset();
 										this.props.clearSites();
 										this.props.userLogout();
-									}} />
+									}}/>
 				</View>
 			</View>
 		);
