@@ -15,5 +15,6 @@ module.exports = {
 	sites: 'sites',
 	settings: 'settings',
 	settingsTab: 'settingsTab',
-	notificationSettings: 'notificationSettings'
+	notificationSettings: 'notificationSettings',
+	feedback: 'feedback'
 };

@@ -33,7 +33,7 @@ class Settings extends Component {
 			new MenuItem(NOTIFICATIONS, function(event) { Actions.notificationSettings(); }),
 			new MenuItem(SPACER, null),
 			new MenuItem(ABOUT, function(event) { console.log(this.title); }),
-			new MenuItem(FEEDBACK, function(event) { console.log(this.title); }),
+			new MenuItem(FEEDBACK, function(event) { Actions.feedback(); }),
 			new MenuItem(SUPPORT, function(event) { console.log(this.title); }),
 			new MenuItem(SPACER, null),
 			new MenuItem(TXST_MOBILE, function(event) { console.log(this.title); }),

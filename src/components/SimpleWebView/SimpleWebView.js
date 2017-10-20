@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
-import {Platform, View} from 'react-native';
-import WKWebView from 'react-native-wkwebview-reborn'
-import {connect} from 'react-redux';
+import {Platform, WebView} from 'react-native';
+import {WKWebView} from 'react-native-wkwebview-reborn'
 
 class SimpleWebView extends Component {
 	constructor(props) {
@@ -9,26 +8,18 @@ class SimpleWebView extends Component {
 	}
 
 	render() {
-		return (
-			<View>
-				Hello, component!
-			</View>
-		);
+		let webView;
+		if (Platform.OS === 'android') {
+			webView = (
+					<WebView source={{uri: this.props.url}}/>
+			);
+		} else {
+			webView = (
+					<WKWebView source={{uri: this.props.url}}/>
+			);
+		}
+		return webView;
 	}
 }
 
-const mapStateToProps = (state, ownProps) => {
-	return {
-		//Object mapping state variables to props variables
-		//netid: state.register.registeredUser
-	}
-};
-
-const mapDispatchToProps = (dispatch) => {
-	return {
-		//Object mapping action functions to props as functions
-		//getMemberships: () => dispatch(getSiteInfo())        
-	}
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(SimpleWebView);
+export default SimpleWebView;

@@ -23,6 +23,7 @@ import * as scenes from './src/constants/scenes';
 import env from './config/env.json';
 import NotificationSettings from './src/components/NotificationSettings/NotificationSettings';
 import TabIcon from './src/components/TabBar/TabIcon';
+import SimpleWebView from './src/components/SimpleWebView/SimpleWebView';
 
 class App extends Component {
 	constructor(props) {
@@ -125,6 +126,11 @@ const Scenes = Actions.create(
 							 title="Notification Settings"
 							 component={NotificationSettings}
 				/>
+				<Scene key={scenes.feedback}
+							 back
+							 title="Feedback"
+							 component={SimpleWebView}
+							 url={global.urls.feedback}/>
 			</Stack>
 		</Tabs>
 	</Scene>
