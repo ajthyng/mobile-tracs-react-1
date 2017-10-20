@@ -78,9 +78,15 @@ if (env.debug) {
 const tabIconSize = 20;
 const tabIconColor = "#000";
 const TabIcons = {
-	announcements: () => { return (<TabIcon name="bullhorn" size={tabIconSize} color={tabIconColor} />); },
-	sites: () => { return (<TabIcon name="list" size={tabIconSize} color={tabIconColor} />); },
-	settings: () => { return (<TabIcon name="cog" size={tabIconSize} color={tabIconColor} />); }
+	announcements: () => {
+		return (<TabIcon name="bullhorn" size={tabIconSize} color={tabIconColor}/>);
+	},
+	sites: () => {
+		return (<TabIcon name="list" size={tabIconSize} color={tabIconColor}/>);
+	},
+	settings: () => {
+		return (<TabIcon name="cog" size={tabIconSize} color={tabIconColor}/>);
+	}
 };
 
 const Scenes = Actions.create(
@@ -131,6 +137,12 @@ const Scenes = Actions.create(
 							 title="Feedback"
 							 component={SimpleWebView}
 							 url={global.urls.feedback}/>
+				<Scene key={scenes.support}
+							 back
+							 title="TRACS Support"
+							 component={SimpleWebView}
+							 url={global.urls.support}/>
+
 			</Stack>
 		</Tabs>
 	</Scene>

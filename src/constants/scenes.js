@@ -16,5 +16,6 @@ module.exports = {
 	settings: 'settings',
 	settingsTab: 'settingsTab',
 	notificationSettings: 'notificationSettings',
-	feedback: 'feedback'
+	feedback: 'feedback',
+	support: 'support'
 };
