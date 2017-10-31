@@ -20,6 +20,7 @@
     "react-native-push-notification": "^3.0.1",
     "react-native-router-flux": "^4.0.0-beta.21",
     "react-native-storage": "^0.2.2",
+    "react-native-switch": "^1.1.2",
     "react-native-vector-icons": "^4.4.2",
     "react-native-wkwebview-reborn": "^1.8.0",
     "react-navigation": "^1.0.0-beta.11",

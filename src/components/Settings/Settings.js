@@ -5,6 +5,8 @@ import {Actions} from 'react-native-router-flux';
 import * as Storage from '../../utils/storage';
 import Spacer from '../Helper/Spacer';
 import SettingsItem from './SettingsItem';
+import {clearSites} from '../../actions/sites';
+import {logout} from '../../actions/login';
 
 const SPACER = "spacer";
 const NOTIFICATIONS = "Notification Settings";
@@ -12,7 +14,8 @@ const ABOUT = "About the App";
 const FEEDBACK = "Give us Feedback";
 const SUPPORT = "TRACS Support";
 const TXST_MOBILE = "Go to TXST Mobile";
-const spacerColor = "#E9E9EF";
+const SPACER_COLOR = "#E9E9EF";
+const SPACER_HEIGHT = 25;
 
 class MenuItem {
 	constructor(title, onPress) {
@@ -26,8 +29,8 @@ class MenuItem {
 class Settings extends Component {
 	constructor(props) {
 		super(props);
-		this.spacerHeight = 25;
-		this.spacerColor = spacerColor;
+		this.spacerHeight = SPACER_HEIGHT;
+		this.spacerColor = SPACER_COLOR;
 		this.menuItems = [
 			new MenuItem(SPACER, null),
 			new MenuItem(NOTIFICATIONS, function(event) { Actions.notificationSettings(); }),
@@ -72,6 +75,7 @@ class Settings extends Component {
 					return menuDOM;
 			}
 		});
+		console.log(this.props);
 		return (
 			<View>
 				{menus}
