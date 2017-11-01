@@ -90,7 +90,7 @@ const mapStateToProps = (state, ownProps) => {
 		siteData.push({key: userSite.id, info: userSite})
 	});
 	return {
-		netid: state.register.registeredUser,
+		netid: state.login.netid,
 		isLoggedIn: state.login.isLoggedIn,
 		deviceToken: state.register.deviceToken,
 		sites: state.tracsSites.userSites,

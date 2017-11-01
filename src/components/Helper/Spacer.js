@@ -4,7 +4,6 @@ import {StyleSheet, Text, View} from 'react-native';
 class Spacer extends Component {
 	constructor(props) {
 		super(props);
-		console.log(this.props);
 	}
 
 	getStyle() {

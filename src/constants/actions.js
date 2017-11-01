@@ -34,5 +34,10 @@ module.exports = {
 	},
 	routingActions: {
 		CURRENT_SCENE: 'CURRENT_SCENE'
+	},
+	settingsActions: {
+		GET_SETTINGS: 'GET_SETTINGS',
+		SAVE_SETTINGS: 'SAVE_SETTINGS',
+		UPDATE_SETTINGS: 'UPDATE_SETTINGS'
 	}
 };

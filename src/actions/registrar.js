@@ -74,7 +74,6 @@ const postRegistration = (payload) => {
 		body: JSON.stringify(registration)
 	}).then(res => {
 		if (res.ok) {
-			console.log("Registered with dispatch using token: ", deviceToken);
 			dispatch(user(netid));
 			dispatch(isRegistered(true));
 			dispatch(updateToken(deviceToken));

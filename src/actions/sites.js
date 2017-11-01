@@ -77,10 +77,10 @@ export function getSiteInfo(netid) {
 				});
 				return Storage.sites.get(netid)
 					.then(async storedSites => {
-						console.log(storedSites);
 						const payload = {
 							siteIds,
-							storedSites
+							storedSites,
+							netid
 						};
 						let userSites = await getAllSites(payload);
 						let allSites = {
@@ -114,7 +114,7 @@ let getSiteTools = (siteID) => {
 };
 
 let getAllSites = (payload) => {
-	const {siteIds, storedSites} = payload;
+	const {siteIds, storedSites, netid} = payload;
 	let userSites = [];
 	let siteTools = [];
 	let fetchedSites = {};
@@ -162,7 +162,8 @@ let getAllSites = (payload) => {
 				id: site.id,
 				name: site.title,
 				contactInfo,
-				tools: {}
+				tools: {},
+				owner: netid
 			};
 
 		});
@@ -177,7 +178,7 @@ let getAllSites = (payload) => {
 			});
 		});
 
-		Storage.sites.store(fetchedSites).then(() => {
+		Storage.sites.store(fetchedSites, netid).then(() => {
 			console.log(`${Object.keys(fetchedSites).length} sites stored`);
 		});
 		const end = new Date().getTime();

@@ -28,7 +28,6 @@ import SimpleWebView from './src/components/SimpleWebView/SimpleWebView';
 class App extends Component {
 	constructor(props) {
 		super(props);
-		console.log("Base URL: ", global.urls.baseUrl);
 		FCM.getFCMToken().then((deviceToken) => {
 			token.store(deviceToken).then(() => {
 				console.log("TOKEN: ", deviceToken);

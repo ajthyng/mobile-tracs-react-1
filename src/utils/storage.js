@@ -27,7 +27,6 @@ let stringify = (obj) => {
 exports.credentials = {
 	get() {
 		return LockStatus().then(secure => {
-			console.log("DEVICE STATUS: ", secure);
 			if (secure === true) {
 				console.log("Device Secure, fetching credentials");
 				return Keychain.getGenericPassword();
@@ -71,22 +70,38 @@ exports.sites = {
 			let filteredSites = {};
 			if (sites !== null) {
 				sites = JSON.parse(sites);
-				for (id in sites) {
-					if (sites.hasOwnProperty(id) && sites[id].owner === netid) {
-						filteredSites[id] = sites[id];
+				console.log("Stored Sites: ", sites);
+				console.log(`NetID: ${netid}`);
+				const siteIDs = Object.keys(sites);
+				siteIDs.forEach(siteID => {
+					if (sites.hasOwnProperty(siteID) && sites[siteID].owner === netid) {
+						filteredSites[siteID] = sites[siteID];
 					}
-				}
+				});
 			}
+			console.log("Filtered Sites: ", filteredSites);
 			return filteredSites;
 		});
 	},
 	store(sites, netid) {
-		Object.keys(sites).map(id => {
-			sites[id].owner = netid;
+		//TODO: don't replace old sites, update the sites in storage.
+		return AsyncStorage.getItem(keys.sites).then(stored => {
+			let updatedSites = {};
+			updatedSites = {...sites};
+			stored = stored === null ? {} : JSON.parse(stored);
+			console.log("Updated Sites: ", updatedSites);
+
+			const siteIDs = Object.keys(sites);
+			siteIDs.forEach(siteID => {
+				if (sites.hasOwnProperty(siteID)) {
+					sites[siteID].owner = netid;
+				}
+			});
+			sites = {...stored, ...updatedSites};
+			return AsyncStorage.setItem(keys.sites, stringify(sites));
 		});
-		return AsyncStorage.setItem(keys.sites, stringify(sites));
 	},
 	reset() {
-		return AsyncStorage.removeItem(key.sites);
+		return AsyncStorage.removeItem(keys.sites);
 	}
 };

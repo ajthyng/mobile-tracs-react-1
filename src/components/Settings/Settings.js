@@ -75,7 +75,6 @@ class Settings extends Component {
 					return menuDOM;
 			}
 		});
-		console.log(this.props);
 		return (
 			<View>
 				{menus}
@@ -83,6 +82,8 @@ class Settings extends Component {
 					<Button title="Logout"
 									onPress={() => {
 										Storage.credentials.reset();
+										Storage.sites.reset();
+										Storage.token.reset();
 										this.props.clearSites();
 										this.props.userLogout();
 									}}/>
