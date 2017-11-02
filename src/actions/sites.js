@@ -10,10 +10,9 @@
 
 import * as Storage from '../utils/storage'
 import * as types from '../constants/actions';
+import moment from 'moment';
 
 let {GET_MEMBERSHIPS, IS_FETCHING_SITES, CLEAR_SITES, GET_SITES_FAILED} = types.sitesActions;
-
-
 
 const getMemberships = (userSites) => {
 	return {
@@ -94,7 +93,6 @@ export function getSiteInfo(netid) {
 	}
 }
 
-
 let getSiteName = (siteID) => {
 	const tracsUrl = global.urls.baseUrl;
 	let siteNameOptions = {
@@ -119,9 +117,13 @@ let getAllSites = (payload) => {
 	let siteTools = [];
 	let fetchedSites = {};
 	let promiseStart = new Date().getTime();
-
 	let sitePromises = siteIds.map(siteID => {
-		if (storedSites === null || !storedSites.hasOwnProperty(siteID)) {
+		let shouldFetch = true;
+		if (storedSites !== null) {
+			shouldFetch = !storedSites.hasOwnProperty(siteID) || storedSites[siteID].expiration - moment() < 0
+		}
+
+		if (shouldFetch === true) {
 			return getSiteName(siteID)
 				.then(res => res.json())
 				.then(site => userSites.push(site));
@@ -168,6 +170,7 @@ let getAllSites = (payload) => {
 
 		});
 
+		console.log("Fetched Sites: ", fetchedSites);
 		siteTools.forEach(site => {
 			site.forEach(toolList => {
 				if (toolList.hasOwnProperty("tools")) {
@@ -176,6 +179,7 @@ let getAllSites = (payload) => {
 					});
 				}
 			});
+
 		});
 
 		Storage.sites.store(fetchedSites, netid).then(() => {

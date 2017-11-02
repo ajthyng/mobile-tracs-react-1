@@ -11,6 +11,7 @@
 import * as Keychain from 'react-native-keychain';
 import {AsyncStorage} from 'react-native';
 import LockStatus from './lockstatus';
+import moment from 'moment';
 
 const expiryDays = 90;
 const msPerDay = 1000 * 3600 * 24;
@@ -75,6 +76,7 @@ exports.sites = {
 				const siteIDs = Object.keys(sites);
 				siteIDs.forEach(siteID => {
 					if (sites.hasOwnProperty(siteID) && sites[siteID].owner === netid) {
+						sites[siteID].expiration = moment(sites[siteID].expiration);
 						filteredSites[siteID] = sites[siteID];
 					}
 				});
@@ -95,6 +97,7 @@ exports.sites = {
 			siteIDs.forEach(siteID => {
 				if (sites.hasOwnProperty(siteID)) {
 					sites[siteID].owner = netid;
+					sites[siteID].expiration = moment().add(1, 'days');
 				}
 			});
 			sites = {...stored, ...updatedSites};
