@@ -64,7 +64,7 @@ export function getSiteInfo(netid) {
 					dispatch(getSitesFailed(true));
 				}
 			})
-			.then(sites => {
+			.then(async sites => {
 				const userHasSites = sites !== undefined && sites.hasOwnProperty('membership_collection') && sites.membership_collection.length > 0;
 				if (!userHasSites) {
 					dispatch(getMemberships({}));
@@ -74,6 +74,8 @@ export function getSiteInfo(netid) {
 				let siteIds = sites.membership_collection.map((site) => {
 					return site.id.split(':').last();
 				});
+				await cleanStorage(siteIds, netid);
+				console.log("Cleaning complete...");
 				return Storage.sites.get(netid)
 					.then(async storedSites => {
 						const payload = {
@@ -92,6 +94,11 @@ export function getSiteInfo(netid) {
 			});
 	}
 }
+
+let cleanStorage = (siteIDs, netid) => {
+	return Storage.sites.clean(siteIDs, netid);
+};
+
 
 let getSiteName = (siteID) => {
 	const tracsUrl = global.urls.baseUrl;
@@ -120,7 +127,7 @@ let getAllSites = (payload) => {
 	let sitePromises = siteIds.map(siteID => {
 		let shouldFetch = true;
 		if (storedSites !== null) {
-			shouldFetch = !storedSites.hasOwnProperty(siteID) || storedSites[siteID].expiration - moment() < 0
+			shouldFetch = !storedSites.hasOwnProperty(siteID) || storedSites[siteID].expiration - moment() < 0;
 		}
 
 		if (shouldFetch === true) {
@@ -131,7 +138,11 @@ let getAllSites = (payload) => {
 	});
 
 	let toolPromises = siteIds.map(siteID => {
-		if (storedSites === null || !storedSites.hasOwnProperty(siteID)) {
+		let shouldFetch = true;
+		if (storedSites !== null) {
+			shouldFetch = !storedSites.hasOwnProperty(siteID) || storedSites[siteID].expiration - moment() < 0;
+		}
+		if (shouldFetch === true) {
 			return getSiteTools(siteID)
 				.then(res => res.json())
 				.then(tools => {
@@ -170,7 +181,6 @@ let getAllSites = (payload) => {
 
 		});
 
-		console.log("Fetched Sites: ", fetchedSites);
 		siteTools.forEach(site => {
 			site.forEach(toolList => {
 				if (toolList.hasOwnProperty("tools")) {
@@ -182,9 +192,7 @@ let getAllSites = (payload) => {
 
 		});
 
-		Storage.sites.store(fetchedSites, netid).then(() => {
-			console.log(`${Object.keys(fetchedSites).length} sites stored`);
-		});
+		Storage.sites.store(fetchedSites, netid).then();
 		const end = new Date().getTime();
 		console.log(`Sites info fetched in ${end - promiseStart} ms.`);
 		return fetchedSites;

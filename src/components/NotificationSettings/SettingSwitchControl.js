@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
 import {StyleSheet, View} from 'react-native';
 import SettingSwitch from './SettingSwitch';
+import {connect} from 'react-redux';
 
 class SettingSwitchControl extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			switchIsOn: true
+			switchIsOn: props.enabled
 		};
 	}
 
@@ -42,4 +43,10 @@ class SettingSwitchControl extends Component {
 	}
 }
 
-export default SettingSwitchControl;
+const mapStateToProps = (state, ownProps) => {
+	return {
+		token: state.register.deviceToken
+	}
+};
+
+export default connect(mapStateToProps, null)(SettingSwitchControl);

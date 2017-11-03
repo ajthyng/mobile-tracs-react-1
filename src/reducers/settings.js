@@ -9,4 +9,75 @@
  */
 
 import * as actions from '../../src/constants/actions';
-const {GET_SETTINGS, SAVE_SETTINGS, UPDATE_SETTINGS} = actions.settingsActions;
+import Settings from '../utils/settings';
+const {
+	GET_SETTINGS,
+	SAVE_REMOTE_SETTINGS,
+	SAVE_SETTINGS_SUCCESS,
+	SAVE_SETTINGS_FAILURE,
+	SAVE_LOCAL_SETTINGS,
+	UPDATE_SETTINGS
+} = actions.settingsActions;
+
+const initialState = {
+	isFetching: true,
+	userSettings: new Settings(),
+	isSaving: false
+};
+
+const getSettings = (state, action) => {
+	return {
+		...state,
+		isFetching: action.isFetching,
+	}
+};
+
+const updateSettings = (state, action) => {
+	const userSettings = new Settings(action.userSettings);
+	return {
+		...state,
+		userSettings,
+		isFetching: action.isFetching
+	}
+};
+
+const saveRemoteSettings = (state, action) => {
+	return {
+		...state,
+		isSaving: action.isSaving
+	}
+};
+
+const saveSettingsSuccess = (state, action) => {
+	return {
+		...state,
+		isSaving: action.isSaving
+	}
+};
+
+const saveSettingsFailure = (state, action) => {
+	return {
+		...state,
+		isSaving: action.isSaving,
+		saveSettingsFailed: action.saveSettingsFailed
+	}
+};
+
+const saveLocalSettings = (state, action) => {
+	return {
+		...state,
+		userSettings: action.userSettings
+	}
+};
+
+export function settingsReducer(state = initialState, action) {
+	switch (action.type) {
+		case GET_SETTINGS: return getSettings(state, action);
+		case UPDATE_SETTINGS: return updateSettings(state, action);
+		case SAVE_REMOTE_SETTINGS: return saveRemoteSettings(state, action);
+		case SAVE_SETTINGS_SUCCESS: return saveSettingsSuccess(state, action);
+		case SAVE_SETTINGS_FAILURE: return saveSettingsFailure(state, action);
+		case SAVE_LOCAL_SETTINGS: return saveLocalSettings(state, action);
+		default: return state;
+	}
+}

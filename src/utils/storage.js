@@ -71,8 +71,6 @@ exports.sites = {
 			let filteredSites = {};
 			if (sites !== null) {
 				sites = JSON.parse(sites);
-				console.log("Stored Sites: ", sites);
-				console.log(`NetID: ${netid}`);
 				const siteIDs = Object.keys(sites);
 				siteIDs.forEach(siteID => {
 					if (sites.hasOwnProperty(siteID) && sites[siteID].owner === netid) {
@@ -81,18 +79,12 @@ exports.sites = {
 					}
 				});
 			}
-			console.log("Filtered Sites: ", filteredSites);
 			return filteredSites;
 		});
 	},
 	store(sites, netid) {
-		//TODO: don't replace old sites, update the sites in storage.
-		return AsyncStorage.getItem(keys.sites).then(stored => {
-			let updatedSites = {};
-			updatedSites = {...sites};
-			stored = stored === null ? {} : JSON.parse(stored);
-			console.log("Updated Sites: ", updatedSites);
-
+		return AsyncStorage.getItem(keys.sites).then(storedSites => {
+			storedSites = storedSites === null ? {} : JSON.parse(storedSites);
 			const siteIDs = Object.keys(sites);
 			siteIDs.forEach(siteID => {
 				if (sites.hasOwnProperty(siteID)) {
@@ -100,11 +92,24 @@ exports.sites = {
 					sites[siteID].expiration = moment().add(1, 'days');
 				}
 			});
-			sites = {...stored, ...updatedSites};
+			sites = {...storedSites, ...sites};
 			return AsyncStorage.setItem(keys.sites, stringify(sites));
 		});
 	},
 	reset() {
 		return AsyncStorage.removeItem(keys.sites);
+	},
+	clean(siteIDs, netid) {
+		return AsyncStorage.getItem(keys.sites).then(stored => {
+			stored = stored === null ? {} : JSON.parse(stored);
+			const storedSiteIDs = Object.keys(stored);
+			storedSiteIDs.forEach((siteID) => {
+				if (siteIDs.indexOf(siteID) < 0) {
+					console.log(`Deleting ${siteID}`);
+					delete stored[siteID];
+				}
+			});
+			return AsyncStorage.setItem(keys.sites, stringify(stored));
+		});
 	}
 };
