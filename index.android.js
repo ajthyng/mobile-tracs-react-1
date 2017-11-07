@@ -24,18 +24,16 @@ import env from './config/env.json';
 import NotificationSettings from './src/components/NotificationSettings/NotificationSettings';
 import TabIcon from './src/components/TabBar/TabIcon';
 import SimpleWebView from './src/components/SimpleWebView/SimpleWebView';
+import {updateToken} from './src/actions/registrar';
+
+
 
 class App extends Component {
 	constructor(props) {
 		super(props);
-		FCM.getFCMToken().then((deviceToken) => {
-			token.store(deviceToken).then(() => {
-				console.log("TOKEN: ", deviceToken);
-			});
-		});
 	}
 
-	componentDidMount() {
+	async componentDidMount() {
 		this.notificationListener = FCM.on(FCMEvent.Notification, async (notification) => {
 			if (notification.local_notification) {
 
@@ -43,7 +41,6 @@ class App extends Component {
 			if (notification.opened_from_tray) {
 
 			}
-
 			handleNotification(notification);
 		});
 	}
@@ -87,6 +84,12 @@ const TabIcons = {
 		return (<TabIcon name="cog" size={tabIconSize} color={tabIconColor}/>);
 	}
 };
+
+FCM.getFCMToken().then((deviceToken) => {
+	console.log("TOKEN: ", deviceToken);
+	store.dispatch(updateToken(deviceToken));
+	token.store(deviceToken).then(() => {});
+});
 
 const Scenes = Actions.create(
 	<Scene key="root">
@@ -148,3 +151,11 @@ const Scenes = Actions.create(
 );
 
 AppRegistry.registerComponent('TRACSMobile', () => App);
+
+
+
+
+
+
+
+

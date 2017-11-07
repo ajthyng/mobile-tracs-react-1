@@ -82,7 +82,7 @@ class NotificationSettings extends Component {
 	}
 
 	render() {
-		if (this.props.isFetching === true || !this.props.blacklist) {
+		if (this.props.isFetching === true || !this.props) {
 			return (
 				<ActivityIndicator/>
 			)
