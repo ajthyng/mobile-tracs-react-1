@@ -6,10 +6,11 @@ import {Actions} from 'react-native-router-flux';
 import ActivityIndicator from '../Helper/ActivityIndicator';
 import SettingSwitchControl from './SettingSwitchControl';
 import Spacer from '../Helper/Spacer';
-import {getRemoteSettings, getSettings, saveLocalSettings, saveRemoteSettings} from '../../actions/settings';
+import {getSettings, saveSettings} from '../../actions/settings';
 import {setCurrentScene} from '../../actions/routes';
 
 import {types} from '../../constants/notifications';
+import Settings from '../../utils/settings';
 
 const SPACER_COLOR = "#E9E9EF";
 const SPACER_HEIGHT = 35;
@@ -45,15 +46,16 @@ class NotificationSettings extends Component {
 	}
 
 	createSettingDOM(isTop, index, setting, onPress) {
-		const blacklist = this.props.settings.blacklist;
-		console.log(blacklist);
+		const blacklist = this.props.blacklist;
 		setting.enabled = true;
 
-		blacklist.forEach((entry) => {
-			if (entry.keys.object_type === setting.id || entry.other_keys.site_id === setting.id) {
-				setting.enabled = false;
-			}
-		});
+		if (blacklist) {
+			blacklist.forEach((entry) => {
+				if (entry.keys.object_type === setting.id || entry.other_keys.site_id === setting.id) {
+					setting.enabled = false;
+				}
+			});
+		}
 		return (
 			<SettingSwitchControl key={index}
 														title={setting.name}
@@ -69,10 +71,6 @@ class NotificationSettings extends Component {
 		this.props.getSettings(this.props.token);
 	}
 
-	componentWillUpdate(nextProps) {
-		console.log(nextProps);
-	}
-
 	createSpacerDOM(setting, index) {
 		return (
 			<Spacer height={this.spacerHeight}
@@ -84,78 +82,83 @@ class NotificationSettings extends Component {
 	}
 
 	render() {
-		if (this.props.isFetchingSettings === true) {
+		if (this.props.isFetching === true || !this.props.blacklist) {
 			return (
 				<ActivityIndicator/>
 			)
-		}
+		} else {
+			const onPress = (enabled, self) => {
+				self.setState({switchIsOn: enabled});
 
-		const onPress = (enabled, self) => {
-			self.setState({switchIsOn: enabled});
-			const userSettings = this.props.settings;
-			switch (self.props.id) {
-				case ANNOUNCEMENT:
-				case FORUM:
-					userSettings.setType(self.props.id, enabled);
-					break;
-				default:
-					userSettings.setSite(self.props.id, enabled);
-					break;
-			}
-			this.props.saveLocalSettings(this.props.settings);
-			this.props.saveRemoteSettings(this.props.settings, this.props.token);
-		};
+				const userSettings = new Settings({
+					blacklist: this.props.blacklist,
+					global_disable: this.props.global_disable
+				});
 
-		const offset = this.settings.length;
-		let nextSettingIsTop = false;
+				switch (self.props.id) {
+					case ANNOUNCEMENT:
+					case FORUM:
+						userSettings.setType(self.props.id, enabled);
+						break;
+					default:
+						userSettings.setSite(self.props.id, enabled);
+						break;
+				}
+				this.props.saveSettings(userSettings.getSettings(), this.props.token, false);
+			};
 
-		let switches = this.settings.map((setting, index) => {
-			switch (setting.type) {
-				case SPACER:
-					nextSettingIsTop = true;
-					return this.createSpacerDOM(setting, index);
-					break;
-				case SETTING:
-					let settingDOM = this.createSettingDOM(nextSettingIsTop, index, setting, onPress);
-					nextSettingIsTop = false;
-					return settingDOM;
-					break;
-				default:
-					return;
-			}
-		});
+			const offset = this.settings.length;
+			let nextSettingIsTop = false;
 
-		switches = [
-			...switches,
-			...Object.keys(this.props.sites).map((siteID, index) => {
+			let defaultSwitches = this.settings.map((setting, index) => {
+				switch (setting.type) {
+					case SPACER:
+						nextSettingIsTop = true;
+						return this.createSpacerDOM(setting, index);
+					case SETTING:
+						let settingDOM = this.createSettingDOM(nextSettingIsTop, index, setting, onPress);
+						nextSettingIsTop = false;
+						return settingDOM;
+					default:
+						return;
+				}
+			});
+
+			let siteSwitches = Object.keys(this.props.sites).map((siteID, index) => {
 				const site = this.props.sites[siteID];
 				return this.createSettingDOM(index === 0, index + offset, site, onPress);
-			})
-		];
+			});
 
-		return (
-			<View>
-				{switches}
-			</View>
-		);
+			defaultSwitches = [
+				...defaultSwitches,
+				...siteSwitches
+			];
+
+			return (
+				<View>
+					{defaultSwitches}
+				</View>
+			);
+		}
 	}
+
 }
 
 const mapStateToProps = (state, ownProps) => {
 	return {
 		sites: state.tracsSites.userSites,
 		token: state.register.deviceToken,
-		settings: state.settings.userSettings,
-		isFetchingSettings: state.settings.isFetching
+		blacklist: state.settings.userSettings.blacklist,
+		global_disable: state.settings.userSettings.global_disable,
+		isFetching: state.settings.isFetching
 	}
 };
 
 const mapDispatchToProps = (dispatch) => {
 	return {
 		setScene: (scene) => dispatch(setCurrentScene(scene)),
-		getSettings: (token) => dispatch(getRemoteSettings(token)),
-		saveLocalSettings: (settings) => dispatch(saveLocalSettings(settings)),
-		saveRemoteSettings: (settings, token) => dispatch(saveRemoteSettings(settings, token))
+		getSettings: (token) => dispatch(getSettings(token)),
+		saveSettings: (settings, token, local) => dispatch(saveSettings(settings, token, local)),
 	}
 };
 

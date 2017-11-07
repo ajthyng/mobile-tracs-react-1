@@ -8,76 +8,80 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import * as actions from '../../src/constants/actions';
+import {settingsActions} from '../../src/constants/actions';
 import Settings from '../utils/settings';
 const {
-	GET_SETTINGS,
-	SAVE_REMOTE_SETTINGS,
+	REQUEST_SETTINGS,
+	SETTINGS_SUCCESS,
+	SETTINGS_FAILURE,
+	REQUEST_SAVE_SETTINGS,
 	SAVE_SETTINGS_SUCCESS,
-	SAVE_SETTINGS_FAILURE,
-	SAVE_LOCAL_SETTINGS,
-	UPDATE_SETTINGS
-} = actions.settingsActions;
+	SAVE_SETTINGS_FAILURE
+} = settingsActions;
 
 const initialState = {
-	isFetching: true,
-	userSettings: new Settings(),
-	isSaving: false
+	userSettings: {}
 };
 
-const getSettings = (state, action) => {
+const requestSettings = (state, action) => {
 	return {
 		...state,
 		isFetching: action.isFetching,
+		isLoaded: false
 	}
 };
 
-const updateSettings = (state, action) => {
-	const userSettings = new Settings(action.userSettings);
+const settingsSuccess = (state, action) => {
 	return {
 		...state,
-		userSettings,
-		isFetching: action.isFetching
+		userSettings: action.userSettings,
+		isFetching: action.isFetching,
+		isLoaded: true
 	}
 };
 
-const saveRemoteSettings = (state, action) => {
+const settingsFailure = (state, action) => {
+	return {
+		isFetching: action.isFetching,
+		isLoaded: false,
+		errorMessage: action.errorMessage
+	}
+};
+
+const requestSaveSettings = (state, action) => {
 	return {
 		...state,
-		isSaving: action.isSaving
+		isSaving: true,
+		isSaved: false
 	}
 };
 
 const saveSettingsSuccess = (state, action) => {
 	return {
 		...state,
-		isSaving: action.isSaving
+		userSettings: action.userSettings,
+		isSaving: false,
+		isSaved: true
 	}
 };
 
 const saveSettingsFailure = (state, action) => {
 	return {
 		...state,
-		isSaving: action.isSaving,
-		saveSettingsFailed: action.saveSettingsFailed
-	}
-};
-
-const saveLocalSettings = (state, action) => {
-	return {
-		...state,
-		userSettings: action.userSettings
+		isSaving: false,
+		isSaved: false,
+		errorMessage: action.errorMessage
 	}
 };
 
 export function settingsReducer(state = initialState, action) {
 	switch (action.type) {
-		case GET_SETTINGS: return getSettings(state, action);
-		case UPDATE_SETTINGS: return updateSettings(state, action);
-		case SAVE_REMOTE_SETTINGS: return saveRemoteSettings(state, action);
+		case REQUEST_SETTINGS: return requestSettings(state, action);
+		case SETTINGS_SUCCESS: return settingsSuccess(state, action);
+		case SETTINGS_FAILURE: return settingsFailure(state, action);
+		case REQUEST_SAVE_SETTINGS: return requestSaveSettings(state, action);
 		case SAVE_SETTINGS_SUCCESS: return saveSettingsSuccess(state, action);
 		case SAVE_SETTINGS_FAILURE: return saveSettingsFailure(state, action);
-		case SAVE_LOCAL_SETTINGS: return saveLocalSettings(state, action);
 		default: return state;
 	}
 }

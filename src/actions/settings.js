@@ -8,111 +8,107 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import Settings from '../utils/settings';
-import * as types from '../constants/actions';
+import {settingsActions} from '../constants/actions';
 
 const {
-	GET_SETTINGS,
-	UPDATE_SETTINGS,
-	SAVE_REMOTE_SETTINGS,
-	SAVE_LOCAL_SETTINGS,
+	REQUEST_SETTINGS,
+	SETTINGS_SUCCESS,
+	SETTINGS_FAILURE,
+	REQUEST_SAVE_SETTINGS,
 	SAVE_SETTINGS_SUCCESS,
 	SAVE_SETTINGS_FAILURE
-} = types.settingsActions;
+} = settingsActions;
 
-const getSettings = () => {
+const requestSettings = () => {
 	return {
-		type: GET_SETTINGS,
+		type: REQUEST_SETTINGS,
 		isFetching: true
 	}
 };
 
-const updateSettings = (userSettings) => {
+const settingsSuccess = (userSettings) => {
 	return {
-		type: UPDATE_SETTINGS,
+		type: SETTINGS_SUCCESS,
 		userSettings,
 		isFetching: false,
 	}
 };
 
-const getSettingsFailed = () => {
+const settingsFailure = (errorMessage) => {
 	return {
-		type: GET_SETTINGS_FAILED,
+		type: SETTINGS_FAILURE,
 		isFetching: false,
-		getSettingsFailed: true
+		errorMessage
 	}
 };
 
-const saveSettings = () => {
+const requestSaveSettings = () => {
 	return {
-		type: SAVE_REMOTE_SETTINGS,
+		type: REQUEST_SAVE_SETTINGS,
 		isSaving: true
 	}
 };
 
-const saveSettingsSuccess = () => {
+const saveSettingsSuccess = (userSettings) => {
 	return {
 		type: SAVE_SETTINGS_SUCCESS,
 		isSaving: false,
-		isFetching: true
+		userSettings
 	}
 };
 
-const saveSettingsFailure = () => {
+const saveSettingsFailure = (errorMessage) => {
 	return {
 		type: SAVE_SETTINGS_FAILURE,
 		isSaving: false,
-		saveSettingsFailed: true,
-		isFetching: true
+		errorMessage
 	}
 };
 
-export function getRemoteSettings(token) {
+export function getSettings(token) {
 	const settingsURL = `${global.urls.dispatchUrl}${global.urls.settings(token)}`;
 	const options = {
 		url: settingsURL,
 		method: 'get'
 	};
 	return (dispatch) => {
-		dispatch(getSettings());
+		dispatch(requestSettings());
 		return fetch(options).then(res => {
 			if (res.ok) {
 				return res.json()
 			} else {
-				dispatch(getSettingsFailed());
+				dispatch(settingsFailure("Retrieving remote settings failed"));
 			}
 		}).then(settings => {
-			dispatch(updateSettings(settings));
+			console.log("SETTINGS: ", settings);
+			dispatch(settingsSuccess(settings));
 		});
 	}
 }
 
-export function saveRemoteSettings(settings, token) {
+export function saveSettings(settings, token, local) {
 	const settingsURL = `${global.urls.dispatchUrl}${global.urls.settings(token)}`;
 	const options = {
 		method: 'post',
 		headers: {
 			'Content-Type': 'application/json'
 		},
-		body: JSON.stringify(settings.getSettings())
+		body: JSON.stringify(settings)
 	};
 
 	return (dispatch) => {
-		dispatch(saveSettings());
+		dispatch(requestSaveSettings());
+		if (local) {
+			return saveSettingsSuccess(settings);
+		}
 		return fetch(settingsURL, options).then(res => {
 			console.log(options);
 			if (res.ok) {
 				console.log("Success!");
-				dispatch(saveSettingsSuccess());
+				dispatch(saveSettingsSuccess(settings));
 			} else {
-				dispatch(saveSettingsFailure());
+				dispatch(saveSettingsFailure("Failed to save settings remotely"));
 			}
 		});
-	}
-}
-
-export function saveLocalSettings(settings) {
-	return {
-		type: SAVE_LOCAL_SETTINGS,
-		userSettings: settings
 	}
 }
