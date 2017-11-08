@@ -8,12 +8,48 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-module.exports = {
-	types: {
-		FORUM: 'discussion',
-		ANNOUNCEMENT: 'announcement',
-		GRADE: 'grade',
-		ASSESSMENT: 'assessment',
-		ASSIGNMENT: 'assignment'
+import {notificationActions} from '../constants/actions';
+
+const {REQUEST_NOTIFICATIONS, NOTIFICATIONS_SUCCESS, NOTIFICATIONS_FAILURE} = notificationActions;
+
+const initialState = {
+	isLoading: false,
+	isLoaded: false,
+	errorMessage: "",
+	notifications: {}
+};
+
+const requestNotifications = (state, action) => {
+	return {
+		...state,
+		isLoading: true,
+		isLoaded: false,
+		errorMessage: "",
+	}
+};
+
+const notificationsSuccess = (state, action) => {
+	return {
+		...state,
+		isLoading: false,
+		isLoaded: true,
+		errorMessage: "",
+		notifications: action.notifications
+	}
+};
+
+const notificationsFailure = (state, actions) => {
+	return {
+		...initialState,
+		errorMessage: actions.errorMessage,
+	}
+};
+
+export const notificationsReducer = (state = initialState, action) => {
+	switch (action.type) {
+		case REQUEST_NOTIFICATIONS: return requestNotifications(state, action);
+		case NOTIFICATIONS_SUCCESS: return notificationsFailure(state, action);
+		case NOTIFICATIONS_FAILURE: return notificationsFailure(state, action);
+		default: return state;
 	}
 };

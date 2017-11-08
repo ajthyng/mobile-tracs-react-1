@@ -14,11 +14,13 @@ import {registerReducer} from './registrar';
 import {sitesReducer} from './sites';
 import {routesReducer} from './routes';
 import {settingsReducer} from './settings';
+import {notificationsReducer} from './notifications';
 
 export default combineReducers({
 	login: loginReducer,
 	register: registerReducer,
 	tracsSites: sitesReducer,
 	routes: routesReducer,
-	settings: settingsReducer
+	settings: settingsReducer,
+	notifications: notificationsReducer
 })
