@@ -14,7 +14,18 @@ import base64 from 'base-64';
 import {token} from '../utils/storage';
 import {registrarActions} from '../constants/actions';
 
-const {IS_REGISTERED, IS_REGISTERING, REGISTRATION_FAILED, REMOVE_TOKEN, REPLACE_TOKEN, REMOVE_USER, REPLACE_USER} = registrarActions;
+const {
+	IS_REGISTERED,
+	IS_REGISTERING,
+	REGISTRATION_FAILED,
+	REMOVE_TOKEN,
+	REPLACE_TOKEN,
+	REMOVE_USER,
+	REPLACE_USER,
+	REQUEST_REGISTRATION_DELETE,
+	REGISTRATION_DELETE_SUCCESS,
+	REGISTRATION_DELETE_FAILURE
+} = registrarActions;
 
 const isRegistered = (bool) => {
 	return {
@@ -23,25 +34,10 @@ const isRegistered = (bool) => {
 	}
 };
 
-export const isRegistering = (bool) => {
-	return {
-		type: IS_REGISTERING,
-		isRegistering: bool
-	}
-};
-
 const registrationHasFailed = (bool) => {
 	return {
 		type: REGISTRATION_FAILED,
 		hasFailed: bool
-	}
-};
-
-export const updateToken = (token) => {
-	let type = (typeof token === 'undefined' || token.length === 0) ? REMOVE_TOKEN : REPLACE_TOKEN;
-	return {
-		type: type,
-		deviceToken: token
 	}
 };
 
@@ -118,7 +114,42 @@ const postRegistration = async (payload) => {
 		});
 };
 
-export let register = (netid = '', password) => {
+const requestRegistrationDelete = () => {
+	return {
+		type: REQUEST_REGISTRATION_DELETE,
+	}
+};
+
+const registrationDeleteSuccess = () => {
+	return {
+		type: REGISTRATION_DELETE_SUCCESS
+	}
+};
+
+const registrationDeleteFailure = (errorMessage) => {
+	console.log(errorMessage);
+	return {
+		type: REGISTRATION_DELETE_FAILURE,
+		errorMessage
+	}
+};
+
+export const isRegistering = (bool) => {
+	return {
+		type: IS_REGISTERING,
+		isRegistering: bool
+	}
+};
+
+export const updateToken = (token) => {
+	let type = (typeof token === 'undefined' || token.length === 0) ? REMOVE_TOKEN : REPLACE_TOKEN;
+	return {
+		type: type,
+		deviceToken: token
+	}
+};
+
+export const register = (netid = '', password) => {
 	return (dispatch) => {
 		dispatch(isRegistering(true));
 		if (netid.length === 0) {
@@ -158,4 +189,35 @@ export let register = (netid = '', password) => {
 			});
 		});
 	}
+};
+
+export const unregister = (token) => {
+	return async (dispatch) => {
+		dispatch(requestRegistrationDelete());
+		if (!token) {
+			await FCM.getFCMToken().then(deviceToken => {
+				token = deviceToken;
+			});
+		}
+		const dispatchURL = global.urls.dispatchUrl;
+		const deleteRegistrationURL = `${dispatchURL}${global.urls.registrationBase}`;
+		const form = new FormData();
+		form.append('token', token);
+		const options = {
+			method: 'delete',
+			body: form,
+			headers: {'Content-Type': 'multipart/form-data'}
+		};
+
+		fetch(deleteRegistrationURL, options).then(res => {
+			if (res.ok) {
+				dispatch(registrationDeleteSuccess());
+			} else {
+				const errorMessage = "Could not unregister device for push notifications";
+				dispatch(registrationDeleteFailure(errorMessage));
+			}
+		}).catch(err => {
+			dispatch(registrationDeleteFailure(err.message));
+		})
+	};
 };

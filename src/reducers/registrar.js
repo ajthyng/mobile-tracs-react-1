@@ -9,9 +9,20 @@
  */
 
 import {Platform} from 'react-native';
-import * as actions from '../constants/actions';
+import {registrarActions} from '../constants/actions';
 
-const {IS_REGISTERED, IS_REGISTERING, REMOVE_TOKEN, REMOVE_USER, REPLACE_TOKEN, REPLACE_USER, REGISTRATION_FAILED} = actions.registrarActions;
+const {
+	IS_REGISTERED,
+	IS_REGISTERING,
+	REMOVE_TOKEN,
+	REMOVE_USER,
+	REPLACE_TOKEN,
+	REPLACE_USER,
+	REGISTRATION_FAILED,
+	REQUEST_REGISTRATION_DELETE,
+	REGISTRATION_DELETE_SUCCESS,
+	REGISTRATION_DELETE_FAILURE
+} = registrarActions;
 
 export const initialState = {
 	isRegistered: false,
@@ -19,7 +30,10 @@ export const initialState = {
 	registeredUser: '',
 	platform: Platform.OS,
 	isRegistering: false,
-	hasFailed: false
+	hasFailed: false,
+	errorMessage: "",
+	isDeleting: false,
+	isDeleted: false
 };
 
 function isRegistered(state, action) {
@@ -71,6 +85,32 @@ function replaceUser(state, action) {
 	}
 }
 
+function requestDeleteRegistration(state, action) {
+	return {
+		...state,
+		isDeleting: true,
+		isDeleted: false,
+		errorMessage: ""
+	}
+}
+
+function deleteRegistrationSuccess(state, action) {
+	return {
+		...initialState,
+		isDeleted: true
+	}
+}
+
+function deleteRegistrationFailure(state, action) {
+	return {
+		...state,
+		isDeleting: false,
+		isDeleted: false,
+		errorMessage: action.errorMessage
+	}
+}
+
+
 export function registerReducer(state = initialState, action) {
 	switch (action.type) {
 		case REMOVE_USER: return removeUser(state, action);
@@ -80,6 +120,9 @@ export function registerReducer(state = initialState, action) {
 		case IS_REGISTERED: return isRegistered(state, action);
 		case IS_REGISTERING: return isRegistering(state, action);
 		case REGISTRATION_FAILED: return registrationHasFailed(state, action);
+		case REQUEST_REGISTRATION_DELETE: return requestDeleteRegistration(state, action);
+		case REGISTRATION_DELETE_SUCCESS: return deleteRegistrationSuccess(state, action);
+		case REGISTRATION_DELETE_FAILURE: return deleteRegistrationFailure(state, action);
 		default: return state;
 	}
 }

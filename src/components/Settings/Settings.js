@@ -7,6 +7,7 @@ import Spacer from '../Helper/Spacer';
 import SettingsItem from './SettingsItem';
 import {clearSites} from '../../actions/sites';
 import {logout} from '../../actions/login';
+import {unregister} from '../../actions/registrar';
 
 const SPACER = "spacer";
 const NOTIFICATIONS = "Notification Settings";
@@ -85,6 +86,7 @@ class Settings extends Component {
 										Storage.sites.reset();
 										Storage.token.reset();
 										this.props.clearSites();
+										this.props.unregister();
 										this.props.userLogout();
 									}}/>
 				</View>
@@ -103,7 +105,8 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		clearSites: () => dispatch(clearSites()),
-		userLogout: () => dispatch(logout())
+		userLogout: () => dispatch(logout()),
+		unregister: () => dispatch(unregister())
 	}
 };
 

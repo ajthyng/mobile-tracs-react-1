@@ -79,9 +79,10 @@ export function getSettings(token) {
 			dispatch(settingsFailure(errorMessage));
 		}).then(settings => {
 			if (settings) {
-				console.log("Settings: ", settings);
 				dispatch(settingsSuccess(settings));
 			}
+		}).catch(err => {
+			dispatch(settingsFailure(err.message));
 		});
 	}
 }
@@ -113,6 +114,8 @@ export function saveSettings(settings, token, local) {
 				dispatch(saveSettingsFailure("Failed to save settings remotely"));
 				return false;
 			}
+		}).catch(err => {
+			dispatch(saveSettingsFailure(err.message));
 		});
 	}
 }
