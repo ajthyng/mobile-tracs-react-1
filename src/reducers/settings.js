@@ -35,7 +35,8 @@ const requestSettings = (state, action) => {
 	return {
 		...state,
 		isFetching: true,
-		isLoaded: false
+		isLoaded: false,
+		errorMessage: "",
 	}
 };
 
@@ -62,7 +63,8 @@ const requestSaveSettings = (state, action) => {
 	return {
 		...state,
 		isSaving: true,
-		isSaved: false
+		isSaved: false,
+		errorMessage: "",
 	}
 };
 

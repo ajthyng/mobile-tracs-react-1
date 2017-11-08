@@ -88,9 +88,9 @@ export function getSettings(token) {
 
 export function saveSettings(settings, token, local) {
 	return async (dispatch) => {
-		//if (!token) {
-		//	await FCM.getFCMToken().then(deviceToken => token = deviceToken);
-		//}
+		if (!token) {
+			await FCM.getFCMToken().then(deviceToken => token = deviceToken);
+		}
 		const settingsURL = `${global.urls.dispatchUrl}${global.urls.settings(token)}`;
 		const options = {
 			method: 'post',
