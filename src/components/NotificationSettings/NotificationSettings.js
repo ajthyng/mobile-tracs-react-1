@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View} from 'react-native';
+import {View, ToastAndroid, Platform} from 'react-native';
 import {connect} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
 
@@ -81,6 +81,21 @@ class NotificationSettings extends Component {
 		)
 	}
 
+	saveSettings(settings, token, local) {
+		if (local) {
+			return new Promise((resolve) => {
+				this.props.saveSettings(settings, token, local);
+				resolve(true);
+			});
+		} else {
+			return new Promise((resolve) => {
+				this.props.saveSettings(settings, token, local).then(didSave => {
+					resolve(didSave);
+				});
+			});
+		}
+	}
+
 	render() {
 		if (this.props.isFetching === true || !this.props) {
 			return (
@@ -104,7 +119,10 @@ class NotificationSettings extends Component {
 						userSettings.setSite(self.props.id, enabled);
 						break;
 				}
-				this.props.saveSettings(userSettings.getSettings(), this.props.token, false);
+				this.saveSettings(userSettings.getSettings(), this.props.token, false)
+					.then(result => {
+						if (!result) self.setState({switchIsOn: !self.state.switchIsOn});
+					});
 			};
 
 			const offset = this.settings.length;
@@ -134,6 +152,9 @@ class NotificationSettings extends Component {
 				...siteSwitches
 			];
 
+			if (this.props.errorMessage) {
+				ToastAndroid.show(this.props.errorMessage, ToastAndroid.LONG);
+			}
 			return (
 				<View>
 					{defaultSwitches}
@@ -150,6 +171,7 @@ const mapStateToProps = (state, ownProps) => {
 		token: state.register.deviceToken,
 		blacklist: state.settings.userSettings.blacklist,
 		global_disable: state.settings.userSettings.global_disable,
+		errorMessage: state.settings.errorMessage,
 		isFetching: state.settings.isFetching
 	}
 };

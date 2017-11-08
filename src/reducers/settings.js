@@ -19,14 +19,22 @@ const {
 	SAVE_SETTINGS_FAILURE
 } = settingsActions;
 
-const initialState = {
-	userSettings: {}
+export const initialState = {
+	userSettings: {
+		blacklist: [],
+		global_disable: false
+	},
+	errorMessage: "",
+	isFetching: false,
+	isLoaded: false,
+	isSaving: false,
+	isSaved: false
 };
 
 const requestSettings = (state, action) => {
 	return {
 		...state,
-		isFetching: action.isFetching,
+		isFetching: true,
 		isLoaded: false
 	}
 };
@@ -35,15 +43,17 @@ const settingsSuccess = (state, action) => {
 	return {
 		...state,
 		userSettings: action.userSettings,
-		isFetching: action.isFetching,
+		isFetching: false,
 		isLoaded: true
 	}
 };
 
 const settingsFailure = (state, action) => {
 	return {
-		isFetching: action.isFetching,
+		...state,
+		isFetching: false,
 		isLoaded: false,
+		userSettings: initialState.userSettings,
 		errorMessage: action.errorMessage
 	}
 };

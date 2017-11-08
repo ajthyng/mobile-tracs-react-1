@@ -85,11 +85,11 @@ const TabIcons = {
 	}
 };
 
-FCM.getFCMToken().then((deviceToken) => {
-	console.log("TOKEN: ", deviceToken);
-	store.dispatch(updateToken(deviceToken));
-	token.store(deviceToken).then(() => {});
-});
+//FCM.getFCMToken().then((deviceToken) => {
+//	console.log("TOKEN: ", deviceToken);
+//	store.dispatch(updateToken(deviceToken));
+//	token.store(deviceToken).then(() => {});
+//});
 
 const Scenes = Actions.create(
 	<Scene key="root">

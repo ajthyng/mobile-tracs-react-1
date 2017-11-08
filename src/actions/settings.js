@@ -9,6 +9,7 @@
  */
 import Settings from '../utils/settings';
 import {settingsActions} from '../constants/actions';
+import FCM from 'react-native-fcm';
 
 const {
 	REQUEST_SETTINGS,
@@ -22,7 +23,6 @@ const {
 const requestSettings = () => {
 	return {
 		type: REQUEST_SETTINGS,
-		isFetching: true
 	}
 };
 
@@ -30,14 +30,12 @@ const settingsSuccess = (userSettings) => {
 	return {
 		type: SETTINGS_SUCCESS,
 		userSettings,
-		isFetching: false,
 	}
 };
 
 const settingsFailure = (errorMessage) => {
 	return {
 		type: SETTINGS_FAILURE,
-		isFetching: false,
 		errorMessage
 	}
 };
@@ -45,14 +43,12 @@ const settingsFailure = (errorMessage) => {
 const requestSaveSettings = () => {
 	return {
 		type: REQUEST_SAVE_SETTINGS,
-		isSaving: true
 	}
 };
 
 const saveSettingsSuccess = (userSettings) => {
 	return {
 		type: SAVE_SETTINGS_SUCCESS,
-		isSaving: false,
 		userSettings
 	}
 };
@@ -60,54 +56,62 @@ const saveSettingsSuccess = (userSettings) => {
 const saveSettingsFailure = (errorMessage) => {
 	return {
 		type: SAVE_SETTINGS_FAILURE,
-		isSaving: false,
 		errorMessage
 	}
 };
 
 export function getSettings(token) {
-	const settingsURL = `${global.urls.dispatchUrl}${global.urls.settings(token)}`;
-	const options = {
-		url: settingsURL,
-		method: 'get'
-	};
-	return (dispatch) => {
+	return async (dispatch) => {
 		dispatch(requestSettings());
+		if (!token) {
+			await FCM.getFCMToken().then(deviceToken => token = deviceToken);
+		}
+		const settingsURL = `${global.urls.dispatchUrl}${global.urls.settings(token)}`;
+		const options = {
+			url: settingsURL,
+			method: 'get'
+		};
 		return fetch(options).then(res => {
+			const errorMessage = "Failed to retrieve settings, assigning defaults";
 			if (res.ok) {
-				return res.json()
-			} else {
-				dispatch(settingsFailure("Retrieving remote settings failed"));
+				return res.json();
 			}
+			dispatch(settingsFailure(errorMessage));
 		}).then(settings => {
-			console.log("SETTINGS: ", settings);
-			dispatch(settingsSuccess(settings));
+			if (settings) {
+				console.log("Settings: ", settings);
+				dispatch(settingsSuccess(settings));
+			}
 		});
 	}
 }
 
 export function saveSettings(settings, token, local) {
-	const settingsURL = `${global.urls.dispatchUrl}${global.urls.settings(token)}`;
-	const options = {
-		method: 'post',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify(settings)
-	};
-
-	return (dispatch) => {
+	return async (dispatch) => {
+		//if (!token) {
+		//	await FCM.getFCMToken().then(deviceToken => token = deviceToken);
+		//}
+		const settingsURL = `${global.urls.dispatchUrl}${global.urls.settings(token)}`;
+		const options = {
+			method: 'post',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(settings)
+		};
 		dispatch(requestSaveSettings());
 		if (local) {
-			return saveSettingsSuccess(settings);
+			 dispatch(saveSettingsSuccess(settings));
+			 return true;
 		}
 		return fetch(settingsURL, options).then(res => {
 			console.log(options);
 			if (res.ok) {
-				console.log("Success!");
 				dispatch(saveSettingsSuccess(settings));
+				return true;
 			} else {
 				dispatch(saveSettingsFailure("Failed to save settings remotely"));
+				return false;
 			}
 		});
 	}

@@ -9,6 +9,7 @@
  */
 import {Platform} from 'react-native';
 import {auth, loginHasFailed, loginIsGuestAccount} from './login';
+import FCM from 'react-native-fcm';
 import base64 from 'base-64';
 import {token} from '../utils/storage';
 import {registrarActions} from '../constants/actions';
@@ -52,8 +53,13 @@ const user = (netid = '') => {
 	}
 };
 
-const postRegistration = (payload) => {
-	const {netid, password, jwt, deviceToken, dispatch} = payload;
+const postRegistration = async (payload) => {
+	let {netid, password, jwt, deviceToken, dispatch} = payload;
+	if (!deviceToken) {
+		await FCM.getFCMToken().then((token) => {
+			deviceToken = token;
+		});
+	}
 	let registration = {
 		platform: Platform.OS,
 		app_id: 'edu.txstate.mobile.tracs',
@@ -86,7 +92,8 @@ const postRegistration = (payload) => {
 	})
 		.then(res => {
 			if (res && res.hasOwnProperty("token") && res.token === deviceToken) {
-				console.log("TOKENS MATCH!");
+				console.log("Stored Token: ", deviceToken);
+				console.log("Server Token: ", res.token);
 				dispatch(user(netid));
 				dispatch(isRegistered(true));
 				dispatch(isRegistering(false));
