@@ -48,7 +48,7 @@ const notificationsFailure = (state, actions) => {
 export const notificationsReducer = (state = initialState, action) => {
 	switch (action.type) {
 		case REQUEST_NOTIFICATIONS: return requestNotifications(state, action);
-		case NOTIFICATIONS_SUCCESS: return notificationsFailure(state, action);
+		case NOTIFICATIONS_SUCCESS: return notificationsSuccess(state, action);
 		case NOTIFICATIONS_FAILURE: return notificationsFailure(state, action);
 		default: return state;
 	}
