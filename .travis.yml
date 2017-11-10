@@ -26,8 +26,7 @@ android:
   - android-sdk-license-.+
   - google-gdk-license-.+
 before_script:
-- $ANDROID_HOME/tools/bin/sdkmanager --help
-- yes | $ANDROID_HOME/tools/bin/sdkmanager --licenses
+- yes | sdkmanager --licenses
 script:
 - cd android && ./gradlew assembleRelease
 deploy:
