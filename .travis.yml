@@ -24,6 +24,8 @@ android:
   - android-sdk-preview-license-52d11cd2
   - android-sdk-license-.+
   - google-gdk-license-.+
+  - android-sdk-license-26
+  - build-tools-26.0.1g
 script:
 - cd android && ./gradlew assembleRelease
 deploy:
