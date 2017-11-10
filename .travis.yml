@@ -6,6 +6,7 @@ before_install:
 - openssl aes-256-cbc -K $encrypted_a68daf7cc111_key -iv $encrypted_a68daf7cc111_iv
   -in config.tar.enc -out config.tar -d
 - tar xvf config.tar
+- yes | $ANDROID_HOME/tools/bin/sdkmanager --licenses
 - nvm install 8
 - node --version
 install:
@@ -24,7 +25,6 @@ android:
   - addon-google_apis-google-19
   licenses:
   - android-sdk-preview-license-.+
-  - build-tools-license-.+
   - android-sdk-license-.+
   - google-gdk-license-.+
 script:
