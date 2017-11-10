@@ -17,14 +17,12 @@ import LoginScreen from './src/components/Login/LoginScreen';
 import SiteList from './src/components/SiteList/SiteList';
 import Notifications from './src/components/Notifications/Notifications';
 import Settings from './src/components/Settings/Settings';
-import {token} from './src/utils/storage';
 import * as urls from './config/urls';
 import * as scenes from './src/constants/scenes';
 import env from './config/env.json';
 import NotificationSettings from './src/components/NotificationSettings/NotificationSettings';
 import TabIcon from './src/components/TabBar/TabIcon';
 import SimpleWebView from './src/components/SimpleWebView/SimpleWebView';
-import {updateToken} from './src/actions/registrar';
 
 
 
