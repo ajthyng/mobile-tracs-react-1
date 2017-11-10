@@ -27,3 +27,4 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots
 storybook/**/*
+config.tar
