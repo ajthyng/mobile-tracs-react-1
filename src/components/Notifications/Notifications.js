@@ -1,32 +1,48 @@
 import React, {Component} from 'react';
 import {Text, View} from 'react-native';
 import {connect} from 'react-redux';
+import {getNotifications} from '../../actions/notifications';
+import ActivityIndicator from '../Helper/ActivityIndicator';
 
 class Notifications extends Component {
 	constructor(props) {
 		super(props);
 	}
 
+	componentWillMount() {
+		if (!this.props.loadingNotifications) {
+			this.props.getNotifications();
+			this.setState({})
+		}
+	}
+
 	render() {
-		return (
-			<View>
-				<Text>Hello from {this.props.title}</Text>
-			</View>
-		);
+		if (this.props.loadingNotifications) {
+			return (
+				<View>
+					<ActivityIndicator/>
+				</View>
+			);
+		} else {
+			return (
+				<View>
+					<Text>Hello from {this.props.title}</Text>
+				</View>
+			);
+		}
 	}
 }
 
 const mapStateToProps = (state, ownProps) => {
 	return {
-		//Object mapping state variables to props variables
-		//netid: state.register.registeredUser
+		loadingNotifications: state.notifications.isLoading,
+		errorMessage: state.notifications.errorMessage
 	}
 };
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		//Object mapping action functions to props as functions
-		//getMemberships: () => dispatch(getSiteInfo())        
+		getNotifications: () => dispatch(getNotifications())
 	}
 };
 
