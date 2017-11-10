@@ -80,7 +80,6 @@ const postRegistration = async (payload) => {
 		headers: {'Content-Type': 'application/json'},
 		body: JSON.stringify(registration)
 	};
-
 	return fetch(getRegistrationUrl, getOptions).then(res => {
 		if (res.ok) {
 			return res.json();
@@ -163,7 +162,6 @@ export const register = (netid = '', password) => {
 		let headers = {
 			'Authorization': 'Basic ' + base64.encode(auth64),
 		};
-
 		return fetch(`${dispatchUrl}${global.urls.jwt}`, {
 			method: 'get',
 			headers: headers
@@ -187,6 +185,12 @@ export const register = (netid = '', password) => {
 				};
 				postRegistration(payload);
 			});
+		}).catch(err => {
+			dispatch(loginIsGuestAccount(true));
+			dispatch(isRegistering(false));
+			dispatch(registrationHasFailed(true));
+			dispatch(auth(netid, password));
+			console.log(err.message);
 		});
 	}
 };

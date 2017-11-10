@@ -12,13 +12,19 @@ import * as Keychain from 'react-native-keychain';
 import {AsyncStorage} from 'react-native';
 import LockStatus from './lockstatus';
 import moment from 'moment';
+import {types} from '../constants/notifications';
 
+const {
+	FORUM,
+	ANNOUNCEMENT
+} = types;
 const expiryDays = 90;
 const msPerDay = 1000 * 3600 * 24;
 
 const keys = {
 	token: 'token',
-	sites: 'sites'
+	sites: 'sites',
+	notifications: 'notifications'
 };
 
 let stringify = (obj) => {
@@ -111,5 +117,47 @@ exports.sites = {
 			});
 			return AsyncStorage.setItem(keys.sites, stringify(stored));
 		});
+	}
+};
+
+exports.notifications = {
+	get(netid) {
+		//fetches list of notifications
+		return AsyncStorage.getItem(keys.notifications).then(stored => {
+			stored = stored === null ? {} : JSON.stringify(stored);
+			Object.keys(stored).forEach(key => {
+				Object.keys(stored[key]).forEach(notif => {
+
+				});
+			});
+			return userNotifs;
+		});
+	},
+	store(notifications) {
+		return AsyncStorage.getItem(keys.notifications).then(stored => {
+			stored = stored === null ? {} : JSON.stringify(stored);
+			return AsyncStorage.setItem(keys.notifications, stringify(userNotifs));
+		});
+	},
+	removeOne(id) {
+		return AsyncStorage.getItem(keys.notifications).then(stored => {
+			stored = stored === null ? {} : JSON.stringify(stored);
+			const keys = Object.keys(stored);
+			keys.forEach(type => {
+				let notifIDs = Object.keys(stored[type]);
+				notifIDs.forEach(notifID => {
+					if (stored[type][notifID].id === id) {
+						delete stored[type][notifID];
+					}
+				});
+			});
+			return AsyncStorage.setItem(keys.notifications, JSON.stringify(stored));
+		});
+	},
+	reset() {
+		return AsyncStorage.removeItem(keys.notifications);
+	},
+	clean(notifications, netid) {
+		//removes cached notifications that should not be present
 	}
 };

@@ -1,4 +1,11 @@
 language: android
+branches:
+  except:
+  - master
+  - dev
+branches:
+  only:
+  - qa
 before_install:
 - openssl aes-256-cbc -K $encrypted_a68daf7cc111_key -iv $encrypted_a68daf7cc111_iv
   -in urls.js.enc -out config/urls.js -d
