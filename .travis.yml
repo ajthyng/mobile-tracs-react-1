@@ -24,6 +24,7 @@ android:
   - addon-google_apis-google-19
   licenses:
   - android-sdk-preview-license-.+
+  - build-tools-license-.+
   - android-sdk-license-.+
   - google-gdk-license-.+
 script:
