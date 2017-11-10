@@ -20,12 +20,10 @@ local.properties
 android/app/google-services.json
 node_modules/
 npm-debug.log
-yarn-error.log
 buck-out/
 \.buckd/
 *.keystore
 fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots
-config/*
 storybook/**/*
