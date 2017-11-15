@@ -92,8 +92,8 @@ class LoginScreen extends Component {
 			return (
 				<ActivityIndicator/>
 			);
-		} else {
-			return (
+		}
+		return (
 				<View style={styles.container}>
 					<Text>Welcome to TRACS Mobile</Text>
 					<TextInput
@@ -152,7 +152,6 @@ class LoginScreen extends Component {
 				</View>
 			);
 		}
-	}
 }
 
 const mapStateToProps = (state, ownProps) => {
