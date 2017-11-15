@@ -7,8 +7,8 @@ before_install:
   -in config.tar.enc -out config.tar -d
 - tar xvf config.tar
 - ls
-- mkdir $TRAVIS_BUILD_DIR/.keystore
-- mv $TRAVIS_BUILD_DIR/android/.keystore/** $TRAVIS_BUILD_DIR/.keystore/
+- mkdir /home/travis/build/.keystore
+- mv $TRAVIS_BUILD_DIR/.keystore/** /home/travis/build/.keystore/
 - nvm install 8
 - node --version
 install:
