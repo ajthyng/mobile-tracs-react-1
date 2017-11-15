@@ -29,12 +29,17 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new VectorIconsPackage(),
-            new KeychainPackage(),
-            new FIRMessagingPackage(),
-            new LockStatusPackage(),
-            new CookieManagerPackage()
+          new VectorIconsPackage(),
+          new KeychainPackage(),
+          new FIRMessagingPackage(),
+          new LockStatusPackage(),
+          new CookieManagerPackage()
       );
+    }
+
+    @Override
+    protected String getJSMainModuleName() {
+      return "index.android";
     }
   };
 
