@@ -1,20 +1,14 @@
 language: android
 branches:
-  except:
-  - master
-  - dev
-branches:
   only:
-  - qa
+  - master
 before_install:
 - openssl aes-256-cbc -K $encrypted_a68daf7cc111_key -iv $encrypted_a68daf7cc111_iv
-  -in urls.js.enc -out config/urls.js -d
-- openssl aes-256-cbc -K $encrypted_a68daf7cc111_key -iv $encrypted_a68daf7cc111_iv
-  -in env.json.enc -out config/env.json -d
-- openssl aes-256-cbc -K $encrypted_a68daf7cc111_key -iv $encrypted_a68daf7cc111_iv
-  -in config.json.enc -out config/config.json -d
-- openssl aes-256-cbc -K $encrypted_a68daf7cc111_key -iv $encrypted_a68daf7cc111_iv
-  -in google-services.json.enc -out android/app/google-services.json -d
+  -in config.tar.enc -out config.tar -d
+- tar xvf config.tar
+- ls
+- mkdir /home/travis/build/.keystore
+- mv $TRAVIS_BUILD_DIR/.keystore/** /home/travis/build/.keystore/
 - nvm install 8
 - node --version
 install:
@@ -24,22 +18,24 @@ android:
   - tools
   - platform-tools
   - build-tools-23.0.1
+  - build-tools-26.0.1
+  - android-26
   - android-23
   - extra-android-m2repository
   - extra-google-google_play_services
   - extra-google-m2repository
   - addon-google_apis-google-19
   licenses:
-  - android-sdk-preview-license-52d11cd2
-  - android-sdk-license-.+
-  - google-gdk-license-.+
+  - 'android-sdk-preview-license-.+'
+  - 'android-sdk-license-.+'
+  - 'google-gdk-license-.+'
 script:
 - cd android && ./gradlew assembleRelease
 deploy:
   provider: releases
   api_key:
     secure: VTBYep2/qQlVEgk8ZoNbPdHNf754Z2rD+PWCdSI12IR/2dHJZTM+pJB2cIVb/mIOpDnu4PrBEojFGW1LQ4dVZl0cLUoCdXwljPRyLmWvNDcRZFR5GMx3SUyW3qJ6MGP/AqYbMoThCith23JX2KpC2mGPcDbYkBLKKZg3cJYjAUahfN3EOmUU3D2ABqOUM4ApltvAwPc8QX8QWG5X5gjwfxLM32NWpeqMgNTvQ/6fOUA+QulAFnMhwHYJJ38X9ENyxLlbkT3Q3tKh52epdqVTDOtzW7rS2zC5gc3I/hu9NoCiHZNTVo3Hp+TVssrcTlXr+Wfw1ZuLpAln55Ihoh+LLBbdl6hygcaQa5Skr5VQSUVCvzXWWo7uSypKR+y2+bOYXV9OOdXTg8i5KLLgZU5dzjw9H8QiRFZ6usQPHtXiMexSq+RCjJU6fJBZu2hfuRWLxPB7osXXlmx2Oq1bsrdblE0GMViGiPnlG8cU5vxGFhqthFgJwUIxVnncapVwiTPpnuZBXD8QzCmCPfo6WHshlaR9LqwYIHJrJVco0x/t31V5XDg9TD5e4MexyfZYxgg/bWLV70KAqKraUBIvGc22bVxYKdMTQdnqjzNZg6so1bl/hlGNjaNcOy7Z0aprCayB054+uZD5gWQ3xNvZ2YyQXdZAx3V0v+FpNZWGoSHCE6s=
-  file: $TRAVIS_BUILD_DIR/android/app/build/outputs/apk/app-release-unsigned.apk
+  file: $TRAVIS_BUILD_DIR/android/app/build/outputs/apk/TRACSMobile-release.apk
   on:
     repo: txstate-etc/mobile-tracs-react
   skip_cleanup: true

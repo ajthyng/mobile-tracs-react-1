@@ -162,6 +162,7 @@ export const register = (netid = '', password) => {
 		let headers = {
 			'Authorization': 'Basic ' + base64.encode(auth64),
 		};
+
 		return fetch(`${dispatchUrl}${global.urls.jwt}`, {
 			method: 'get',
 			headers: headers

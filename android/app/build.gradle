@@ -1,6 +1,12 @@
+import java.text.SimpleDateFormat
+import com.android.build.OutputFile
+
 apply plugin: "com.android.application"
 apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
-import com.android.build.OutputFile
+
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 /**
  * The react.gradle file registers a task for each build variant (e.g. bundleDebugJsAndAssets
@@ -111,10 +117,44 @@ android {
             include "armeabi-v7a", "x86"
         }
     }
+    signingConfigs {
+        releaseConfig {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+        }
+    }
     buildTypes {
         release {
-            minifyEnabled enableProguardInReleaseBuilds
-            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            minifyEnabled false
+                        proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+                        android.applicationVariants.all { variant ->
+                            def appName
+                            if (project.hasProperty("applicationname")) {
+                                appName = applicationName
+                            } else {
+                                appName = parent.name
+                            }
+                            def date = new Date()
+                            def dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HHmmss")
+                            def formattedDate = dateFormat.format(date)
+                            variant.outputs.each { output ->
+
+                                def newApkName
+                                newApkName = "${appName}-${variant.baseName}.apk"
+                                output.outputFile = new File(
+                                    output.outputFile.parent,
+                                    newApkName)
+                            }
+                        }
+                        signingConfig signingConfigs.releaseConfig
+                        debuggable true
+        }
+        debug {
+        }
+        network_test {
+            debuggable true
         }
     }
     // applicationVariants are e.g. debug, release
