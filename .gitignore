@@ -28,3 +28,4 @@ fastlane/Preview.html
 fastlane/screenshots
 storybook/**/*
 config.tar
+/android/keystore.properties
