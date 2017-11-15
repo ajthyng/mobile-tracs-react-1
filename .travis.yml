@@ -7,7 +7,7 @@ before_install:
   -in config.tar.enc -out config.tar -d
 - tar xvf config.tar
 - ls
-- mkdir .keystore/
+- mkdir /home/travis/build/.keystore
 - mv .keystore/** /home/travis/build/.keystore/
 - nvm install 8
 - node --version
