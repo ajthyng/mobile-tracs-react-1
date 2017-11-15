@@ -1,7 +1,8 @@
 language: android
 branches:
   only:
-  - master
+  - qa
+  - /^v\d+(\.\d+)+$/
 before_install:
 - openssl aes-256-cbc -K $encrypted_a68daf7cc111_key -iv $encrypted_a68daf7cc111_iv
   -in config.tar.enc -out config.tar -d
@@ -40,3 +41,4 @@ deploy:
     repo: txstate-etc/mobile-tracs-react
   skip_cleanup: true
   tags: true
+  prerelease: true
