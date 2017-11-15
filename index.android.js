@@ -60,7 +60,7 @@ class App extends Component {
 const store = configureStore();
 const RouterWithRedux = connect()(Router);
 const handleNotification = (notification) => {
-	console.log("NOTIFICATION: ", notification);
+	console.log("Notification: ", notification);
 };
 
 if (env.debug) {
