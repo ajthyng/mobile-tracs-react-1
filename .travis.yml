@@ -41,3 +41,4 @@ deploy:
     repo: txstate-etc/mobile-tracs-react
   skip_cleanup: true
   tags: true
+  prerelease: true
