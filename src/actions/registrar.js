@@ -8,48 +8,54 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import {Platform} from 'react-native';
-import {auth, loginHasFailed, loginIsGuestAccount} from './login';
+import {auth, login, loginHasFailed, loginIsGuestAccount} from './login';
 import FCM from 'react-native-fcm';
 import base64 from 'base-64';
 import {registrarActions} from '../constants/actions';
 
 const {
-	IS_REGISTERED,
-	IS_REGISTERING,
-	REGISTRATION_FAILED,
-	REMOVE_TOKEN,
-	REPLACE_TOKEN,
-	REMOVE_USER,
-	REPLACE_USER,
-	REQUEST_REGISTRATION_DELETE,
-	REGISTRATION_DELETE_SUCCESS,
-	REGISTRATION_DELETE_FAILURE
+	REQUEST_REGISTRATION,
+	REGISTRATION_SUCCESS,
+	REGISTRATION_FAILURE,
+	REQUEST_UNREGISTER,
+	UNREGISTER_SUCCESS,
+	UNREGISTER_FAILURE,
 } = registrarActions;
 
-const isRegistered = (bool) => {
+const requestRegistration = () => {
 	return {
-		type: IS_REGISTERED,
-		isRegistered: bool,
+		type: REQUEST_REGISTRATION,
+		isRegistering: true,
+		isRegistered: false
 	}
 };
 
-const registrationHasFailed = (bool) => {
+const registrationSuccess = (deviceToken, netid) => {
 	return {
-		type: REGISTRATION_FAILED,
-		hasFailed: bool
+		type: REGISTRATION_SUCCESS,
+		isRegistering: false,
+		isRegistered: true,
+		deviceToken,
+		netid
 	}
 };
 
-const user = (netid = '') => {
-	let type = (typeof netid === 'undefined' || netid.length === 0) ? REMOVE_USER : REPLACE_USER;
+const registrationFailure = (errorMessage) => {
 	return {
-		type: type,
-		registeredUser: netid
+		type: REGISTRATION_FAILURE,
+		isRegistering: false,
+		isRegistered: false,
+		errorMessage
 	}
 };
 
-const postRegistration = async (payload) => {
-	let {netid, password, jwt, deviceToken, dispatch} = payload;
+const postRegistration = async (payload, dispatch) => {
+	let {
+		netid,
+		password,
+		jwt,
+		deviceToken
+	} = payload;
 	if (!deviceToken) {
 		await FCM.getFCMToken().then((token) => {
 			deviceToken = token;
@@ -83,77 +89,52 @@ const postRegistration = async (payload) => {
 		if (res.ok) {
 			return res.json();
 		}
-	})
-		.then(res => {
-			if (res && res.hasOwnProperty("token") && res.token === deviceToken) {
-				console.log("Stored Token: ", deviceToken);
-				console.log("Server Token: ", res.token);
-				dispatch(user(netid));
-				dispatch(isRegistered(true));
-				dispatch(isRegistering(false));
-				dispatch(auth(netid, password));
-			} else {
-				return fetch(registrationUrl, postOptions).then(res => {
-					if (res.ok) {
-						dispatch(user(netid));
-						dispatch(isRegistered(true));
-						dispatch(updateToken(deviceToken));
-					} else {
-						console.log("Error: Could not register device");
-						dispatch(user());
-						dispatch(isRegistered(false));
-						dispatch(registrationHasFailed(true));
-						dispatch(loginIsGuestAccount(true));
-					}
-					dispatch(isRegistering(false));
-					dispatch(auth(netid, password));
-				});
-			}
-		});
+	}).then(res => {
+		if (res && res.hasOwnProperty("token") && res.token === deviceToken) {
+			console.log("Stored Token: ", deviceToken);
+			console.log("Server Token: ", res.token);
+			dispatch(login(netid, password));
+			dispatch(registrationSuccess(res.token, netid));
+		} else {
+			return fetch(registrationUrl, postOptions).then(res => {
+				dispatch(login(netid, password));
+				if (res.ok) {
+					dispatch(registrationSuccess(deviceToken, netid));
+				} else {
+					const errorMessage = `${res.statusCode} error: Could not register device for push notifications`;
+					console.log(errorMessage);
+					dispatch(registrationFailure(errorMessage));
+				}
+			});
+		}
+	});
 };
 
-const requestRegistrationDelete = () => {
+const requestUnregister = () => {
 	return {
-		type: REQUEST_REGISTRATION_DELETE,
+		type: REQUEST_UNREGISTER,
 	}
 };
 
-const registrationDeleteSuccess = () => {
+const unregisterSuccess = () => {
 	return {
-		type: REGISTRATION_DELETE_SUCCESS
+		type: UNREGISTER_SUCCESS
 	}
 };
 
-const registrationDeleteFailure = (errorMessage) => {
+const unregisterFailure = (errorMessage) => {
 	console.log(errorMessage);
 	return {
-		type: REGISTRATION_DELETE_FAILURE,
+		type: UNREGISTER_FAILURE,
 		errorMessage
-	}
-};
-
-export const isRegistering = (bool) => {
-	return {
-		type: IS_REGISTERING,
-		isRegistering: bool
-	}
-};
-
-export const updateToken = (token) => {
-	let type = (typeof token === 'undefined' || token.length === 0) ? REMOVE_TOKEN : REPLACE_TOKEN;
-	return {
-		type: type,
-		deviceToken: token
 	}
 };
 
 export const register = (netid = '', password) => {
 	return (dispatch) => {
-		dispatch(isRegistering(true));
+		dispatch(requestRegistration());
 		if (netid.length === 0) {
-			dispatch(isRegistering(false));
-			dispatch(registrationHasFailed(true));
-			dispatch(loginHasFailed(true));
+			dispatch(registrationFailure("A Net ID is required to register device"));
 			return;
 		}
 		const dispatchUrl = global.urls.dispatchUrl;
@@ -169,27 +150,24 @@ export const register = (netid = '', password) => {
 			if (res.ok) {
 				return res.text();
 			} else {
-				dispatch(loginIsGuestAccount(true));
-				dispatch(isRegistering(false));
-				dispatch(registrationHasFailed(true));
-				dispatch(auth(netid, password));
+				dispatch(login(netid, password));
+				dispatch(registrationFailure(`${res.statusCode}: Could not register device to receive push notifications`));
 			}
 		}).then(jwt => {
-			FCM.getFCMToken().then(deviceToken => {
-				const payload = {
-					netid,
-					password,
-					jwt,
-					deviceToken,
-					dispatch
-				};
-				postRegistration(payload);
-			});
+			if (jwt) {
+				FCM.getFCMToken().then(deviceToken => {
+					const payload = {
+						netid,
+						password,
+						jwt,
+						deviceToken
+					};
+					postRegistration(payload, dispatch);
+				});
+			}
 		}).catch(err => {
-			dispatch(loginIsGuestAccount(true));
-			dispatch(isRegistering(false));
-			dispatch(registrationHasFailed(true));
-			dispatch(auth(netid, password));
+			dispatch(login(netid, password));
+			dispatch(registrationFailure("Could not register device to receive push notifications"));
 			console.log(err.message);
 		});
 	}
@@ -197,7 +175,7 @@ export const register = (netid = '', password) => {
 
 export const unregister = (token) => {
 	return async (dispatch) => {
-		dispatch(requestRegistrationDelete());
+		dispatch(requestUnregister());
 		if (!token) {
 			await FCM.getFCMToken().then(deviceToken => {
 				token = deviceToken;
@@ -215,13 +193,13 @@ export const unregister = (token) => {
 
 		fetch(deleteRegistrationURL, options).then(res => {
 			if (res.ok) {
-				dispatch(registrationDeleteSuccess());
+				dispatch(unregisterSuccess());
 			} else {
 				const errorMessage = "Could not unregister device for push notifications";
-				dispatch(registrationDeleteFailure(errorMessage));
+				dispatch(unregisterFailure(errorMessage));
 			}
 		}).catch(err => {
-			dispatch(registrationDeleteFailure(err.message));
+			dispatch(unregisterFailure(err.message));
 		})
 	};
 };

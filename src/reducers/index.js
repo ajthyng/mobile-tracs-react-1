@@ -18,7 +18,7 @@ import {notificationsReducer} from './notifications';
 
 export default combineReducers({
 	login: loginReducer,
-	register: registerReducer,
+	registrar: registerReducer,
 	tracsSites: sitesReducer,
 	routes: routesReducer,
 	settings: settingsReducer,

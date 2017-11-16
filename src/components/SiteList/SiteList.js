@@ -84,7 +84,7 @@ const mapStateToProps = (state, ownProps) => {
 	return {
 		netid: state.login.netid,
 		isAuthenticated: state.login.isAuthenticated,
-		deviceToken: state.register.deviceToken,
+		deviceToken: state.registrar.deviceToken,
 		sites: state.tracsSites.userSites,
 		isFetchingSites: state.tracsSites.isFetchingSites,
 		dataSource: siteData,

@@ -97,7 +97,7 @@ class Settings extends Component {
 
 const mapStateToProps = (state, ownProps) => {
 	return {
-		isLoggedIn: state.login.isLoggedIn,
+		isLoggedIn: state.login.isAuthenticated,
 		hasSites: state.tracsSites.userSites.length > 0
 	}
 };

@@ -3,9 +3,8 @@ import {connect} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
 import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
 import user from '../../../config/config.json';
-import location from '../../utils/location';
 import ActivityIndicator from '../Helper/ActivityIndicator';
-import {login} from '../../actions/login';
+import {register} from '../../actions/registrar';
 import {setCurrentScene} from '../../actions/routes';
 
 const styles = StyleSheet.create({
@@ -43,8 +42,7 @@ class LoginScreen extends Component {
 	componentWillMount() {
 		this.props.setScene(Actions.currentScene);
 		if (Actions.currentScene === 'login') {
-			if (this.props.loggingIn === false) {
-				console.log("Attempting login");
+			if (this.props.loggingIn === false && this.props.registering === false) {
 				this.props.login();
 			}
 		}
@@ -57,7 +55,7 @@ class LoginScreen extends Component {
 	}
 
 	render() {
-		if (this.props.loggingIn) {
+		if (this.props.loggingIn || this.props.registering) {
 			return (
 				<ActivityIndicator/>
 			);
@@ -128,15 +126,17 @@ const mapStateToProps = (state, ownProps) => {
 	return {
 		isAuthenticated: state.login.isAuthenticated,
 		loggingIn: state.login.isLoggingIn,
+		registering: state.registrar.isRegistering,
 		credentials: {netid: state.login.netid, password: state.login.password},
-		errorMessage: state.login.errorMessage,
+		loginError: state.login.errorMessage,
+		registerError: state.registrar.errorMessage,
 		currentScene: state.routes.scene
 	}
 };
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		login: (netid, password) => dispatch(login(netid, password)),
+		login: (netid, password) => dispatch(register(netid, password)),
 		setScene: (scene) => dispatch(setCurrentScene(scene))
 	}
 };
