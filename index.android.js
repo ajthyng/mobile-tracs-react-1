@@ -15,18 +15,14 @@ import {ActionConst, Actions, Router, Scene, Stack, Tabs} from 'react-native-rou
 import configureStore from './src/store/configureStore';
 import LoginScreen from './src/components/Login/LoginScreen';
 import SiteList from './src/components/SiteList/SiteList';
-import Notifications from './src/components/Notifications/Notifications';
+import NotificationView from './src/components/Notifications/NotificationView';
 import Settings from './src/components/Settings/Settings';
 import * as urls from './config/urls';
 import * as scenes from './src/constants/scenes';
 import env from './config/env.json';
-import {credentials} from './src/utils/storage';
-import {setCredentials} from './src/actions/login';
 import NotificationSettings from './src/components/NotificationSettings/NotificationSettings';
 import TabIcon from './src/components/TabBar/TabIcon';
 import SimpleWebView from './src/components/SimpleWebView/SimpleWebView';
-
-
 
 class App extends Component {
 	constructor(props) {
@@ -106,7 +102,7 @@ const Scenes = Actions.create(
 						 tabBarLabel="Announcements"
 						 hideNavBar={true}
 						 title={<Text>Announcements</Text>}
-						 component={Notifications}/>
+						 component={NotificationView}/>
 			<Scene key={scenes.sites}
 						 icon={TabIcons.sites}
 						 tabBarLabel="Courses"

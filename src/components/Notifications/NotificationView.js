@@ -1,19 +1,34 @@
 import React, {Component} from 'react';
-import {Text, View} from 'react-native';
+import {View, Dimensions, SectionList} from 'react-native';
 import {connect} from 'react-redux';
 import {getNotifications} from '../../actions/notifications';
 import ActivityIndicator from '../Helper/ActivityIndicator';
+import Discussion from './Discussion';
+import Announcement from './Announcement';
 
-class Notifications extends Component {
+class NotificationView extends Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			deviceWidth: Dimensions.get('window').width
+		};
 	}
 
 	componentWillMount() {
 		if (!this.props.loadingNotifications) {
 			this.props.getNotifications();
-			this.setState({})
 		}
+		Dimensions.addEventListener('change', (dimensions) => {
+			this.setState({
+				deviceWidth: dimensions.window.width
+			});
+		});
+	}
+
+	componentWillUnmount() {
+		Dimensions.removeEventListener('change', (result) => {
+			console.log(result);
+		});
 	}
 
 	render() {
@@ -26,7 +41,12 @@ class Notifications extends Component {
 		} else {
 			return (
 				<View>
-					<Text>Hello from {this.props.title}</Text>
+					<Announcement read={false}
+											deviceWidth={this.state.deviceWidth}
+					/>
+					<Discussion read={true}
+											deviceWidth={this.state.deviceWidth}
+					/>
 				</View>
 			);
 		}
@@ -46,4 +66,4 @@ const mapDispatchToProps = (dispatch) => {
 	}
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Notifications);
+export default connect(mapStateToProps, mapDispatchToProps)(NotificationView);

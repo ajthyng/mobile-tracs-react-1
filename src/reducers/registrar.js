@@ -17,17 +17,7 @@ const {
 	REGISTRATION_FAILURE,
 	REQUEST_UNREGISTER,
 	UNREGISTER_SUCCESS,
-	UNREGISTER_FAILURE,
-	//IS_REGISTERED,
-	//IS_REGISTERING,
-	//REMOVE_TOKEN,
-	//REMOVE_USER,
-	//REPLACE_TOKEN,
-	//REPLACE_USER,
-	//REGISTRATION_FAILED,
-	//REQUEST_REGISTRATION_DELETE,
-	//REGISTRATION_DELETE_SUCCESS,
-	//REGISTRATION_DELETE_FAILURE
+	UNREGISTER_FAILURE
 } = registrarActions;
 
 export const initialState = {
@@ -39,18 +29,6 @@ export const initialState = {
 	isUnregistering: false,
 	errorMessage: ''
 };
-
-//export const initialState = {
-//	isRegistered: false,
-//	deviceToken: '',
-//	registeredUser: '',
-//	platform: Platform.OS,
-//	isRegistering: false,
-//	hasFailed: false,
-//	errorMessage: "",
-//	isDeleting: false,
-//	isDeleted: false
-//};
 
 function requestRegistration(state, action) {
 	return {
@@ -109,13 +87,6 @@ export function registerReducer(state = initialState, action) {
 		case REQUEST_REGISTRATION: return requestRegistration(state, action);
 		case REGISTRATION_SUCCESS: return registrationSuccess(state, action);
 		case REGISTRATION_FAILURE: return registrationFailure(state, action);
-		//case REMOVE_USER: return removeUser(state, action);
-		//case REPLACE_USER: return replaceUser(state, action);
-		//case REMOVE_TOKEN: return removeToken(state, action);
-		//case REPLACE_TOKEN: return replaceToken(state, action);
-		//case IS_REGISTERED: return isRegistered(state, action);
-		//case IS_REGISTERING: return isRegistering(state, action);
-		//case REGISTRATION_FAILED: return registrationHasFailed(state, action);
 		case REQUEST_UNREGISTER: return requestUnregister(state, action);
 		case UNREGISTER_SUCCESS: return unregisterSuccess(state, action);
 		case UNREGISTER_FAILURE: return unregisterFailure(state, action);
