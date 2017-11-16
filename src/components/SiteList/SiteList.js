@@ -3,7 +3,6 @@ import {FlatList, RefreshControl} from 'react-native';
 import {connect} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
 import {clearSites, getSiteInfo} from '../../actions/sites';
-import * as location from '../../utils/location';
 import Site from './Site';
 import {setCurrentScene} from '../../actions/routes';
 import {auth, netidLogout} from '../../actions/login';
@@ -19,10 +18,11 @@ class SiteList extends Component {
 
 	componentWillMount() {
 		this.props.setScene(Actions.currentScene);
+		this.checkComponentState();
 	}
 
 	componentDidUpdate() {
-		if (location.compare(Actions.currentScene, this.props.currentScene)) {
+		if (Actions.currentScene === 'sites' && !this.props.isFetchingSites) {
 			this.checkComponentState();
 
 			if (this.props.siteFetchFailed === true) {
@@ -36,21 +36,13 @@ class SiteList extends Component {
 		if (sitesNotLoaded) {
 			this.getMemberships(this.props.netid);
 		}
-		if (this.props.isLoggedIn === false) {
+		if (!this.props.isAuthenticated) {
 			Actions.login();
 		}
 	}
 
 	clearSites() {
 		this.props.clearSites();
-	}
-
-	login(netid, password) {
-		this.props.onLogin(netid, password);
-	}
-
-	logout() {
-		this.props.onLogout();
 	}
 
 	getMemberships(netid) {
@@ -91,7 +83,7 @@ const mapStateToProps = (state, ownProps) => {
 	});
 	return {
 		netid: state.login.netid,
-		isLoggedIn: state.login.isLoggedIn,
+		isAuthenticated: state.login.isAuthenticated,
 		deviceToken: state.register.deviceToken,
 		sites: state.tracsSites.userSites,
 		isFetchingSites: state.tracsSites.isFetchingSites,
@@ -104,9 +96,7 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		getMemberships: (netid) => dispatch(getSiteInfo(netid)),
 		clearSites: () => dispatch(clearSites()),
-		setScene: (scene) => dispatch(setCurrentScene(scene)),
-		onLogin: (netid, password) => dispatch(auth(netid, password)),
-		onLogout: () => dispatch(netidLogout())
+		setScene: (scene) => dispatch(setCurrentScene(scene))
 	}
 };
 

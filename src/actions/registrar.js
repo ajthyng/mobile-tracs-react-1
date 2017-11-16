@@ -11,7 +11,6 @@ import {Platform} from 'react-native';
 import {auth, loginHasFailed, loginIsGuestAccount} from './login';
 import FCM from 'react-native-fcm';
 import base64 from 'base-64';
-import {token} from '../utils/storage';
 import {registrarActions} from '../constants/actions';
 
 const {
@@ -176,7 +175,7 @@ export const register = (netid = '', password) => {
 				dispatch(auth(netid, password));
 			}
 		}).then(jwt => {
-			token.get().then(deviceToken => {
+			FCM.getFCMToken().then(deviceToken => {
 				const payload = {
 					netid,
 					password,

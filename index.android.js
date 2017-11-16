@@ -20,6 +20,8 @@ import Settings from './src/components/Settings/Settings';
 import * as urls from './config/urls';
 import * as scenes from './src/constants/scenes';
 import env from './config/env.json';
+import {credentials} from './src/utils/storage';
+import {setCredentials} from './src/actions/login';
 import NotificationSettings from './src/components/NotificationSettings/NotificationSettings';
 import TabIcon from './src/components/TabBar/TabIcon';
 import SimpleWebView from './src/components/SimpleWebView/SimpleWebView';
@@ -31,8 +33,8 @@ class App extends Component {
 		super(props);
 	}
 
-	async componentDidMount() {
-		this.notificationListener = FCM.on(FCMEvent.Notification, async (notification) => {
+	componentDidMount() {
+		this.notificationListener = FCM.on(FCMEvent.Notification, (notification) => {
 			if (notification.local_notification) {
 
 			}
@@ -83,12 +85,6 @@ const TabIcons = {
 	}
 };
 
-//FCM.getFCMToken().then((deviceToken) => {
-//	console.log("TOKEN: ", deviceToken);
-//	store.dispatch(updateToken(deviceToken));
-//	token.store(deviceToken).then(() => {});
-//});
-
 const Scenes = Actions.create(
 	<Scene key="root">
 		<Scene key={scenes.login}
@@ -101,7 +97,8 @@ const Scenes = Actions.create(
 					type={ActionConst.RESET}
 					hideNavBar
 					swipeEnabled
-					backToInitial={true}
+					backToInitial
+					lazy={true}
 					showLabel={true}
 					tabBarPosition="bottom">
 			<Scene key={scenes.announcements}

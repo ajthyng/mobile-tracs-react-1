@@ -13,69 +13,83 @@ import {authActions} from '../constants/actions';
 import {credentials} from '../utils/storage';
 
 const {
-	LOGIN,
-	LOGOUT,
-	LOGIN_HAS_FAILED,
-	LOGIN_IS_GUEST,
-	LOGGING_IN,
-	IS_LOGGED_IN
+	REQUEST_LOGIN,
+	LOGIN_SUCCESS,
+	LOGIN_FAILURE,
+	REQUEST_LOGOUT,
+	LOGOUT_SUCCESS,
+	LOGOUT_FAILURE,
+	SET_CREDENTIALS
 } = authActions;
 
-export function loginHasFailed(bool) {
+const requestLogin = () => {
 	return {
-		type: LOGIN_HAS_FAILED,
-		hasFailed: bool
-	};
-}
+		type: REQUEST_LOGIN,
+	}
+};
 
-export function loginIsGuestAccount(bool) {
+const loginSuccess = (netid, password) => {
 	return {
-		type: LOGIN_IS_GUEST,
-		isGuestAccount: bool
-	};
-}
-
-export function netidLogin(netid, password) {
-	return {
-		type: LOGIN,
+		type: LOGIN_SUCCESS,
 		netid,
 		password,
-		isLoggedIn: true
-	};
-}
-
-export function netidLogout() {
-	return {
-		type: LOGOUT,
-		netid: '',
-		password: '',
-		isLoggedIn: false
-	};
-}
-
-export function loggingIn(bool) {
-	return {
-		type: LOGGING_IN,
-		loggingIn: bool,
 	}
-}
+};
 
-export function isLoggedIn(bool) {
+const loginFailure = (errorMessage) => {
 	return {
-		type: IS_LOGGED_IN,
-		isLoggedIn: bool
+		type: LOGIN_FAILURE,
+		errorMessage
 	}
-}
+};
 
-export function auth(netid = '', password) {
-	return (dispatch) => {
-		dispatch(loggingIn(true));
+const requestLogout = () => {
+	return {
+		type: REQUEST_LOGOUT
+	}
+};
 
+const logoutSuccess = () => {
+	return {
+		type: LOGOUT_SUCCESS
+	}
+};
+
+const logoutFailure = (errorMessage) => {
+	return {
+		type: LOGOUT_FAILURE,
+		errorMessage
+	}
+};
+
+export const setCredentials = (creds) => {
+	return {
+		type: SET_CREDENTIALS,
+		creds
+	}
+};
+
+export function login(netid = '', password) {
+	return async (dispatch) => {
 		if (netid.length === 0) {
-			dispatch(loggingIn(false));
-			dispatch(loginHasFailed(true));
+			dispatch(requestLogin());
+			credentials.get().then(credentials => {
+				if (!credentials) {
+					dispatch(loginFailure("Net ID must be filled out"));
+				} else {
+					netid = credentials.username;
+					password = credentials.password;
+					dispatch(login(netid, password));
+				}
+			}).catch(err => {
+				console.log("Storage Error: ", err.message);
+				dispatch(loginFailure("Cannot get credentials from storage"));
+			});
 			return;
 		}
+
+		dispatch(requestLogin());
+
 		const loginUrl = `${global.urls.baseUrl}${global.urls.login(netid, password)}`;
 		const sessionUrl = `${global.urls.baseUrl}${global.urls.session}`;
 
@@ -87,44 +101,50 @@ export function auth(netid = '', password) {
 						password
 					};
 					return fetch(sessionUrl, {method: 'get'})
-						.then(res => res.json())
-						.then(session => {
+						.then(res => {
+							if (res.ok) {
+								return res.json();
+							} else {
+								throw new Error("Could not verify session with TRACS");
+							}
+						}).then(session => {
 							if (session.userEid === creds.netid) {
 								credentials.store(creds.netid, creds.password).then(() => {
-									dispatch(loggingIn(false));
-									dispatch(loginHasFailed(false));
-									dispatch(netidLogin(session.userEid, creds.password));
+									dispatch(loginSuccess(session.userEid, creds.password));
 								});
 							} else {
-								loginFailure(dispatch);
+								//Maybe this should update the session by logging into TRACS?
+								//Only cause should be if the user wasn't actually logged in during the previous fetch reques
+								loginFailure("Session does not match provided credentials");
 							}
+						}).catch(err => {
+							dispatch(loginFailure(err.message));
 						});
 				} else {
-					loginFailure(dispatch);
+					throw new Error("Could not login to TRACS");
 				}
 			})
-			.catch(error => {
-				console.log("Error logging in: ", error);
-				loginFailure(dispatch);
+			.catch(err => {
+				dispatch(loginFailure(err.message));
 			});
 	};
 }
 
-let loginFailure = (dispatch) => {
-	dispatch(netidLogout());
-	dispatch(loginHasFailed(true));
-};
-
 export function logout() {
 	return (dispatch) => {
+		dispatch(requestLogout());
 		const logoutUrl = `${global.urls.baseUrl}${global.urls.logout}`;
 
-		fetch(logoutUrl, {
+		return fetch(logoutUrl, {
 			method: 'get'
 		}).then(res => {
 			if (res.ok) {
-				dispatch(netidLogout());
+				dispatch(logoutSuccess());
+			} else {
+				throw new Error("Could not logout of TRACS");
 			}
+		}).catch(err => {
+			dispatch(logoutFailure(err.message));
 		});
 	};
 }
