@@ -42,9 +42,11 @@ class NotificationView extends Component {
 			return (
 				<View>
 					<Announcement read={false}
+												title="This is my announcement of important things that need to be shown to all students at once"
 											deviceWidth={this.state.deviceWidth}
 					/>
-					<Discussion read={true}
+					<Discussion topic="We were looking for a topic to discuss but we couldn't come to an agreeable consensus"
+											read={false}
 											deviceWidth={this.state.deviceWidth}
 					/>
 				</View>
