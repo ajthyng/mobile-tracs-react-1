@@ -8,51 +8,83 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import { authActions } from '../constants/actions';
-let { LOGIN, LOGOUT, LOGIN_HAS_FAILED, LOGIN_IS_GUEST, LOGGING_IN } = authActions;
+let {
+	REQUEST_LOGIN,
+	LOGIN_SUCCESS,
+	LOGIN_FAILURE,
+	REQUEST_LOGOUT,
+	LOGOUT_SUCCESS,
+	LOGOUT_FAILURE
+} = authActions;
 
 export const initialState = {
-	hasFailed: false,
-	loginIsGuestAccount: false,
-	isLoggedIn: false,
-	loggingIn: false,
+	isAuthenticated: false,
+	isLoggingIn: false,
 	netid: '',
 	password: ''
 };
 
-function auth(state, action) {
+const requestLogin = (state, action) => {
 	return {
 		...state,
-		netid: action.netid,
-		password: action.password,
-		isLoggedIn: action.isLoggedIn
+		isAuthenticated: false,
+		isLoggingIn: true,
+		errorMessage: ""
 	}
-}
+};
 
-function loginHasFailed(state, action) {
+const loginSuccess = (state, action) => {
 	return {
 		...state,
-		hasFailed: action.hasFailed
-	}}
+		isAuthenticated: true,
+		isLoggingIn: false,
+		errorMessage: "",
+		netid: action.netid,
+		password: action.password
+	}
+};
 
-function loginIsGuestAccount(state, action) {
+const loginFailure = (state, action) => {
+	return {
+		...initialState,
+		errorMessage: action.errorMessage,
+	}
+};
+
+const requestLogout = (state, action) => {
 	return {
 		...state,
-		loginIsGuestAccount: action.loginIsGuestAccount
-	}}
+		isLoggingOut: true,
+		errorMessage: ""
+	}
+};
 
-function loggingIn(state, action) {
+const logoutSuccess = (state, action) => {
 	return {
 		...state,
-		loggingIn: action.loggingIn
-	}}
+		isLoggingOut: false,
+		isAuthenticated: false,
+		errorMessage: "",
+		netid: "",
+		password: ""
+	}
+};
+
+const logoutFailure = (state, action) => {
+	return {
+		...initialState,
+		errorMessage: action.errorMessage
+	}
+};
 
 export function loginReducer(state = initialState, action) {
 	switch (action.type) {
-		case LOGIN: 						return auth(state, action);
-		case LOGOUT: 						return auth(state, action);
-		case LOGIN_HAS_FAILED: 	return loginHasFailed(state, action);
-		case LOGIN_IS_GUEST: 		return loginIsGuestAccount(state, action);
-		case LOGGING_IN: 				return loggingIn(state, action);
+		case REQUEST_LOGIN: 		return requestLogin(state, action);
+		case LOGIN_SUCCESS: 		return loginSuccess(state, action);
+		case LOGIN_FAILURE: 		return loginFailure(state, action);
+		case REQUEST_LOGOUT: 		return requestLogout(state, action);
+		case LOGOUT_SUCCESS: 		return logoutSuccess(state, action);
+		case LOGOUT_FAILURE:		return logoutFailure(state, action);
 		default: 								return state;
 	}
 }

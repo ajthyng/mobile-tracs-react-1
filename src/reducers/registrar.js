@@ -12,100 +12,71 @@ import {Platform} from 'react-native';
 import {registrarActions} from '../constants/actions';
 
 const {
-	IS_REGISTERED,
-	IS_REGISTERING,
-	REMOVE_TOKEN,
-	REMOVE_USER,
-	REPLACE_TOKEN,
-	REPLACE_USER,
-	REGISTRATION_FAILED,
-	REQUEST_REGISTRATION_DELETE,
-	REGISTRATION_DELETE_SUCCESS,
-	REGISTRATION_DELETE_FAILURE
+	REQUEST_REGISTRATION,
+	REGISTRATION_SUCCESS,
+	REGISTRATION_FAILURE,
+	REQUEST_UNREGISTER,
+	UNREGISTER_SUCCESS,
+	UNREGISTER_FAILURE
 } = registrarActions;
 
 export const initialState = {
+	isRegistering: false,
 	isRegistered: false,
 	deviceToken: '',
-	registeredUser: '',
+	netid: '',
 	platform: Platform.OS,
-	isRegistering: false,
-	hasFailed: false,
-	errorMessage: "",
-	isDeleting: false,
-	isDeleted: false
+	isUnregistering: false,
+	errorMessage: ''
 };
 
-function isRegistered(state, action) {
+function requestRegistration(state, action) {
 	return {
 		...state,
-		isRegistered: action.isRegistered
+		isRegistering: true,
+		isRegistered: false,
+		errorMessage: ''
 	}
 }
 
-function isRegistering(state, action) {
+function registrationSuccess(state, action) {
 	return {
 		...state,
-		isRegistering: action.isRegistering
+		isRegistering: false,
+		isRegistered: true,
+		netid: action.netid,
+		errorMessage: ''
 	}
 }
 
-function registrationHasFailed(state, action) {
+function registrationFailure(state, action) {
 	return {
-		...state,
-		hasFailed: action.hasFailed
+		...initialState,
+		errorMessage: action.errorMessage
 	}
 }
 
-function removeToken(state, action) {
-	return {
-		...state,
-		deviceToken: ''
-	}
-}
 
-function replaceToken(state, action) {
-	return {
-		...state,
-		deviceToken: action.deviceToken
-	}
-}
-
-function removeUser(state, action) {
-	return {
-		...state,
-		registeredUser: ''
-	}
-}
-
-function replaceUser(state, action) {
-	return {
-		...state,
-		registeredUser: action.registeredUser
-	}
-}
-
-function requestDeleteRegistration(state, action) {
+function requestUnregister(state, action) {
 	return {
 		...state,
 		isDeleting: true,
 		isDeleted: false,
-		errorMessage: ""
+		errorMessage: ''
 	}
 }
 
-function deleteRegistrationSuccess(state, action) {
+function unregisterSuccess(state, action) {
 	return {
-		...initialState,
-		isDeleted: true
+		...initialState
 	}
 }
 
-function deleteRegistrationFailure(state, action) {
+function unregisterFailure(state, action) {
 	return {
 		...state,
 		isDeleting: false,
-		isDeleted: false,
+		isRegistered: true,
 		errorMessage: action.errorMessage
 	}
 }
@@ -113,16 +84,12 @@ function deleteRegistrationFailure(state, action) {
 
 export function registerReducer(state = initialState, action) {
 	switch (action.type) {
-		case REMOVE_USER: return removeUser(state, action);
-		case REPLACE_USER: return replaceUser(state, action);
-		case REMOVE_TOKEN: return removeToken(state, action);
-		case REPLACE_TOKEN: return replaceToken(state, action);
-		case IS_REGISTERED: return isRegistered(state, action);
-		case IS_REGISTERING: return isRegistering(state, action);
-		case REGISTRATION_FAILED: return registrationHasFailed(state, action);
-		case REQUEST_REGISTRATION_DELETE: return requestDeleteRegistration(state, action);
-		case REGISTRATION_DELETE_SUCCESS: return deleteRegistrationSuccess(state, action);
-		case REGISTRATION_DELETE_FAILURE: return deleteRegistrationFailure(state, action);
+		case REQUEST_REGISTRATION: return requestRegistration(state, action);
+		case REGISTRATION_SUCCESS: return registrationSuccess(state, action);
+		case REGISTRATION_FAILURE: return registrationFailure(state, action);
+		case REQUEST_UNREGISTER: return requestUnregister(state, action);
+		case UNREGISTER_SUCCESS: return unregisterSuccess(state, action);
+		case UNREGISTER_FAILURE: return unregisterFailure(state, action);
 		default: return state;
 	}
 }

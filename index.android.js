@@ -15,7 +15,7 @@ import {ActionConst, Actions, Router, Scene, Stack, Tabs} from 'react-native-rou
 import configureStore from './src/store/configureStore';
 import LoginScreen from './src/components/Login/LoginScreen';
 import SiteList from './src/components/SiteList/SiteList';
-import Notifications from './src/components/Notifications/Notifications';
+import NotificationView from './src/components/Notifications/NotificationView';
 import Settings from './src/components/Settings/Settings';
 import * as urls from './config/urls';
 import * as scenes from './src/constants/scenes';
@@ -24,15 +24,13 @@ import NotificationSettings from './src/components/NotificationSettings/Notifica
 import TabIcon from './src/components/TabBar/TabIcon';
 import SimpleWebView from './src/components/SimpleWebView/SimpleWebView';
 
-
-
 class App extends Component {
 	constructor(props) {
 		super(props);
 	}
 
-	async componentDidMount() {
-		this.notificationListener = FCM.on(FCMEvent.Notification, async (notification) => {
+	componentDidMount() {
+		this.notificationListener = FCM.on(FCMEvent.Notification, (notification) => {
 			if (notification.local_notification) {
 
 			}
@@ -60,7 +58,7 @@ class App extends Component {
 const store = configureStore();
 const RouterWithRedux = connect()(Router);
 const handleNotification = (notification) => {
-	console.log("NOTIFICATION: ", notification);
+	console.log("Notification: ", notification);
 };
 
 if (env.debug) {
@@ -83,12 +81,6 @@ const TabIcons = {
 	}
 };
 
-//FCM.getFCMToken().then((deviceToken) => {
-//	console.log("TOKEN: ", deviceToken);
-//	store.dispatch(updateToken(deviceToken));
-//	token.store(deviceToken).then(() => {});
-//});
-
 const Scenes = Actions.create(
 	<Scene key="root">
 		<Scene key={scenes.login}
@@ -101,7 +93,8 @@ const Scenes = Actions.create(
 					type={ActionConst.RESET}
 					hideNavBar
 					swipeEnabled
-					backToInitial={true}
+					backToInitial
+					lazy={true}
 					showLabel={true}
 					tabBarPosition="bottom">
 			<Scene key={scenes.announcements}
@@ -109,7 +102,7 @@ const Scenes = Actions.create(
 						 tabBarLabel="Announcements"
 						 hideNavBar={true}
 						 title={<Text>Announcements</Text>}
-						 component={Notifications}/>
+						 component={NotificationView}/>
 			<Scene key={scenes.sites}
 						 icon={TabIcons.sites}
 						 tabBarLabel="Courses"

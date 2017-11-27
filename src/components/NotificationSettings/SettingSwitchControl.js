@@ -45,7 +45,7 @@ class SettingSwitchControl extends Component {
 
 const mapStateToProps = (state, ownProps) => {
 	return {
-		token: state.register.deviceToken
+		token: state.registrar.deviceToken
 	}
 };
 

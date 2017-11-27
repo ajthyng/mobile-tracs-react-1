@@ -7,7 +7,6 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-//import Storage from 'react-native-storage';
 import * as Keychain from 'react-native-keychain';
 import {AsyncStorage} from 'react-native';
 import LockStatus from './lockstatus';
@@ -39,7 +38,11 @@ exports.credentials = {
 				return Keychain.getGenericPassword();
 			} else {
 				console.log("Device not secure, removing credentials");
-				return Keychain.resetGenericPassword();
+				return new Promise((resolve, reject) => {
+					Keychain.resetGenericPassword().then(didReset => {
+						resolve(!didReset);
+					});
+				});
 			}
 		});
 	},
@@ -79,14 +82,14 @@ exports.sites = {
 				sites = JSON.parse(sites);
 				const siteIDs = Object.keys(sites);
 				siteIDs.forEach(siteID => {
-					if (sites.hasOwnProperty(siteID) && sites[siteID].owner === netid) {
-						sites[siteID].expiration = moment(sites[siteID].expiration);
+					if (sites[siteID].owner === netid) {
 						filteredSites[siteID] = sites[siteID];
+						filteredSites[siteID].expiration = moment(sites[siteID].expiration)
 					}
-				});
+				})
 			}
-			return filteredSites;
-		});
+			return Promise.resolve(filteredSites);
+		})
 	},
 	store(sites, netid) {
 		return AsyncStorage.getItem(keys.sites).then(storedSites => {
@@ -105,7 +108,7 @@ exports.sites = {
 	reset() {
 		return AsyncStorage.removeItem(keys.sites);
 	},
-	clean(siteIDs, netid) {
+	clean(siteIDs) {
 		return AsyncStorage.getItem(keys.sites).then(stored => {
 			stored = stored === null ? {} : JSON.parse(stored);
 			const storedSiteIDs = Object.keys(stored);

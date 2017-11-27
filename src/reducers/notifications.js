@@ -9,7 +9,7 @@
  */
 
 import {notificationActions} from '../constants/actions';
-
+import {types} from '../constants/notifications'
 const {REQUEST_NOTIFICATIONS, NOTIFICATIONS_SUCCESS, NOTIFICATIONS_FAILURE} = notificationActions;
 
 const initialState = {
@@ -29,12 +29,25 @@ const requestNotifications = (state, action) => {
 };
 
 const notificationsSuccess = (state, action) => {
+	let announcements = action.notifications.filter(notification => {
+		notification.key = notification.id;
+		return notification.keys.object_type === types.ANNOUNCEMENT;
+	});
+	let forums = action.notifications.filter(notification => {
+		notification.key = notification.id;
+		return notification.keys.object_type === types.FORUM
+	});
+
+	announcements = announcements ? announcements : [];
+	forums = forums ? forums : [];
+
 	return {
 		...state,
 		isLoading: false,
 		isLoaded: true,
 		errorMessage: "",
-		notifications: action.notifications
+		announcements,
+		forums
 	}
 };
 

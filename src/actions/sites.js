@@ -8,7 +8,7 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import * as Storage from '../utils/storage'
+import {sites as Sites} from '../utils/storage'
 import * as types from '../constants/actions';
 import moment from 'moment';
 
@@ -74,31 +74,30 @@ export function getSiteInfo(netid) {
 				let siteIds = sites.membership_collection.map((site) => {
 					return site.id.split(':').last();
 				});
-				await cleanStorage(siteIds, netid);
-				console.log("Cleaning complete...");
-				return Storage.sites.get(netid)
-					.then(async storedSites => {
-						const payload = {
-							siteIds,
-							storedSites,
-							netid
-						};
-						let userSites = await getAllSites(payload);
+				cleanStorage(siteIds, netid);
+				Sites.get(netid).then(storedSites => {
+					console.log("Stored Sites: ", storedSites);
+					const payload = {
+						siteIds,
+						storedSites,
+						netid
+					};
+					getAllSites(payload).then(userSites => {
 						let allSites = {
 							...userSites,
 							...storedSites
 						};
 						dispatch(getMemberships(allSites));
 						dispatch(isFetchingSites(false));
-					})
+					});
+				})
 			});
 	}
 }
 
 let cleanStorage = (siteIDs, netid) => {
-	return Storage.sites.clean(siteIDs, netid);
+	return Sites.clean(siteIDs, netid);
 };
-
 
 let getSiteName = (siteID) => {
 	const tracsUrl = global.urls.baseUrl;
@@ -192,7 +191,7 @@ let getAllSites = (payload) => {
 
 		});
 
-		Storage.sites.store(fetchedSites, netid).then();
+		Sites.store(fetchedSites, netid).then();
 		const end = new Date().getTime();
 		console.log(`Sites info fetched in ${end - promiseStart} ms.`);
 		return fetchedSites;

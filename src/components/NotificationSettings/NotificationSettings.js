@@ -168,7 +168,7 @@ class NotificationSettings extends Component {
 const mapStateToProps = (state, ownProps) => {
 	return {
 		sites: state.tracsSites.userSites,
-		token: state.register.deviceToken,
+		token: state.registrar.deviceToken,
 		blacklist: state.settings.userSettings.blacklist,
 		global_disable: state.settings.userSettings.global_disable,
 		errorMessage: state.settings.errorMessage,

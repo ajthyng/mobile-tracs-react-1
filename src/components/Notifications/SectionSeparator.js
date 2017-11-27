@@ -7,20 +7,18 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import React from 'react';
+import {StyleSheet, View} from 'react-native';
 
-import {combineReducers} from 'redux';
-import {loginReducer} from './login';
-import {registerReducer} from './registrar';
-import {sitesReducer} from './sites';
-import {routesReducer} from './routes';
-import {settingsReducer} from './settings';
-import {notificationsReducer} from './notifications';
+export default SectionSeparator = (props) => {
+	const styles = StyleSheet.create({
+		container: {
+			height: 25
+		}
+	});
+	return (
+		<View style={styles.container}>
 
-export default combineReducers({
-	login: loginReducer,
-	registrar: registerReducer,
-	tracsSites: sitesReducer,
-	routes: routesReducer,
-	settings: settingsReducer,
-	notifications: notificationsReducer
-})
+		</View>
+	)
+}

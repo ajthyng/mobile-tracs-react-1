@@ -11,7 +11,7 @@ export default SettingSwitch = (props) => {
 			flexDirection: 'row',
 		},
 		label: {
-
+			fontSize: 18
 		},
 		switch: {
 			alignSelf: 'flex-end'
