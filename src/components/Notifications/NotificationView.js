@@ -1,16 +1,21 @@
 import React, {Component} from 'react';
-import {View, Dimensions, SectionList} from 'react-native';
+import {Dimensions, SectionList, Text, View} from 'react-native';
 import {connect} from 'react-redux';
 import {getNotifications} from '../../actions/notifications';
 import ActivityIndicator from '../Helper/ActivityIndicator';
-import Discussion from './Discussion';
 import Announcement from './Announcement';
+import SectionHeader from './SectionHeader';
+import Discussion from './Discussion';
+import SectionSeparator from './SectionSeparator';
+import ItemSeparator from './ItemSeparator';
 
 class NotificationView extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			deviceWidth: Dimensions.get('window').width
+			deviceWidth: Dimensions.get('window').width,
+			forums: true,
+			announcements: false
 		};
 	}
 
@@ -27,12 +32,55 @@ class NotificationView extends Component {
 
 	componentWillUnmount() {
 		Dimensions.removeEventListener('change', (result) => {
-			console.log(result);
+			console.log(result);a
 		});
 	}
 
+	renderSectionHeader = ({section}) => {
+		return <SectionHeader title={section.title}
+													onToggle={section.onToggle}
+													isOn={section.isOn}
+		/>
+	};
+
 	render() {
-		if (this.props.loadingNotifications) {
+		let sections = [{
+			data: this.props.announcements,
+			renderItem: ({item}) => {
+				return <Announcement deviceWidth={this.state.deviceWidth}
+														 title={item.id}
+														 author="Mr. Pink"
+														 read={item.read}
+														 onPress={() => {console.log(`${item.id} pressed.`)}}
+				/>
+			},
+			title: "Announcements",
+			isOn: this.state.announcements,
+			onToggle: (value) => {
+				this.setState({
+					announcements: value
+				});
+				console.log(`Switch is toggled ${value}.`)
+			}
+		}, {
+			data: this.props.forums,
+			renderItem: ({item}) => {
+				return <Discussion deviceWidth={this.state.deviceWidth}
+													 title={item.id}
+													 author="Mr. Brown"
+													 read={item.read}
+				/>
+			},
+			title: "Forums",
+			isOn: this.state.forums,
+			onToggle: (value) => {
+				this.setState({
+					forums: value
+				});
+				console.log(`Switch is toggled ${value}.`)
+			}
+		}];
+		if (!this.props.notificationsLoaded) {
 			return (
 				<View>
 					<ActivityIndicator/>
@@ -40,16 +88,12 @@ class NotificationView extends Component {
 			);
 		} else {
 			return (
-				<View>
-					<Announcement read={false}
-												title="This is my announcement of important things that need to be shown to all students at once"
-											deviceWidth={this.state.deviceWidth}
-					/>
-					<Discussion topic="We were looking for a topic to discuss but we couldn't come to an agreeable consensus"
-											read={false}
-											deviceWidth={this.state.deviceWidth}
-					/>
-				</View>
+				<SectionList
+					sections={sections}
+					renderSectionHeader={this.renderSectionHeader}
+					renderSectionFooter={() => <SectionSeparator/>}
+					ItemSeparatorComponent={ItemSeparator}
+				/>
 			);
 		}
 	}
@@ -57,8 +101,10 @@ class NotificationView extends Component {
 
 const mapStateToProps = (state, ownProps) => {
 	return {
-		loadingNotifications: state.notifications.isLoading,
-		errorMessage: state.notifications.errorMessage
+		notificationsLoaded: state.notifications.isLoaded,
+		errorMessage: state.notifications.errorMessage,
+		announcements: state.notifications.announcements || [],
+		forums: state.notifications.forums
 	}
 };
 
