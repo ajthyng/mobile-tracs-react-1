@@ -124,35 +124,44 @@ exports.sites = {
 };
 
 exports.notifications = {
-	get(netid) {
-		//fetches list of notifications
+	get() {
 		return AsyncStorage.getItem(keys.notifications).then(stored => {
-			stored = stored === null ? {} : JSON.stringify(stored);
+			stored = stored === null ? {} : JSON.parse(stored);
 			Object.keys(stored).forEach(key => {
 				Object.keys(stored[key]).forEach(notif => {
-
+					//I don't think I actually need this
 				});
 			});
-			return userNotifs;
+			return stored;
 		});
 	},
 	store(notifications) {
 		return AsyncStorage.getItem(keys.notifications).then(stored => {
-			stored = stored === null ? {} : JSON.stringify(stored);
-			return AsyncStorage.setItem(keys.notifications, stringify(userNotifs));
+			stored = stored === null ? {} : JSON.parse(stored);
+			const storedNotifications = {
+				...stored,
+				...notifications
+			};
+			return AsyncStorage.setItem(keys.notifications, JSON.stringify(storedNotifications));
 		});
 	},
-	removeOne(id) {
+	remove(id) {
+		function* reverseKeys(array) {
+			let key = array.length - 1;
+			while (key >= 0) {
+				yield key;
+				key -= 1;
+			}
+		}
 		return AsyncStorage.getItem(keys.notifications).then(stored => {
-			stored = stored === null ? {} : JSON.stringify(stored);
-			const keys = Object.keys(stored);
-			keys.forEach(type => {
-				let notifIDs = Object.keys(stored[type]);
-				notifIDs.forEach(notifID => {
-					if (stored[type][notifID].id === id) {
-						delete stored[type][notifID];
+			stored = stored === null ? {} : JSON.parse(stored);
+			const types = Object.keys(stored);
+			types.forEach(type => {
+				for (let index of reverseKeys(stored[type])) {
+					if (stored[type][index].id === id) {
+						stored[type].splice(index, 1);
 					}
-				});
+				}
 			});
 			return AsyncStorage.setItem(keys.notifications, JSON.stringify(stored));
 		});
@@ -160,7 +169,17 @@ exports.notifications = {
 	reset() {
 		return AsyncStorage.removeItem(keys.notifications);
 	},
-	clean(notifications, netid) {
-		//removes cached notifications that should not be present
+	clean(dispatchIDs) {
+		//TODO: Remove notifications that aren't in dispatch's service any more
+		return AsyncStorage.getItem(keys.notifications).then(stored => {
+			stored = stored ? JSON.parse(stored) : {};
+			const storedKeys = Object.keys(stored);
+			storedKeys.forEach(key => {
+				if (dispatchIDs.indexOf(key) < 0) {
+					delete stored[key];
+				}
+			});
+			return AsyncStorage.setItem(keys.notifications, JSON.stringify(stored));
+		});
 	}
 };

@@ -16,7 +16,6 @@ const initialState = {
 	isLoading: false,
 	isLoaded: false,
 	errorMessage: "",
-	notifications: {}
 };
 
 const requestNotifications = (state, action) => {
@@ -29,25 +28,23 @@ const requestNotifications = (state, action) => {
 };
 
 const notificationsSuccess = (state, action) => {
-	let announcements = action.notifications.filter(notification => {
-		notification.key = notification.id;
-		return notification.keys.object_type === types.ANNOUNCEMENT;
+	let notifs = {};
+	Object.keys(types).forEach(type => {
+		notifs[types[type]] = [];
 	});
-	let forums = action.notifications.filter(notification => {
-		notification.key = notification.id;
-		return notification.keys.object_type === types.FORUM
-	});
-
-	announcements = announcements ? announcements : [];
-	forums = forums ? forums : [];
-
+	for (const notification in action.notifications) {
+		if (action.notifications.hasOwnProperty(notification)) {
+			let notif = action.notifications[notification];
+			notifs[notif.keys.object_type].push(notif);
+		}
+	}
 	return {
 		...state,
 		isLoading: false,
 		isLoaded: true,
 		errorMessage: "",
-		announcements,
-		forums
+		announcements: notifs[types.ANNOUNCEMENT],
+		forums: notifs[types.FORUM]
 	}
 };
 

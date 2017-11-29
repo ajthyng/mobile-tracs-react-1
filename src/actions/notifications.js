@@ -9,7 +9,9 @@
  */
 
 import {notificationActions} from '../constants/actions';
+import * as Storage from '../utils/storage';
 import FCM from 'react-native-fcm';
+import {types} from '../constants/notifications';
 
 const {
 	REQUEST_NOTIFICATIONS,
@@ -37,15 +39,129 @@ const notificationsFailure = (errorMessage) => {
 	}
 };
 
-const getNotificationDetail = (notifications) => {
-	//1. Check cache for notification
-	//2. If it's there, check update status
-	//3. If it's an update, fetch new data
-	//4. If it's not there, fetch new data
-	//5. If it is there, add it to the display list
-	//6. Wait for data to return
-	//7. Combine fetched and stored data into one display list
-	//8. We're done here.
+const fetchNotification = (notification) => {
+	switch (notification.keys.object_type) {
+		case types.ANNOUNCEMENT:
+			return fetchAnnouncement(notification);
+		case types.FORUM:
+			return fetchForumPost(notification);
+		default:
+			return;
+	}
+};
+
+const fetchAnnouncement = (notification) => {
+	let url = `${global.urls.baseUrl}${global.urls.announcement(notification.other_keys.site_id, notification.keys.object_id)}`;
+	return fetch(url).then(res => {
+		if (res.ok) {
+			return res.json();
+		}
+	}).then(notif => {
+		if (notif) {
+			return {
+				id: notification.id,
+				data: notif
+			}
+		} else {
+			throw new Error("Could not retrieve notification");
+		}
+	}).catch(err => {
+		return Promise.reject();
+	});
+};
+
+const fetchForumPost = (notification) => {
+	let messageUrl = `${global.urls.baseUrl}${global.urls.forumMessage(notification.keys.object_id)}`;
+	let topicUrl = `${global.urls.baseUrl}${global.urls.forumTopic(notification.keys.object_id)}`;
+
+	let forumPromises = [
+		fetch(messageUrl).then(res => {
+			if (res.ok) {
+				return res.json();
+			}
+		}).then(message => {
+			if (message) {
+				message.type = "message";
+				return message;
+			}
+		}),
+		fetch(topicUrl).then(res => {
+			if (res.ok) {
+				return res.json();
+			}
+		}).then(topic => {
+			if (topic) {
+				topic.type = "topic";
+				return topic;
+			}
+		})
+	];
+
+	return Promise.all(forumPromises).then(data => {
+		let tracsData = {};
+		data.forEach(item => {
+			if (item.type === "topic") {
+				tracsData.topic_title = item.title;
+			} else if (item.type === "message") {
+				tracsData = {
+					...tracsData,
+					...item
+				}
+			}
+		});
+		return {
+			id: notification.id,
+			data: tracsData
+		}
+	});
+};
+
+const getNotificationDetail = async (notifications) => {
+	await Storage.notifications.clean(Object.keys(notifications));
+	return Storage.notifications.get().then(stored => {
+		const storedIDs = Object.keys(stored);
+		let notificationPromises = [];
+
+		notifications = notifications.reduce((prev, curr) => {
+			let next = {
+				...prev
+			};
+			next[curr.id] = curr;
+			return next;
+		}, {});
+
+		Object.keys(notifications).forEach(id => {
+			let notification = notifications[id];
+			const storedIndex = storedIDs.indexOf(notification.id);
+			if (storedIndex > -1) {
+				if (notification.is_update === true || !stored[notification.id].hasOwnProperty('tracs_data')) {
+					notificationPromises.push(fetchNotification(notification));
+				}
+			} else {
+				notificationPromises.push(fetchNotification(notification));
+			}
+		});
+
+		return Promise.all(notificationPromises).then(async tracs => {
+			let updatedNotifications = {};
+			tracs.forEach((tracs_notif) => {
+				let id = tracs_notif.id;
+				updatedNotifications[id] = notifications[id];
+				updatedNotifications[id].tracs_data = tracs_notif.data;
+			});
+
+			let notificationsToStore = {
+				...stored,
+				...updatedNotifications
+			};
+
+			await Storage.notifications.store(notificationsToStore);
+
+			return notificationsToStore;
+		});
+	}).catch(err => {
+		console.log(err);
+	});
 };
 
 export const getNotifications = (token) => {
@@ -67,9 +183,10 @@ export const getNotifications = (token) => {
 				const errorMessage = "Failed to retrieve notifications";
 				dispatch(notificationsFailure(errorMessage));
 			})
-			.then(data => {
+			.then(async data => {
 				if (data) {
-					dispatch(notificationSuccess(data));
+					let notifications = await getNotificationDetail(data);
+					dispatch(notificationSuccess(notifications));
 				}
 			}).catch(err => {
 				dispatch(notificationsFailure(err.message));

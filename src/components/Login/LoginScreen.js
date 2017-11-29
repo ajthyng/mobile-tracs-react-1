@@ -6,6 +6,7 @@ import user from '../../../config/config.json';
 import ActivityIndicator from '../Helper/ActivityIndicator';
 import {register} from '../../actions/registrar';
 import {setCurrentScene} from '../../actions/routes';
+import * as Storage from '../../utils/storage';
 
 const styles = StyleSheet.create({
 	container: {
@@ -43,7 +44,11 @@ class LoginScreen extends Component {
 		this.props.setScene(Actions.currentScene);
 		if (Actions.currentScene === 'login') {
 			if (this.props.loggingIn === false && this.props.registering === false) {
-				this.props.login();
+				Storage.credentials.get().then(creds => {
+					if (creds !== false) {
+						this.props.login(creds.username, creds.password);
+					}
+				});
 			}
 		}
 	}

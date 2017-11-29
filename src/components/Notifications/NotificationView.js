@@ -1,28 +1,46 @@
 import React, {Component} from 'react';
-import {Dimensions, SectionList, Text, View} from 'react-native';
+import {Dimensions, SectionList} from 'react-native';
 import {connect} from 'react-redux';
 import {getNotifications} from '../../actions/notifications';
-import ActivityIndicator from '../Helper/ActivityIndicator';
 import Announcement from './Announcement';
 import SectionHeader from './SectionHeader';
 import Discussion from './Discussion';
 import SectionSeparator from './SectionSeparator';
 import ItemSeparator from './ItemSeparator';
+import ActivityIndicator from '../Helper/ActivityIndicator';
 
 class NotificationView extends Component {
+	renderSectionHeader = ({section}) => {
+		return <SectionHeader title={section.title}
+													onToggle={section.onToggle}
+													isOn={section.isOn}
+		/>
+	};
+	getNotifications = () => {
+		if (!this.props.loadingNotifications) {
+			this.setState({
+				isRefreshing: true
+			});
+			this.props.getNotifications().then(result => {
+				this.setState({
+					isRefreshing: false
+				});
+			});
+		}
+	};
+
 	constructor(props) {
 		super(props);
 		this.state = {
 			deviceWidth: Dimensions.get('window').width,
 			forums: true,
-			announcements: false
+			announcements: false,
+			isRefreshing: true,
+			firstLoad: true
 		};
 	}
 
 	componentWillMount() {
-		if (!this.props.loadingNotifications) {
-			this.props.getNotifications();
-		}
 		Dimensions.addEventListener('change', (dimensions) => {
 			this.setState({
 				deviceWidth: dimensions.window.width
@@ -30,28 +48,35 @@ class NotificationView extends Component {
 		});
 	}
 
+	componentDidMount() {
+		this.getNotifications();
+	}
+
+	componentWillUpdate(nextProps, nextState) {
+		if (nextProps.notificationsLoaded && this.state.firstLoad) {
+			this.setState({
+				firstLoad: false,
+			});
+		}
+	}
+
 	componentWillUnmount() {
 		Dimensions.removeEventListener('change', (result) => {
-			console.log(result);a
+			console.log(result);
 		});
 	}
 
-	renderSectionHeader = ({section}) => {
-		return <SectionHeader title={section.title}
-													onToggle={section.onToggle}
-													isOn={section.isOn}
-		/>
-	};
-
 	render() {
 		let sections = [{
-			data: this.props.announcements,
+			data: this.props.announcements || [],
 			renderItem: ({item}) => {
 				return <Announcement deviceWidth={this.state.deviceWidth}
-														 title={item.id}
-														 author="Mr. Pink"
+														 title={item.tracs_data.title}
+														 author={item.tracs_data.createdByDisplayName}
 														 read={item.read}
-														 onPress={() => {console.log(`${item.id} pressed.`)}}
+														 onPress={() => {
+															 console.log(`${item.id} pressed.`)
+														 }}
 				/>
 			},
 			title: "Announcements",
@@ -63,11 +88,15 @@ class NotificationView extends Component {
 				console.log(`Switch is toggled ${value}.`)
 			}
 		}, {
-			data: this.props.forums,
+			data: this.props.forums || [],
 			renderItem: ({item}) => {
+				let author = item.tracs_data.authoredBy;
+				author = author.split(' ');
+				author.splice(author.length - 1, 1);
 				return <Discussion deviceWidth={this.state.deviceWidth}
-													 title={item.id}
-													 author="Mr. Brown"
+													 topic={item.tracs_data.topic_title}
+													 thread={item.tracs_data.title}
+													 author={author.join(' ')}
 													 read={item.read}
 				/>
 			},
@@ -80,16 +109,19 @@ class NotificationView extends Component {
 				console.log(`Switch is toggled ${value}.`)
 			}
 		}];
-		if (!this.props.notificationsLoaded) {
+		if (!this.props.notificationsLoaded && this.state.firstLoad) {
 			return (
-				<View>
-					<ActivityIndicator/>
-				</View>
+				<ActivityIndicator/>
 			);
 		} else {
 			return (
 				<SectionList
 					sections={sections}
+					keyExtractor={(item, index) => {
+						return item.id
+					}}
+					onRefresh={this.getNotifications}
+					refreshing={this.state.isRefreshing}
 					renderSectionHeader={this.renderSectionHeader}
 					renderSectionFooter={() => <SectionSeparator/>}
 					ItemSeparatorComponent={ItemSeparator}
