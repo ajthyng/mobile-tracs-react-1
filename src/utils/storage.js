@@ -170,7 +170,6 @@ exports.notifications = {
 		return AsyncStorage.removeItem(keys.notifications);
 	},
 	clean(dispatchIDs) {
-		//TODO: Remove notifications that aren't in dispatch's service any more
 		return AsyncStorage.getItem(keys.notifications).then(stored => {
 			stored = stored ? JSON.parse(stored) : {};
 			const storedKeys = Object.keys(stored);
