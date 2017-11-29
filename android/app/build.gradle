@@ -149,7 +149,7 @@ android {
                             }
                         }
                         signingConfig signingConfigs.releaseConfig
-                        debuggable true
+                        debuggable false
         }
         debug {
         }
