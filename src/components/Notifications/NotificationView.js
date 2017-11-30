@@ -8,20 +8,39 @@ import Discussion from './Discussion';
 import SectionSeparator from './SectionSeparator';
 import ItemSeparator from './ItemSeparator';
 import ActivityIndicator from '../Helper/ActivityIndicator';
+import {getSettings, saveSettings} from '../../actions/settings';
+import Settings from '../../utils/settings';
+import {types} from '../../constants/notifications';
 
 class NotificationView extends Component {
+
+	constructor(props) {
+		super(props);
+		this.state = {
+			deviceWidth: Dimensions.get('window').width,
+			isRefreshing: true,
+			firstLoad: true
+		};
+	}
+
 	renderSectionHeader = ({section}) => {
 		return <SectionHeader title={section.title}
 													onToggle={section.onToggle}
 													isOn={section.isOn}
 		/>
 	};
+
 	getNotifications = () => {
 		if (!this.props.loadingNotifications) {
 			this.setState({
 				isRefreshing: true
 			});
-			this.props.getNotifications().then(result => {
+			let promises = [
+				this.props.getNotifications(),
+				this.props.getSettings()
+			];
+
+			Promise.all(promises).then(result => {
 				this.setState({
 					isRefreshing: false
 				});
@@ -29,23 +48,13 @@ class NotificationView extends Component {
 		}
 	};
 
-	constructor(props) {
-		super(props);
-		this.state = {
-			deviceWidth: Dimensions.get('window').width,
-			forums: true,
-			announcements: false,
-			isRefreshing: true,
-			firstLoad: true
-		};
-	}
-
 	componentWillMount() {
 		Dimensions.addEventListener('change', (dimensions) => {
 			this.setState({
 				deviceWidth: dimensions.window.width
 			});
 		});
+		console.log(this.props);
 	}
 
 	componentDidMount() {
@@ -80,12 +89,14 @@ class NotificationView extends Component {
 				/>
 			},
 			title: "Announcements",
-			isOn: this.state.announcements,
+			isOn: this.props.announcementSetting,
 			onToggle: (value) => {
-				this.setState({
-					announcements: value
+				let userSettings = new Settings({
+					blacklist: this.props.blacklist,
+					global_disable: this.props.global_disable
 				});
-				console.log(`Switch is toggled ${value}.`)
+				userSettings.setType(types.ANNOUNCEMENT, value);
+				this.props.saveSettings(userSettings.getSettings(), this.props.token, false);
 			}
 		}, {
 			data: this.props.forums || [],
@@ -101,12 +112,14 @@ class NotificationView extends Component {
 				/>
 			},
 			title: "Forums",
-			isOn: this.state.forums,
+			isOn: this.props.forumSetting,
 			onToggle: (value) => {
-				this.setState({
-					forums: value
+				let userSettings = new Settings({
+					blacklist: this.props.blacklist,
+					global_disable: this.props.global_disable
 				});
-				console.log(`Switch is toggled ${value}.`)
+				userSettings.setType(types.FORUM, value);
+				this.props.saveSettings(userSettings.getSettings(), this.props.token, false);
 			}
 		}];
 		if (!this.props.notificationsLoaded && this.state.firstLoad) {
@@ -132,17 +145,33 @@ class NotificationView extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
+	let announcementSetting = true;
+	let forumSetting = true;
+	state.settings.userSettings.blacklist.forEach(setting => {
+		console.log("SETTING: ", setting);
+		if (setting.keys.object_type === "discussion") {
+			forumSetting = false;
+		} else if (setting.keys.object_type === "announcement") {
+			announcementSetting = false;
+		}
+	});
 	return {
 		notificationsLoaded: state.notifications.isLoaded,
 		errorMessage: state.notifications.errorMessage,
 		announcements: state.notifications.announcements || [],
-		forums: state.notifications.forums
+		forums: state.notifications.forums || [],
+		blacklist: state.settings.userSettings.blacklist,
+		global_disable: state.settings.userSettings.global_disable,
+		announcementSetting,
+		forumSetting,
 	}
 };
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		getNotifications: () => dispatch(getNotifications())
+		getNotifications: () => dispatch(getNotifications()),
+		getSettings: () => dispatch(getSettings()),
+		saveSettings: (settings, token, local) => dispatch(saveSettings(settings, token, local))
 	}
 };
 
