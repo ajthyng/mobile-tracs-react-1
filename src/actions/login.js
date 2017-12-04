@@ -90,7 +90,7 @@ export function login(netid = '', password) {
 
 		dispatch(requestLogin());
 
-		const loginUrl = `${global.urls.baseUrl}${global.urls.login(netid, password)}`;
+		const loginUrl = `${global.urls.baseUrl}${global.urls.login(netid, encodeURI(password))}`;
 		const sessionUrl = `${global.urls.baseUrl}${global.urls.session}`;
 
 		return fetch(loginUrl, {method: 'post'})

@@ -134,6 +134,7 @@ export const register = (netid = '', password) => {
 	return (dispatch) => {
 		dispatch(requestRegistration());
 		if (netid.length === 0) {
+			debugger;
 			dispatch(registrationFailure("A Net ID is required to register device"));
 			return;
 		}
