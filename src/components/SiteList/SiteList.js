@@ -69,8 +69,7 @@ class SiteList extends Component {
 					<RefreshControl
 						refreshing={this.state.refreshing}
 						onRefresh={this.onRefresh.bind(this)}/>
-				}
-		/>
+				}/>
 		);
 	}
 }
