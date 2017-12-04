@@ -102,7 +102,13 @@ const Scenes = Actions.create(
 						 tabBarLabel="Announcements"
 						 hideNavBar={true}
 						 title={<Text>Announcements</Text>}
-						 component={NotificationView}/>
+						 component={NotificationView}
+						 onEnter={(props) => {
+							 props.renderAnnouncements = true;
+							 props.renderForums = false;
+							 props.renderDashboard = false;
+						 }}
+			/>
 			<Scene key={scenes.sites}
 						 icon={TabIcons.sites}
 						 tabBarLabel="Courses"

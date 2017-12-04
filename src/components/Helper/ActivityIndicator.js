@@ -1,32 +1,66 @@
 import React, {Component} from 'react';
-import {Image, Platform, StyleSheet, Text, View} from 'react-native';
+import {Animated, Easing, Image, StyleSheet, View} from 'react-native';
 
 class ActivityIndicator extends Component {
 	constructor(props) {
 		super(props);
 		this.getStyle = this.getStyle.bind(this);
+		this.rotateValue = new Animated.Value(0);
+		this.rotateImage = this.rotateImage.bind(this);
+	}
+
+	rotateImage() {
+		this.rotateValue.setValue(0);
+		Animated.timing(this.rotateValue, {
+			toValue: 1,
+			duration: this.props.duration || 2500,
+			easing: Easing.linear
+		}).start(() => {
+			this.rotateImage();
+		});
 	}
 
 	getStyle() {
+		const rotateData = this.rotateValue.interpolate({
+			inputRange: [0, 1],
+			outputRange: ['0deg', '360deg']
+		});
+		const aspectRatio = 1438 / 1378;
+		const imageSize = this.props.size || 80;
 		return StyleSheet.create({
 			container: {
 				flex: 1,
-				flexDirection: 'row',
 				alignItems: 'center',
-				justifyContent: 'center'
+				justifyContent: 'center',
 			},
 			image: {
-				width: 60,
-				height: 60
+				width: imageSize * aspectRatio,
+				height: imageSize,
+				display: 'flex',
+			},
+			animatedView: {
+				width: imageSize * aspectRatio,
+				height: (imageSize + imageSize / (22.875)) * aspectRatio,
+				transform: [{rotate: rotateData}],
+				alignItems: 'center',
+				justifyContent: 'flex-end',
 			}
 		});
 	}
 
+	componentDidMount() {
+		this.rotateImage();
+	}
+
 	render() {
+		const tracsLogo = require('../../../img/tracs.png');
+
 		return (
 			<View style={this.getStyle().container}>
-				<Image source={require('../../../img/tracs.png')}
-							 style={this.getStyle().image} />
+				<Animated.View style={this.getStyle().animatedView}>
+					<Image style={this.getStyle().image}
+								 source={tracsLogo} />
+				</Animated.View>
 			</View>
 		)
 	}

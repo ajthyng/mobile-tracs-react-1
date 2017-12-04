@@ -8,33 +8,54 @@ import Discussion from './Discussion';
 import SectionSeparator from './SectionSeparator';
 import ItemSeparator from './ItemSeparator';
 import ActivityIndicator from '../Helper/ActivityIndicator';
+import {getSettings, saveSettings} from '../../actions/settings';
+import Settings from '../../utils/settings';
+import {types} from '../../constants/notifications';
+import DashboardHeader from './DashboardHeader'
 
 class NotificationView extends Component {
+
 	renderSectionHeader = ({section}) => {
-		return <SectionHeader title={section.title}
-													onToggle={section.onToggle}
-													isOn={section.isOn}
-		/>
+		switch (section.type) {
+			case types.FORUM:
+			case types.ANNOUNCEMENT:
+				return (<SectionHeader title={section.title}
+															onToggle={section.onToggle}
+															isOn={section.isOn}
+				/>);
+			default:
+				return null;
+		}
+
 	};
-	getNotifications = () => {
+	getNotifications = (getSettings = false) => {
 		if (!this.props.loadingNotifications) {
 			this.setState({
 				isRefreshing: true
 			});
-			this.props.getNotifications().then(result => {
+			let promises = [
+				this.props.getNotifications(),
+				getSettings ? this.props.getSettings() : null
+			];
+
+			Promise.all(promises).then(result => {
 				this.setState({
 					isRefreshing: false
 				});
 			});
 		}
 	};
+	settingsChanged = (nextProps) => {
+		const announceChange = nextProps.announcementSetting !== this.props.announcementSetting;
+		const forumChange = nextProps.forumSetting !== this.props.forumSetting;
+
+		return announceChange || forumChange;
+	};
 
 	constructor(props) {
 		super(props);
 		this.state = {
 			deviceWidth: Dimensions.get('window').width,
-			forums: true,
-			announcements: false,
 			isRefreshing: true,
 			firstLoad: true
 		};
@@ -49,7 +70,7 @@ class NotificationView extends Component {
 	}
 
 	componentDidMount() {
-		this.getNotifications();
+		this.getNotifications(true);
 	}
 
 	componentWillUpdate(nextProps, nextState) {
@@ -57,6 +78,10 @@ class NotificationView extends Component {
 			this.setState({
 				firstLoad: false,
 			});
+		}
+
+		if (this.props.notificationsLoaded && this.settingsChanged(nextProps)) {
+			this.getNotifications(true);
 		}
 	}
 
@@ -67,8 +92,8 @@ class NotificationView extends Component {
 	}
 
 	render() {
-		let sections = [{
-			data: this.props.announcements || [],
+		let announcementSection = {
+			data: this.props.announcementSetting ? this.props.announcements || [] : [],
 			renderItem: ({item}) => {
 				return <Announcement deviceWidth={this.state.deviceWidth}
 														 title={item.tracs_data.title}
@@ -80,15 +105,19 @@ class NotificationView extends Component {
 				/>
 			},
 			title: "Announcements",
-			isOn: this.state.announcements,
+			type: types.ANNOUNCEMENT,
+			isOn: this.props.announcementSetting,
 			onToggle: (value) => {
-				this.setState({
-					announcements: value
+				let userSettings = new Settings({
+					blacklist: this.props.blacklist,
+					global_disable: this.props.global_disable
 				});
-				console.log(`Switch is toggled ${value}.`)
+				userSettings.setType(types.ANNOUNCEMENT, value);
+				this.props.saveSettings(userSettings.getSettings(), this.props.token, false);
 			}
-		}, {
-			data: this.props.forums || [],
+		};
+		let forumSection = {
+			data: this.props.forumSetting ? this.props.forums || [] : [],
 			renderItem: ({item}) => {
 				let author = item.tracs_data.authoredBy;
 				author = author.split(' ');
@@ -101,14 +130,26 @@ class NotificationView extends Component {
 				/>
 			},
 			title: "Forums",
-			isOn: this.state.forums,
+			type: types.FORUM,
+			isOn: this.props.forumSetting,
 			onToggle: (value) => {
-				this.setState({
-					forums: value
+				let userSettings = new Settings({
+					blacklist: this.props.blacklist,
+					global_disable: this.props.global_disable
 				});
-				console.log(`Switch is toggled ${value}.`)
+				userSettings.setType(types.FORUM, value);
+				this.props.saveSettings(userSettings.getSettings(), this.props.token, false);
 			}
-		}];
+		};
+
+		let sections = [];
+		if (this.props.renderAnnouncements) {
+			sections.push(announcementSection);
+		}
+		if (this.props.renderForums) {
+			sections.push(forumSection);
+		}
+
 		if (!this.props.notificationsLoaded && this.state.firstLoad) {
 			return (
 				<ActivityIndicator/>
@@ -123,26 +164,44 @@ class NotificationView extends Component {
 					onRefresh={this.getNotifications}
 					refreshing={this.state.isRefreshing}
 					renderSectionHeader={this.renderSectionHeader}
+					ListHeaderComponent={this.props.renderDashboard ? DashboardHeader : null}
 					renderSectionFooter={() => <SectionSeparator/>}
 					ItemSeparatorComponent={ItemSeparator}
 				/>
 			);
 		}
+
 	}
 }
 
 const mapStateToProps = (state, ownProps) => {
+	let announcementSetting = true;
+	let forumSetting = true;
+
+	state.settings.userSettings.blacklist.forEach(setting => {
+		if (setting.keys.object_type === "discussion" && forumSetting) {
+			forumSetting = false;
+		} else if (setting.keys.object_type === "announcement" && announcementSetting) {
+			announcementSetting = false;
+		}
+	});
 	return {
 		notificationsLoaded: state.notifications.isLoaded,
 		errorMessage: state.notifications.errorMessage,
 		announcements: state.notifications.announcements || [],
-		forums: state.notifications.forums
+		forums: state.notifications.forums || [],
+		blacklist: state.settings.userSettings.blacklist,
+		global_disable: state.settings.userSettings.global_disable,
+		announcementSetting,
+		forumSetting,
 	}
 };
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		getNotifications: () => dispatch(getNotifications())
+		getNotifications: () => dispatch(getNotifications()),
+		getSettings: () => dispatch(getSettings()),
+		saveSettings: (settings, token, local) => dispatch(saveSettings(settings, token, local))
 	}
 };
 
