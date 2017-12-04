@@ -11,14 +11,22 @@ import ActivityIndicator from '../Helper/ActivityIndicator';
 import {getSettings, saveSettings} from '../../actions/settings';
 import Settings from '../../utils/settings';
 import {types} from '../../constants/notifications';
+import DashboardHeader from './DashboardHeader'
 
 class NotificationView extends Component {
 
 	renderSectionHeader = ({section}) => {
-		return <SectionHeader title={section.title}
-													onToggle={section.onToggle}
-													isOn={section.isOn}
-		/>
+		switch (section.type) {
+			case types.FORUM:
+			case types.ANNOUNCEMENT:
+				return (<SectionHeader title={section.title}
+															onToggle={section.onToggle}
+															isOn={section.isOn}
+				/>);
+			default:
+				return null;
+		}
+
 	};
 	getNotifications = (getSettings = false) => {
 		if (!this.props.loadingNotifications) {
@@ -84,7 +92,7 @@ class NotificationView extends Component {
 	}
 
 	render() {
-		let sections = [{
+		let announcementSection = {
 			data: this.props.announcementSetting ? this.props.announcements || [] : [],
 			renderItem: ({item}) => {
 				return <Announcement deviceWidth={this.state.deviceWidth}
@@ -97,6 +105,7 @@ class NotificationView extends Component {
 				/>
 			},
 			title: "Announcements",
+			type: types.ANNOUNCEMENT,
 			isOn: this.props.announcementSetting,
 			onToggle: (value) => {
 				let userSettings = new Settings({
@@ -106,7 +115,8 @@ class NotificationView extends Component {
 				userSettings.setType(types.ANNOUNCEMENT, value);
 				this.props.saveSettings(userSettings.getSettings(), this.props.token, false);
 			}
-		}, {
+		};
+		let forumSection = {
 			data: this.props.forumSetting ? this.props.forums || [] : [],
 			renderItem: ({item}) => {
 				let author = item.tracs_data.authoredBy;
@@ -120,6 +130,7 @@ class NotificationView extends Component {
 				/>
 			},
 			title: "Forums",
+			type: types.FORUM,
 			isOn: this.props.forumSetting,
 			onToggle: (value) => {
 				let userSettings = new Settings({
@@ -129,7 +140,16 @@ class NotificationView extends Component {
 				userSettings.setType(types.FORUM, value);
 				this.props.saveSettings(userSettings.getSettings(), this.props.token, false);
 			}
-		}];
+		};
+
+		let sections = [];
+		if (this.props.renderAnnouncements) {
+			sections.push(announcementSection);
+		}
+		if (this.props.renderForums) {
+			sections.push(forumSection);
+		}
+
 		if (!this.props.notificationsLoaded && this.state.firstLoad) {
 			return (
 				<ActivityIndicator/>
@@ -144,6 +164,7 @@ class NotificationView extends Component {
 					onRefresh={this.getNotifications}
 					refreshing={this.state.isRefreshing}
 					renderSectionHeader={this.renderSectionHeader}
+					ListHeaderComponent={this.props.renderDashboard ? DashboardHeader : null}
 					renderSectionFooter={() => <SectionSeparator/>}
 					ItemSeparatorComponent={ItemSeparator}
 				/>

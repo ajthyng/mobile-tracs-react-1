@@ -16,5 +16,11 @@ module.exports = {
 		unreadIcon: "#5b5b5b",
 		readIcon: "#b4b4b4",
 		forwardArrow: "#5b5b5b"
+	},
+	site: {
+		courseTitleBackground: "#005481",
+		projectTitleBackground: "#d0dce9",
+		dashboardTitleBackground: "#005481",
+		dashboardTitleText: "#fefefe"
 	}
 };
