@@ -9,10 +9,10 @@
  */
 
 import {sites as Sites} from '../utils/storage'
-import * as types from '../constants/actions';
+import {sitesActions} from '../constants/actions';
 import moment from 'moment';
 
-let {GET_MEMBERSHIPS, IS_FETCHING_SITES, CLEAR_SITES, GET_SITES_FAILED} = types.sitesActions;
+let {GET_MEMBERSHIPS, IS_FETCHING_SITES, CLEAR_SITES, GET_SITES_FAILED} = sitesActions;
 
 const getMemberships = (userSites) => {
 	return {
@@ -175,7 +175,8 @@ let getAllSites = (payload) => {
 				name: site.title,
 				contactInfo,
 				tools: {},
-				owner: netid
+				owner: netid,
+				type: site.type
 			};
 
 		});

@@ -7,49 +7,51 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import * as sites from '../constants/actions';
-const {GET_MEMBERSHIPS, IS_FETCHING_SITES, CLEAR_SITES, GET_SITES_FAILED} = sites.sitesActions;
-export const initialState = {
-	userSites: {},
-	isFetchingSites: false,
-	hasFailed: false
-};
+import React, {Component} from 'react';
+import {StyleSheet, View} from 'react-native';
+import SiteButton from './SiteButton';
+import SiteButtonPlaceholder from './SiteButtonPlaceholder';
 
-let getMemberships = (state, action) => {
-	let userSites = action.userSites;
-	return {
-		...state,
-		userSites: action.userSites
+const margin = "25%";
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		flexDirection: "row",
+		justifyContent: "space-between",
+		marginLeft: margin,
+		marginRight: margin
 	}
-};
+});
 
-let clearSites = (state, action) => {
-	return {
-		...state,
-		userSites: action.userSites
+class SiteToolBar extends Component {
+	constructor(props) {
+		super(props);
 	}
-};
 
-let hasFailed = (state, action) => {
-	return {
-		...state,
-		hasFailed: action.hasFailed
-	}
-};
+	render() {
+		let forumButton;
+		if (this.props.forums === true) {
+			forumButton = <SiteButton name="comments"
+																style={{flex: 1}}
+																color={this.props.color}
+																size={24}
+																label="Forums"/>;
+		} else {
+			forumButton = <SiteButtonPlaceholder size={24} color="transparent"/>;
+			styles.container.alignContent = "flex-end"
+		}
 
-let isFetchingSites = (state, action) => {
-	return {
-		...state,
-		isFetchingSites: action.isFetchingSites
-	}
-};
-
-export function sitesReducer(state = initialState, action) {
-	switch (action.type) {
-		case GET_MEMBERSHIPS: return getMemberships(state, action);
-		case IS_FETCHING_SITES: return isFetchingSites(state, action);
-		case CLEAR_SITES: return clearSites(state, action);
-		case GET_SITES_FAILED: return hasFailed(state, action);
-		default: return state;
+		return (
+			<View style={styles.container}>
+				{forumButton}
+				<SiteButton name="tachometer"
+										style={{flex: 1}}
+										color={this.props.color}
+										size={24}
+										label="Dashboard"/>
+			</View>
+		)
 	}
 }
+
+export default SiteToolBar;

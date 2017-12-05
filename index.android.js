@@ -105,8 +105,7 @@ const Scenes = Actions.create(
 						 component={NotificationView}
 						 onEnter={(props) => {
 							 props.renderAnnouncements = true;
-							 props.renderForums = false;
-							 props.renderDashboard = false;
+							 return props;
 						 }}
 			/>
 			<Scene key={scenes.sites}

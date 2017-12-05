@@ -185,6 +185,7 @@ const mapStateToProps = (state, ownProps) => {
 			announcementSetting = false;
 		}
 	});
+	console.log(ownProps);
 	return {
 		notificationsLoaded: state.notifications.isLoaded,
 		errorMessage: state.notifications.errorMessage,
@@ -203,6 +204,12 @@ const mapDispatchToProps = (dispatch) => {
 		getSettings: () => dispatch(getSettings()),
 		saveSettings: (settings, token, local) => dispatch(saveSettings(settings, token, local))
 	}
+};
+
+NotificationView.defaultProps = {
+	renderAnnouncements: false,
+	renderForums: false,
+	renderDashboard: false
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(NotificationView);

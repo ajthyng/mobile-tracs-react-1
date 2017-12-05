@@ -7,49 +7,9 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import * as sites from '../constants/actions';
-const {GET_MEMBERSHIPS, IS_FETCHING_SITES, CLEAR_SITES, GET_SITES_FAILED} = sites.sitesActions;
-export const initialState = {
-	userSites: {},
-	isFetchingSites: false,
-	hasFailed: false
-};
-
-let getMemberships = (state, action) => {
-	let userSites = action.userSites;
-	return {
-		...state,
-		userSites: action.userSites
+module.exports = {
+	types: {
+		PROJECT: "project",
+		COURSE: "course"
 	}
 };
-
-let clearSites = (state, action) => {
-	return {
-		...state,
-		userSites: action.userSites
-	}
-};
-
-let hasFailed = (state, action) => {
-	return {
-		...state,
-		hasFailed: action.hasFailed
-	}
-};
-
-let isFetchingSites = (state, action) => {
-	return {
-		...state,
-		isFetchingSites: action.isFetchingSites
-	}
-};
-
-export function sitesReducer(state = initialState, action) {
-	switch (action.type) {
-		case GET_MEMBERSHIPS: return getMemberships(state, action);
-		case IS_FETCHING_SITES: return isFetchingSites(state, action);
-		case CLEAR_SITES: return clearSites(state, action);
-		case GET_SITES_FAILED: return hasFailed(state, action);
-		default: return state;
-	}
-}
