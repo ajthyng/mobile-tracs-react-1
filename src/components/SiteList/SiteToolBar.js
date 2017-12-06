@@ -41,6 +41,15 @@ class SiteToolBar extends Component {
 																style={{flex: 1}}
 																color={this.props.color}
 																size={24}
+																onPress={() => {
+																	let props = {
+																		renderForums: true,
+																		renderAnnouncements: false,
+																		renderDashboard: true,
+																		siteData: this.props.siteData
+																	};
+																	Actions.dashboard(props);
+																}}
 																label="Forums"/>;
 		} else {
 			forumButton = <SiteButtonPlaceholder size={24} color="transparent"/>;

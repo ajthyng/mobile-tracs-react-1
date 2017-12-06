@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {SectionList} from 'react-native';
+import {Picker, SectionList} from 'react-native';
 import {connect} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
 import {clearSites, getSiteInfo} from '../../actions/sites';
