@@ -23,6 +23,7 @@ import env from './config/env.json';
 import NotificationSettings from './src/components/NotificationSettings/NotificationSettings';
 import TabIcon from './src/components/TabBar/TabIcon';
 import SimpleWebView from './src/components/SimpleWebView/SimpleWebView';
+import {getNotifications} from './src/actions/notifications';
 
 class App extends Component {
 	constructor(props) {
@@ -32,21 +33,32 @@ class App extends Component {
 	componentDidMount() {
 		this.notificationListener = FCM.on(FCMEvent.Notification, (notification) => {
 			if (notification.local_notification) {
+				//Not used but I don't want to forget the option
+			} else if (notification.opened_from_tray) {
 
+			} else {
+				console.log(notification);
+				this.handleNotification(notification);
+				store.dispatch(getNotifications());
 			}
-			if (notification.opened_from_tray) {
-
-			}
-			handleNotification(notification);
 		});
 	}
+
+	handleNotification = (notification) => {
+		FCM.presentLocalNotification({
+			title: `${notification.fcm.title}`,
+			body: `${notification.fcm.body}`,
+			sound: "default",
+			show_in_foreground: true,
+			icon: "ic_notification"
+		});
+	};
 
 	componentWillUnmount() {
 		this.notificationListener.remove();
 	}
 
 	render() {
-
 		return (
 			<Provider store={store}>
 				<RouterWithRedux scenes={Scenes}/>
@@ -57,9 +69,6 @@ class App extends Component {
 
 const store = configureStore();
 const RouterWithRedux = connect()(Router);
-const handleNotification = (notification) => {
-	console.log("Notification: ", notification);
-};
 
 if (env.debug) {
 	global.urls = urls.debug;
