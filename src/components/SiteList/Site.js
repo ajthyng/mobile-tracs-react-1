@@ -4,6 +4,7 @@ import {site as siteColor} from '../../constants/colors';
 import {types as siteType} from '../../constants/sites';
 import Icon from 'react-native-vector-icons/Ionicons';
 import SiteToolBar from './SiteToolBar';
+import Ripple from 'react-native-material-ripple';
 
 const styles = StyleSheet.create({
 	container: {
@@ -22,6 +23,10 @@ const styles = StyleSheet.create({
 });
 
 class Site extends Component {
+	constructor(props) {
+		super(props);
+	}
+
 	titleStyle = () => {
 		let backgroundColor = this.props.siteData.type === siteType.PROJECT ? siteColor.projectTitleBackground : siteColor.courseTitleBackground;
 
@@ -36,32 +41,24 @@ class Site extends Component {
 		};
 	};
 
-	constructor(props) {
-		super(props);
-	}
-
-	hasForums = () => {
-		return Object.keys(this.props.siteData.tools).indexOf("sakai.forums") > -1;
-	};
-
-
 	render() {
-
 		return (
 			<View style={styles.container}
 						elevation={2}>
-				<View style={this.titleStyle()} ref="title">
-					<Text style={styles.titleText}
-								ellipsizeMode="tail"
-								numberOfLines={1}>
-						{this.props.siteData.name}
-					</Text>
-					<Icon name="ios-arrow-forward"
-								size={18}
-								color="white"
-								style={styles.forwardArrow}/>
-				</View>
-				<SiteToolBar color={this.titleStyle().backgroundColor} forums={this.hasForums()}/>
+				<Ripple>
+					<View style={this.titleStyle()} ref="title">
+						<Text style={styles.titleText}
+									ellipsizeMode="tail"
+									numberOfLines={1}>
+							{this.props.siteData.name}
+						</Text>
+						<Icon name="ios-arrow-forward"
+									size={18}
+									color="white"
+									style={styles.forwardArrow}/>
+					</View>
+				</Ripple>
+				<SiteToolBar color={siteColor.courseTitleBackground} siteData={this.props.siteData} />
 			</View>
 		);
 	}

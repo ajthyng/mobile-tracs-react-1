@@ -104,20 +104,23 @@ const Scenes = Actions.create(
 						 title={<Text>Announcements</Text>}
 						 component={NotificationView}
 						 onEnter={(props) => {
-							 props.renderAnnouncements = true;
-							 return props;
+						 		props.renderAnnouncements = true;
+						 		return props;
 						 }}
 			/>
-			<Scene key={scenes.sites}
+			<Stack key={scenes.sitesTab}
 						 icon={TabIcons.sites}
-						 tabBarLabel="Courses"
-						 title={<Text>Sites</Text>}
-						 hideNavBar={true}
-						 component={SiteList}
-						 initial={true}
-						 onEnter={(props) => {
-							 props.portalUrl = `${global.urls.baseUrl}${global.urls.portal}`
-						 }}/>
+						 initial
+						 tabBarLabel="Courses">
+				<Scene key={scenes.sites}
+							 hideNavBar={true}
+							 component={SiteList}
+							 initial
+				/>
+				<Scene key={scenes.dashboard}
+							 title="Dashboard"
+							 component={NotificationView}/>
+			</Stack>
 			<Stack key={scenes.settingsTab}
 						 icon={TabIcons.settings}
 						 tabBarLabel="Settings">
@@ -128,8 +131,7 @@ const Scenes = Actions.create(
 				<Scene key={scenes.notificationSettings}
 							 back
 							 title="Notification Settings"
-							 component={NotificationSettings}
-				/>
+							 component={NotificationSettings}/>
 				<Scene key={scenes.feedback}
 							 back
 							 title="Feedback"

@@ -11,6 +11,8 @@ import React, {Component} from 'react';
 import {StyleSheet, View} from 'react-native';
 import SiteButton from './SiteButton';
 import SiteButtonPlaceholder from './SiteButtonPlaceholder';
+import {Actions} from 'react-native-router-flux';
+import {tool} from '../../constants/tools';
 
 const margin = "25%";
 const styles = StyleSheet.create({
@@ -28,9 +30,13 @@ class SiteToolBar extends Component {
 		super(props);
 	}
 
+	hasTool = (type) => {
+		return Object.keys(this.props.siteData.tools).indexOf(type) > -1;
+	};
+
 	render() {
 		let forumButton;
-		if (this.props.forums === true) {
+		if (this.hasTool(tool.FORUM)) {
 			forumButton = <SiteButton name="comments"
 																style={{flex: 1}}
 																color={this.props.color}
@@ -41,16 +47,23 @@ class SiteToolBar extends Component {
 			styles.container.alignContent = "flex-end"
 		}
 
-		return (
-			<View style={styles.container}>
-				{forumButton}
-				<SiteButton name="tachometer"
-										style={{flex: 1}}
-										color={this.props.color}
-										size={24}
-										label="Dashboard"/>
-			</View>
-		)
+		return <View style={styles.container}>
+			{forumButton}
+			<SiteButton name="tachometer"
+									style={{flex: 1}}
+									color={this.props.color}
+									size={24}
+									onPress={() => {
+										let props = {
+											renderForums: this.hasTool(tool.FORUM),
+											renderAnnouncements: this.hasTool(tool.ANNOUNCEMENT),
+											renderDashboard: true,
+											siteData: this.props.siteData
+										};
+										Actions.dashboard(props);
+									}}
+									label="Dashboard"/>
+		</View>;
 	}
 }
 

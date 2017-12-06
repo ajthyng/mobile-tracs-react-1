@@ -7,37 +7,9 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
-import React, {Component} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import Ripple from 'react-native-material-ripple';
-
-const styles = StyleSheet.create({
-	container: {
-		flexDirection: 'column',
-		alignItems: 'center',
-		justifyContent: 'center',
-		margin: 5
-	},
-});
-
-class SiteButton extends Component {
-	constructor(props) {
-		super(props);
-		this.onPress = props.onPress;
+module.exports = {
+	tool: {
+		ANNOUNCEMENT: "sakai.announcements",
+		FORUM: "sakai.forums"
 	}
-
-	render() {
-		return <Ripple onPress={this.onPress}>
-			<View style={styles.container}>
-				<Icon name={this.props.name}
-							size={this.props.size}
-							color={this.props.color}/>
-				<Text style={{fontSize: this.props.fontSize || 12}}>{this.props.label}</Text>
-			</View>
-		</Ripple>
-	}
-}
-
-export default SiteButton;
+};
