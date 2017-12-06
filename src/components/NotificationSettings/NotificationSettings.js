@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, ToastAndroid, Platform, SectionList, ScrollView} from 'react-native';
+import {ToastAndroid, ScrollView} from 'react-native';
 import {connect} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
 
@@ -156,10 +156,6 @@ class NotificationSettings extends Component {
 				ToastAndroid.show(this.props.errorMessage, ToastAndroid.LONG);
 			}
 
-			let typesSection = {
-				data: "none"
-			};
-			let sections = [];
 			return (
 				<ScrollView>
 					{defaultSwitches}

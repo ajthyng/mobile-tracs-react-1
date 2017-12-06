@@ -13,6 +13,8 @@ module.exports = {
 	main: 'mainApp',
 	announcements: 'announcements',
 	sites: 'sites',
+	dashboard: 'dashboard',
+	sitesTab: 'sitesTab',
 	settings: 'settings',
 	settingsTab: 'settingsTab',
 	notificationSettings: 'notificationSettings',

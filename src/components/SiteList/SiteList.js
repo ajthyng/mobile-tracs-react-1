@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
-import {FlatList, RefreshControl} from 'react-native';
+import {SectionList} from 'react-native';
 import {connect} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
 import {clearSites, getSiteInfo} from '../../actions/sites';
 import Site from './Site';
 import {setCurrentScene} from '../../actions/routes';
 import {auth, netidLogout} from '../../actions/login';
+import {types as siteTypes} from '../../constants/sites';
 
 class SiteList extends Component {
 	constructor(props) {
@@ -32,7 +33,7 @@ class SiteList extends Component {
 	}
 
 	checkComponentState() {
-		const sitesNotLoaded = this.props.isFetchingSites === false && Object.keys(this.props.sites).length === 0;
+		const sitesNotLoaded = this.props.isFetchingSites === false && Object.keys(this.props.userSites).length === 0;
 		if (sitesNotLoaded) {
 			this.getMemberships(this.props.netid);
 		}
@@ -57,37 +58,61 @@ class SiteList extends Component {
 	}
 
 	render() {
-		return (
-			<FlatList
-				data={this.props.dataSource}
-				renderItem={(site) => {
+		let sites = {};
+		sites.projects = this.props.sites.filter((site) => {
+			return site.info.type === siteTypes.PROJECT;
+		});
+		sites.courses = this.props.sites.filter((site) => {
+			return site.info.type === siteTypes.COURSE;
+		});
+
+		let sections = [
+			{
+				data: sites.courses,
+				renderItem: ({item}) => {
 					return (
-						<Site siteData={site.item.info}/>
-					);
-				}}
-				refreshControl={
-					<RefreshControl
-						refreshing={this.state.refreshing}
-						onRefresh={this.onRefresh.bind(this)}/>
-				}/>
+						<Site siteData={item.info}/>
+					)
+				}
+			}, {
+				data: sites.projects,
+				renderItem: ({item}) => {
+					return (
+						<Site siteData={item.info}/>
+					)
+				}
+			}
+		];
+		return (
+			<SectionList
+				style={{backgroundColor: "#D2CCC3"}}
+				sections={sections}
+				refreshing={this.state.refreshing}
+				onRefresh={this.onRefresh.bind(this)}
+			/>
 		);
 	}
 }
 
 const mapStateToProps = (state, ownProps) => {
-	let siteData = [];
+	let sites = [];
 	Object.keys(state.tracsSites.userSites).forEach(site => {
 		const userSite = state.tracsSites.userSites[site];
-		siteData.push({key: userSite.id, info: userSite})
+		sites.push({key: userSite.id, info: userSite})
+	});
+	sites.sort((a, b) => {
+		if (a.info.name > b.info.name) return 1;
+		if (a.info.name < b.info.name) return -1;
+		return 0;
 	});
 	return {
 		netid: state.login.netid,
 		isAuthenticated: state.login.isAuthenticated,
 		deviceToken: state.registrar.deviceToken,
-		sites: state.tracsSites.userSites,
+		userSites: state.tracsSites.userSites,
 		isFetchingSites: state.tracsSites.isFetchingSites,
-		dataSource: siteData,
-		currentScene: state.routes.scene
+		currentScene: state.routes.scene,
+		sites
 	}
 };
 

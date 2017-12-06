@@ -15,13 +15,22 @@ import DashboardHeader from './DashboardHeader'
 
 class NotificationView extends Component {
 
+	constructor(props) {
+		super(props);
+		this.state = {
+			deviceWidth: Dimensions.get('window').width,
+			isRefreshing: true,
+			firstLoad: true
+		};
+	}
+
 	renderSectionHeader = ({section}) => {
 		switch (section.type) {
 			case types.FORUM:
 			case types.ANNOUNCEMENT:
 				return (<SectionHeader title={section.title}
-															onToggle={section.onToggle}
-															isOn={section.isOn}
+															 onToggle={section.onToggle}
+															 isOn={section.isOn}
 				/>);
 			default:
 				return null;
@@ -52,14 +61,16 @@ class NotificationView extends Component {
 		return announceChange || forumChange;
 	};
 
-	constructor(props) {
-		super(props);
-		this.state = {
-			deviceWidth: Dimensions.get('window').width,
-			isRefreshing: true,
-			firstLoad: true
-		};
-	}
+	filterNotifications = () => {
+		if (this.props.siteData) {
+			this.announcements = this.props.announcements.filter(announce => {
+				return announce.other_keys.site_id === this.props.siteData.id;
+			});
+			this.forums = this.props.forums.filter(post => {
+				return post.other_keys.site_id === this.props.siteData.id;
+			});
+		}
+	};
 
 	componentWillMount() {
 		Dimensions.addEventListener('change', (dimensions) => {
@@ -92,8 +103,10 @@ class NotificationView extends Component {
 	}
 
 	render() {
+		console.log(this.props.announcements);
+		this.filterNotifications();
 		let announcementSection = {
-			data: this.props.announcementSetting ? this.props.announcements || [] : [],
+			data: this.props.announcementSetting ? (this.announcements || this.props.announcements) : [],
 			renderItem: ({item}) => {
 				return <Announcement deviceWidth={this.state.deviceWidth}
 														 title={item.tracs_data.title}
@@ -116,8 +129,9 @@ class NotificationView extends Component {
 				this.props.saveSettings(userSettings.getSettings(), this.props.token, false);
 			}
 		};
+
 		let forumSection = {
-			data: this.props.forumSetting ? this.props.forums || [] : [],
+			data: this.props.forumSetting ? this.forums || [] : [],
 			renderItem: ({item}) => {
 				let author = item.tracs_data.authoredBy;
 				author = author.split(' ');
@@ -155,6 +169,12 @@ class NotificationView extends Component {
 				<ActivityIndicator/>
 			);
 		} else {
+			let dashboard = null;
+			if (this.props.renderDashboard === true) {
+				dashboard = <DashboardHeader siteName={this.props.siteData.name}
+												 contactName={this.props.siteData.contactInfo.name}
+												 contactEmail={this.props.siteData.contactInfo.email}/>
+			}
 			return (
 				<SectionList
 					sections={sections}
@@ -164,7 +184,7 @@ class NotificationView extends Component {
 					onRefresh={this.getNotifications}
 					refreshing={this.state.isRefreshing}
 					renderSectionHeader={this.renderSectionHeader}
-					ListHeaderComponent={this.props.renderDashboard ? DashboardHeader : null}
+					ListHeaderComponent={dashboard}
 					renderSectionFooter={() => <SectionSeparator/>}
 					ItemSeparatorComponent={ItemSeparator}
 				/>
@@ -203,6 +223,12 @@ const mapDispatchToProps = (dispatch) => {
 		getSettings: () => dispatch(getSettings()),
 		saveSettings: (settings, token, local) => dispatch(saveSettings(settings, token, local))
 	}
+};
+
+NotificationView.defaultProps = {
+	renderAnnouncements: true,
+	renderForums: false,
+	renderDashboard: false
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(NotificationView);

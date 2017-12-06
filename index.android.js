@@ -23,6 +23,7 @@ import env from './config/env.json';
 import NotificationSettings from './src/components/NotificationSettings/NotificationSettings';
 import TabIcon from './src/components/TabBar/TabIcon';
 import SimpleWebView from './src/components/SimpleWebView/SimpleWebView';
+import {getNotifications} from './src/actions/notifications';
 
 class App extends Component {
 	constructor(props) {
@@ -32,21 +33,32 @@ class App extends Component {
 	componentDidMount() {
 		this.notificationListener = FCM.on(FCMEvent.Notification, (notification) => {
 			if (notification.local_notification) {
+				//Not used but I don't want to forget the option
+			} else if (notification.opened_from_tray) {
 
+			} else {
+				console.log(notification);
+				this.handleNotification(notification);
+				store.dispatch(getNotifications());
 			}
-			if (notification.opened_from_tray) {
-
-			}
-			handleNotification(notification);
 		});
 	}
+
+	handleNotification = (notification) => {
+		FCM.presentLocalNotification({
+			title: `${notification.fcm.title}`,
+			body: `${notification.fcm.body}`,
+			sound: "default",
+			show_in_foreground: true,
+			icon: "ic_notification"
+		});
+	};
 
 	componentWillUnmount() {
 		this.notificationListener.remove();
 	}
 
 	render() {
-
 		return (
 			<Provider store={store}>
 				<RouterWithRedux scenes={Scenes}/>
@@ -57,9 +69,6 @@ class App extends Component {
 
 const store = configureStore();
 const RouterWithRedux = connect()(Router);
-const handleNotification = (notification) => {
-	console.log("Notification: ", notification);
-};
 
 if (env.debug) {
 	global.urls = urls.debug;
@@ -104,21 +113,23 @@ const Scenes = Actions.create(
 						 title={<Text>Announcements</Text>}
 						 component={NotificationView}
 						 onEnter={(props) => {
-							 props.renderAnnouncements = true;
-							 props.renderForums = false;
-							 props.renderDashboard = false;
+						 		props.renderAnnouncements = true;
+						 		return props;
 						 }}
 			/>
-			<Scene key={scenes.sites}
+			<Stack key={scenes.sitesTab}
 						 icon={TabIcons.sites}
-						 tabBarLabel="Courses"
-						 title={<Text>Sites</Text>}
-						 hideNavBar={true}
-						 component={SiteList}
-						 initial={true}
-						 onEnter={(props) => {
-							 props.portalUrl = `${global.urls.baseUrl}${global.urls.portal}`
-						 }}/>
+						 initial
+						 tabBarLabel="Courses">
+				<Scene key={scenes.sites}
+							 hideNavBar={true}
+							 component={SiteList}
+							 initial
+				/>
+				<Scene key={scenes.dashboard}
+							 title="Dashboard"
+							 component={NotificationView}/>
+			</Stack>
 			<Stack key={scenes.settingsTab}
 						 icon={TabIcons.settings}
 						 tabBarLabel="Settings">
@@ -129,8 +140,7 @@ const Scenes = Actions.create(
 				<Scene key={scenes.notificationSettings}
 							 back
 							 title="Notification Settings"
-							 component={NotificationSettings}
-				/>
+							 component={NotificationSettings}/>
 				<Scene key={scenes.feedback}
 							 back
 							 title="Feedback"

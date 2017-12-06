@@ -18,8 +18,8 @@ module.exports = {
 		forwardArrow: "#5b5b5b"
 	},
 	site: {
-		courseTitleBackground: "#005481",
-		projectTitleBackground: "#d0dce9",
+		courseTitleBackground: "#501214",
+		projectTitleBackground: "#734143",
 		dashboardTitleBackground: "#005481",
 		dashboardTitleText: "#fefefe"
 	}

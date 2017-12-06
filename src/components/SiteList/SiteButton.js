@@ -9,25 +9,35 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, Text, View} from 'react-native';
-import {connect} from 'react-redux';
+import {StyleSheet, Text, View} from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Ripple from 'react-native-material-ripple';
 
-/**
- * props: type, read,
- *
- */
-class Notification extends Component {
+const styles = StyleSheet.create({
+	container: {
+		flexDirection: 'column',
+		alignItems: 'center',
+		justifyContent: 'center',
+		margin: 5
+	},
+});
+
+class SiteButton extends Component {
 	constructor(props) {
 		super(props);
+		this.onPress = props.onPress;
 	}
 
 	render() {
-		return (
-			<View>
-				<Text>Hello, component!</Text>
+		return <Ripple onPress={this.onPress}>
+			<View style={styles.container}>
+				<Icon name={this.props.name}
+							size={this.props.size}
+							color={this.props.color}/>
+				<Text style={{fontSize: this.props.fontSize || 12}}>{this.props.label}</Text>
 			</View>
-		);
+		</Ripple>
 	}
 }
 
-export default Notification;
+export default SiteButton;
