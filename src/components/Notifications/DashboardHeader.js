@@ -55,12 +55,12 @@ class DashboardHeader extends Component {
 		return (
 			<View style={styles.container}>
 				<View style={styles.titleContainer}>
-					<Text style={styles.titleText}>{this.props.siteName || "Course Name Not Found"}</Text>
+					<Text style={styles.titleText}>{this.props.siteName || "Contact TRACS Support"}</Text>
 				</View>
 				<Spacer height={10}/>
 				<Text style={styles.infoLabel}>{this.infoLabel}</Text>
 				<View style={styles.contactContainer}>
-					<Text style={styles.siteOwnerName}>{this.props.contactName || "Name Not Found"}</Text>
+					<Text style={styles.siteOwnerName}>{this.props.contactName || "TRACS Support"}</Text>
 					<Text style={styles.emailText}
 								onPress={() => {
 									Linking.openURL(`mailto:?to=${this.props.contactEmail}&subject=${this.props.siteName}` || `mailto:?to=tracs@txstate.edu&subject=${this.props.siteName}`)
