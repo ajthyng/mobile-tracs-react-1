@@ -226,7 +226,7 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 NotificationView.defaultProps = {
-	renderAnnouncements: false,
+	renderAnnouncements: true,
 	renderForums: false,
 	renderDashboard: false
 };
