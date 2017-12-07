@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Dimensions, SectionList} from 'react-native';
 import {connect} from 'react-redux';
 import {getNotifications} from '../../actions/notifications';
-import Announcement from './Announcement';
+import Notification from './Notification';
 import SectionHeader from './SectionHeader';
 import Discussion from './Discussion';
 import SectionSeparator from './SectionSeparator';
@@ -12,6 +12,7 @@ import {getSettings, saveSettings} from '../../actions/settings';
 import Settings from '../../utils/settings';
 import {types} from '../../constants/notifications';
 import DashboardHeader from './DashboardHeader'
+import {Swipeout} from 'react-native-swipeout';
 
 class NotificationView extends Component {
 
@@ -35,7 +36,6 @@ class NotificationView extends Component {
 			default:
 				return null;
 		}
-
 	};
 	getNotifications = (getSettings = false) => {
 		if (!this.props.loadingNotifications) {
@@ -60,7 +60,6 @@ class NotificationView extends Component {
 
 		return announceChange || forumChange;
 	};
-
 	filterNotifications = () => {
 		if (this.props.siteData) {
 			this.announcements = this.props.announcements.filter(announce => {
@@ -103,19 +102,18 @@ class NotificationView extends Component {
 	}
 
 	render() {
-		console.log(this.props.announcements);
 		this.filterNotifications();
 		let announcementSection = {
 			data: this.props.announcementSetting ? (this.announcements || this.props.announcements) : [],
 			renderItem: ({item}) => {
-				return <Announcement deviceWidth={this.state.deviceWidth}
-														 title={item.tracs_data.title}
-														 author={item.tracs_data.createdByDisplayName}
-														 read={item.read}
-														 onPress={() => {
-															 console.log(`${item.id} pressed.`)
-														 }}
-				/>
+				let data = {
+					deviceWidth: this.state.deviceWidth,
+					title: item.tracs_data.title,
+					author: item.tracs_data.createdByDisplayName,
+					read: item.read,
+					onPress: () => {console.log(`${item.id} pressed`)}
+				};
+				return <Notification type={types.ANNOUNCEMENT} data={data}/>
 			},
 			title: "Announcements",
 			type: types.ANNOUNCEMENT,
@@ -136,12 +134,14 @@ class NotificationView extends Component {
 				let author = item.tracs_data.authoredBy;
 				author = author.split(' ');
 				author.splice(author.length - 1, 1);
-				return <Discussion deviceWidth={this.state.deviceWidth}
-													 topic={item.tracs_data.topic_title}
-													 thread={item.tracs_data.title}
-													 author={author.join(' ')}
-													 read={item.read}
-				/>
+				let data = {
+					deviceWidth: this.state.deviceWidth,
+					topic: item.tracs_data.topic_title,
+					thread: item.tracs_data.title,
+					author: author.join(' '),
+					read: item.read
+				};
+				return <Notification type={types.FORUM} data={data}/>
 			},
 			title: "Forums",
 			type: types.FORUM,
@@ -172,8 +172,8 @@ class NotificationView extends Component {
 			let dashboard = null;
 			if (this.props.renderDashboard === true) {
 				dashboard = <DashboardHeader siteName={this.props.siteData.name}
-												 contactName={this.props.siteData.contactInfo.name}
-												 contactEmail={this.props.siteData.contactInfo.email}/>
+																		 contactName={this.props.siteData.contactInfo.name}
+																		 contactEmail={this.props.siteData.contactInfo.email}/>
 			}
 			return (
 				<SectionList

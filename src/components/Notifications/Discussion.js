@@ -5,6 +5,7 @@ import TabIcon from '../TabBar/TabIcon';
 import {notification} from '../../constants/colors';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Ripple from 'react-native-material-ripple';
+import Swipeout from 'react-native-swipeout';
 
 const circleSize = 50;
 
@@ -59,6 +60,7 @@ class Discussion extends Component {
 		});
 		Ripple.defaultProps.rippleContainerBorderRadius = styles.container.borderRadius;
 		return (
+			<Swipeout right={[{text: "Delete"}]}>
 				<Ripple onPress={this.props.onPress} rippleDuration={600}>
 					<View style={styles.container}>
 						<View style={styles.circle}>
@@ -82,6 +84,7 @@ class Discussion extends Component {
 									style={styles.forwardArrow}/>
 					</View>
 				</Ripple>
+			</Swipeout>
 		);
 	}
 }

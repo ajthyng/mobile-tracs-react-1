@@ -25,11 +25,101 @@ import TabIcon from './src/components/TabBar/TabIcon';
 import SimpleWebView from './src/components/SimpleWebView/SimpleWebView';
 import {getNotifications} from './src/actions/notifications';
 
+const store = configureStore();
+const RouterWithRedux = connect()(Router);
+
+if (env.debug) {
+	global.urls = urls.debug;
+} else {
+	global.urls = urls.release;
+}
+
+const tabIconSize = 20;
+const tabIconColor = "#000";
+const TabIcons = {
+	announcements: () => {
+		return (<TabIcon name="bullhorn" size={tabIconSize} color={tabIconColor}/>);
+	},
+	sites: () => {
+		return (<TabIcon name="list" size={tabIconSize} color={tabIconColor}/>);
+	},
+	settings: () => {
+		return (<TabIcon name="cog" size={tabIconSize} color={tabIconColor}/>);
+	}
+};
+
 class App extends Component {
 	constructor(props) {
 		super(props);
-	}
 
+		this.Scenes = Actions.create(
+			<Scene key="root">
+				<Scene key={scenes.login}
+							 component={LoginScreen}
+							 title="TRACS Mobile Login"
+							 initial={true}
+							 hideNavBar={true}
+							 type={ActionConst.RESET}/>
+				<Tabs key={scenes.main}
+							type={ActionConst.RESET}
+							hideNavBar
+							swipeEnabled={false}
+							backToInitial
+							lazy={true}
+							showLabel={true}
+							tabBarPosition="bottom">
+					<Scene key={scenes.announcements}
+								 icon={TabIcons.announcements}
+								 tabBarLabel="Announcements"
+								 hideNavBar={true}
+								 title={<Text>Announcements</Text>}
+								 component={NotificationView}
+								 onEnter={(props) => {
+									 props.renderAnnouncements = true;
+									 return props;
+								 }}
+					/>
+					<Stack key={scenes.sitesTab}
+								 icon={TabIcons.sites}
+								 initial
+								 tabBarLabel="Courses">
+						<Scene key={scenes.sites}
+									 hideNavBar={true}
+									 component={SiteList}
+									 initial
+						/>
+						<Scene key={scenes.dashboard}
+									 title="Dashboard"
+									 swipeEnabled={false}
+									 component={NotificationView}/>
+					</Stack>
+					<Stack key={scenes.settingsTab}
+								 icon={TabIcons.settings}
+								 tabBarLabel="Settings">
+						<Scene key={scenes.settings}
+									 initial
+									 title="Settings"
+									 component={Settings}/>
+						<Scene key={scenes.notificationSettings}
+									 back
+									 title="Notification Settings"
+									 component={NotificationSettings}/>
+						<Scene key={scenes.feedback}
+									 back
+									 title="Feedback"
+									 component={SimpleWebView}
+									 url={global.urls.feedback}/>
+						<Scene key={scenes.support}
+									 back
+									 title="TRACS Support"
+									 component={SimpleWebView}
+									 url={global.urls.support}/>
+
+					</Stack>
+				</Tabs>
+			</Scene>
+		);
+	}
 	componentDidMount() {
 		this.notificationListener = FCM.on(FCMEvent.Notification, (notification) => {
 			if (notification.local_notification) {
@@ -61,101 +151,11 @@ class App extends Component {
 	render() {
 		return (
 			<Provider store={store}>
-				<RouterWithRedux scenes={Scenes}/>
+				<RouterWithRedux scenes={this.Scenes}/>
 			</Provider>
 		);
 	}
 }
-
-const store = configureStore();
-const RouterWithRedux = connect()(Router);
-
-if (env.debug) {
-	global.urls = urls.debug;
-} else {
-	global.urls = urls.release;
-}
-
-const tabIconSize = 20;
-const tabIconColor = "#000";
-const TabIcons = {
-	announcements: () => {
-		return (<TabIcon name="bullhorn" size={tabIconSize} color={tabIconColor}/>);
-	},
-	sites: () => {
-		return (<TabIcon name="list" size={tabIconSize} color={tabIconColor}/>);
-	},
-	settings: () => {
-		return (<TabIcon name="cog" size={tabIconSize} color={tabIconColor}/>);
-	}
-};
-
-const Scenes = Actions.create(
-	<Scene key="root">
-		<Scene key={scenes.login}
-					 component={LoginScreen}
-					 title="TRACS Mobile Login"
-					 initial={true}
-					 hideNavBar={true}
-					 type={ActionConst.RESET}/>
-		<Tabs key={scenes.main}
-					type={ActionConst.RESET}
-					hideNavBar
-					swipeEnabled
-					backToInitial
-					lazy={true}
-					showLabel={true}
-					tabBarPosition="bottom">
-			<Scene key={scenes.announcements}
-						 icon={TabIcons.announcements}
-						 tabBarLabel="Announcements"
-						 hideNavBar={true}
-						 title={<Text>Announcements</Text>}
-						 component={NotificationView}
-						 onEnter={(props) => {
-						 		props.renderAnnouncements = true;
-						 		return props;
-						 }}
-			/>
-			<Stack key={scenes.sitesTab}
-						 icon={TabIcons.sites}
-						 initial
-						 tabBarLabel="Courses">
-				<Scene key={scenes.sites}
-							 hideNavBar={true}
-							 component={SiteList}
-							 initial
-				/>
-				<Scene key={scenes.dashboard}
-							 title="Dashboard"
-							 component={NotificationView}/>
-			</Stack>
-			<Stack key={scenes.settingsTab}
-						 icon={TabIcons.settings}
-						 tabBarLabel="Settings">
-				<Scene key={scenes.settings}
-							 initial
-							 title="Settings"
-							 component={Settings}/>
-				<Scene key={scenes.notificationSettings}
-							 back
-							 title="Notification Settings"
-							 component={NotificationSettings}/>
-				<Scene key={scenes.feedback}
-							 back
-							 title="Feedback"
-							 component={SimpleWebView}
-							 url={global.urls.feedback}/>
-				<Scene key={scenes.support}
-							 back
-							 title="TRACS Support"
-							 component={SimpleWebView}
-							 url={global.urls.support}/>
-
-			</Stack>
-		</Tabs>
-	</Scene>
-);
 
 AppRegistry.registerComponent('TRACSMobile', () => App);
 
