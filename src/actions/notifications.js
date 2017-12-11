@@ -19,7 +19,8 @@ const {
 	NOTIFICATIONS_FAILURE,
 	REQUEST_NOTIFICATION_UPDATE,
 	NOTIFICATION_UPDATE_SUCCESS,
-	NOTIFICATION_UPDATE_FAILURE
+	NOTIFICATION_UPDATE_FAILURE,
+	REMOVE_NOTIFICATION
 } = notificationActions;
 
 const requestNotifications = () => {
@@ -218,6 +219,13 @@ const updateNotificationFailure = (errorMessage, notification) => {
 	}
 };
 
+const removeNotification = (notification) => {
+	return {
+		type: REMOVE_NOTIFICATION,
+		notification
+	}
+};
+
 export const updateNotification = (newNotif, oldNotif) => {
 	return async (dispatch) => {
 		dispatch(requestUpdateNotification());
@@ -235,6 +243,8 @@ export const updateNotification = (newNotif, oldNotif) => {
 				'Content-Type': 'application/json'
 			}
 		};
+		dispatch(removeNotification(oldNotif));
+
 		return fetch(updateURL, options).then(res => {
 			if (res.ok) {
 				dispatch(updateNotificationSuccess(newNotif));
@@ -246,6 +256,6 @@ export const updateNotification = (newNotif, oldNotif) => {
 		}).catch(err => {
 			console.log(err);
 			dispatch(updateNotificationFailure(err.message));
-		})
+		});
 	}
 };

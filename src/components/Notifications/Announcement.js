@@ -21,7 +21,7 @@ class Announcement extends Component {
 				padding: 5,
 				width: this.props.deviceWidth,
 				backgroundColor: notification.background,
-				height: 87.142
+				height: 88
 			},
 			circle: {
 				width: circleSize,

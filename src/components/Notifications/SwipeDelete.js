@@ -14,7 +14,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const styles = StyleSheet.create({
 	container: {
-		backgroundColor: '#ff3b30',
+		backgroundColor: '#dd4430',
 		alignItems: 'center',
 		justifyContent: 'center',
 		height: "100%"
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
 class SwipeDelete extends Component {
 	render() {
 		return (
-			<Ripple onPress={this.props.onDelete}>
+			<Ripple onPressIn={this.props.onDelete}>
 				<View style={styles.container}>
 					<Icon name="delete-forever"
 								color="#ffffff"

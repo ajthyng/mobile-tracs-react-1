@@ -16,7 +16,8 @@ const {
 	NOTIFICATIONS_FAILURE,
 	REQUEST_NOTIFICATION_UPDATE,
 	NOTIFICATION_UPDATE_SUCCESS,
-	NOTIFICATION_UPDATE_FAILURE
+	NOTIFICATION_UPDATE_FAILURE,
+	REMOVE_NOTIFICATION
 } = notificationActions;
 
 const initialState = {
@@ -87,6 +88,34 @@ const notificationUpdateFailure = (state, action) => {
 	}
 };
 
+const removeNotification = (state, action) => {
+	let notification = action.notification;
+	let index = null;
+	switch (notification.keys.object_type) {
+		case types.ANNOUNCEMENT:
+			index = state.announcements.findIndex(i => i.id === notification.id);
+			let announcements = [...state.announcements];
+			announcements.splice(index, 1);
+			return {
+				...state,
+				announcements: announcements || [],
+				errorMessage: ""
+			};
+		case types.FORUM:
+			index = state.forums.findIndex(i => i.id === notification.id);
+			let forums = [...state.forums];
+			forums.splice(index, 1);
+			return {
+				...state,
+				forums: forums || [],
+				errorMessage: ""
+			};
+		default:
+			break;
+	}
+
+};
+
 export const notificationsReducer = (state = initialState, action) => {
 	switch (action.type) {
 		case REQUEST_NOTIFICATIONS: return requestNotifications(state, action);
@@ -95,6 +124,7 @@ export const notificationsReducer = (state = initialState, action) => {
 		case REQUEST_NOTIFICATION_UPDATE: return requestNotificationUpdate(state, action);
 		case NOTIFICATION_UPDATE_SUCCESS: return notificationUpdateSuccess(state, action);
 		case NOTIFICATION_UPDATE_FAILURE: return notificationUpdateFailure(state, action);
+		case REMOVE_NOTIFICATION: return removeNotification(state, action);
 		default: return state;
 	}
 };

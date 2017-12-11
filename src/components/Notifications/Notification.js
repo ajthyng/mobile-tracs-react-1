@@ -8,7 +8,7 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import React, {Component} from 'react';
-import {Animated, Dimensions, Easing} from 'react-native';
+import {Animated, Easing} from 'react-native';
 import {connect} from 'react-redux';
 import {types} from '../../constants/notifications';
 import Discussion from './Discussion';
@@ -18,32 +18,68 @@ import SwipeDelete from './SwipeDelete';
 import {updateNotification} from '../../actions/notifications';
 
 class Notification extends Component {
-	deleteNotification = () => {
-		this.props.deleteNotification(this.props.notification);
-	};
-	animateIn = () => {
-		Animated.timing(this.controlVar, {
-			toValue: 0,
-			duration: 600,
-			easing: Easing.exp
-		}).start();
-	};
 
 	constructor(props) {
 		super(props);
-
 		this.delete = [{
 			component: <SwipeDelete onDelete={this.deleteNotification}/>
 		}];
-		this.controlVar = new Animated.Value(Dimensions.get('window').width);
+		this.height = new Animated.Value(0);
+		this.scaleY = new Animated.Value(0);
+		this.duration = 500;
+	}
+
+	deleteNotification = () => {
+		this.animateOut().start(() => {
+			setTimeout(() => {this.props.deleteNotification(this.props.notification)}, 200);
+		});
+	};
+
+	animateIn = () => {
+		Animated.parallel([
+			Animated.timing(this.scaleY, {
+				toValue: 1,
+				duration: this.duration,
+				easing: Easing.exp,
+			}),
+			Animated.timing(this.height, {
+				toValue: 88,
+				duration: this.duration,
+				easing: Easing.exp
+			})
+		]).start();
+	};
+	animateOut = () => {
+		return Animated.parallel([
+			Animated.timing(this.scaleY, {
+				toValue: 0,
+				duration: this.duration,
+				easing: Easing.exp,
+			}),
+			Animated.timing(this.height, {
+				toValue: 0,
+				duration: this.duration,
+				easing: Easing.exp
+			})
+		]);
+	};
+
+	componentDidMount() {
+		this.animateIn();
 	}
 
 	render() {
-		this.animateIn();
+		let animatedStyle = {
+			transform: [{
+				scaleY: this.scaleY
+			}],
+			height: this.height
+		};
+
 		switch (this.props.type) {
 			case types.ANNOUNCEMENT:
 				return (
-					<Animated.View style={{transform: [{translateX: this.controlVar}]}}>
+					<Animated.View style={animatedStyle}>
 						<Swipeout right={this.delete}>
 							<Announcement {...this.props.data}/>
 						</Swipeout>
@@ -51,7 +87,7 @@ class Notification extends Component {
 				);
 			case types.FORUM:
 				return (
-					<Animated.View style={{transform: [{translateX: this.controlVar}]}}>
+					<Animated.View style={animatedStyle}>
 						<Swipeout right={this.delete}>
 							<Discussion {...this.props.data}/>
 						</Swipeout>
