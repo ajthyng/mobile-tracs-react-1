@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
-import {Dimensions, SectionList} from 'react-native';
+import {Dimensions, Platform, SectionList, ToastAndroid} from 'react-native';
 import {connect} from 'react-redux';
 import {getNotifications} from '../../actions/notifications';
 import Notification from './Notification';
 import SectionHeader from './SectionHeader';
-import Discussion from './Discussion';
 import SectionSeparator from './SectionSeparator';
 import ItemSeparator from './ItemSeparator';
 import ActivityIndicator from '../Helper/ActivityIndicator';
@@ -15,7 +14,6 @@ import DashboardHeader from './DashboardHeader'
 import {Swipeout} from 'react-native-swipeout';
 
 class NotificationView extends Component {
-
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -60,6 +58,7 @@ class NotificationView extends Component {
 
 		return announceChange || forumChange;
 	};
+
 	filterNotifications = () => {
 		if (this.props.siteData) {
 			this.announcements = this.props.announcements.filter(announce => {
@@ -93,6 +92,12 @@ class NotificationView extends Component {
 		if (this.props.notificationsLoaded && this.settingsChanged(nextProps)) {
 			this.getNotifications(true);
 		}
+
+		if (nextProps.errorMessage) {
+			if (Platform.OS === 'android') {
+				ToastAndroid.show(nextProps.errorMessage, ToastAndroid.LONG);
+			}
+		}
 	}
 
 	componentWillUnmount() {
@@ -111,9 +116,13 @@ class NotificationView extends Component {
 					title: item.tracs_data.title,
 					author: item.tracs_data.createdByDisplayName,
 					read: item.read,
-					onPress: () => {console.log(`${item.id} pressed`)}
+					onPress: () => {
+						console.log(`${item.id} pressed`)
+					}
 				};
-				return <Notification type={types.ANNOUNCEMENT} data={data}/>
+				return <Notification type={types.ANNOUNCEMENT}
+														 notification={item}
+														 data={data}/>
 			},
 			title: "Announcements",
 			type: types.ANNOUNCEMENT,
@@ -141,7 +150,9 @@ class NotificationView extends Component {
 					author: author.join(' '),
 					read: item.read
 				};
-				return <Notification type={types.FORUM} data={data}/>
+				return <Notification type={types.FORUM}
+														 notification={item}
+														 data={data}/>
 			},
 			title: "Forums",
 			type: types.FORUM,

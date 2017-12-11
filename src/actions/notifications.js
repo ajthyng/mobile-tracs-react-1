@@ -16,7 +16,10 @@ import {types} from '../constants/notifications';
 const {
 	REQUEST_NOTIFICATIONS,
 	NOTIFICATIONS_SUCCESS,
-	NOTIFICATIONS_FAILURE
+	NOTIFICATIONS_FAILURE,
+	REQUEST_NOTIFICATION_UPDATE,
+	NOTIFICATION_UPDATE_SUCCESS,
+	NOTIFICATION_UPDATE_FAILURE
 } = notificationActions;
 
 const requestNotifications = () => {
@@ -189,7 +192,60 @@ export const getNotifications = (token) => {
 					dispatch(notificationSuccess(notifications));
 				}
 			}).catch(err => {
-				dispatch(notificationsFailure(err.message));
+			dispatch(notificationsFailure(err.message));
 		});
+	}
+};
+
+const requestUpdateNotification = () => {
+	return {
+		type: REQUEST_NOTIFICATION_UPDATE
+	}
+};
+
+const updateNotificationSuccess = (notification) => {
+	return {
+		type: NOTIFICATION_UPDATE_SUCCESS,
+		notification
+	}
+};
+
+const updateNotificationFailure = (errorMessage, notification) => {
+	return {
+		type: NOTIFICATION_UPDATE_FAILURE,
+		notification,
+		errorMessage
+	}
+};
+
+export const updateNotification = (newNotif, oldNotif) => {
+	return async (dispatch) => {
+		dispatch(requestUpdateNotification());
+
+		let token = await FCM.getFCMToken().then(deviceToken => deviceToken);
+		const dispatchURL = global.urls.dispatchUrl;
+		const updateURL = `${dispatchURL}${global.urls.updateNotification(token, newNotif)}`;
+		let updatedNotif = {...newNotif};
+		delete updatedNotif.tracs_data;
+		console.log(updatedNotif);
+		const options = {
+			method: 'post',
+			body: JSON.stringify(updatedNotif),
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		};
+		return fetch(updateURL, options).then(res => {
+			if (res.ok) {
+				dispatch(updateNotificationSuccess(newNotif));
+				dispatch(getNotifications(token));
+			} else {
+				dispatch(getNotifications(token));
+				throw new Error("Failed to delete notification, please try again later");
+			}
+		}).catch(err => {
+			console.log(err);
+			dispatch(updateNotificationFailure(err.message));
+		})
 	}
 };

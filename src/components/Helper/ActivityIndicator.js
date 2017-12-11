@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import {Animated, Easing, Image, StyleSheet, View} from 'react-native';
 
+const tracsLogo = require('../../../img/tracs.png');
+
 class ActivityIndicator extends Component {
 	constructor(props) {
 		super(props);
@@ -53,8 +55,6 @@ class ActivityIndicator extends Component {
 	}
 
 	render() {
-		const tracsLogo = require('../../../img/tracs.png');
-
 		return (
 			<View style={this.getStyle().container}>
 				<Animated.View style={this.getStyle().animatedView}>

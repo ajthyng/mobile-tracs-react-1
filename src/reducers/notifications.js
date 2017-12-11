@@ -10,11 +10,19 @@
 
 import {notificationActions} from '../constants/actions';
 import {types} from '../constants/notifications'
-const {REQUEST_NOTIFICATIONS, NOTIFICATIONS_SUCCESS, NOTIFICATIONS_FAILURE} = notificationActions;
+const {
+	REQUEST_NOTIFICATIONS,
+	NOTIFICATIONS_SUCCESS,
+	NOTIFICATIONS_FAILURE,
+	REQUEST_NOTIFICATION_UPDATE,
+	NOTIFICATION_UPDATE_SUCCESS,
+	NOTIFICATION_UPDATE_FAILURE
+} = notificationActions;
 
 const initialState = {
 	isLoading: false,
 	isLoaded: false,
+	isUpdating: false,
 	errorMessage: "",
 };
 
@@ -55,11 +63,38 @@ const notificationsFailure = (state, actions) => {
 	}
 };
 
+const requestNotificationUpdate = (state, action) => {
+	return {
+		...state,
+		isUpdating: true,
+		errorMessage: ""
+	}
+};
+
+const notificationUpdateSuccess = (state, action) => {
+	return {
+		...state,
+		isUpdating: false,
+		errorMessage: ""
+	};
+};
+
+const notificationUpdateFailure = (state, action) => {
+	return {
+		...state,
+		isUpdating: false,
+		errorMessage: action.errorMessage
+	}
+};
+
 export const notificationsReducer = (state = initialState, action) => {
 	switch (action.type) {
 		case REQUEST_NOTIFICATIONS: return requestNotifications(state, action);
 		case NOTIFICATIONS_SUCCESS: return notificationsSuccess(state, action);
 		case NOTIFICATIONS_FAILURE: return notificationsFailure(state, action);
+		case REQUEST_NOTIFICATION_UPDATE: return requestNotificationUpdate(state, action);
+		case NOTIFICATION_UPDATE_SUCCESS: return notificationUpdateSuccess(state, action);
+		case NOTIFICATION_UPDATE_FAILURE: return notificationUpdateFailure(state, action);
 		default: return state;
 	}
 };
