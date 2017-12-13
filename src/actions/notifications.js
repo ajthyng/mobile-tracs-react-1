@@ -12,6 +12,7 @@ import {notificationActions} from '../constants/actions';
 import * as Storage from '../utils/storage';
 import FCM from 'react-native-fcm';
 import {types} from '../constants/notifications';
+import axios from 'axios';
 
 const {
 	REQUEST_NOTIFICATIONS,
@@ -20,7 +21,10 @@ const {
 	REQUEST_NOTIFICATION_UPDATE,
 	NOTIFICATION_UPDATE_SUCCESS,
 	NOTIFICATION_UPDATE_FAILURE,
-	REMOVE_NOTIFICATION
+	REMOVE_NOTIFICATION,
+	REQUEST_BATCH_UPDATE,
+	BATCH_UPDATE_SUCCESS,
+	BATCH_UPDATE_FAILURE
 } = notificationActions;
 
 const requestNotifications = () => {
@@ -121,7 +125,9 @@ const fetchForumPost = (notification) => {
 };
 
 const getNotificationDetail = async (notifications) => {
+	let start = new Date();
 	await Storage.notifications.clean(Object.keys(notifications));
+	console.log(`Clean Time: ${new Date() - start}`);
 	return Storage.notifications.get().then(stored => {
 		const storedIDs = Object.keys(stored);
 		let notificationPromises = [];
@@ -171,9 +177,11 @@ const getNotificationDetail = async (notifications) => {
 export const getNotifications = (token) => {
 	return async (dispatch) => {
 		dispatch(requestNotifications());
+		let start = new Date();
 		if (!token) {
 			await FCM.getFCMToken().then(deviceToken => token = deviceToken);
 		}
+		console.log(`Token Fetch: ${new Date() - start}ms`);
 		const dispatchURL = global.urls.dispatchUrl;
 		const notificationURL = `${dispatchURL}${global.urls.getNotifications(token)}`;
 		const options = {
@@ -189,7 +197,9 @@ export const getNotifications = (token) => {
 			})
 			.then(async data => {
 				if (data) {
+					let start = new Date();
 					let notifications = await getNotificationDetail(data);
+					console.log("Notifications: ", new Date() - start);
 					dispatch(notificationSuccess(notifications));
 				}
 			}).catch(err => {
@@ -256,6 +266,48 @@ export const updateNotification = (newNotif, oldNotif) => {
 		}).catch(err => {
 			console.log(err);
 			dispatch(updateNotificationFailure(err.message));
+		});
+	}
+};
+
+const requestBatchUpdate = () => {
+	return {
+		type: REQUEST_BATCH_UPDATE,
+	}
+};
+
+const batchUpdateSuccess = () => {
+	return {
+		type: BATCH_UPDATE_SUCCESS,
+	}
+};
+
+const batchUpdateFailure = (errorMessage) => {
+	return {
+		type: BATCH_UPDATE_FAILURE,
+		errorMessage
+	}
+};
+
+export const batchUpdateNotification = (ids=[], status = {}) => {
+	return async (dispatch) => {
+		dispatch(requestBatchUpdate());
+		if (ids.length === 0 || !Object.keys(status).some(key => true)) {
+			return;
+		}
+
+		const token = await FCM.getFCMToken().then(token => token);
+		const url = `${global.urls.dispatchUrl}${global.urls.getNotifications(token)}`;
+		const options = {
+			url,
+			method: 'patch',
+			body: JSON.stringify({ids, status})
+		};
+
+		return axios(options).then(res => {
+			dispatch(batchUpdateSuccess());
+		}).catch(err => {
+			dispatch(batchUpdateFailure(err.message));
 		});
 	}
 };

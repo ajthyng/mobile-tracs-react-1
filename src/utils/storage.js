@@ -109,6 +109,7 @@ exports.sites = {
 		return AsyncStorage.removeItem(keys.sites);
 	},
 	clean(siteIDs) {
+		debugger;
 		return AsyncStorage.getItem(keys.sites).then(stored => {
 			stored = stored === null ? {} : JSON.parse(stored);
 			const storedSiteIDs = Object.keys(stored);
@@ -170,7 +171,9 @@ exports.notifications = {
 		return AsyncStorage.removeItem(keys.notifications);
 	},
 	clean(dispatchIDs) {
+		let start = new Date();
 		return AsyncStorage.getItem(keys.notifications).then(stored => {
+			console.log(`Async Time: ${new Date() - start}ms`);
 			stored = stored ? JSON.parse(stored) : {};
 			const storedKeys = Object.keys(stored);
 			storedKeys.forEach(key => {

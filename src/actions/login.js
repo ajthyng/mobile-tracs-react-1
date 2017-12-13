@@ -11,6 +11,7 @@
 import {user} from './registrar';
 import {authActions} from '../constants/actions';
 import {credentials} from '../utils/storage';
+import axios from 'axios';
 
 const {
 	REQUEST_LOGIN,
@@ -93,39 +94,29 @@ export function login(netid = '', password) {
 		const loginUrl = `${global.urls.baseUrl}${global.urls.login(netid, encodeURI(password))}`;
 		const sessionUrl = `${global.urls.baseUrl}${global.urls.session}`;
 
-		return fetch(loginUrl, {method: 'post'})
+		return axios(loginUrl, {method: 'post'})
 			.then(res => {
-				if (res.ok) {
-					let creds = {
-						netid,
-						password
-					};
-					return fetch(sessionUrl, {method: 'get'})
-						.then(res => {
-							if (res.ok) {
-								return res.json();
-							} else {
-								throw new Error("Could not verify session with TRACS");
-							}
-						}).then(session => {
-							if (session.userEid === creds.netid) {
-								credentials.store(creds.netid, creds.password).then(() => {
-									dispatch(loginSuccess(session.userEid, creds.password));
-								});
-							} else {
-								//Maybe this should update the session by logging into TRACS?
-								//Only cause should be if the user wasn't actually logged in during the previous fetch reques
-								loginFailure("Session does not match provided credentials");
-							}
-						}).catch(err => {
-							dispatch(loginFailure(err.message));
+				let creds = {
+					netid,
+					password
+				};
+				return axios(sessionUrl, {method: 'get'}).then(res => {
+					const session = res.data;
+					console.log(session);
+					if (session.userEid === creds.netid) {
+						credentials.store(creds.netid, creds.password).then(() => {
+							dispatch(loginSuccess(session.userEid, creds.password));
 						});
-				} else {
-					throw new Error("Could not login to TRACS");
-				}
-			})
-			.catch(err => {
-				dispatch(loginFailure(err.message));
+					} else {
+						//Maybe this should update the session by logging into TRACS?
+						//Only cause should be if the user wasn't actually logged in during the previous fetch reques
+						throw new Error("Session does not match provided credentials");
+					}
+				}).catch(err => {
+					dispatch(loginFailure(err));
+				});
+			}).catch(err => {
+				dispatch(loginFailure(err));
 			});
 	};
 }
@@ -134,7 +125,7 @@ export function logout() {
 	return (dispatch) => {
 		dispatch(requestLogout());
 		const logoutUrl = `${global.urls.baseUrl}${global.urls.logout}`;
-
+		console.log(logoutUrl);
 		return fetch(logoutUrl, {
 			method: 'get'
 		}).then(res => {

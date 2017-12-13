@@ -9,6 +9,7 @@
     "storybook": "storybook start -p 7007"
   },
   "dependencies": {
+    "axios": "^0.17.1",
     "base-64": "^0.1.0",
     "bluebird": "^3.5.1",
     "moment": "^2.19.2",

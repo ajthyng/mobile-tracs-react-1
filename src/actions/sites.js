@@ -74,15 +74,14 @@ export function getSiteInfo(netid) {
 				let siteIds = sites.membership_collection.map((site) => {
 					return site.id.split(':').last();
 				});
-				cleanStorage(siteIds, netid);
-				Sites.get(netid).then(storedSites => {
+				return Sites.get(netid).then(storedSites => {
 					console.log("Stored Sites: ", storedSites);
 					const payload = {
 						siteIds,
 						storedSites,
 						netid
 					};
-					getAllSites(payload).then(userSites => {
+					return getAllSites(payload).then(userSites => {
 						let allSites = {
 							...userSites,
 							...storedSites

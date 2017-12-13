@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Dimensions, Platform, SectionList, ToastAndroid} from 'react-native';
 import {connect} from 'react-redux';
-import {getNotifications} from '../../actions/notifications';
+import {batchUpdateNotification, getNotifications} from '../../actions/notifications';
 import Notification from './Notification';
 import SectionHeader from './SectionHeader';
 import SectionSeparator from './SectionSeparator';
@@ -40,6 +40,7 @@ class NotificationView extends Component {
 			this.setState({
 				isRefreshing: true
 			});
+			let start = new Date();
 			let promises = [
 				this.props.getNotifications(),
 				getSettings ? this.props.getSettings() : null
@@ -70,6 +71,13 @@ class NotificationView extends Component {
 		}
 	};
 
+	notSeen(updateIds, notification) {
+		if (!notification.seen) {
+			updateIds.push(notification.id);
+		}
+		return updateIds;
+	}
+
 	componentWillMount() {
 		Dimensions.addEventListener('change', (dimensions) => {
 			this.setState({
@@ -96,6 +104,13 @@ class NotificationView extends Component {
 		if (nextProps.errorMessage) {
 			if (Platform.OS === 'android') {
 				ToastAndroid.show(nextProps.errorMessage, ToastAndroid.LONG);
+			}
+		}
+
+		if (!nextProps.isBatchUpdating && !nextProps.errorMessage) {
+			let ids = nextProps.announcements.reduce(this.notSeen, []);
+			if (ids.length > 0) {
+				this.props.batchUpdate(ids, {seen: true});
 			}
 		}
 	}
@@ -186,6 +201,7 @@ class NotificationView extends Component {
 																		 contactName={this.props.siteData.contactInfo.name}
 																		 contactEmail={this.props.siteData.contactInfo.email}/>
 			}
+
 			return (
 				<SectionList
 					sections={sections}
@@ -218,6 +234,8 @@ const mapStateToProps = (state, ownProps) => {
 	});
 	return {
 		notificationsLoaded: state.notifications.isLoaded,
+		isUpdating: state.notifications.isUpdating,
+		isBatchUpdating: state.notifications.isBatchUpdating,
 		errorMessage: state.notifications.errorMessage,
 		announcements: state.notifications.announcements || [],
 		forums: state.notifications.forums || [],
@@ -231,6 +249,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		getNotifications: () => dispatch(getNotifications()),
+		batchUpdate: (ids, status) => dispatch(batchUpdateNotification(ids, status)),
 		getSettings: () => dispatch(getSettings()),
 		saveSettings: (settings, token, local) => dispatch(saveSettings(settings, token, local))
 	}

@@ -12,6 +12,7 @@ import {auth, login, loginHasFailed, loginIsGuestAccount} from './login';
 import FCM from 'react-native-fcm';
 import base64 from 'base-64';
 import {registrarActions} from '../constants/actions';
+import axios from 'axios';
 
 const {
 	REQUEST_REGISTRATION,
@@ -143,24 +144,16 @@ export const register = (netid = '', password) => {
 		let headers = {
 			'Authorization': 'Basic ' + base64.encode(auth64),
 		};
-
-		return fetch(`${dispatchUrl}${global.urls.jwt}`, {
+		return axios(`${dispatchUrl}${global.urls.jwt}`, {
 			method: 'get',
 			headers: headers
 		}).then(res => {
-			if (res.ok) {
-				return res.text();
-			} else {
-				dispatch(login(netid, password));
-				dispatch(registrationFailure(`${res.statusCode}: Could not register device to receive push notifications`));
-			}
-		}).then(jwt => {
-			if (jwt) {
+			if (res.data) {
 				FCM.getFCMToken().then(deviceToken => {
 					const payload = {
 						netid,
 						password,
-						jwt,
+						jwt: res.data,
 						deviceToken
 					};
 					postRegistration(payload, dispatch);

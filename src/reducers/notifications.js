@@ -17,13 +17,17 @@ const {
 	REQUEST_NOTIFICATION_UPDATE,
 	NOTIFICATION_UPDATE_SUCCESS,
 	NOTIFICATION_UPDATE_FAILURE,
-	REMOVE_NOTIFICATION
+	REMOVE_NOTIFICATION,
+	REQUEST_BATCH_UPDATE,
+	BATCH_UPDATE_SUCCESS,
+	BATCH_UPDATE_FAILURE
 } = notificationActions;
 
 const initialState = {
 	isLoading: false,
 	isLoaded: false,
 	isUpdating: false,
+	isBatchUpdating: false,
 	errorMessage: "",
 };
 
@@ -67,7 +71,7 @@ const notificationsFailure = (state, actions) => {
 const requestNotificationUpdate = (state, action) => {
 	return {
 		...state,
-		isUpdating: true,
+		isBatchUpdating: true,
 		errorMessage: ""
 	}
 };
@@ -75,7 +79,7 @@ const requestNotificationUpdate = (state, action) => {
 const notificationUpdateSuccess = (state, action) => {
 	return {
 		...state,
-		isUpdating: false,
+		isBatchUpdating: false,
 		errorMessage: ""
 	};
 };
@@ -83,7 +87,7 @@ const notificationUpdateSuccess = (state, action) => {
 const notificationUpdateFailure = (state, action) => {
 	return {
 		...state,
-		isUpdating: false,
+		isBatchUpdating: false,
 		errorMessage: action.errorMessage
 	}
 };
@@ -116,6 +120,30 @@ const removeNotification = (state, action) => {
 
 };
 
+const requestBatchUpdate = (state, action) => {
+	return {
+		...state,
+		isBatchUpdating: true,
+		errorMessage: ""
+	}
+};
+
+const batchUpdateSuccess = (state, action) => {
+	return {
+		...state,
+		isBatchUpdating: false,
+		errorMessage: ""
+	}
+};
+
+const batchUpdateFailure = (state, action) => {
+	return {
+		...state,
+		isBatchUpdating: false,
+		errorMessage: action.errorMessage
+	}
+};
+
 export const notificationsReducer = (state = initialState, action) => {
 	switch (action.type) {
 		case REQUEST_NOTIFICATIONS: return requestNotifications(state, action);
@@ -125,6 +153,9 @@ export const notificationsReducer = (state = initialState, action) => {
 		case NOTIFICATION_UPDATE_SUCCESS: return notificationUpdateSuccess(state, action);
 		case NOTIFICATION_UPDATE_FAILURE: return notificationUpdateFailure(state, action);
 		case REMOVE_NOTIFICATION: return removeNotification(state, action);
+		case REQUEST_BATCH_UPDATE: return requestBatchUpdate(state, action);
+		case BATCH_UPDATE_SUCCESS: return batchUpdateSuccess(state, action);
+		case BATCH_UPDATE_FAILURE: return batchUpdateFailure(state, action);
 		default: return state;
 	}
 };
