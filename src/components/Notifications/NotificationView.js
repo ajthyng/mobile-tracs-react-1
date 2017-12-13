@@ -62,21 +62,19 @@ class NotificationView extends Component {
 
 	filterNotifications = () => {
 		if (this.props.siteData) {
-			this.announcements = this.props.announcements.filter(announce => {
-				return announce.other_keys.site_id === this.props.siteData.id;
-			});
-			this.forums = this.props.forums.filter(post => {
-				return post.other_keys.site_id === this.props.siteData.id;
-			});
+			if (this.props.renderAnnouncements) {
+				this.announcements = this.props.announcements.filter(announce => {
+					return announce.other_keys.site_id === this.props.siteData.id;
+				});
+			}
+
+			if (this.props.renderForums) {
+				this.forums = this.props.forums.filter(post => {
+					return post.other_keys.site_id === this.props.siteData.id;
+				});
+			}
 		}
 	};
-
-	notSeen(updateIds, notification) {
-		if (!notification.seen) {
-			updateIds.push(notification.id);
-		}
-		return updateIds;
-	}
 
 	componentWillMount() {
 		Dimensions.addEventListener('change', (dimensions) => {
@@ -107,12 +105,7 @@ class NotificationView extends Component {
 			}
 		}
 
-		if (!nextProps.isBatchUpdating && !nextProps.errorMessage) {
-			let ids = nextProps.announcements.reduce(this.notSeen, []);
-			if (ids.length > 0) {
-				this.props.batchUpdate(ids, {seen: true});
-			}
-		}
+		this.filterNotifications();
 	}
 
 	componentWillUnmount() {
@@ -122,7 +115,6 @@ class NotificationView extends Component {
 	}
 
 	render() {
-		this.filterNotifications();
 		let announcementSection = {
 			data: this.props.announcementSetting ? (this.announcements || this.props.announcements) : [],
 			renderItem: ({item}) => {
@@ -234,8 +226,8 @@ const mapStateToProps = (state, ownProps) => {
 	});
 	return {
 		notificationsLoaded: state.notifications.isLoaded,
+		dispatchToken: state.registrar.deviceToken,
 		isUpdating: state.notifications.isUpdating,
-		isBatchUpdating: state.notifications.isBatchUpdating,
 		errorMessage: state.notifications.errorMessage,
 		announcements: state.notifications.announcements || [],
 		forums: state.notifications.forums || [],
@@ -249,7 +241,6 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		getNotifications: () => dispatch(getNotifications()),
-		batchUpdate: (ids, status) => dispatch(batchUpdateNotification(ids, status)),
 		getSettings: () => dispatch(getSettings()),
 		saveSettings: (settings, token, local) => dispatch(saveSettings(settings, token, local))
 	}

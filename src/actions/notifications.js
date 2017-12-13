@@ -276,9 +276,11 @@ const requestBatchUpdate = () => {
 	}
 };
 
-const batchUpdateSuccess = () => {
+const batchUpdateSuccess = (ids, status) => {
 	return {
 		type: BATCH_UPDATE_SUCCESS,
+		status,
+		ids
 	}
 };
 
@@ -289,25 +291,25 @@ const batchUpdateFailure = (errorMessage) => {
 	}
 };
 
-export const batchUpdateNotification = (ids=[], status = {}) => {
+export const batchUpdateNotification = (ids=[], status = {}, token) => {
 	return async (dispatch) => {
 		dispatch(requestBatchUpdate());
 		if (ids.length === 0 || !Object.keys(status).some(key => true)) {
 			return;
 		}
 
-		const token = await FCM.getFCMToken().then(token => token);
+		token = token ? token : await FCM.getFCMToken().then(deviceToken => deviceToken);
+
 		const url = `${global.urls.dispatchUrl}${global.urls.getNotifications(token)}`;
 		const options = {
-			url,
 			method: 'patch',
-			body: JSON.stringify({ids, status})
+			data: {ids: ids, patches: status}
 		};
-
-		return axios(options).then(res => {
-			dispatch(batchUpdateSuccess());
-		}).catch(err => {
-			dispatch(batchUpdateFailure(err.message));
-		});
+		dispatch(batchUpdateSuccess(ids, status));
+		//return axios(url, options).then(res => {
+		//	dispatch(batchUpdateSuccess(ids, status));
+		//}).catch(err => {
+		//	dispatch(batchUpdateFailure(err.message));
+		//});
 	}
 };

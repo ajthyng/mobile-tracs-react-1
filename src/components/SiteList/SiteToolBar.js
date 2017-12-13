@@ -40,6 +40,7 @@ class SiteToolBar extends Component {
 			forumButton = <SiteButton name="comments"
 																style={{flex: 1}}
 																color={this.props.color}
+																badgeCount={2}
 																size={24}
 																onPress={() => {
 																	let props = {

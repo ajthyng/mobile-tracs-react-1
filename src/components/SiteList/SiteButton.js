@@ -35,6 +35,9 @@ class SiteButton extends Component {
 							size={this.props.size}
 							color={this.props.color}/>
 				<Text style={{fontSize: this.props.fontSize || 12}}>{this.props.label}</Text>
+				<View style={{backgroundColor: 'red', height: 10, width: 10, borderRadius: 5, top: 0, left: "60%", margin: 'auto', position: 'absolute'}}>
+
+				</View>
 			</View>
 		</Ripple>
 	}

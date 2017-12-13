@@ -128,7 +128,21 @@ const requestBatchUpdate = (state, action) => {
 	}
 };
 
+const updateStatusKeys = (notifications: Array) => {
+
+};
+
 const batchUpdateSuccess = (state, action) => {
+	let ids = action.ids;
+	let status = action.status;
+	state.announcements.forEach(announcement => {
+		if (ids.indexOf(announcement.id) > -1) {
+			Object.keys(status).forEach(key => {
+				announcement[key] = status[key];
+			});
+		}
+	});
+
 	return {
 		...state,
 		isBatchUpdating: false,

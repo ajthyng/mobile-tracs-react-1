@@ -13,9 +13,10 @@ import {connect} from 'react-redux';
 import {types} from '../../constants/notifications';
 import Discussion from './Discussion';
 import Announcement from './Announcement';
+import {Actions} from 'react-native-router-flux';
 import Swipeout from 'react-native-swipeout';
 import SwipeDelete from './SwipeDelete';
-import {updateNotification} from '../../actions/notifications';
+import {batchUpdateNotification, updateNotification} from '../../actions/notifications';
 
 class Notification extends Component {
 
@@ -27,6 +28,7 @@ class Notification extends Component {
 		this.height = new Animated.Value(0);
 		this.scaleY = new Animated.Value(0);
 		this.duration = 500;
+		this.scene = Actions.currentScene;
 	}
 
 	deleteNotification = () => {
@@ -65,7 +67,9 @@ class Notification extends Component {
 	};
 
 	componentDidMount() {
-		this.animateIn();
+		if (!this.props.notification.seen && Actions.currentScene === this.scene) {
+			this.props.markSeen(this.props.notification);
+		}
 	}
 
 	render() {
@@ -76,6 +80,7 @@ class Notification extends Component {
 			height: this.height
 		};
 
+		this.animateIn();
 		switch (this.props.type) {
 			case types.ANNOUNCEMENT:
 				return (
@@ -107,6 +112,9 @@ const mapDispatchToProps = (dispatch) => {
 			newNotif.seen = true;
 			newNotif.cleared = true;
 			dispatch(updateNotification(newNotif, oldNotif));
+		},
+		markSeen: (notification) => {
+			dispatch(batchUpdateNotification([notification.id], {seen: true}));
 		}
 	}
 };

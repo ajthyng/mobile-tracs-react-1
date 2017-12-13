@@ -7,6 +7,7 @@ import Site from './Site';
 import {setCurrentScene} from '../../actions/routes';
 import {auth, netidLogout} from '../../actions/login';
 import {types as siteTypes} from '../../constants/sites';
+import {getNotifications} from '../../actions/notifications';
 
 class SiteList extends Component {
 	constructor(props) {
@@ -20,6 +21,10 @@ class SiteList extends Component {
 	componentWillMount() {
 		this.props.setScene(Actions.currentScene);
 		this.checkComponentState();
+	}
+
+	componentDidMount() {
+		this.props.getNotifications(this.props.token);
 	}
 
 	componentDidUpdate() {
@@ -119,6 +124,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		getMemberships: (netid) => dispatch(getSiteInfo(netid)),
+		getNotifications: (token) => dispatch(getNotifications(token)),
 		clearSites: () => dispatch(clearSites()),
 		setScene: (scene) => dispatch(setCurrentScene(scene))
 	}

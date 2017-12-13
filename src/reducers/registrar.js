@@ -45,6 +45,7 @@ function registrationSuccess(state, action) {
 		isRegistering: false,
 		isRegistered: true,
 		netid: action.netid,
+		deviceToken: action.deviceToken,
 		errorMessage: ''
 	}
 }
