@@ -28,6 +28,9 @@ const initialState = {
 	isLoaded: false,
 	isUpdating: false,
 	isBatchUpdating: false,
+	announcements: [],
+	forums: [],
+	badgeCounts: {},
 	errorMessage: "",
 };
 
@@ -36,8 +39,54 @@ const requestNotifications = (state, action) => {
 		...state,
 		isLoading: true,
 		isLoaded: false,
-		errorMessage: "",
+		errorMessage: ""
 	}
+};
+const countAnnouncements = (badgeCounts) => {
+	return announcement => {
+		let site_id = announcement.other_keys.site_id;
+		if (!announcement.seen) {
+			if (badgeCounts.hasOwnProperty(site_id)) {
+				badgeCounts[site_id].unseenCount += 1;
+			} else {
+				badgeCounts[site_id] = {
+					unseenCount: 1
+				}
+			}
+		}
+	}
+};
+
+const countForums = (badgeCounts) => {
+	return forum => {
+		let site_id = forum.other_keys.site_id;
+		if (!forum.seen) {
+			if (badgeCounts.hasOwnProperty(site_id)) {
+				badgeCounts[site_id].unseenCount += 1;
+				if (badgeCounts[site_id].hasOwnProperty('forumCount')) {
+					badgeCounts[site_id].forumCount += 1;
+				} else {
+					badgeCounts[site_id] = {
+						...badgeCounts[site_id],
+						forumCount: 1
+					}
+				}
+			} else {
+				badgeCounts[site_id] = {
+					unseenCount: 1,
+					forumCount: 1
+				}
+			}
+		}
+	}
+};
+
+const updateBadgeCount = (notifs) => {
+	let badgeCounts = {};
+	(notifs[types.ANNOUNCEMENT] || []).forEach(countAnnouncements(badgeCounts));
+	(notifs[types.FORUM] || []).forEach(countForums(badgeCounts));
+	console.log("Badge Count: ", badgeCounts);
+	return badgeCounts;
 };
 
 const notificationsSuccess = (state, action) => {
@@ -51,11 +100,15 @@ const notificationsSuccess = (state, action) => {
 			notifs[notif.keys.object_type].push(notif);
 		}
 	}
+
+	let badgeCounts = updateBadgeCount(notifs);
+
 	return {
 		...state,
 		isLoading: false,
 		isLoaded: true,
 		errorMessage: "",
+		badgeCounts: badgeCounts,
 		announcements: notifs[types.ANNOUNCEMENT],
 		forums: notifs[types.FORUM]
 	}
@@ -128,24 +181,32 @@ const requestBatchUpdate = (state, action) => {
 	}
 };
 
-const updateStatusKeys = (notifications: Array) => {
-
+const updateStatus = (status, ids) => {
+	return function(notif) {
+		if (ids.indexOf(notif.id) > -1) {
+			Object.keys(status).forEach(key => {
+				notif[key] = status[key];
+			});
+		}
+	};
 };
 
 const batchUpdateSuccess = (state, action) => {
 	let ids = action.ids;
 	let status = action.status;
-	state.announcements.forEach(announcement => {
-		if (ids.indexOf(announcement.id) > -1) {
-			Object.keys(status).forEach(key => {
-				announcement[key] = status[key];
-			});
-		}
-	});
+	state.announcements.forEach(updateStatus(status, ids));
+	state.forums.forEach(updateStatus(status, ids));
+
+	let notifs = {};
+	notifs[types.ANNOUNCEMENT] = [...(state.announcements ||[])];
+	notifs[types.FORUM] = [...(state.forums || [])];
+
+	let badgeCounts = updateBadgeCount(notifs);
 
 	return {
 		...state,
 		isBatchUpdating: false,
+		badgeCounts: badgeCounts,
 		errorMessage: ""
 	}
 };

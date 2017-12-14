@@ -305,11 +305,10 @@ export const batchUpdateNotification = (ids=[], status = {}, token) => {
 			method: 'patch',
 			data: {ids: ids, patches: status}
 		};
-		dispatch(batchUpdateSuccess(ids, status));
-		//return axios(url, options).then(res => {
-		//	dispatch(batchUpdateSuccess(ids, status));
-		//}).catch(err => {
-		//	dispatch(batchUpdateFailure(err.message));
-		//});
+		return axios(url, options).then(res => {
+			dispatch(batchUpdateSuccess(ids, status));
+		}).catch(err => {
+			dispatch(batchUpdateFailure(err.message));
+		});
 	}
 };

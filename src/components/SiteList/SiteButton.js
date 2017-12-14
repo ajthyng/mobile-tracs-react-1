@@ -12,7 +12,9 @@ import React, {Component} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Ripple from 'react-native-material-ripple';
+import {site} from '../../constants/colors';
 
+const badgeSide = 10;
 const styles = StyleSheet.create({
 	container: {
 		flexDirection: 'column',
@@ -20,6 +22,19 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		margin: 5
 	},
+	badge: {
+		backgroundColor: site.badgeColor,
+		height: badgeSide,
+		width: badgeSide,
+		borderRadius: badgeSide / 2,
+		top: 0,
+		left: "60%",
+		margin: 'auto',
+		position: 'absolute'
+	},
+	badgeText: {
+		color: "#fff"
+	}
 });
 
 class SiteButton extends Component {
@@ -35,9 +50,7 @@ class SiteButton extends Component {
 							size={this.props.size}
 							color={this.props.color}/>
 				<Text style={{fontSize: this.props.fontSize || 12}}>{this.props.label}</Text>
-				<View style={{backgroundColor: 'red', height: 10, width: 10, borderRadius: 5, top: 0, left: "60%", margin: 'auto', position: 'absolute'}}>
-
-				</View>
+				{this.props.badgeCount > 0 ? <View style={styles.badge}/> : null}
 			</View>
 		</Ripple>
 	}

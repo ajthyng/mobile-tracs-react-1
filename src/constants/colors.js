@@ -21,6 +21,7 @@ module.exports = {
 		courseTitleBackground: "#501214",
 		projectTitleBackground: "#734143",
 		dashboardTitleBackground: "#005481",
-		dashboardTitleText: "#fefefe"
+		dashboardTitleText: "#fefefe",
+		badgeColor: "#ff3b30"
 	}
 };

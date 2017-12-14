@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {SectionList} from 'react-native';
+import {SectionList, Keyboard} from 'react-native';
 import {connect} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
 import {clearSites, getSiteInfo} from '../../actions/sites';
@@ -15,7 +15,7 @@ class SiteList extends Component {
 		this.state = {
 			...this.state,
 			refreshing: false
-		}
+		};
 	}
 
 	componentWillMount() {
@@ -24,7 +24,10 @@ class SiteList extends Component {
 	}
 
 	componentDidMount() {
-		this.props.getNotifications(this.props.token);
+		if (!this.props.isLoadingNotifications) {
+			this.props.getNotifications(this.props.token);
+		}
+
 	}
 
 	componentDidUpdate() {
@@ -62,14 +65,29 @@ class SiteList extends Component {
 		});
 	}
 
+	countNotifications = (site) => {
+		if ((this.props.badgeCounts || {}).hasOwnProperty(site.info.id)) {
+			site.info.forumCount = this.props.badgeCounts[site.info.id].forumCount || 0;
+			site.info.unseenCount = this.props.badgeCounts[site.info.id].unseenCount || 0;
+		} else {
+			site.info.forumCount = 0;
+			site.info.unseenCount = 0;
+		}
+		return site;
+	};
+
 	render() {
 		let sites = {};
+		Keyboard.dismiss();
 		sites.projects = this.props.sites.filter((site) => {
 			return site.info.type === siteTypes.PROJECT;
 		});
 		sites.courses = this.props.sites.filter((site) => {
 			return site.info.type === siteTypes.COURSE;
 		});
+
+		sites.projects = sites.projects.map(this.countNotifications);
+		sites.courses = sites.courses.map(this.countNotifications);
 
 		let sections = [
 			{
@@ -101,6 +119,7 @@ class SiteList extends Component {
 
 const mapStateToProps = (state, ownProps) => {
 	let sites = [];
+
 	Object.keys(state.tracsSites.userSites).forEach(site => {
 		const userSite = state.tracsSites.userSites[site];
 		sites.push({key: userSite.id, info: userSite})
@@ -111,7 +130,11 @@ const mapStateToProps = (state, ownProps) => {
 		return 0;
 	});
 	return {
+		announcements: state.notifications.announcements,
+		isLoadingNotifications: state.notifications.isLoading,
+		forums: state.notifications.forums,
 		netid: state.login.netid,
+		badgeCounts: state.notifications.badgeCounts,
 		isAuthenticated: state.login.isAuthenticated,
 		deviceToken: state.registrar.deviceToken,
 		userSites: state.tracsSites.userSites,

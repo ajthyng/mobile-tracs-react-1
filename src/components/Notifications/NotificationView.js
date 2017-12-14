@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
-import {Dimensions, Platform, SectionList, ToastAndroid} from 'react-native';
+import {Dimensions, Platform, SectionList, ToastAndroid, BackHandler} from 'react-native';
 import {connect} from 'react-redux';
-import {batchUpdateNotification, getNotifications} from '../../actions/notifications';
+import {getNotifications} from '../../actions/notifications';
+import {Actions} from 'react-native-router-flux';
 import Notification from './Notification';
 import SectionHeader from './SectionHeader';
 import SectionSeparator from './SectionSeparator';
 import ItemSeparator from './ItemSeparator';
+import configureStore from '../../store/configureStore';
 import ActivityIndicator from '../Helper/ActivityIndicator';
 import {getSettings, saveSettings} from '../../actions/settings';
 import Settings from '../../utils/settings';
@@ -21,6 +23,15 @@ class NotificationView extends Component {
 			isRefreshing: true,
 			firstLoad: true
 		};
+
+		this.handleBack = this.handleBack.bind(this);
+	}
+
+	static updateNotifications() {
+		const store = configureStore();
+		if (!store.getState().notifications.isLoading) {
+			store.dispatch(getNotifications());
+		}
 	}
 
 	renderSectionHeader = ({section}) => {
@@ -36,6 +47,7 @@ class NotificationView extends Component {
 		}
 	};
 	getNotifications = (getSettings = false) => {
+		console.log(`Loading Notifications: ${this.props.loadingNotifications ? "true" : "false"}`);
 		if (!this.props.loadingNotifications) {
 			this.setState({
 				isRefreshing: true
@@ -50,6 +62,7 @@ class NotificationView extends Component {
 				this.setState({
 					isRefreshing: false
 				});
+				console.log(`Get Notifications: ${new Date() - start}`);
 			});
 		}
 	};
@@ -82,16 +95,14 @@ class NotificationView extends Component {
 				deviceWidth: dimensions.window.width
 			});
 		});
-	}
-
-	componentDidMount() {
+		BackHandler.addEventListener('hardwareBackPress', this.handleBack);
 		this.getNotifications(true);
 	}
 
 	componentWillUpdate(nextProps, nextState) {
 		if (nextProps.notificationsLoaded && this.state.firstLoad) {
 			this.setState({
-				firstLoad: false,
+				firstLoad: false
 			});
 		}
 
@@ -112,6 +123,11 @@ class NotificationView extends Component {
 		Dimensions.removeEventListener('change', (result) => {
 			console.log(result);
 		});
+		BackHandler.removeEventListener('hardwareBackPress', this.handleBack);
+	}
+
+	handleBack() {
+		Actions.pop();
 	}
 
 	render() {
@@ -193,7 +209,6 @@ class NotificationView extends Component {
 																		 contactName={this.props.siteData.contactInfo.name}
 																		 contactEmail={this.props.siteData.contactInfo.email}/>
 			}
-
 			return (
 				<SectionList
 					sections={sections}
@@ -201,7 +216,7 @@ class NotificationView extends Component {
 						return item.id
 					}}
 					onRefresh={this.getNotifications}
-					refreshing={this.state.isRefreshing}
+					refreshing={false}
 					renderSectionHeader={this.renderSectionHeader}
 					ListHeaderComponent={dashboard}
 					renderSectionFooter={() => <SectionSeparator/>}
@@ -227,7 +242,7 @@ const mapStateToProps = (state, ownProps) => {
 	return {
 		notificationsLoaded: state.notifications.isLoaded,
 		dispatchToken: state.registrar.deviceToken,
-		isUpdating: state.notifications.isUpdating,
+		loadingNotifications: state.notifications.isLoading,
 		errorMessage: state.notifications.errorMessage,
 		announcements: state.notifications.announcements || [],
 		forums: state.notifications.forums || [],

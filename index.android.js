@@ -72,7 +72,6 @@ class App extends Component {
 								 icon={TabIcons.announcements}
 								 tabBarLabel="Announcements"
 								 hideNavBar={true}
-								 title={<Text>Announcements</Text>}
 								 component={NotificationView}
 								 onEnter={(props) => {
 									 props.renderAnnouncements = true;

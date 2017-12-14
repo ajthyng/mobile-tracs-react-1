@@ -28,7 +28,6 @@ class Notification extends Component {
 		this.height = new Animated.Value(0);
 		this.scaleY = new Animated.Value(0);
 		this.duration = 500;
-		this.scene = Actions.currentScene;
 	}
 
 	deleteNotification = () => {
@@ -66,8 +65,8 @@ class Notification extends Component {
 		]);
 	};
 
-	componentDidMount() {
-		if (!this.props.notification.seen && Actions.currentScene === this.scene) {
+	componentDidMount(){
+		if (!this.props.notification.seen) {
 			this.props.markSeen(this.props.notification);
 		}
 	}
@@ -81,6 +80,7 @@ class Notification extends Component {
 		};
 
 		this.animateIn();
+
 		switch (this.props.type) {
 			case types.ANNOUNCEMENT:
 				return (
