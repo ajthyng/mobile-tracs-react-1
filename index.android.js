@@ -7,11 +7,11 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {AppRegistry, Text} from 'react-native';
+import {AppRegistry} from 'react-native';
 import React, {Component} from 'react';
 import {connect, Provider} from 'react-redux';
 import FCM, {FCMEvent} from 'react-native-fcm';
-import {ActionConst, Actions, Router, Scene, Stack, Tabs} from 'react-native-router-flux';
+import {ActionConst, Actions, Router, Scene, Stack} from 'react-native-router-flux';
 import configureStore from './src/store/configureStore';
 import LoginScreen from './src/components/Login/LoginScreen';
 import SiteList from './src/components/SiteList/SiteList';
@@ -24,6 +24,7 @@ import NotificationSettings from './src/components/NotificationSettings/Notifica
 import TabIcon from './src/components/TabBar/TabIcon';
 import SimpleWebView from './src/components/SimpleWebView/SimpleWebView';
 import {getNotifications} from './src/actions/notifications';
+import {setCurrentScene} from './src/actions/routes';
 
 const store = configureStore();
 const RouterWithRedux = connect()(Router);
@@ -48,7 +49,18 @@ const TabIcons = {
 	}
 };
 
+
 class App extends Component {
+	handleNotification = (notification) => {
+		FCM.presentLocalNotification({
+			title: `${notification.fcm.title}`,
+			body: `${notification.fcm.body}`,
+			sound: "default",
+			show_in_foreground: true,
+			icon: "ic_notification"
+		});
+	};
+
 	constructor(props) {
 		super(props);
 
@@ -60,14 +72,15 @@ class App extends Component {
 							 initial={true}
 							 hideNavBar={true}
 							 type={ActionConst.RESET}/>
-				<Tabs key={scenes.main}
-							type={ActionConst.RESET}
-							hideNavBar
-							swipeEnabled={false}
-							backToInitial
-							lazy={true}
-							showLabel={true}
-							tabBarPosition="bottom">
+				<Scene key={scenes.main}
+							 type={ActionConst.RESET}
+							 hideNavBar
+							 tabs={true}
+							 swipeEnabled={false}
+							 backToInitial
+							 lazy={true}
+							 showLabel={true}
+							 tabBarPosition="bottom">
 					<Scene key={scenes.announcements}
 								 icon={TabIcons.announcements}
 								 tabBarLabel="Announcements"
@@ -75,6 +88,7 @@ class App extends Component {
 								 component={NotificationView}
 								 onEnter={(props) => {
 									 props.renderAnnouncements = true;
+									 store.dispatch(setCurrentScene(scenes.announcements));
 									 return props;
 								 }}
 					/>
@@ -86,7 +100,9 @@ class App extends Component {
 									 hideNavBar={true}
 									 component={SiteList}
 									 initial
-						/>
+									 onEnter={() => {
+										 store.dispatch(setCurrentScene(scenes.sitesTab));
+									 }}/>
 						<Scene key={scenes.dashboard}
 									 title="Dashboard"
 									 swipeEnabled={false}
@@ -94,6 +110,9 @@ class App extends Component {
 					</Stack>
 					<Stack key={scenes.settingsTab}
 								 icon={TabIcons.settings}
+								 onEnter={() => {
+									 store.dispatch(setCurrentScene(scenes.settingsTab));
+								 }}
 								 tabBarLabel="Settings">
 						<Scene key={scenes.settings}
 									 initial
@@ -115,10 +134,11 @@ class App extends Component {
 									 url={global.urls.support}/>
 
 					</Stack>
-				</Tabs>
+				</Scene>
 			</Scene>
 		);
 	}
+
 	componentDidMount() {
 		this.notificationListener = FCM.on(FCMEvent.Notification, (notification) => {
 			if (notification.local_notification) {
@@ -132,16 +152,6 @@ class App extends Component {
 			}
 		});
 	}
-
-	handleNotification = (notification) => {
-		FCM.presentLocalNotification({
-			title: `${notification.fcm.title}`,
-			body: `${notification.fcm.body}`,
-			sound: "default",
-			show_in_foreground: true,
-			icon: "ic_notification"
-		});
-	};
 
 	componentWillUnmount() {
 		this.notificationListener.remove();

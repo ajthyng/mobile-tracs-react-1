@@ -13,12 +13,31 @@ import {connect} from 'react-redux';
 import {types} from '../../constants/notifications';
 import Discussion from './Discussion';
 import Announcement from './Announcement';
-import {Actions} from 'react-native-router-flux';
 import Swipeout from 'react-native-swipeout';
 import SwipeDelete from './SwipeDelete';
 import {batchUpdateNotification, updateNotification} from '../../actions/notifications';
 
 class Notification extends Component {
+
+	deleteNotification = () => {
+		this.animateOut().start((event) => {
+			if (event.finished) this.props.deleteNotification(this.props.notification);
+		});
+	};
+	animateIn = () => {
+		Animated.timing(this.height, {
+			toValue: 88,
+			duration: this.duration,
+			easing: Easing.exp
+		}).start();
+	};
+	animateOut = () => {
+		return Animated.timing(this.height, {
+			toValue: 0,
+			duration: 300,
+			easing: Easing.exp
+		});
+	};
 
 	constructor(props) {
 		super(props);
@@ -26,46 +45,10 @@ class Notification extends Component {
 			component: <SwipeDelete onDelete={this.deleteNotification}/>
 		}];
 		this.height = new Animated.Value(0);
-		this.scaleY = new Animated.Value(0);
 		this.duration = 500;
 	}
 
-	deleteNotification = () => {
-		this.animateOut().start(() => {
-			setTimeout(() => {this.props.deleteNotification(this.props.notification)}, 200);
-		});
-	};
-
-	animateIn = () => {
-		Animated.parallel([
-			Animated.timing(this.scaleY, {
-				toValue: 1,
-				duration: this.duration,
-				easing: Easing.exp,
-			}),
-			Animated.timing(this.height, {
-				toValue: 88,
-				duration: this.duration,
-				easing: Easing.exp
-			})
-		]).start();
-	};
-	animateOut = () => {
-		return Animated.parallel([
-			Animated.timing(this.scaleY, {
-				toValue: 0,
-				duration: this.duration,
-				easing: Easing.exp,
-			}),
-			Animated.timing(this.height, {
-				toValue: 0,
-				duration: this.duration,
-				easing: Easing.exp
-			})
-		]);
-	};
-
-	componentDidMount(){
+	componentDidMount() {
 		if (!this.props.notification.seen) {
 			this.props.markSeen(this.props.notification);
 		}
@@ -73,9 +56,6 @@ class Notification extends Component {
 
 	render() {
 		let animatedStyle = {
-			transform: [{
-				scaleY: this.scaleY
-			}],
 			height: this.height
 		};
 

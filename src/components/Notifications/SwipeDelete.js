@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
 class SwipeDelete extends Component {
 	render() {
 		return (
-			<Ripple onPressIn={this.props.onDelete}>
+			<Ripple onPress={this.props.onDelete}>
 				<View style={styles.container}>
 					<Icon name="delete-forever"
 								color="#ffffff"
