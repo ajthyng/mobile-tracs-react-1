@@ -53,6 +53,12 @@ const countAnnouncements = (badgeCounts) => {
 					unseenCount: 1
 				}
 			}
+
+			if (badgeCounts.hasOwnProperty('announceCount')) {
+				badgeCounts.announceCount += 1;
+			} else {
+				badgeCounts.announceCount = 1;
+			}
 		}
 	}
 };
@@ -85,7 +91,6 @@ const updateBadgeCount = (notifs) => {
 	let badgeCounts = {};
 	(notifs[types.ANNOUNCEMENT] || []).forEach(countAnnouncements(badgeCounts));
 	(notifs[types.FORUM] || []).forEach(countForums(badgeCounts));
-	console.log("Badge Count: ", badgeCounts);
 	return badgeCounts;
 };
 

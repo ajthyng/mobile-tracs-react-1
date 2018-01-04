@@ -35,20 +35,8 @@ if (env.debug) {
 	global.urls = urls.release;
 }
 
-const tabIconSize = 20;
+const tabIconSize = 24;
 const tabIconColor = "#000";
-const TabIcons = {
-	announcements: () => {
-		return (<TabIcon name="bullhorn" size={tabIconSize} color={tabIconColor}/>);
-	},
-	sites: () => {
-		return (<TabIcon name="list" size={tabIconSize} color={tabIconColor}/>);
-	},
-	settings: () => {
-		return (<TabIcon name="cog" size={tabIconSize} color={tabIconColor}/>);
-	}
-};
-
 
 class App extends Component {
 	handleNotification = (notification) => {
@@ -63,6 +51,18 @@ class App extends Component {
 
 	constructor(props) {
 		super(props);
+
+		this.TabIcons = {
+			announcements: () => {
+				return (<TabIcon name="bullhorn" size={tabIconSize} color={tabIconColor}/>);
+			},
+			sites: () => {
+				return (<TabIcon name="list" size={tabIconSize} color={tabIconColor}/>);
+			},
+			settings: () => {
+				return (<TabIcon name="cog" size={tabIconSize} color={tabIconColor}/>);
+			}
+		};
 
 		this.Scenes = Actions.create(
 			<Scene key="root">
@@ -82,7 +82,7 @@ class App extends Component {
 							 showLabel={true}
 							 tabBarPosition="bottom">
 					<Scene key={scenes.announcements}
-								 icon={TabIcons.announcements}
+								 icon={this.TabIcons.announcements}
 								 tabBarLabel="Announcements"
 								 hideNavBar={true}
 								 component={NotificationView}
@@ -93,7 +93,7 @@ class App extends Component {
 								 }}
 					/>
 					<Stack key={scenes.sitesTab}
-								 icon={TabIcons.sites}
+								 icon={this.TabIcons.sites}
 								 initial
 								 tabBarLabel="Courses">
 						<Scene key={scenes.sites}
@@ -109,7 +109,7 @@ class App extends Component {
 									 component={NotificationView}/>
 					</Stack>
 					<Stack key={scenes.settingsTab}
-								 icon={TabIcons.settings}
+								 icon={this.TabIcons.settings}
 								 onEnter={() => {
 									 store.dispatch(setCurrentScene(scenes.settingsTab));
 								 }}
