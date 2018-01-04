@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import TabIcon from '../TabBar/TabIcon';
+import {default as FAIcon} from 'react-native-vector-icons/FontAwesome';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import {notification} from '../../constants/colors';
@@ -52,13 +52,12 @@ class Announcement extends Component {
 				paddingRight: 5
 			}
 		});
-
 		return (
 			<Ripple onPress={this.props.onPress} rippleDuration={600}>
 				<View style={styles.container}>
 					<View style={styles.circle}>
-						<TabIcon name="bullhorn" size={circleSize / 2}
-										 color={this.props.read ? notification.readIcon : notification.unreadIcon}/>
+						<FAIcon name="bullhorn" size={circleSize / 2}
+										 	   color={this.props.read ? notification.readIcon : notification.unreadIcon}/>
 					</View>
 					<View style={styles.content}>
 						<Text style={styles.titleText}
