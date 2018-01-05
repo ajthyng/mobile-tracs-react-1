@@ -11,7 +11,7 @@ import {AppRegistry} from 'react-native';
 import React, {Component} from 'react';
 import {connect, Provider} from 'react-redux';
 import FCM, {FCMEvent} from 'react-native-fcm';
-import {ActionConst, Actions, Router, Scene, Stack} from 'react-native-router-flux';
+import {ActionConst, Actions, Router, Scene, Stack, Tabs} from 'react-native-router-flux';
 import configureStore from './src/store/configureStore';
 import LoginScreen from './src/components/Login/LoginScreen';
 import SiteList from './src/components/SiteList/SiteList';
@@ -54,13 +54,13 @@ class App extends Component {
 
 		this.TabIcons = {
 			announcements: () => {
-				return (<TabIcon name="bullhorn" size={tabIconSize} color={tabIconColor}/>);
+				return <TabIcon name="bullhorn" size={tabIconSize} color={tabIconColor}/>;
 			},
 			sites: () => {
-				return (<TabIcon name="list" size={tabIconSize} color={tabIconColor}/>);
+				return <TabIcon name="list" size={tabIconSize} color={tabIconColor}/>;
 			},
 			settings: () => {
-				return (<TabIcon name="cog" size={tabIconSize} color={tabIconColor}/>);
+				return <TabIcon name="cog" size={tabIconSize} color={tabIconColor}/>;
 			}
 		};
 
@@ -72,10 +72,9 @@ class App extends Component {
 							 initial={true}
 							 hideNavBar={true}
 							 type={ActionConst.RESET}/>
-				<Scene key={scenes.main}
+				<Tabs key={scenes.main}
 							 type={ActionConst.RESET}
 							 hideNavBar
-							 tabs={true}
 							 swipeEnabled={false}
 							 backToInitial
 							 lazy={true}
@@ -134,7 +133,7 @@ class App extends Component {
 									 url={global.urls.support}/>
 
 					</Stack>
-				</Scene>
+				</Tabs>
 			</Scene>
 		);
 	}
