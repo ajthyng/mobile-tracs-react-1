@@ -36,7 +36,6 @@ const styles = StyleSheet.create({
 class TabIcon extends Component {
 	constructor(props) {
 		super(props);
-		console.log("ANNOUNCE TAB ICON BADGE COUNT: ", this.props.badgeCount);
 	}
 
 	render() {
@@ -55,8 +54,6 @@ const mapStateToProps = (state, ownProps) => {
 	if (ownProps.name === 'bullhorn') {
 		announceCount = state.notifications.badgeCounts ? state.notifications.badgeCounts.announceCount : 0;
 	}
-
-	console.log("TABICON", state.notifications);
 	return {
 		badgeCount: announceCount
 	}
