@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {BackHandler, Dimensions, Platform, SectionList, ToastAndroid} from 'react-native';
 import {connect} from 'react-redux';
-import {getNotifications} from '../../actions/notifications';
+import {batchUpdateNotification, getNotifications} from '../../actions/notifications';
 import {Actions} from 'react-native-router-flux';
 import Notification from './Notification';
 import SectionHeader from './SectionHeader';
@@ -138,6 +138,7 @@ class NotificationView extends Component {
 			firstLoad: true
 		};
 
+		this.batchUpdateSeen = this.batchUpdateSeen.bind(this);
 		this.handleBack = this.handleBack.bind(this);
 	}
 
@@ -182,10 +183,6 @@ class NotificationView extends Component {
 		this.setupNotificationSections(nextProps);
 	}
 
-	componentDidUpdate() {
-		console.log(this.props);
-	}
-
 	componentWillUnmount() {
 		Dimensions.removeEventListener('change', (result) => {
 		});
@@ -201,6 +198,7 @@ class NotificationView extends Component {
 	}
 
 	render() {
+		this.start = new Date();
 		let sections = [];
 		if (this.props.renderAnnouncements && this.announcementSection) {
 			sections.push(this.announcementSection);
@@ -209,12 +207,6 @@ class NotificationView extends Component {
 			sections.push(this.forumSection);
 		}
 
-		let ids = [
-			...this.announcementSection.data.filter(item => !item.seen).map(item => item.id),
-			...this.forumSection.data.filter(item => !item.seen).map(item => item.id)
-		];
-
-		console.log("Announcements: ", this.announcementSection.data);
 
 
 		if (!this.props.notificationsLoaded && this.state.firstLoad) {
@@ -245,6 +237,32 @@ class NotificationView extends Component {
 		}
 
 	}
+
+	componentDidMount() {
+		this.batchUpdateSeen();
+	}
+
+	componentDidUpdate() {
+		this.batchUpdateSeen();
+	}
+
+	async batchUpdateSeen() {
+		const status = {
+			seen: true
+		};
+
+		const ids = [
+			...this.announcementSection.data.filter(item => !item.seen).map(item => item.id),
+			...this.forumSection.data.filter(item => !item.seen).map(item => item.id)
+		];
+
+		let token = this.props.dispatchToken || await FCM.getFCMToken().then(token => token);
+
+		if (!this.props.isBatchUpdating && !this.props.errorMessage && ids.length > 0) {
+			this.props.batchUpdate(ids, status, token);
+		}
+		console.log("Total IDS: ", ids.length);
+	}
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -261,6 +279,7 @@ const mapStateToProps = (state, ownProps) => {
 	return {
 		notificationsLoaded: state.notifications.isLoaded,
 		dispatchToken: state.registrar.deviceToken,
+		isBatchUpdating: state.notifications.isBatchUpdating,
 		loadingNotifications: state.notifications.isLoading,
 		errorMessage: state.notifications.errorMessage,
 		announcements: state.notifications.announcements || [],
@@ -277,7 +296,8 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		getNotifications: () => dispatch(getNotifications()),
 		getSettings: () => dispatch(getSettings()),
-		saveSettings: (settings, token, local) => dispatch(saveSettings(settings, token, local))
+		saveSettings: (settings, token, local) => dispatch(saveSettings(settings, token, local)),
+		batchUpdate: (ids, status, token) => dispatch(batchUpdateNotification(ids, status, token))
 	}
 };
 

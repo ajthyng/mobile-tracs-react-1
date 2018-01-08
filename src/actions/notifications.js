@@ -291,7 +291,7 @@ const batchUpdateFailure = (errorMessage) => {
 	}
 };
 
-export const batchUpdateNotification = (ids=[], status = {}, token) => {
+export const batchUpdateNotification = (ids = [], status = {}, token) => {
 	return async (dispatch) => {
 		dispatch(requestBatchUpdate());
 		if (ids.length === 0 || !Object.keys(status).some(key => true)) {
