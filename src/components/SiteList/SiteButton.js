@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
 	badgeText: {
 		marginBottom: 1,
 		color: "#fff",
-		fontSize: 12,
+		fontSize: 10,
 		fontWeight: 'bold'
 	}
 });
