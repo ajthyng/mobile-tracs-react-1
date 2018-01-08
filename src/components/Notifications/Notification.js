@@ -47,12 +47,12 @@ class Notification extends Component {
 		this.height = new Animated.Value(0);
 		this.duration = 500;
 	}
-
-	componentDidMount() {
-		if (!this.props.notification.seen) {
-			this.props.markSeen(this.props.notification);
-		}
-	}
+	//
+	//componentDidMount() {
+	//	if (!this.props.notification.seen) {
+	//		this.props.markSeen(this.props.notification);
+	//	}
+	//}
 
 	render() {
 		let animatedStyle = {

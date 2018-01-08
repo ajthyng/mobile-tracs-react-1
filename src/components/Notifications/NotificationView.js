@@ -11,7 +11,7 @@ import ActivityIndicator from '../Helper/ActivityIndicator';
 import {getSettings, saveSettings} from '../../actions/settings';
 import Settings from '../../utils/settings';
 import {types} from '../../constants/notifications';
-import {announcements} from '../../constants/scenes';
+import {announcements, dashboard} from '../../constants/scenes';
 import DashboardHeader from './DashboardHeader'
 import {Swipeout} from 'react-native-swipeout';
 
@@ -28,8 +28,8 @@ class NotificationView extends Component {
 				return null;
 		}
 	};
+
 	getNotifications = (getSettings = false) => {
-		console.log(`Loading Notifications: ${this.props.loadingNotifications ? "true" : "false"}`);
 		if (!this.props.loadingNotifications) {
 			this.setState({
 				isRefreshing: true
@@ -48,59 +48,56 @@ class NotificationView extends Component {
 			});
 		}
 	};
+
 	settingsChanged = (nextProps) => {
 		const announceChange = nextProps.announcementSetting !== this.props.announcementSetting;
 		const forumChange = nextProps.forumSetting !== this.props.forumSetting;
 
 		return announceChange || forumChange;
 	};
-	filterNotifications = () => {
-		if (this.props.siteData) {
-			if (this.props.renderAnnouncements) {
-				this.announcements = this.props.announcements.filter(announce => {
-					return announce.other_keys.site_id === this.props.siteData.id;
+
+	filterNotifications = (props) => {
+		if (props.siteData) {
+			if (props.renderAnnouncements) {
+				this.announcements = props.announcements.filter(announce => {
+					return announce.other_keys.site_id === props.siteData.id;
 				});
 			}
 
-			if (this.props.renderForums) {
-				this.forums = this.props.forums.filter(post => {
-					return post.other_keys.site_id === this.props.siteData.id;
+			if (props.renderForums && props.forums) {
+				this.forums = props.forums.filter(post => {
+					return post.other_keys.site_id === props.siteData.id;
 				});
+			} else {
+				this.forums = [];
 			}
 		} else {
-			this.announcements = this.props.announcements;
+			this.announcements = props.announcements;
 		}
 	};
-	setupNotificationSections = () => {
-		this.filterNotifications();
+
+	//TODO: This needs to take props as an argument to avoid this.props vs nextProps problems
+	setupNotificationSections = (props) => {
+		this.filterNotifications(props);
 		this.announcementSection = {
-			data: this.props.announcementSetting ? this.announcements : [],
+			data: props.announcementSetting ? this.announcements || [] : [],
 			renderItem: this.renderAnnouncement,
 			title: "Announcements",
 			type: types.ANNOUNCEMENT,
-			isOn: this.props.announcementSetting,
+			isOn: props.announcementSetting,
 			onToggle: this.toggleSetting(types.ANNOUNCEMENT)
 		};
 
 		this.forumSection = {
-			data: this.props.forumSetting ? this.forums || [] : [],
+			data: props.forumSetting ? this.forums || [] : [],
 			renderItem: this.renderForum,
 			title: "Forums",
 			type: types.FORUM,
-			isOn: this.props.forumSetting,
+			isOn: props.forumSetting,
 			onToggle: this.toggleSetting(types.FORUM)
 		};
 	};
-	toggleSetting(type) {
-		return (value) => {
-			let userSettings = new Settings({
-				blacklist: this.props.blacklist,
-				global_disable: this.props.global_disable
-			});
-			userSettings.setType(type, value);
-			this.props.saveSettings(userSettings.getSettings(), this.props.token, false);
-		};
-	};
+
 	renderForum = ({item}) => {
 		if (!item) return null;
 		let author = item.tracs_data.authoredBy;
@@ -117,6 +114,7 @@ class NotificationView extends Component {
 												 notification={item}
 												 data={data}/>
 	};
+
 	renderAnnouncement = ({item}) => {
 		if (!item) return null;
 		let data = {
@@ -125,7 +123,6 @@ class NotificationView extends Component {
 			author: item.tracs_data.createdByDisplayName,
 			read: item.read,
 			onPress: () => {
-				console.log(`${item.id} pressed`)
 			}
 		};
 		return <Notification type={types.ANNOUNCEMENT}
@@ -144,6 +141,17 @@ class NotificationView extends Component {
 		this.handleBack = this.handleBack.bind(this);
 	}
 
+	toggleSetting(type) {
+		return (value) => {
+			let userSettings = new Settings({
+				blacklist: this.props.blacklist,
+				global_disable: this.props.global_disable
+			});
+			userSettings.setType(type, value);
+			this.props.saveSettings(userSettings.getSettings(), this.props.token, false);
+		};
+	};
+
 	componentWillMount() {
 		Dimensions.addEventListener('change', (dimensions) => {
 			this.setState({
@@ -152,7 +160,7 @@ class NotificationView extends Component {
 		});
 		BackHandler.addEventListener('hardwareBackPress', this.handleBack);
 		this.getNotifications(true);
-		this.setupNotificationSections();
+		this.setupNotificationSections(this.props);
 	}
 
 	componentWillUpdate(nextProps, nextState) {
@@ -171,12 +179,15 @@ class NotificationView extends Component {
 				ToastAndroid.show(nextProps.errorMessage, ToastAndroid.LONG);
 			}
 		}
-		this.setupNotificationSections();
+		this.setupNotificationSections(nextProps);
+	}
+
+	componentDidUpdate() {
+		console.log(this.props);
 	}
 
 	componentWillUnmount() {
 		Dimensions.removeEventListener('change', (result) => {
-			console.log(result);
 		});
 		BackHandler.removeEventListener('hardwareBackPress', this.handleBack);
 	}
@@ -186,8 +197,7 @@ class NotificationView extends Component {
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
-		console.log(`Announcements is ${nextProps.route === announcements ? "active" : "inactive"}.`);
-		return nextProps.route === announcements;
+		return nextProps.route === announcements || nextProps.route === dashboard;
 	}
 
 	render() {
@@ -198,6 +208,14 @@ class NotificationView extends Component {
 		if (this.props.renderForums && this.forumSection) {
 			sections.push(this.forumSection);
 		}
+
+		let ids = [
+			...this.announcementSection.data.filter(item => !item.seen).map(item => item.id),
+			...this.forumSection.data.filter(item => !item.seen).map(item => item.id)
+		];
+
+		console.log("Announcements: ", this.announcementSection.data);
+
 
 		if (!this.props.notificationsLoaded && this.state.firstLoad) {
 			return (
@@ -240,7 +258,6 @@ const mapStateToProps = (state, ownProps) => {
 			announcementSetting = false;
 		}
 	});
-	console.log(state.routes);
 	return {
 		notificationsLoaded: state.notifications.isLoaded,
 		dispatchToken: state.registrar.deviceToken,

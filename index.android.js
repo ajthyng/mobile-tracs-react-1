@@ -73,13 +73,13 @@ class App extends Component {
 							 hideNavBar={true}
 							 type={ActionConst.RESET}/>
 				<Tabs key={scenes.main}
-							 type={ActionConst.RESET}
-							 hideNavBar
-							 swipeEnabled={false}
-							 backToInitial
-							 lazy={true}
-							 showLabel={true}
-							 tabBarPosition="bottom">
+							type={ActionConst.RESET}
+							hideNavBar
+							swipeEnabled={false}
+							backToInitial
+							lazy={true}
+							showLabel={true}
+							tabBarPosition="bottom">
 					<Scene key={scenes.announcements}
 								 icon={this.TabIcons.announcements}
 								 tabBarLabel="Announcements"
@@ -105,7 +105,10 @@ class App extends Component {
 						<Scene key={scenes.dashboard}
 									 title="Dashboard"
 									 swipeEnabled={false}
-									 component={NotificationView}/>
+									 component={NotificationView}
+									 onEnter={() => {
+										 store.dispatch(setCurrentScene(scenes.dashboard));
+									 }}/>
 					</Stack>
 					<Stack key={scenes.settingsTab}
 								 icon={this.TabIcons.settings}
