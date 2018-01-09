@@ -44,22 +44,19 @@ class Notification extends Component {
 		this.delete = [{
 			component: <SwipeDelete onDelete={this.deleteNotification}/>
 		}];
-		this.height = new Animated.Value(0);
+		this.height = new Animated.Value(88);
+		//TODO: Figure out a better way to animate
+		//this.height = new Animated.Value(0);
 		this.duration = 500;
 	}
-	//
-	//componentDidMount() {
-	//	if (!this.props.notification.seen) {
-	//		this.props.markSeen(this.props.notification);
-	//	}
-	//}
 
 	render() {
 		let animatedStyle = {
 			height: this.height
 		};
 
-		this.animateIn();
+		//TODO: Activate animation when improved
+		//this.animateIn();
 
 		switch (this.props.type) {
 			case types.ANNOUNCEMENT:

@@ -194,7 +194,11 @@ class NotificationView extends Component {
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
-		return nextProps.route === announcements || nextProps.route === dashboard;
+		if (nextProps.route === dashboard && this.props.renderDashboard) {
+			return true;
+		}
+
+		return nextProps.route === announcements && !this.props.renderDashboard
 	}
 
 	render() {
@@ -206,8 +210,6 @@ class NotificationView extends Component {
 		if (this.props.renderForums && this.forumSection) {
 			sections.push(this.forumSection);
 		}
-
-
 
 		if (!this.props.notificationsLoaded && this.state.firstLoad) {
 			return (
