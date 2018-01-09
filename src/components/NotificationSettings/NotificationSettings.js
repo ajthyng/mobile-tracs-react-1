@@ -102,14 +102,13 @@ class NotificationSettings extends Component {
 				<ActivityIndicator/>
 			)
 		} else {
-			const onPress = (enabled, self) => {
+			const onPress = async (enabled, self) => {
 				self.setState({switchIsOn: enabled});
 
 				const userSettings = new Settings({
 					blacklist: this.props.blacklist,
 					global_disable: this.props.global_disable
 				});
-
 				switch (self.props.id) {
 					case ANNOUNCEMENT:
 					case FORUM:
@@ -119,7 +118,7 @@ class NotificationSettings extends Component {
 						userSettings.setSite(self.props.id, enabled);
 						break;
 				}
-				this.saveSettings(userSettings.getSettings(), this.props.token, false)
+				await this.saveSettings(userSettings.getSettings(), this.props.token, false)
 					.then(result => {
 						if (!result) self.setState({switchIsOn: !self.state.switchIsOn});
 					});

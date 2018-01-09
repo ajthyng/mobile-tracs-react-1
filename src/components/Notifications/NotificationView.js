@@ -76,16 +76,19 @@ class NotificationView extends Component {
 		}
 	};
 
-	//TODO: This needs to take props as an argument to avoid this.props vs nextProps problems
 	setupNotificationSections = (props) => {
 		this.filterNotifications(props);
+		let id = null;
+		if (this.props.siteData) {
+			id = this.props.siteData.id;
+		}
 		this.announcementSection = {
 			data: props.announcementSetting ? this.announcements || [] : [],
 			renderItem: this.renderAnnouncement,
 			title: "Announcements",
 			type: types.ANNOUNCEMENT,
 			isOn: props.announcementSetting,
-			onToggle: this.toggleSetting(types.ANNOUNCEMENT)
+			onToggle: this.toggleSetting(types.ANNOUNCEMENT, id)
 		};
 
 		this.forumSection = {
@@ -94,7 +97,7 @@ class NotificationView extends Component {
 			title: "Forums",
 			type: types.FORUM,
 			isOn: props.forumSetting,
-			onToggle: this.toggleSetting(types.FORUM)
+			onToggle: this.toggleSetting(types.FORUM, id)
 		};
 	};
 
@@ -137,18 +140,23 @@ class NotificationView extends Component {
 			isRefreshing: true,
 			firstLoad: true
 		};
-
+		console.log(this.props.siteData);
 		this.batchUpdateSeen = this.batchUpdateSeen.bind(this);
 		this.handleBack = this.handleBack.bind(this);
 	}
 
-	toggleSetting(type) {
+	toggleSetting(type, id=null) {
 		return (value) => {
 			let userSettings = new Settings({
 				blacklist: this.props.blacklist,
 				global_disable: this.props.global_disable
 			});
-			userSettings.setType(type, value);
+			if (id !== null) {
+				userSettings.setTypeAndSite(type, id, value);
+			} else {
+				userSettings.setType(type, value);
+			}
+
 			this.props.saveSettings(userSettings.getSettings(), this.props.token, false);
 		};
 	};
@@ -272,12 +280,19 @@ const mapStateToProps = (state, ownProps) => {
 	let forumSetting = true;
 
 	state.settings.userSettings.blacklist.forEach(setting => {
-		if (setting.keys.object_type === "discussion" && forumSetting) {
-			forumSetting = false;
-		} else if (setting.keys.object_type === "announcement" && announcementSetting) {
-			announcementSetting = false;
+		if (setting.hasOwnProperty("other_keys") && setting.other_keys.site_id === (ownProps.siteData || {}).id) {
+			if (setting.hasOwnProperty("keys")) {
+				if (setting.keys.object_type === "discussion") {
+					forumSetting = false;
+				}
+
+				if (setting.keys.object_type === "announcement") {
+					announcementSetting = false;
+				}
+			}
 		}
 	});
+
 	return {
 		notificationsLoaded: state.notifications.isLoaded,
 		dispatchToken: state.registrar.deviceToken,

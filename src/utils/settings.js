@@ -101,4 +101,36 @@ export default class Settings {
 		this.blacklist.push(entry);
 		this.blacklist = [...new Set(this.blacklist)];
 	}
+
+	setTypeAndSite(type, id, enabled) {
+		if (enabled === true) {
+			this._enableTypeAndSite(type, id);
+		} else {
+			this._disableTypeAndSite(type, id);
+		}
+	}
+
+	_enableTypeAndSite(type, id) {
+		this.blacklist = this.blacklist.filter(entry => {
+			if (entry.hasOwnProperty("keys") && entry.hasOwnProperty("other_keys")) {
+				if (entry["keys"].hasOwnProperty("object_type") && entry["other_keys"].hasOwnProperty("site_id")) {
+					return type !== entry["keys"]["object_type"] && id !== entry["other_keys"]["site_id"];
+				}
+			}
+		});
+	}
+
+	_disableTypeAndSite(type, id) {
+		const entry = {
+			keys: {
+				object_type: type
+			},
+			other_keys: {
+				site_id: id
+			}
+		};
+
+		this.blacklist.push(entry);
+		this.blacklist = [...new Set(this.blacklist)];
+	}
 }

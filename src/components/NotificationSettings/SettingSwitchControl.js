@@ -7,7 +7,7 @@ class SettingSwitchControl extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			switchIsOn: props.enabled
+			switchIsOn: this.props.enabled
 		};
 	}
 

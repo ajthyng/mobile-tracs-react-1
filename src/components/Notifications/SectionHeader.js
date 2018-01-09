@@ -18,6 +18,7 @@ class SectionHeader extends Component {
 	}
 
 	toggleSwitch = (value) => {
+		console.log(value);
 		this.props.onToggle(value);
 	};
 
