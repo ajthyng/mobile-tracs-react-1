@@ -59,19 +59,16 @@ class NotificationView extends Component {
 	filterNotifications = (props) => {
 		if (props.siteData) {
 			if (props.renderAnnouncements) {
-				this.announcements = props.announcements.filter(announce => {
-					return announce.other_keys.site_id === props.siteData.id;
-				});
+				this.announcements = props.announcements.filter(announce => announce.other_keys.site_id === props.siteData.id);
 			}
 
 			if (props.renderForums && props.forums) {
-				this.forums = props.forums.filter(post => {
-					return post.other_keys.site_id === props.siteData.id;
-				});
+				this.forums = props.forums.filter(post => post.other_keys.site_id === props.siteData.id);
 			} else {
 				this.forums = [];
 			}
 		} else {
+			console.log(props);
 			this.announcements = props.announcements;
 		}
 	};
@@ -111,7 +108,19 @@ class NotificationView extends Component {
 			topic: item.tracs_data.topic_title,
 			thread: item.tracs_data.title,
 			author: author.join(' '),
-			read: item.read
+			read: item.read,
+			onPress: () => {
+				let toolPageId = "";
+				if (this.props.siteData.tools.hasOwnProperty('sakai.forums')) {
+					toolPageId = `${this.props.siteData.tools['sakai.forums'].id}`;
+				}
+
+				let forumUrl = `${global.urls.baseUrl}${global.urls.webUrl}${global.urls.getForumPage(this.props.siteData.id, toolPageId)}`;
+				console.log("base url: ", forumUrl);
+				Actions.push('tracsDashboard', {
+					baseUrl: forumUrl
+				});
+			}
 		};
 		return <Notification type={types.FORUM}
 												 notification={item}
@@ -126,6 +135,18 @@ class NotificationView extends Component {
 			author: item.tracs_data.createdByDisplayName,
 			read: item.read,
 			onPress: () => {
+				let sceneToCall = 'tracsAnnouncement';
+				if (this.props.renderDashboard) {
+					sceneToCall = 'tracsDashboard';
+				}
+				console.log(this.props.siteData);
+				let siteId = (this.props.siteData || {}).id || item.other_keys.site_id || "";
+				let toolPageId = ((this.props.sites[siteId] || {}).tools || {})['sakai.announcements'].id;
+				let announcementUrl = `${global.urls.baseUrl}${global.urls.webUrl}${global.urls.getAnnouncementPage(siteId, toolPageId)}`;
+				console.log(announcementUrl);
+				Actions.push(sceneToCall, {
+					baseUrl: announcementUrl
+				});
 			}
 		};
 		return <Notification type={types.ANNOUNCEMENT}
@@ -140,12 +161,11 @@ class NotificationView extends Component {
 			isRefreshing: true,
 			firstLoad: true
 		};
-		console.log(this.props.siteData);
 		this.batchUpdateSeen = this.batchUpdateSeen.bind(this);
 		this.handleBack = this.handleBack.bind(this);
 	}
 
-	toggleSetting(type, id=null) {
+	toggleSetting(type, id = null) {
 		return (value) => {
 			let userSettings = new Settings({
 				blacklist: this.props.blacklist,
@@ -163,9 +183,11 @@ class NotificationView extends Component {
 
 	componentWillMount() {
 		Dimensions.addEventListener('change', (dimensions) => {
-			this.setState({
-				deviceWidth: dimensions.window.width
-			});
+			if (this.props.route === 'announcements' || this.props.route === 'dashboard') {
+				this.setState({
+					deviceWidth: dimensions.window.width
+				});
+			}
 		});
 		BackHandler.addEventListener('hardwareBackPress', this.handleBack);
 		this.getNotifications(true);
@@ -242,6 +264,7 @@ class NotificationView extends Component {
 					ListHeaderComponent={dashboard}
 					renderSectionFooter={() => <SectionSeparator/>}
 					ItemSeparatorComponent={ItemSeparator}
+					maxToRenderPerBatch={30}
 				/>
 			);
 		}
@@ -304,6 +327,7 @@ const mapStateToProps = (state, ownProps) => {
 		blacklist: state.settings.userSettings.blacklist,
 		global_disable: state.settings.userSettings.global_disable,
 		route: state.routes.scene,
+		sites: state.tracsSites.userSites,
 		announcementSetting,
 		forumSetting,
 	}

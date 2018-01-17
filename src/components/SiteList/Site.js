@@ -45,7 +45,7 @@ class Site extends Component {
 		return (
 			<View style={styles.container}
 						elevation={2}>
-				<Ripple>
+				<Ripple onPress={this.props.siteData.onPress || (() => {})}>
 					<View style={this.titleStyle()} ref="title">
 						<Text style={styles.titleText}
 									ellipsizeMode="tail"

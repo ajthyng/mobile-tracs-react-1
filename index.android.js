@@ -25,6 +25,7 @@ import TabIcon from './src/components/TabBar/TabIcon';
 import SimpleWebView from './src/components/SimpleWebView/SimpleWebView';
 import {getNotifications} from './src/actions/notifications';
 import {setCurrentScene} from './src/actions/routes';
+import TRACSWebView from './src/components/TRACSWebView/TRACSWebNative';
 
 const store = configureStore();
 const RouterWithRedux = connect()(Router);
@@ -80,17 +81,32 @@ class App extends Component {
 							lazy={true}
 							showLabel={true}
 							tabBarPosition="bottom">
-					<Scene key={scenes.announcements}
+
+					<Stack key={scenes.announcementsTab}
 								 icon={this.TabIcons.announcements}
-								 tabBarLabel="Announcements"
-								 hideNavBar={true}
-								 component={NotificationView}
-								 onEnter={(props) => {
-									 props.renderAnnouncements = true;
-									 store.dispatch(setCurrentScene(scenes.announcements));
-									 return props;
+								 onEnter={() => {
+								 	store.dispatch(setCurrentScene(scenes.announcementsTab))
 								 }}
-					/>
+								 tabBarLabel="Announcements">
+						<Scene key={scenes.announcements}
+									 icon={this.TabIcons.announcements}
+									 initial
+									 tabBarLabel="Announcements"
+									 hideNavBar={true}
+									 component={NotificationView}
+									 onEnter={(props) => {
+										 props.renderAnnouncements = true;
+										 store.dispatch(setCurrentScene(scenes.announcements));
+										 return props;
+									 }}/>
+						<Scene key={scenes.tracsAnnouncement}
+									 component={TRACSWebView}
+									 hideNavBar={true}
+									 onEnter={() => {
+										 store.dispatch(setCurrentScene(scenes.tracsAnnouncement));
+									 }}
+									/>
+					</Stack>
 					<Stack key={scenes.sitesTab}
 								 icon={this.TabIcons.sites}
 								 initial
@@ -109,6 +125,13 @@ class App extends Component {
 									 onEnter={() => {
 										 store.dispatch(setCurrentScene(scenes.dashboard));
 									 }}/>
+						<Scene key={scenes.tracsDashboard}
+									 component={TRACSWebView}
+									 hideNavBar={true}
+									 onEnter={() => {
+										 store.dispatch(setCurrentScene(scenes.tracsDashboard));
+									 }}
+						/>
 					</Stack>
 					<Stack key={scenes.settingsTab}
 								 icon={this.TabIcons.settings}

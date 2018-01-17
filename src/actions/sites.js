@@ -184,11 +184,13 @@ let getAllSites = (payload) => {
 			site.forEach(toolList => {
 				if (toolList.hasOwnProperty("tools")) {
 					toolList.tools.forEach(tool => {
-						fetchedSites[tool.siteId].tools[tool.toolId] = tool.pageId;
+						fetchedSites[tool.siteId].tools[tool.toolId] = {
+							pageId: tool.pageId,
+							id: tool.id
+						};
 					});
 				}
 			});
-
 		});
 
 		Sites.store(fetchedSites, netid).then();

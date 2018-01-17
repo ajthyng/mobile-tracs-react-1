@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {SectionList, Keyboard} from 'react-native';
+import {Keyboard, SectionList} from 'react-native';
 import {connect} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
 import {clearSites, getSiteInfo} from '../../actions/sites';
@@ -10,6 +10,28 @@ import {types as siteTypes} from '../../constants/sites';
 import {getNotifications} from '../../actions/notifications';
 
 class SiteList extends Component {
+	countNotifications = (site) => {
+		if ((this.props.badgeCounts || {}).hasOwnProperty(site.info.id)) {
+			site.info.forumCount = this.props.badgeCounts[site.info.id].forumCount || 0;
+			site.info.unseenCount = this.props.badgeCounts[site.info.id].unseenCount || 0;
+		} else {
+			site.info.forumCount = 0;
+			site.info.unseenCount = 0;
+		}
+		return site;
+	};
+
+	siteOnPress = (site) => {
+		let siteUrl = `${global.urls.baseUrl}${global.urls.webUrl}/${site.info.id}`;
+		console.log('URL: ', siteUrl);
+		site.info.onPress = () => {
+			Actions.push('tracsDashboard', {
+				baseUrl: siteUrl
+			});
+		};
+		return site;
+	};
+
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -65,17 +87,6 @@ class SiteList extends Component {
 		});
 	}
 
-	countNotifications = (site) => {
-		if ((this.props.badgeCounts || {}).hasOwnProperty(site.info.id)) {
-			site.info.forumCount = this.props.badgeCounts[site.info.id].forumCount || 0;
-			site.info.unseenCount = this.props.badgeCounts[site.info.id].unseenCount || 0;
-		} else {
-			site.info.forumCount = 0;
-			site.info.unseenCount = 0;
-		}
-		return site;
-	};
-
 	render() {
 		let sites = {};
 		Keyboard.dismiss();
@@ -88,6 +99,9 @@ class SiteList extends Component {
 
 		sites.projects = sites.projects.map(this.countNotifications);
 		sites.courses = sites.courses.map(this.countNotifications);
+
+		sites.projects = sites.projects.map(this.siteOnPress);
+		sites.courses = sites.courses.map(this.siteOnPress);
 
 		let sections = [
 			{
