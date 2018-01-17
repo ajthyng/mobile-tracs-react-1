@@ -33,7 +33,8 @@ public class MainApplication extends Application implements ReactApplication {
           new KeychainPackage(),
           new FIRMessagingPackage(),
           new LockStatusPackage(),
-          new CookieManagerPackage()
+          new CookieManagerPackage(),
+          new TRACSWebPackage()
       );
     }
 

@@ -3,4 +3,5 @@
     <color name="badgeColor">#501214</color>
     <color name="notifIconBg">#D8D8D8</color>
     <color name="notificationColor">#501214</color>
+    <color name="unreadBullhornColor">#5B5B5B</color>
 </resources>
