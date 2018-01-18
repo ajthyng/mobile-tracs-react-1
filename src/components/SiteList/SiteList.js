@@ -8,6 +8,7 @@ import {setCurrentScene} from '../../actions/routes';
 import {auth, netidLogout} from '../../actions/login';
 import {types as siteTypes} from '../../constants/sites';
 import {getNotifications} from '../../actions/notifications';
+import Workspace from './Workspace';
 
 class SiteList extends Component {
 	countNotifications = (site) => {
@@ -103,22 +104,29 @@ class SiteList extends Component {
 		sites.projects = sites.projects.map(this.siteOnPress);
 		sites.courses = sites.courses.map(this.siteOnPress);
 
-		let sections = [
-			{
-				data: sites.courses,
-				renderItem: ({item}) => {
-					return (
-						<Site siteData={item.info}/>
-					)
-				}
-			}, {
-				data: sites.projects,
-				renderItem: ({item}) => {
-					return (
-						<Site siteData={item.info}/>
-					)
-				}
+		let sections = [{
+			data: [{
+				owner: 'its-cms-testperms5',
+				key: 0
+			}],
+			renderItem: () => {
+				return <Workspace owner={this.props.netid}/>
 			}
+		}, {
+			data: sites.courses,
+			renderItem: ({item}) => {
+				return (
+					<Site siteData={item.info}/>
+				)
+			}
+		}, {
+			data: sites.projects,
+			renderItem: ({item}) => {
+				return (
+					<Site siteData={item.info}/>
+				)
+			}
+		}
 		];
 		return (
 			<SectionList
