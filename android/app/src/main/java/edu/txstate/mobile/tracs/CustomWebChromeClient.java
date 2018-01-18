@@ -3,12 +3,16 @@ package edu.txstate.mobile.tracs;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.view.View;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+import android.widget.FrameLayout;
+import android.widget.VideoView;
 
 import java.io.File;
 import java.io.IOException;

@@ -37,6 +37,7 @@ public class CustomWebView extends WebView {
         getSettings().setBuiltInZoomControls(true);
         getSettings().setDisplayZoomControls(false);
         getSettings().setJavaScriptEnabled(true);
+        getSettings().setDomStorageEnabled(true);
         getSettings().setLoadWithOverviewMode(true);
         getSettings().setUseWideViewPort(true);
         setDownloadListener(new DownloadListener() {

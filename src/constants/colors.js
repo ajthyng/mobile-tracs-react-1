@@ -23,5 +23,9 @@ module.exports = {
 		dashboardTitleBackground: "#005481",
 		dashboardTitleText: "#fefefe",
 		badgeColor: "#ff3b30"
+	},
+	workspace: {
+		textColor: "#501214",
+		backgroundColor: "#fafafa"
 	}
 };
