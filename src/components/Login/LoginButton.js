@@ -7,3 +7,39 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+import React, {Component} from 'react';
+import {StyleSheet, Text, ToastAndroid} from 'react-native';
+import Ripple from 'react-native-material-ripple';
+
+const styles = StyleSheet.create({
+	container: {
+		backgroundColor: '#00557e',
+		flexDirection: 'row',
+		justifyContent: 'center',
+		alignItems: 'center',
+		width: '100%',
+		height: 50,
+		marginTop: 16
+	},
+	text: {
+		color: '#fff',
+		fontSize: 18
+	}
+});
+
+class LoginButton extends Component {
+	defaultOnPress = () => {};
+
+	render() {
+		return (
+			<Ripple style={styles.container} onPress={this.props.onPress || this.defaultOnPress}>
+				<Text style={styles.text}>
+					Login
+				</Text>
+			</Ripple>
+		)
+	}
+}
+
+export default LoginButton;

@@ -14,7 +14,8 @@ let {
 	LOGIN_FAILURE,
 	REQUEST_LOGOUT,
 	LOGOUT_SUCCESS,
-	LOGOUT_FAILURE
+	LOGOUT_FAILURE,
+	CLEAR_ERROR
 } = authActions;
 
 export const initialState = {
@@ -77,6 +78,13 @@ const logoutFailure = (state, action) => {
 	}
 };
 
+const clearError = (state, action) => {
+	return {
+		...state,
+		errorMessage: ''
+	}
+};
+
 export function loginReducer(state = initialState, action) {
 	switch (action.type) {
 		case REQUEST_LOGIN: 		return requestLogin(state, action);
@@ -85,6 +93,7 @@ export function loginReducer(state = initialState, action) {
 		case REQUEST_LOGOUT: 		return requestLogout(state, action);
 		case LOGOUT_SUCCESS: 		return logoutSuccess(state, action);
 		case LOGOUT_FAILURE:		return logoutFailure(state, action);
+		case CLEAR_ERROR: 			return clearError(state, action);
 		default: 								return state;
 	}
 }

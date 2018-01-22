@@ -20,7 +20,8 @@ const {
 	REQUEST_LOGOUT,
 	LOGOUT_SUCCESS,
 	LOGOUT_FAILURE,
-	SET_CREDENTIALS
+	SET_CREDENTIALS,
+	CLEAR_ERROR
 } = authActions;
 
 const requestLogin = () => {
@@ -70,6 +71,12 @@ export const setCredentials = (creds) => {
 	}
 };
 
+export const clearError = () => {
+	return {
+		type: CLEAR_ERROR,
+	}
+};
+
 export function login(netid = '', password) {
 	return async (dispatch) => {
 		if (netid.length === 0) {
@@ -101,16 +108,21 @@ export function login(netid = '', password) {
 					password
 				};
 				return axios(sessionUrl, {method: 'get'}).then(res => {
-					const session = res.data;
+					let session = res.data;
 					console.log(session);
 					if (session.userEid === creds.netid) {
 						credentials.store(creds.netid, creds.password).then(() => {
 							dispatch(loginSuccess(session.userEid, creds.password));
 						});
 					} else {
-						//Maybe this should update the session by logging into TRACS?
-						//Only cause should be if the user wasn't actually logged in during the previous fetch reques
-						throw new Error("Session does not match provided credentials");
+						//This error is thrown when the user's creds don't match the session creds. This will happen
+						//on a failed login, or an expired session.
+						if (session.userEid === null) {
+							throw new Error("NetID or password is incorrect");
+						} else {
+							throw new Error("There was a problem logging into TRACS");
+						}
+
 					}
 				}).catch(err => {
 					dispatch(loginFailure(err));
