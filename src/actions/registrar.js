@@ -21,6 +21,7 @@ const {
 	REQUEST_UNREGISTER,
 	UNREGISTER_SUCCESS,
 	UNREGISTER_FAILURE,
+	IS_GUEST_ACCOUNT
 } = registrarActions;
 
 const requestRegistration = () => {
@@ -103,7 +104,6 @@ const postRegistration = async (payload, dispatch) => {
 					dispatch(registrationSuccess(deviceToken, netid));
 				} else {
 					const errorMessage = `${res.statusCode} error: Could not register device for push notifications`;
-					console.log(errorMessage);
 					dispatch(registrationFailure(errorMessage));
 				}
 			});
@@ -128,6 +128,13 @@ const unregisterFailure = (errorMessage) => {
 	return {
 		type: UNREGISTER_FAILURE,
 		errorMessage
+	}
+};
+
+export const setGuestAccount = (isGuestAccount = false) => {
+	return {
+		type: IS_GUEST_ACCOUNT,
+		isGuestAccount
 	}
 };
 

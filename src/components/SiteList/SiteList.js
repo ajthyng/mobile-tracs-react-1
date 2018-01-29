@@ -71,7 +71,7 @@ class SiteList extends Component {
 	}
 
 	checkComponentState() {
-		const sitesNotLoaded = this.props.isFetchingSites === false && Object.keys(this.props.userSites).length === 0;
+		const sitesNotLoaded = this.props.isFetchingSites === false && this.props.hasSites === undefined;
 		if (sitesNotLoaded) {
 			this.getMemberships(this.props.netid);
 		}
@@ -183,6 +183,7 @@ const mapStateToProps = (state, ownProps) => {
 		userSites: state.tracsSites.userSites,
 		isFetchingSites: state.tracsSites.isFetchingSites,
 		currentScene: state.routes.scene,
+		hasSites: state.tracsSites.hasSites,
 		sites
 	}
 };
