@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
 	},
 	titleText: {
 		flex: 19,
-		fontSize: 18
+		fontSize: 15
 	},
 	forwardArrow: {
 		flex: 1,
@@ -22,11 +22,6 @@ const styles = StyleSheet.create({
 });
 
 class Site extends Component {
-	constructor(props) {
-		super(props);
-		this.isCourse = this.props.siteData.type === siteType.COURSE;
-	}
-
 	titleStyle = () => {
 		let backgroundColor = this.isCourse ? siteColor.courseTitleBackground : siteColor.projectTitleBackground;
 
@@ -41,6 +36,11 @@ class Site extends Component {
 		};
 	};
 
+	constructor(props) {
+		super(props);
+		this.isCourse = this.props.siteData.type === siteType.COURSE;
+	}
+
 	render() {
 		let textColor = {
 			color: this.isCourse ? '#fff' : '#000'
@@ -48,14 +48,15 @@ class Site extends Component {
 		return (
 			<View style={styles.container}
 						elevation={2}>
-				<Ripple onPress={this.props.siteData.onPress || (() => {})}>
+				<Ripple onPress={this.props.siteData.onPress || (() => {
+				})}>
 					<View style={this.titleStyle()} ref="title">
 						<Text style={[styles.titleText, textColor]}
 									ellipsizeMode="tail"
 									numberOfLines={1}>
 							{this.props.siteData.name}
 						</Text>
-						<Text style={textColor}>
+						<Text style={[textColor, {marginLeft: 20}]}>
 							Site
 						</Text>
 						<Icon name="ios-arrow-forward"
@@ -64,7 +65,7 @@ class Site extends Component {
 									style={[styles.forwardArrow, textColor]}/>
 					</View>
 				</Ripple>
-				<SiteToolBar color={siteColor.courseTitleBackground} siteData={this.props.siteData} />
+				<SiteToolBar color={siteColor.courseTitleBackground} siteData={this.props.siteData}/>
 			</View>
 		);
 	}

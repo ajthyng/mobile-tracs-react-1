@@ -294,8 +294,7 @@ class NotificationView extends Component {
 					keyExtractor={(item, index) => {
 						return item.id
 					}}
-					onRefresh={this.props.isGuestAccount ? (() => {
-					}) : this.getNotifications}
+					onRefresh={this.props.isGuestAccount ? (() => {}) : this.getNotifications}
 					refreshing={false}
 					renderSectionHeader={this.renderSectionHeader}
 					ListHeaderComponent={dashboard}
