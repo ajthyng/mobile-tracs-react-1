@@ -7,7 +7,7 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {AppRegistry} from 'react-native';
+import {AppRegistry, PermissionsAndroid} from 'react-native';
 import React, {Component} from 'react';
 import {connect, Provider} from 'react-redux';
 import FCM, {FCMEvent} from 'react-native-fcm';
@@ -64,6 +64,9 @@ class App extends Component {
 				return <TabIcon name="cog" size={tabIconSize} color={tabIconColor}/>;
 			}
 		};
+
+		this.requestStoragePermission = this.requestStoragePermission.bind(this);
+		this.requestStoragePermission();
 
 		this.Scenes = Actions.create(
 			<Scene key="root">
@@ -180,6 +183,25 @@ class App extends Component {
 
 	componentWillUnmount() {
 		this.notificationListener.remove();
+	}
+
+	async requestStoragePermission() {
+		try {
+			const granted = await PermissionsAndroid.request(
+				PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+				{
+					'title': "TRACS Storage Permission",
+					'message': "TRACS needs access to store data on your phone."
+				}
+			);
+			if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+				console.log("Cache Enabled");
+			} else {
+				console.log("Cache Disabled");
+			}
+		} catch(err) {
+			console.log("Cache Disabled");
+		}
 	}
 
 	render() {

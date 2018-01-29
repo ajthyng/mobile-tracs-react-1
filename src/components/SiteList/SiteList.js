@@ -24,7 +24,6 @@ class SiteList extends Component {
 
 	siteOnPress = (site) => {
 		let siteUrl = `${global.urls.baseUrl}${global.urls.webUrl}/${site.info.id}`;
-		console.log('URL: ', siteUrl);
 		site.info.onPress = () => {
 			Actions.push('tracsDashboard', {
 				baseUrl: siteUrl

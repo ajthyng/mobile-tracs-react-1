@@ -146,17 +146,17 @@ export const register = (netid = '', password) => {
 		return axios(`${dispatchUrl}${global.urls.jwt}`, {
 			method: 'get',
 			headers: headers
-		}).then(res => {
+		}).then(async res => {
 			if (res.data) {
-				FCM.getFCMToken().then(deviceToken => {
-					const payload = {
-						netid,
-						password,
-						jwt: res.data,
-						deviceToken
-					};
-					postRegistration(payload, dispatch);
-				});
+				let deviceToken = await FCM.getFCMToken();
+
+				const payload = {
+					netid,
+					password,
+					jwt: res.data,
+					deviceToken,
+				};
+				postRegistration(payload, dispatch);
 			}
 		}).catch(err => {
 			dispatch(login(netid, password));
