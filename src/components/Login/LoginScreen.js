@@ -1,22 +1,58 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
-import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
+import {Dimensions, Alert, Image, ScrollView, StatusBar, StyleSheet, Text, TextInput, View} from 'react-native';
 import user from '../../../config/config.json';
 import ActivityIndicator from '../Helper/ActivityIndicator';
 import {register} from '../../actions/registrar';
 import {setCurrentScene} from '../../actions/routes';
 import * as Storage from '../../utils/storage';
+import LoginButton from './LoginButton';
+import {clearError as clearLoginError} from '../../actions/login';
 
 const styles = StyleSheet.create({
 	container: {
-		flex: 1,
 		flexDirection: 'column',
-		margin: 32,
+		alignItems: 'center',
+		justifyContent: 'space-between',
+		width: '100%',
+		height: Dimensions.get('window').height - StatusBar.currentHeight,
+		backgroundColor: '#fff'
 	},
-	netid: {},
-	password: {},
-	submit: {}
+	tracsImage: {
+		width: 80,
+		height: 80,
+		marginBottom: 16
+	},
+	loginPage: {
+		flexDirection: 'column',
+		alignItems: 'center',
+		justifyContent: 'center',
+		paddingTop: '30%',
+		width: '100%'
+	},
+	loginGreeting: {
+		flexDirection: 'column',
+		alignItems: 'center',
+		marginBottom: 50
+	},
+	loginForm: {
+		flexDirection: 'column',
+		alignItems: 'center',
+		justifyContent: 'center',
+		width: '65%'
+	},
+	inputText: {
+		width: '100%',
+		height: 40
+	},
+	uppsRequiredTextContainer: {
+		margin: 10
+	},
+	uppsRequiredText: {
+		textAlign: 'center',
+		fontSize: 10
+	}
 });
 
 class LoginScreen extends Component {
@@ -32,16 +68,18 @@ class LoginScreen extends Component {
 			netidTwo,
 			passwordTwo
 		};
+		this.underlineColor = '#000';
+		this.uppsRequiredText = `Use of computer and network facilities owned or operated by Texas State University requires prior authorization. Unauthorized access is prohibited. Usage may be subject to security testing and monitoring, and affords no privacy guarantees or expectations except as otherwise provided by applicable privacy laws. Abuse is subject to criminal prosecution. Use of these facilities implies agreement to comply with the policies of Texas State University.`;
+		this.userLogin = this.userLogin.bind(this);
 	}
 
-	userLogin(netid, password) {
+	userLogin() {
 		if (!this.props.loggingIn) {
-			this.props.login(netid, password)
+			this.props.login(this.state.netid, this.state.password)
 		}
 	}
 
 	componentWillMount() {
-		this.props.setScene(Actions.currentScene);
 		if (Actions.currentScene === 'login') {
 			if (this.props.loggingIn === false && this.props.registering === false) {
 				Storage.credentials.get().then(creds => {
@@ -59,69 +97,78 @@ class LoginScreen extends Component {
 		}
 	}
 
+	componentDidUpdate() {
+		if (this.props.loginError) {
+			if ((this.props.loginError.message || "").length > 0) {
+				this.props.clearLoginError();
+			}
+		}
+	}
+
 	render() {
 		if (this.props.loggingIn || this.props.registering) {
 			return (
 				<ActivityIndicator/>
 			);
 		} else {
+			if (this.props.loginError) {
+				if ((this.props.loginError.message || "").length > 0) {
+					console.log("Error message is ", this.props.loginError.message);
+					Alert.alert(`Login Error`, `${this.props.loginError.message}`);
+				}
+			}
 			return (
-				<View style={styles.container}>
-					<Text>Welcome to TRACS Mobile</Text>
-					<TextInput
-						placeholder="Net ID"
-						autoCapitalize='none'
-						autoFocus={true}
-						returnKeyType='next'
-						value={this.state.netid}
-						onChangeText={(text) => this.setState({netid: text})}
-						onSubmitEditing={() => {
-							this.refs.Password.focus();
-						}}
-					/>
-					<TextInput
-						ref='Password'
-						placeholder="Password"
-						autoCapitalize='none'
-						autoCorrect={false}
-						secureTextEntry={true}
-						returnKeyType='send'
-						value={this.state.password}
-						onChangeText={(text) => this.setState({password: text})}
-						onSubmitEditing={() => {
-							this.userLogin();
-						}}
-					/>
-					<Button
-						onPress={() => this.userLogin(this.state.netid, this.state.password)}
-						title="Login"/>
-					<TextInput
-						placeholder="Net ID"
-						autoCapitalize='none'
-						returnKeyType='next'
-						value={this.state.netidTwo}
-						onChangeText={(text) => this.setState({netidTwo: text})}
-						onSubmitEditing={() => {
-							this.refs.Password.focus();
-						}}
-					/>
-					<TextInput
-						ref='Password'
-						placeholder="Password"
-						autoCapitalize='none'
-						autoCorrect={false}
-						secureTextEntry={true}
-						returnKeyType='send'
-						value={this.state.passwordTwo}
-						onChangeText={(text) => this.setState({passwordTwo: text})}
-						onSubmitEditing={() => {
-							this.userLogin();
-						}}
-					/>
-					<Button
-						onPress={() => this.userLogin(this.state.netidTwo, this.state.passwordTwo)}
-						title="Login"/>
-				</View>
+				<ScrollView ref={(ref) => this.scrollView = ref}>
+					<View style={styles.container}>
+						<View style={styles.loginPage}>
+							<View style={styles.loginGreeting}>
+								<Image
+									source={require('../../../img/tracs.png')}
+									style={styles.tracsImage}
+								/>
+								<Text style={{color: '#00557e', fontSize: 20}}>Welcome to TRACS</Text>
+								<Text style={{color: '#959595'}}>Sign in to your account</Text>
+							</View>
+							<View style={styles.loginForm}>
+								<TextInput
+									style={styles.inputText}
+									ref={ref => this.netid = ref}
+									placeholder="Net ID"
+									underlineColorAndroid={this.underlineColor}
+									selectionColor='#909090'
+									autoCapitalize='none'
+									returnKeyType='next'
+									value={this.state.netid}
+									onChangeText={(text) => this.setState({netid: text})}
+									onSubmitEditing={() => {
+										this.password.focus();
+									}}
+								/>
+								<TextInput
+									style={styles.inputText}
+									ref={ref => this.password = ref}
+									underlineColorAndroid={this.underlineColor}
+									placeholder="Password"
+									selectionColor='#909090'
+									autoCapitalize='none'
+									autoCorrect={false}
+									secureTextEntry={true}
+									returnKeyType='send'
+									value={this.state.password}
+									onChangeText={(text) => this.setState({password: text})}
+									onSubmitEditing={this.userLogin}
+								/>
+								<LoginButton
+									onPress={this.userLogin}/>
+							</View>
+						</View>
+						<View style={styles.uppsRequiredTextContainer}>
+							<Text style={styles.uppsRequiredText}>
+								{this.uppsRequiredText}
+							</Text>
+						</View>
+					</View>
+				</ScrollView>
 			);
 		}
 	}
@@ -142,7 +189,8 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		login: (netid, password) => dispatch(register(netid, password)),
-		setScene: (scene) => dispatch(setCurrentScene(scene))
+		setScene: (scene) => dispatch(setCurrentScene(scene)),
+		clearLoginError: () => dispatch(clearLoginError())
 	}
 };
 

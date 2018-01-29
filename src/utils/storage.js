@@ -13,6 +13,7 @@ import LockStatus from './lockstatus';
 import moment from 'moment';
 import {types} from '../constants/notifications';
 
+
 const {
 	FORUM,
 	ANNOUNCEMENT
@@ -28,6 +29,13 @@ const keys = {
 
 let stringify = (obj) => {
 	return JSON.stringify(obj);
+};
+
+const TokenSchema = {
+	name: "Token",
+	properties: {
+		deviceToken: 'string'
+	}
 };
 
 exports.credentials = {
@@ -63,7 +71,15 @@ exports.credentials = {
 };
 
 exports.token = {
-	get() {
+	async get() {
+		//const realm = await Realm.open({schema: [TokenSchema]});
+		//realm.write(() => {
+		//	realm.create('Token', {
+		//		deviceToken: 'testToken'
+		//	});
+		//});
+		//const tokens = realm.objects('Token');
+		//console.log(tokens.length);
 		return AsyncStorage.getItem(keys.token);
 	},
 	store(token) {
@@ -154,6 +170,7 @@ exports.notifications = {
 				key -= 1;
 			}
 		}
+
 		return AsyncStorage.getItem(keys.notifications).then(stored => {
 			stored = stored === null ? {} : JSON.parse(stored);
 			const types = Object.keys(stored);

@@ -17,9 +17,11 @@ export const initialState = {
 
 let getMemberships = (state, action) => {
 	let userSites = action.userSites;
+	let hasSites = Object.keys(userSites).length > 0;
 	return {
 		...state,
-		userSites: action.userSites
+		userSites: action.userSites,
+		hasSites
 	}
 };
 

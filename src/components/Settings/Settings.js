@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Button, View} from 'react-native';
+import {Button, View, ToastAndroid} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import * as Storage from '../../utils/storage';
 import Spacer from '../Helper/Spacer';
@@ -34,7 +34,13 @@ class Settings extends Component {
 		this.spacerColor = SPACER_COLOR;
 		this.menuItems = [
 			new MenuItem(SPACER, null),
-			new MenuItem(NOTIFICATIONS, function(event) { Actions.notificationSettings(); }),
+			new MenuItem(NOTIFICATIONS, (event) => {
+				if (props.isGuestAccount) {
+					ToastAndroid.show("Guest accounts can't receive notifications", ToastAndroid.LONG);
+				} else {
+					Actions.notificationSettings();
+				}
+			}),
 			new MenuItem(SPACER, null),
 			new MenuItem(ABOUT, function(event) { console.log(this.title); }),
 			new MenuItem(FEEDBACK, function(event) { Actions.feedback(); }),
@@ -44,10 +50,11 @@ class Settings extends Component {
 		];
 	}
 
-	static createMenuDOM(shouldBeTop, index, title, onPress) {
+	static createMenuDOM(shouldBeTop, index, disabled, title, onPress) {
 		return (
 			<SettingsItem key={index}
 										title={title}
+										disabled={disabled}
 										topItem={shouldBeTop}
 										onPress={onPress}/>
 		)
@@ -71,7 +78,8 @@ class Settings extends Component {
 										color={this.spacerColor}/>
 					);
 				default:
-					menuDOM = Settings.createMenuDOM(lastItemWasSpacer, index, item.title, item.onPress);
+					let disabled = this.props.isGuestAccount && item.title === NOTIFICATIONS;
+					menuDOM = Settings.createMenuDOM(lastItemWasSpacer, index, disabled, item.title, item.onPress);
 					lastItemWasSpacer = false;
 					return menuDOM;
 			}
@@ -98,7 +106,8 @@ class Settings extends Component {
 const mapStateToProps = (state, ownProps) => {
 	return {
 		isLoggedIn: state.login.isAuthenticated,
-		hasSites: state.tracsSites.userSites.length > 0
+		hasSites: state.tracsSites.userSites.length > 0,
+		isGuestAccount: state.registrar.isGuestAccount
 	}
 };
 

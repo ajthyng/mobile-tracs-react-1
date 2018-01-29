@@ -21,6 +21,7 @@ const {
 	REQUEST_UNREGISTER,
 	UNREGISTER_SUCCESS,
 	UNREGISTER_FAILURE,
+	IS_GUEST_ACCOUNT
 } = registrarActions;
 
 const requestRegistration = () => {
@@ -103,7 +104,6 @@ const postRegistration = async (payload, dispatch) => {
 					dispatch(registrationSuccess(deviceToken, netid));
 				} else {
 					const errorMessage = `${res.statusCode} error: Could not register device for push notifications`;
-					console.log(errorMessage);
 					dispatch(registrationFailure(errorMessage));
 				}
 			});
@@ -131,11 +131,17 @@ const unregisterFailure = (errorMessage) => {
 	}
 };
 
+export const setGuestAccount = (isGuestAccount = false) => {
+	return {
+		type: IS_GUEST_ACCOUNT,
+		isGuestAccount
+	}
+};
+
 export const register = (netid = '', password) => {
 	return (dispatch) => {
 		dispatch(requestRegistration());
 		if (netid.length === 0) {
-			debugger;
 			dispatch(registrationFailure("A Net ID is required to register device"));
 			return;
 		}
@@ -147,17 +153,17 @@ export const register = (netid = '', password) => {
 		return axios(`${dispatchUrl}${global.urls.jwt}`, {
 			method: 'get',
 			headers: headers
-		}).then(res => {
+		}).then(async res => {
 			if (res.data) {
-				FCM.getFCMToken().then(deviceToken => {
-					const payload = {
-						netid,
-						password,
-						jwt: res.data,
-						deviceToken
-					};
-					postRegistration(payload, dispatch);
-				});
+				let deviceToken = await FCM.getFCMToken();
+
+				const payload = {
+					netid,
+					password,
+					jwt: res.data,
+					deviceToken,
+				};
+				postRegistration(payload, dispatch);
 			}
 		}).catch(err => {
 			dispatch(login(netid, password));

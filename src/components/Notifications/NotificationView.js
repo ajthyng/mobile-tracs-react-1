@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {BackHandler, Dimensions, Platform, SectionList, ToastAndroid} from 'react-native';
+import {BackHandler, Dimensions, Platform, SectionList, Text, ToastAndroid, View} from 'react-native';
 import {connect} from 'react-redux';
 import {batchUpdateNotification, getNotifications} from '../../actions/notifications';
 import {Actions} from 'react-native-router-flux';
@@ -14,6 +14,7 @@ import {types} from '../../constants/notifications';
 import {announcements, dashboard} from '../../constants/scenes';
 import DashboardHeader from './DashboardHeader'
 import {Swipeout} from 'react-native-swipeout';
+import FCM from 'react-native-fcm';
 
 class NotificationView extends Component {
 	renderSectionHeader = ({section}) => {
@@ -68,7 +69,6 @@ class NotificationView extends Component {
 				this.forums = [];
 			}
 		} else {
-			console.log(props);
 			this.announcements = props.announcements;
 		}
 	};
@@ -190,8 +190,15 @@ class NotificationView extends Component {
 			}
 		});
 		BackHandler.addEventListener('hardwareBackPress', this.handleBack);
-		this.getNotifications(true);
-		this.setupNotificationSections(this.props);
+		if (this.props.isGuestAccount === false) {
+			this.getNotifications(true);
+			this.setupNotificationSections(this.props);
+		} else {
+			this.setState({
+				firstLoad: false,
+				isRefreshing: false
+			})
+		}
 	}
 
 	componentWillUpdate(nextProps, nextState) {
@@ -202,6 +209,7 @@ class NotificationView extends Component {
 		}
 
 		if (nextProps.notificationsLoaded && this.settingsChanged(nextProps)) {
+			debugger;
 			this.getNotifications(true);
 		}
 
@@ -224,6 +232,10 @@ class NotificationView extends Component {
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
+		if (this.props.isGuestAccount === true) {
+			return false;
+		}
+
 		if (nextProps.route === dashboard && this.props.renderDashboard) {
 			return true;
 		}
@@ -233,32 +245,56 @@ class NotificationView extends Component {
 
 	render() {
 		this.start = new Date();
-		let sections = [];
-		if (this.props.renderAnnouncements && this.announcementSection) {
-			sections.push(this.announcementSection);
-		}
-		if (this.props.renderForums && this.forumSection) {
-			sections.push(this.forumSection);
-		}
 
-		if (!this.props.notificationsLoaded && this.state.firstLoad) {
+		if (this.props.isGuestAccount && this.props.renderDashboard === false) {
+			return (
+				<View style={{height: 80, backgroundColor: "#fff", alignItems: 'center', justifyContent: 'center'}}>
+					<Text style={{color: '#404040', fontSize: 16}}>
+						Guest Accounts can't receive push notifications
+					</Text>
+				</View>
+			);
+		} else if (!this.props.notificationsLoaded && this.state.firstLoad) {
 			return (
 				<ActivityIndicator/>
 			);
 		} else {
 			let dashboard = null;
+			let sections = [];
+			if (!this.props.isGuestAccount) {
+				if (this.props.renderAnnouncements && this.announcementSection) {
+					sections.push(this.announcementSection);
+				}
+				if (this.props.renderForums && this.forumSection) {
+					sections.push(this.forumSection);
+				}
+			} else {
+				let emptySection = {
+					data: ["Guest accounts can't receive notifications"],
+					renderItem: ({item}) => (
+						<View style={{alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff', height: 50}}>
+							<Text style={{color: '#000', fontSize: 14}}>
+								{item}
+							</Text>
+						</View>
+					),
+				};
+				sections.push(emptySection);
+			}
+
 			if (this.props.renderDashboard === true) {
 				dashboard = <DashboardHeader siteName={this.props.siteData.name}
 																		 contactName={this.props.siteData.contactInfo.name}
 																		 contactEmail={this.props.siteData.contactInfo.email}/>
 			}
+
 			return (
 				<SectionList
 					sections={sections}
 					keyExtractor={(item, index) => {
 						return item.id
 					}}
-					onRefresh={this.getNotifications}
+					onRefresh={this.props.isGuestAccount ? (() => {}) : this.getNotifications}
 					refreshing={false}
 					renderSectionHeader={this.renderSectionHeader}
 					ListHeaderComponent={dashboard}
@@ -280,6 +316,9 @@ class NotificationView extends Component {
 	}
 
 	async batchUpdateSeen() {
+		if (this.props.isGuestAccount === true) {
+			return;
+		}
 		const status = {
 			seen: true
 		};
@@ -294,14 +333,12 @@ class NotificationView extends Component {
 		if (!this.props.isBatchUpdating && !this.props.errorMessage && ids.length > 0) {
 			this.props.batchUpdate(ids, status, token);
 		}
-		console.log("Total IDS: ", ids.length);
 	}
 }
 
 const mapStateToProps = (state, ownProps) => {
 	let announcementSetting = true;
 	let forumSetting = true;
-
 	state.settings.userSettings.blacklist.forEach(setting => {
 		if (setting.hasOwnProperty("other_keys") && setting.other_keys.site_id === (ownProps.siteData || {}).id) {
 			if (setting.hasOwnProperty("keys")) {
@@ -328,6 +365,7 @@ const mapStateToProps = (state, ownProps) => {
 		global_disable: state.settings.userSettings.global_disable,
 		route: state.routes.scene,
 		sites: state.tracsSites.userSites,
+		isGuestAccount: state.registrar.isGuestAccount,
 		announcementSetting,
 		forumSetting,
 	}

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Keyboard, SectionList} from 'react-native';
+import {Keyboard, SectionList, StyleSheet, Text} from 'react-native';
 import {connect} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
 import {clearSites, getSiteInfo} from '../../actions/sites';
@@ -8,7 +8,15 @@ import {setCurrentScene} from '../../actions/routes';
 import {auth, netidLogout} from '../../actions/login';
 import {types as siteTypes} from '../../constants/sites';
 import {getNotifications} from '../../actions/notifications';
+import {site as siteColor} from '../../constants/colors';
 import Workspace from './Workspace';
+
+const styles = StyleSheet.create({
+	sectionHeader: {
+		marginLeft: 10,
+		marginTop: 10,
+	}
+});
 
 class SiteList extends Component {
 	countNotifications = (site) => {
@@ -24,7 +32,6 @@ class SiteList extends Component {
 
 	siteOnPress = (site) => {
 		let siteUrl = `${global.urls.baseUrl}${global.urls.webUrl}/${site.info.id}`;
-		console.log('URL: ', siteUrl);
 		site.info.onPress = () => {
 			Actions.push('tracsDashboard', {
 				baseUrl: siteUrl
@@ -64,7 +71,7 @@ class SiteList extends Component {
 	}
 
 	checkComponentState() {
-		const sitesNotLoaded = this.props.isFetchingSites === false && Object.keys(this.props.userSites).length === 0;
+		const sitesNotLoaded = this.props.isFetchingSites === false && this.props.hasSites === undefined;
 		if (sitesNotLoaded) {
 			this.getMemberships(this.props.netid);
 		}
@@ -106,14 +113,16 @@ class SiteList extends Component {
 
 		let sections = [{
 			data: [{
-				owner: 'its-cms-testperms5',
+				owner: this.props.netid,
 				key: 0
 			}],
+			type: 'workspace',
 			renderItem: () => {
 				return <Workspace owner={this.props.netid}/>
 			}
 		}, {
 			data: sites.courses,
+			type: 'courses',
 			renderItem: ({item}) => {
 				return (
 					<Site siteData={item.info}/>
@@ -121,6 +130,7 @@ class SiteList extends Component {
 			}
 		}, {
 			data: sites.projects,
+			type: 'projects',
 			renderItem: ({item}) => {
 				return (
 					<Site siteData={item.info}/>
@@ -130,8 +140,19 @@ class SiteList extends Component {
 		];
 		return (
 			<SectionList
-				style={{backgroundColor: "#D2CCC3"}}
+				style={{backgroundColor: siteColor.backgroundColor}}
 				sections={sections}
+				renderSectionHeader={({section}) => {
+					let sectionHeader = null;
+					if (section.data.length > 0) {
+						if (section.type === 'courses') {
+							sectionHeader = <Text style={styles.sectionHeader}>Courses</Text>;
+						} else if (section.type === 'projects') {
+							sectionHeader = <Text style={styles.sectionHeader}>Projects</Text>;
+						}
+					}
+					return sectionHeader;
+				}}
 				refreshing={this.state.refreshing}
 				onRefresh={this.onRefresh.bind(this)}
 			/>
@@ -162,6 +183,7 @@ const mapStateToProps = (state, ownProps) => {
 		userSites: state.tracsSites.userSites,
 		isFetchingSites: state.tracsSites.isFetchingSites,
 		currentScene: state.routes.scene,
+		hasSites: state.tracsSites.hasSites,
 		sites
 	}
 };

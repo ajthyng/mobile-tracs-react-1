@@ -7,69 +7,39 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
 import React, {Component} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import {workspace} from '../../constants/colors';
-import {Actions} from 'react-native-router-flux';
+import {StyleSheet, Text, ToastAndroid} from 'react-native';
 import Ripple from 'react-native-material-ripple';
 
 const styles = StyleSheet.create({
 	container: {
-		backgroundColor: workspace.backgroundColor,
-		margin: 10,
-		height: 50,
-		shadowColor: "#000",
-		shadowOffset: {
-			width: 0,
-			height: 3
-		},
-		shadowRadius: 5,
-		shadowOpacity: 1.0
-	},
-	workspace: {
+		backgroundColor: '#00557e',
 		flexDirection: 'row',
-		height: '100%',
-		padding: 10,
+		justifyContent: 'center',
 		alignItems: 'center',
-		justifyContent: 'space-between',
-	},
-	moreEllipses: {
-		alignItems: 'center',
-		justifyContent: 'space-around',
-		padding: 5
+		width: '100%',
+		height: 50,
+		marginTop: 16
 	},
 	text: {
-		color: workspace.textColor,
-		fontSize: 16
+		color: '#fff',
+		fontSize: 18
 	}
 });
 
-class Workspace extends Component {
+class LoginButton extends Component {
+	defaultOnPress = () => {};
+
 	render() {
 		return (
-			<View style={styles.container} elevation={2}>
-				<Ripple onPress={() => {
-					Actions.push('tracsDashboard', {
-							baseUrl: `${global.urls.baseUrl}${global.urls.webUrl}/~${this.props.owner}`
-						}
-					);
-				}}>
-					<View style={styles.workspace}>
-						<Text style={styles.text}>
-							My Workspace
-						</Text>
-						<View style={styles.moreEllipses}>
-							<Icon name="ellipsis-h" size={20} color={workspace.textColor}/>
-							<Text style={{color: workspace.textColor, fontSize: 12}}>
-								more
-							</Text>
-						</View>
-					</View>
-				</Ripple>
-			</View>
-		);
+			<Ripple style={styles.container} onPress={this.props.onPress || this.defaultOnPress}>
+				<Text style={styles.text}>
+					Login
+				</Text>
+			</Ripple>
+		)
 	}
 }
 
-export default Workspace;
+export default LoginButton;
