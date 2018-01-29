@@ -193,6 +193,11 @@ class NotificationView extends Component {
 		if (this.props.isGuestAccount === false) {
 			this.getNotifications(true);
 			this.setupNotificationSections(this.props);
+		} else {
+			this.setState({
+				firstLoad: false,
+				isRefreshing: false
+			})
 		}
 	}
 
@@ -204,6 +209,7 @@ class NotificationView extends Component {
 		}
 
 		if (nextProps.notificationsLoaded && this.settingsChanged(nextProps)) {
+			debugger;
 			this.getNotifications(true);
 		}
 
@@ -240,7 +246,7 @@ class NotificationView extends Component {
 	render() {
 		this.start = new Date();
 
-		if (this.props.isGuestAccount) {
+		if (this.props.isGuestAccount && this.props.renderDashboard === false) {
 			return (
 				<View style={{height: 80, backgroundColor: "#fff", alignItems: 'center', justifyContent: 'center'}}>
 					<Text style={{color: '#404040', fontSize: 16}}>
@@ -255,11 +261,25 @@ class NotificationView extends Component {
 		} else {
 			let dashboard = null;
 			let sections = [];
-			if (this.props.renderAnnouncements && this.announcementSection) {
-				sections.push(this.announcementSection);
-			}
-			if (this.props.renderForums && this.forumSection) {
-				sections.push(this.forumSection);
+			if (!this.props.isGuestAccount) {
+				if (this.props.renderAnnouncements && this.announcementSection) {
+					sections.push(this.announcementSection);
+				}
+				if (this.props.renderForums && this.forumSection) {
+					sections.push(this.forumSection);
+				}
+			} else {
+				let emptySection = {
+					data: ["Guest accounts can't receive notifications"],
+					renderItem: ({item}) => (
+						<View style={{alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff', height: 50}}>
+							<Text style={{color: '#000', fontSize: 14}}>
+								{item}
+							</Text>
+						</View>
+					),
+				};
+				sections.push(emptySection);
 			}
 
 			if (this.props.renderDashboard === true) {
@@ -267,13 +287,15 @@ class NotificationView extends Component {
 																		 contactName={this.props.siteData.contactInfo.name}
 																		 contactEmail={this.props.siteData.contactInfo.email}/>
 			}
+
 			return (
 				<SectionList
 					sections={sections}
 					keyExtractor={(item, index) => {
 						return item.id
 					}}
-					onRefresh={this.getNotifications}
+					onRefresh={this.props.isGuestAccount ? (() => {
+					}) : this.getNotifications}
 					refreshing={false}
 					renderSectionHeader={this.renderSectionHeader}
 					ListHeaderComponent={dashboard}
