@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Keyboard, SectionList} from 'react-native';
+import {Keyboard, StyleSheet, SectionList, Text} from 'react-native';
 import {connect} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
 import {clearSites, getSiteInfo} from '../../actions/sites';
@@ -8,7 +8,15 @@ import {setCurrentScene} from '../../actions/routes';
 import {auth, netidLogout} from '../../actions/login';
 import {types as siteTypes} from '../../constants/sites';
 import {getNotifications} from '../../actions/notifications';
+import {site as siteColor} from '../../constants/colors';
 import Workspace from './Workspace';
+
+const styles = StyleSheet.create({
+	sectionHeader: {
+		marginLeft: 10,
+		marginTop: 10,
+	}
+});
 
 class SiteList extends Component {
 	countNotifications = (site) => {
@@ -105,14 +113,16 @@ class SiteList extends Component {
 
 		let sections = [{
 			data: [{
-				owner: 'its-cms-testperms5',
+				owner: this.props.netid,
 				key: 0
 			}],
+			type: 'workspace',
 			renderItem: () => {
 				return <Workspace owner={this.props.netid}/>
 			}
 		}, {
 			data: sites.courses,
+			type: 'courses',
 			renderItem: ({item}) => {
 				return (
 					<Site siteData={item.info}/>
@@ -120,6 +130,7 @@ class SiteList extends Component {
 			}
 		}, {
 			data: sites.projects,
+			type: 'projects',
 			renderItem: ({item}) => {
 				return (
 					<Site siteData={item.info}/>
@@ -129,8 +140,17 @@ class SiteList extends Component {
 		];
 		return (
 			<SectionList
-				style={{backgroundColor: "#D2CCC3"}}
+				style={{backgroundColor: siteColor.backgroundColor}}
 				sections={sections}
+				renderSectionHeader={({section}) => {
+					let sectionHeader = null;
+					if (section.type === 'courses') {
+						sectionHeader = <Text style={styles.sectionHeader}>Courses</Text>;
+					} else if (section.type === 'projects') {
+						sectionHeader = <Text style={styles.sectionHeader}>Projects</Text>;
+					}
+					return sectionHeader;
+				}}
 				refreshing={this.state.refreshing}
 				onRefresh={this.onRefresh.bind(this)}
 			/>

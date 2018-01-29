@@ -9,11 +9,10 @@ import Ripple from 'react-native-material-ripple';
 const styles = StyleSheet.create({
 	container: {
 		margin: 10,
-		backgroundColor: "#fefefe",
+		backgroundColor: "#fff",
 	},
 	titleText: {
 		flex: 19,
-		color: siteColor.dashboardTitleText,
 		fontSize: 18
 	},
 	forwardArrow: {
@@ -25,10 +24,11 @@ const styles = StyleSheet.create({
 class Site extends Component {
 	constructor(props) {
 		super(props);
+		this.isCourse = this.props.siteData.type === siteType.COURSE;
 	}
 
 	titleStyle = () => {
-		let backgroundColor = this.props.siteData.type === siteType.PROJECT ? siteColor.projectTitleBackground : siteColor.courseTitleBackground;
+		let backgroundColor = this.isCourse ? siteColor.courseTitleBackground : siteColor.projectTitleBackground;
 
 		return {
 			height: 35,
@@ -42,20 +42,26 @@ class Site extends Component {
 	};
 
 	render() {
+		let textColor = {
+			color: this.isCourse ? '#fff' : '#000'
+		};
 		return (
 			<View style={styles.container}
 						elevation={2}>
 				<Ripple onPress={this.props.siteData.onPress || (() => {})}>
 					<View style={this.titleStyle()} ref="title">
-						<Text style={styles.titleText}
+						<Text style={[styles.titleText, textColor]}
 									ellipsizeMode="tail"
 									numberOfLines={1}>
 							{this.props.siteData.name}
 						</Text>
+						<Text style={textColor}>
+							Site
+						</Text>
 						<Icon name="ios-arrow-forward"
 									size={18}
 									color="white"
-									style={styles.forwardArrow}/>
+									style={[styles.forwardArrow, textColor]}/>
 					</View>
 				</Ripple>
 				<SiteToolBar color={siteColor.courseTitleBackground} siteData={this.props.siteData} />

@@ -34,10 +34,14 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'space-between',
 	},
+	moreEllipses: {
+		alignItems: 'center',
+		justifyContent: 'space-around',
+		padding: 5
+	},
 	text: {
 		color: workspace.textColor,
-		fontSize: 18,
-		fontWeight: "bold"
+		fontSize: 16
 	}
 });
 
@@ -55,7 +59,12 @@ class Workspace extends Component {
 						<Text style={styles.text}>
 							My Workspace
 						</Text>
-						<Icon name="ellipsis-h" size={20} color={workspace.textColor}/>
+						<View style={styles.moreEllipses}>
+							<Icon name="ellipsis-h" size={20} color={workspace.textColor}/>
+							<Text style={{color: workspace.textColor, fontSize: 12}}>
+								more
+							</Text>
+						</View>
 					</View>
 				</Ripple>
 			</View>
