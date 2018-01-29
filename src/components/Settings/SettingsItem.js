@@ -19,7 +19,7 @@ class SettingsItem extends Component {
 			},
 			label: {
 				textAlign: 'left',
-				color: '#000',
+				color: this.props.disabled ? "#A0A0A0" : "#000",
 				fontSize: 15,
 				padding: 10
 			},
@@ -51,16 +51,8 @@ class SettingsItem extends Component {
 
 const mapStateToProps = (state, ownProps) => {
 	return {
-		//Object mapping state variables to props variables
-		//netid: state.register.registeredUser
+		isGuestAccount: state.registrar.isGuestAccount
 	}
 };
 
-const mapDispatchToProps = (dispatch) => {
-	return {
-		//Object mapping action functions to props as functions
-		//getMemberships: () => dispatch(getSiteInfo())        
-	}
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(SettingsItem);
+export default connect(mapStateToProps, null)(SettingsItem);
