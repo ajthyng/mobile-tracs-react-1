@@ -29,5 +29,10 @@ module.exports = {
 	workspace: {
 		textColor: "#501214",
 		backgroundColor: 'rgba(232, 227, 219, 1)'
+	},
+	tabBar: {
+		backgroundColor: '#501214',
+		active: '#fff',
+		inactive: 'rgba(188, 162, 164, 1)'
 	}
 };

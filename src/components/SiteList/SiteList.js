@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Keyboard, StyleSheet, SectionList, Text} from 'react-native';
+import {Keyboard, SectionList, StyleSheet, Text} from 'react-native';
 import {connect} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
 import {clearSites, getSiteInfo} from '../../actions/sites';
@@ -144,10 +144,12 @@ class SiteList extends Component {
 				sections={sections}
 				renderSectionHeader={({section}) => {
 					let sectionHeader = null;
-					if (section.type === 'courses') {
-						sectionHeader = <Text style={styles.sectionHeader}>Courses</Text>;
-					} else if (section.type === 'projects') {
-						sectionHeader = <Text style={styles.sectionHeader}>Projects</Text>;
+					if (section.data.length > 0) {
+						if (section.type === 'courses') {
+							sectionHeader = <Text style={styles.sectionHeader}>Courses</Text>;
+						} else if (section.type === 'projects') {
+							sectionHeader = <Text style={styles.sectionHeader}>Projects</Text>;
+						}
 					}
 					return sectionHeader;
 				}}
