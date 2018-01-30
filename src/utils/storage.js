@@ -12,7 +12,7 @@ import {AsyncStorage} from 'react-native';
 import LockStatus from './lockstatus';
 import moment from 'moment';
 import {types} from '../constants/notifications';
-
+import Realm from 'realm';
 
 const {
 	FORUM,
@@ -27,17 +27,6 @@ const keys = {
 	notifications: 'notifications'
 };
 
-let stringify = (obj) => {
-	return JSON.stringify(obj);
-};
-
-const TokenSchema = {
-	name: "Token",
-	properties: {
-		deviceToken: 'string'
-	}
-};
-
 exports.credentials = {
 	get() {
 		return LockStatus().then(secure => {
@@ -46,7 +35,7 @@ exports.credentials = {
 				return Keychain.getGenericPassword();
 			} else {
 				console.log("Device not secure, removing credentials");
-				return new Promise((resolve, reject) => {
+				return new Promise((resolve) => {
 					Keychain.resetGenericPassword().then(didReset => {
 						resolve(!didReset);
 					});
@@ -90,12 +79,72 @@ exports.token = {
 	}
 };
 
+const SiteSchema = {
+	name: 'Site',
+	primaryKey: 'id',
+	properties: {
+		id: 'string',
+		contactInfo: 'Contact',
+		expiration: 'date',
+		name: 'string',
+		owner: 'string',
+		tools: 'Tool[]',
+		type: 'string'
+	}
+};
+
+const ContactSchema = {
+	name: 'Contact',
+	properties: {
+		email: {type: 'string', default: 'tracs@txstate.edu'},
+		name: {type: 'string', default: 'TRACS Support'}
+	}
+};
+
+const ToolSchema = {
+	name: 'Tool',
+	properties: {
+		type: 'string',
+		id: 'string',
+		pageId: 'string'
+	}
+};
+
+const SiteRealm = Realm.open({schema: [SiteSchema, ContactSchema, ToolSchema]}).then(realm => realm);
+
 exports.sites = {
-	get(netid) {
-		return AsyncStorage.getItem(keys.sites).then(sites => {
+	async get(netid) {
+		let siteRealm = await SiteRealm;
+		let sites = {};
+		try {
+			sites = siteRealm.objects('Site').reduce((accum, site) => {
+				let tools = site.tools.reduce((accum, tool) => {
+					accum[tool.type] = {
+						id: tool.id,
+						pageId: tool.pageId
+					};
+					return accum;
+				}, {});
+				accum[site.id] = {
+					id: site.id,
+					owner: site.owner,
+					expiration: site.expiration,
+					contactInfo: {
+						name: site.contactInfo.name,
+						email: site.contactInfo.email
+					},
+					type: site.type,
+					name: site.name,
+					tools: tools
+				};
+				return accum;
+			}, {});
+		} catch (error) {
+			console.log(`%cRealm Error: ${error.message}`, 'background-color: red; color: white');
+		}
+		let filterSites = (sites) => {
 			let filteredSites = {};
 			if (sites !== null) {
-				sites = JSON.parse(sites);
 				const siteIDs = Object.keys(sites);
 				siteIDs.forEach(siteID => {
 					if (sites[siteID].owner === netid) {
@@ -105,21 +154,35 @@ exports.sites = {
 				})
 			}
 			return Promise.resolve(filteredSites);
-		})
+		};
+		return filterSites(sites);
 	},
-	store(sites, netid) {
-		return AsyncStorage.getItem(keys.sites).then(storedSites => {
-			storedSites = storedSites === null ? {} : JSON.parse(storedSites);
-			const siteIDs = Object.keys(sites);
-			siteIDs.forEach(siteID => {
-				if (sites.hasOwnProperty(siteID)) {
-					sites[siteID].owner = netid;
-					sites[siteID].expiration = moment().add(1, 'days');
-				}
-			});
-			sites = {...storedSites, ...sites};
-			return AsyncStorage.setItem(keys.sites, stringify(sites));
+	async store(sites, netid) {
+		let realmSites = Object.keys(sites).map(id => {
+			return {
+				id: id,
+				contactInfo: {email: sites[id].contactInfo.email, name: sites[id].contactInfo.name},
+				expiration: moment().add(1, 'days').toDate(),
+				name: sites[id].name,
+				owner: netid,
+				tools: [...Object.keys(sites[id].tools).map(tool => {
+					return {type: tool, id: sites[id].tools[tool].id, pageId: sites[id].tools[tool].pageId}
+				})],
+				type: sites[id].type
+			}
 		});
+		let siteRealm = await SiteRealm;
+		try {
+			siteRealm.write(() => {
+				realmSites.forEach(site => {
+					siteRealm.create('Site', site, true);
+				});
+			});
+			return Promise.resolve(true);
+		} catch (error) {
+			console.log(`%cRealm Error: ${error.message}`, 'background-color: red; color: white');
+			return Promise.resolve(false);
+		}
 	},
 	reset() {
 		return AsyncStorage.removeItem(keys.sites);
@@ -135,7 +198,7 @@ exports.sites = {
 					delete stored[siteID];
 				}
 			});
-			return AsyncStorage.setItem(keys.sites, stringify(stored));
+			return AsyncStorage.setItem(keys.sites, JSON.stringify(stored));
 		});
 	}
 };

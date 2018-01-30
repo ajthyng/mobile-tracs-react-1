@@ -157,8 +157,8 @@ let getAllSites = (payload) => {
 	return Promise.all(allPromises).then(() => {
 		userSites.forEach(site => {
 			let contactInfo = {
-				name: "Contact Name Not Found",
-				email: "Contact Email Not Found"
+				name: "TRACS Support",
+				email: "tracs@txstate.edu"
 			};
 			if (site.props) {
 				if (site.props['contact-name']) {
@@ -175,7 +175,7 @@ let getAllSites = (payload) => {
 				contactInfo,
 				tools: {},
 				owner: netid,
-				type: site.type
+				type: site.type || 'project'
 			};
 
 		});
