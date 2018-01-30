@@ -15,12 +15,22 @@ import {sitesReducer} from './sites';
 import {routesReducer} from './routes';
 import {settingsReducer} from './settings';
 import {notificationsReducer} from './notifications';
+import {authActions as auth} from '../constants/actions';
 
-export default combineReducers({
+const appReducer = combineReducers({
 	login: loginReducer,
 	registrar: registerReducer,
 	tracsSites: sitesReducer,
 	routes: routesReducer,
 	settings: settingsReducer,
 	notifications: notificationsReducer
-})
+});
+
+const rootReducer = (state, action) => {
+	if (action.type === auth.LOGOUT_SUCCESS) {
+		state = undefined;
+	}
+	return appReducer(state, action);
+};
+
+export default rootReducer;
