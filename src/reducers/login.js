@@ -60,17 +60,6 @@ const requestLogout = (state, action) => {
 	}
 };
 
-const logoutSuccess = (state, action) => {
-	return {
-		...state,
-		isLoggingOut: false,
-		isAuthenticated: false,
-		errorMessage: "",
-		netid: "",
-		password: ""
-	}
-};
-
 const logoutFailure = (state, action) => {
 	return {
 		...initialState,
