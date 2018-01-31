@@ -186,21 +186,23 @@ exports.sites = {
 			return Promise.resolve(false);
 		}
 	},
-	reset() {
-		return AsyncStorage.removeItem(keys.sites);
+	async reset() {
+		let siteRealm = await SiteRealm;
+		siteRealm.write(() => {
+			siteRealm.deleteAll();
+		});
 	},
-	clean(siteIDs) {
-		debugger;
-		return AsyncStorage.getItem(keys.sites).then(stored => {
-			stored = stored === null ? {} : JSON.parse(stored);
-			const storedSiteIDs = Object.keys(stored);
-			storedSiteIDs.forEach((siteID) => {
-				if (siteIDs.indexOf(siteID) < 0) {
-					console.log(`Deleting ${siteID}`);
-					delete stored[siteID];
+	async clean(siteIDs) {
+		let siteRealm = await SiteRealm;
+		console.tron.log(siteIDs[0]);
+		siteRealm.write(() => {
+			let sites = siteRealm.objects('Site');
+			sites.forEach((site) => {
+				if (siteIDs.indexOf(site.id) < 0) {
+					siteRealm.delete(site);
 				}
 			});
-			return AsyncStorage.setItem(keys.sites, JSON.stringify(stored));
+			console.tron.log(`Sites Length: ${sites.length}`);
 		});
 	}
 };

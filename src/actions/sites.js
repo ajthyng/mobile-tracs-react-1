@@ -74,6 +74,7 @@ export function getSiteInfo(netid) {
 				let siteIds = sites.membership_collection.map((site) => {
 					return site.id.split(':').last();
 				});
+				await cleanStorage(siteIds);
 				return Sites.get(netid).then(storedSites => {
 					console.log("Stored Sites: ", storedSites);
 					const payload = {
@@ -94,8 +95,9 @@ export function getSiteInfo(netid) {
 	}
 }
 
-let cleanStorage = (siteIDs, netid) => {
-	return Sites.clean(siteIDs, netid);
+let cleanStorage = (siteIDs) => {
+	console.tron.log(siteIDs);
+	return Sites.clean(siteIDs);
 };
 
 let getSiteName = (siteID) => {
