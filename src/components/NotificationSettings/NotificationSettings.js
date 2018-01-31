@@ -77,9 +77,9 @@ class NotificationSettings extends Component {
 		BackHandler.removeEventListener('hardwareBackPress', this.handleBack);
 	}
 
-	handleBack = (event) => {
-		console.log(event);
-		Actions.popAndPush(SETTINGS);
+	handleBack = () => {
+		Actions.pop();
+		return true;
 	};
 
 	createSpacerDOM(setting, index) {

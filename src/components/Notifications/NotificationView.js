@@ -229,6 +229,7 @@ class NotificationView extends Component {
 
 	handleBack() {
 		Actions.pop();
+		return true;
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
