@@ -27,6 +27,9 @@ import {getNotifications} from './src/actions/notifications';
 import {setCurrentScene} from './src/actions/routes';
 import TRACSWebView from './src/components/TRACSWebView/TRACSWebNative';
 import {tabBar} from './src/constants/colors';
+import AboutView from './src/components/About/AboutView';
+import './src/utils/reactotron';
+import Reactotron from 'reactotron-react-native';
 
 const store = configureStore();
 const RouterWithRedux = connect()(Router);
@@ -39,6 +42,8 @@ if (env.debug) {
 
 const tabIconSize = 24;
 const tabIconColor = tabBar.inactive;
+
+console.tron = Reactotron;
 
 class App extends Component {
 	handleNotification = (notification) => {
@@ -180,9 +185,12 @@ class App extends Component {
 									 title="TRACS Support"
 									 component={SimpleWebView}
 									 url={global.urls.support}/>
-
 					</Stack>
 				</Tabs>
+				<Scene key={scenes.about}
+							 hideNavBar={true}
+							 back
+							 component={AboutView}/>
 			</Scene>
 		);
 	}

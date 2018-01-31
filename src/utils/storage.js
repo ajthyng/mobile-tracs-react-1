@@ -13,6 +13,7 @@ import LockStatus from './lockstatus';
 import moment from 'moment';
 import {types} from '../constants/notifications';
 import Realm from 'realm';
+import PouchDB from 'pouchdb';
 
 const {
 	FORUM,
@@ -117,7 +118,8 @@ exports.sites = {
 		let siteRealm = await SiteRealm;
 		let sites = {};
 		try {
-			sites = siteRealm.objects('Site').reduce((accum, site) => {
+			sites = siteRealm.objects('Site');
+			sites = sites.reduce((accum, site) => {
 				let tools = site.tools.reduce((accum, tool) => {
 					accum[tool.type] = {
 						id: tool.id,

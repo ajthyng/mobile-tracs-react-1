@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {ToastAndroid, ScrollView} from 'react-native';
+import {ToastAndroid, BackHandler, ScrollView} from 'react-native';
 import {connect} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
 
@@ -10,6 +10,7 @@ import {getSettings, saveSettings} from '../../actions/settings';
 import {setCurrentScene} from '../../actions/routes';
 
 import {types} from '../../constants/notifications';
+import {settings as SETTINGS} from '../../constants/scenes';
 import Settings from '../../utils/settings';
 
 const SPACER_COLOR = "#E9E9EF";
@@ -67,9 +68,19 @@ class NotificationSettings extends Component {
 	}
 
 	componentWillMount() {
+		BackHandler.addEventListener('hardwareBackPress', this.handleBack);
 		this.props.setScene(Actions.currentScene);
 		this.props.getSettings(this.props.token);
 	}
+
+	componentWillUnmount() {
+		BackHandler.removeEventListener('hardwareBackPress', this.handleBack);
+	}
+
+	handleBack = (event) => {
+		console.log(event);
+		Actions.popAndPush(SETTINGS);
+	};
 
 	createSpacerDOM(setting, index) {
 		return (

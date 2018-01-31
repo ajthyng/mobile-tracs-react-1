@@ -42,7 +42,7 @@ class Settings extends Component {
 				}
 			}),
 			new MenuItem(SPACER, null),
-			new MenuItem(ABOUT, function(event) { console.log(this.title); }),
+			new MenuItem(ABOUT, function(event) { Actions.about(); }),
 			new MenuItem(FEEDBACK, function(event) { Actions.feedback(); }),
 			new MenuItem(SUPPORT, function(event) { Actions.support();}),
 			new MenuItem(SPACER, null),
@@ -89,6 +89,7 @@ class Settings extends Component {
 				{menus}
 				<View style={{margin: 32}}>
 					<Button title="Logout"
+									color="#501214"
 									onPress={() => {
 										Storage.credentials.reset();
 										Storage.sites.reset();
