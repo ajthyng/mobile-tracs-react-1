@@ -96,7 +96,6 @@ export function getSiteInfo(netid) {
 }
 
 let cleanStorage = (siteIDs) => {
-	console.tron.log(siteIDs);
 	return Sites.clean(siteIDs);
 };
 

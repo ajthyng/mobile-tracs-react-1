@@ -93,7 +93,7 @@ class Settings extends Component {
 									onPress={() => {
 										Storage.credentials.reset();
 										Storage.sites.reset();
-										Storage.token.reset();
+										Storage.notifications.reset();
 										this.props.clearSites();
 										this.props.unregister();
 										this.props.userLogout();

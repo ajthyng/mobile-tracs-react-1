@@ -125,19 +125,13 @@ const fetchForumPost = (notification) => {
 };
 
 const getNotificationDetail = async (notifications) => {
-	let start = new Date();
-	await Storage.notifications.clean(Object.keys(notifications));
-	console.log(`Clean Time: ${new Date() - start}`);
 	return Storage.notifications.get().then(stored => {
 		const storedIDs = Object.keys(stored);
 		let notificationPromises = [];
 
-		notifications = notifications.reduce((prev, curr) => {
-			let next = {
-				...prev
-			};
-			next[curr.id] = curr;
-			return next;
+		notifications = notifications.reduce((accum, curr) => {
+			accum[curr.id] = curr;
+			return accum;
 		}, {});
 
 		Object.keys(notifications).forEach(id => {
@@ -151,6 +145,7 @@ const getNotificationDetail = async (notifications) => {
 				notificationPromises.push(fetchNotification(notification));
 			}
 		});
+
 
 		return Promise.all(notificationPromises).then(async tracs => {
 			let updatedNotifications = {};
@@ -177,11 +172,9 @@ const getNotificationDetail = async (notifications) => {
 export const getNotifications = (token) => {
 	return async (dispatch) => {
 		dispatch(requestNotifications());
-		let start = new Date();
 		if (!token) {
 			await FCM.getFCMToken().then(deviceToken => token = deviceToken);
 		}
-		console.log(`Token Fetch: ${new Date() - start}ms`);
 		const dispatchURL = global.urls.dispatchUrl;
 		const notificationURL = `${dispatchURL}${global.urls.getNotifications(token)}`;
 		const options = {
@@ -197,9 +190,7 @@ export const getNotifications = (token) => {
 			})
 			.then(async data => {
 				if (data) {
-					let start = new Date();
 					let notifications = await getNotificationDetail(data);
-					console.log("Notifications: ", new Date() - start);
 					dispatch(notificationSuccess(notifications));
 				}
 			}).catch(err => {
@@ -245,7 +236,6 @@ export const updateNotification = (newNotif, oldNotif) => {
 		const updateURL = `${dispatchURL}${global.urls.updateNotification(token, newNotif)}`;
 		let updatedNotif = {...newNotif};
 		delete updatedNotif.tracs_data;
-		console.log(updatedNotif);
 		const options = {
 			method: 'post',
 			body: JSON.stringify(updatedNotif),
@@ -257,6 +247,7 @@ export const updateNotification = (newNotif, oldNotif) => {
 
 		return fetch(updateURL, options).then(res => {
 			if (res.ok) {
+				Storage.notifications.delete(oldNotif.id);
 				dispatch(updateNotificationSuccess(newNotif));
 				dispatch(getNotifications(token));
 			} else {
@@ -306,6 +297,7 @@ export const batchUpdateNotification = (ids = [], status = {}, token) => {
 			data: {ids: ids, patches: status}
 		};
 		return axios(url, options).then(res => {
+			Storage.notifications.update(ids, status);
 			dispatch(batchUpdateSuccess(ids, status));
 		}).catch(err => {
 			dispatch(batchUpdateFailure(err.message));
