@@ -367,15 +367,17 @@ exports.notifications = {
 			notificationRealm.write(() => {
 				ids.forEach(id => {
 					let notif = notifications.filtered('id == $0', id);
-					let {seen, read, cleared} = status;
-					notif.seen = seen;
-					notif.read = read;
+					notif.forEach(notification => {
+						let {seen, read, cleared} = status;
+						notification.seen = seen || notification.seen;
+						notification.read = read || notification.read;
 
-					if (cleared) {
-						notificationRealm.delete(notif);
-					} else {
-						notificationRealm.create('Notification', notif, true);
-					}
+						if (!!cleared) {
+							notificationRealm.delete(notification);
+						} else {
+							notificationRealm.create('Notification', notification, true);
+						}
+					});
 				});
 			});
 		} catch (err) {
