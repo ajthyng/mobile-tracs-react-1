@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Button, View, ToastAndroid} from 'react-native';
+import {Button, Linking, View, ToastAndroid} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import * as Storage from '../../utils/storage';
 import Spacer from '../Helper/Spacer';
@@ -8,6 +8,7 @@ import SettingsItem from './SettingsItem';
 import {clearSites} from '../../actions/sites';
 import {logout} from '../../actions/login';
 import {unregister} from '../../actions/registrar';
+
 
 const SPACER = "spacer";
 const NOTIFICATIONS = "Notification Settings";
@@ -46,7 +47,19 @@ class Settings extends Component {
 			new MenuItem(FEEDBACK, function(event) { Actions.feedback(); }),
 			new MenuItem(SUPPORT, function(event) { Actions.support();}),
 			new MenuItem(SPACER, null),
-			new MenuItem(TXST_MOBILE, function(event) { console.log(this.title); }),
+			new MenuItem(TXST_MOBILE, function(event) {
+				const texasStateURL = 'edu.txstate.mobileapp://';
+				Linking.canOpenURL(texasStateURL).then(supported => {
+					if (!supported) {
+						//Go To Play Store
+					} else {
+						console.tron.log("Here");
+						Linking.openURL(texasStateURL);
+					}
+				}).catch(err => {
+					console.tron.log(`Linking Error: ${err.message}`);
+				});
+			}),
 		];
 	}
 
@@ -92,9 +105,7 @@ class Settings extends Component {
 									color="#501214"
 									onPress={() => {
 										Storage.credentials.reset();
-										Storage.sites.reset();
-										Storage.notifications.reset();
-										this.props.clearSites();
+										Storage.clear();
 										this.props.unregister();
 										this.props.userLogout();
 									}}/>

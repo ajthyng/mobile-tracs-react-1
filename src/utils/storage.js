@@ -10,20 +10,7 @@
 import * as Keychain from 'react-native-keychain';
 import LockStatus from './lockstatus';
 import moment from 'moment';
-import {types} from '../constants/notifications';
 import Realm from 'realm';
-
-const {
-	FORUM,
-	ANNOUNCEMENT
-} = types;
-const expiryDays = 90;
-const msPerDay = 1000 * 3600 * 24;
-
-const keys = {
-	sites: 'sites',
-	notifications: 'notifications'
-};
 
 exports.credentials = {
 	get() {
@@ -153,7 +140,7 @@ const TracsDataSchema = {
 		lastModified: 'int?',
 		messageId: 'int?',
 		readMessages: 'int?',
-		replyTo: 'string?',
+		replyTo: 'int?',
 		topicId: 'int?',
 		totalMessages: 'int?',
 		deleted: 'bool?',
@@ -399,5 +386,15 @@ exports.notifications = {
 			}
 		});
 	}
-}
-;
+};
+
+exports.clear = async () => {
+	let realm = await StorageRealm;
+	try {
+		realm.write(() => {
+			realm.deleteAll();
+		});
+	} catch (err) {
+		console.tron.log(`Delete All Error: ${err.message}`);
+	}
+};
