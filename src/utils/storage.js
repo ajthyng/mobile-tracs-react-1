@@ -8,7 +8,6 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import * as Keychain from 'react-native-keychain';
-import {AsyncStorage} from 'react-native';
 import LockStatus from './lockstatus';
 import moment from 'moment';
 import {types} from '../constants/notifications';
@@ -284,15 +283,6 @@ exports.notifications = {
 				return accum;
 			}, {});
 		return Promise.resolve(notifications);
-		//return AsyncStorage.getItem(keys.notifications).then(stored => {
-		//	stored = stored === null ? {} : JSON.parse(stored);
-		//	Object.keys(stored).forEach(key => {
-		//		Object.keys(stored[key]).forEach(notif => {
-		//			//I don't think I actually need this
-		//		});
-		//	});
-		//	return stored;
-		//});
 	},
 	async store(notifications) {
 		let notificationRealm = await StorageRealm;
@@ -392,39 +382,6 @@ exports.notifications = {
 			console.tron.log(`Realm Error: ${err.message}`);
 		}
 	},
-	//async remove(id) {
-	//	let notificationRealm = await StorageRealm;
-	//	try {
-	//		notificationRealm.write(() => {
-	//			let notification = notificationRealm.filtered(`id = ${id}`);
-	//			console.tron.log(notification);
-	//		});
-	//		//return Promise.resolve(true);
-	//	} catch (err) {
-	//		console.log(`Realm Error: ${err.message}`);
-	//		//return Promise.resolve(false);
-	//	}
-	//	function* reverseKeys(array) {
-	//		let key = array.length - 1;
-	//		while (key >= 0) {
-	//			yield key;
-	//			key -= 1;
-	//		}
-	//	}
-	//
-	//	return AsyncStorage.getItem(keys.notifications).then(stored => {
-	//		stored = stored === null ? {} : JSON.parse(stored);
-	//		const types = Object.keys(stored);
-	//		types.forEach(type => {
-	//			for (let index of reverseKeys(stored[type])) {
-	//				if (stored[type][index].id === id) {
-	//					stored[type].splice(index, 1);
-	//				}
-	//			}
-	//		});
-	//		return AsyncStorage.setItem(keys.notifications, JSON.stringify(stored));
-	//	});
-	//},
 	async reset() {
 		let notificationRealm = await StorageRealm;
 		notificationRealm.write(() => {
