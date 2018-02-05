@@ -16,6 +16,8 @@ import DashboardHeader from './DashboardHeader'
 import {Swipeout} from 'react-native-swipeout';
 import FCM from 'react-native-fcm';
 
+const UNPUBLISHED_SITE_NAME = "Unpublished Site";
+
 class NotificationView extends Component {
 	renderSectionHeader = ({section}) => {
 		switch (section.type) {
@@ -117,9 +119,10 @@ class NotificationView extends Component {
 			author: author.join(' '),
 			read: item.read,
 			onPress: () => {
+				this.props.batchUpdate(item.id, {read: true});
 				let toolPageId = "";
 				if (this.props.siteData.tools.hasOwnProperty('sakai.forums')) {
-					toolPageId = `${this.props.siteData.tools['sakai.forums'].id}`;
+					toolPageId = `${(((this.props.siteData || {}).tools['sakai.forums'] || {}).id || "")}`;
 				}
 
 				let forumUrl = `${global.urls.baseUrl}${global.urls.webUrl}${global.urls.getForumPage(this.props.siteData.id, toolPageId)}`;
@@ -135,11 +138,12 @@ class NotificationView extends Component {
 
 	renderAnnouncement = ({item}) => {
 		let siteId = item.other_keys.site_id;
-		let name = "Unpublished Site";
+		let name = UNPUBLISHED_SITE_NAME;
 		if (siteId && this.props.sites.hasOwnProperty(siteId)) {
 			name = this.props.sites[siteId].name;
 		}
 		if (!item) return null;
+		let siteIsUnpublished = name === UNPUBLISHED_SITE_NAME;
 		let data = {
 			deviceWidth: this.state.deviceWidth,
 			title: item.tracs_data.title,
@@ -147,13 +151,17 @@ class NotificationView extends Component {
 			siteName: name,
 			read: item.read,
 			onPress: () => {
+				if (!siteIsUnpublished) {
+					this.props.batchUpdate([item.id], {read: true});
+				}
 				let sceneToCall = 'tracsAnnouncement';
 				if (this.props.renderDashboard) {
 					sceneToCall = 'tracsDashboard';
 				}
 				let siteId = (this.props.siteData || {}).id || item.other_keys.site_id || "";
-				let toolPageId = ((this.props.sites[siteId] || {}).tools || {})['sakai.announcements'].id;
-				let announcementUrl = `${global.urls.baseUrl}${global.urls.webUrl}${global.urls.getAnnouncementPage(siteId, toolPageId)}`;
+				let	toolPageId = ((((this.props.sites[siteId] || {}).tools || {})['sakai.announcements']) || {}).id || "";
+				let	announcementUrl = `${global.urls.baseUrl}${global.urls.webUrl}${global.urls.getAnnouncementPage(siteId, toolPageId)}`;
+
 				Actions.push(sceneToCall, {
 					baseUrl: announcementUrl
 				});
