@@ -11,6 +11,8 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+
+import edu.txstate.applaunch.AppLaunchPackage;
 import io.realm.react.RealmReactPackage;
 import org.pgsqlite.SQLitePluginPackage;
 import com.github.yamill.orientation.OrientationPackage;
@@ -36,6 +38,7 @@ public class MainApplication extends Application implements ReactApplication {
           new KeychainPackage(),
           new FIRMessagingPackage(),
           new LockStatusPackage(),
+          new AppLaunchPackage(),
           new CookieManagerPackage(),
           new TRACSWebPackage(),
           new RealmReactPackage(),

@@ -8,6 +8,7 @@ import SettingsItem from './SettingsItem';
 import {clearSites} from '../../actions/sites';
 import {logout} from '../../actions/login';
 import {unregister} from '../../actions/registrar';
+import AppLaunch from '../../utils/applaunch';
 
 
 const SPACER = "spacer";
@@ -48,17 +49,8 @@ class Settings extends Component {
 			new MenuItem(SUPPORT, function(event) { Actions.support();}),
 			new MenuItem(SPACER, null),
 			new MenuItem(TXST_MOBILE, function(event) {
-				const texasStateURL = 'edu.txstate.mobileapp://';
-				Linking.canOpenURL(texasStateURL).then(supported => {
-					if (!supported) {
-						//Go To Play Store
-					} else {
-						console.tron.log("Here");
-						Linking.openURL(texasStateURL);
-					}
-				}).catch(err => {
-					console.tron.log(`Linking Error: ${err.message}`);
-				});
+				const texasStateURL = 'edu.txstate.mobileapp';
+				AppLaunch.load(texasStateURL);
 			}),
 		];
 	}

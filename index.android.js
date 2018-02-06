@@ -41,7 +41,6 @@ if (env.debug) {
 }
 
 const tabIconSize = 24;
-const tabIconColor = tabBar.inactive;
 
 console.tron = Reactotron;
 
@@ -62,7 +61,7 @@ class App extends Component {
 
 	constructor(props) {
 		super(props);
-
+		FCM.getFCMToken().then(token => console.tron.log(token));
 		this.TabIcons = {
 			announcements: (tabBarProps) => {
 				return <TabIcon name="bullhorn" size={tabIconSize} color={this.setTabBarColor(tabBarProps)}/>;
@@ -219,7 +218,7 @@ class App extends Component {
 				PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
 				{
 					'title': "TRACS Storage Permission",
-					'message': "TRACS needs access to store data on your phone."
+					'message': "TRACS needs access storage to download and save files."
 				}
 			);
 			if (granted === PermissionsAndroid.RESULTS.GRANTED) {
