@@ -14,6 +14,7 @@ before_install:
 - node --version
 install:
 - npm install
+- rm ./node_modules/react-native/local-cli/core/__fixtures__/files/package.json
 android:
   components:
   - tools
