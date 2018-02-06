@@ -7,7 +7,7 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {AppRegistry, PermissionsAndroid} from 'react-native';
+import {AppRegistry, StatusBar, PermissionsAndroid} from 'react-native';
 import React, {Component} from 'react';
 import {connect, Provider} from 'react-redux';
 import FCM, {FCMEvent} from 'react-native-fcm';
@@ -73,6 +73,8 @@ class App extends Component {
 				return <TabIcon name="cog" size={tabIconSize} color={this.setTabBarColor(tabBarProps)}/>;
 			}
 		};
+
+		StatusBar.setBackgroundColor('#501214');
 
 		this.requestStoragePermission = this.requestStoragePermission.bind(this);
 		this.requestStoragePermission();
