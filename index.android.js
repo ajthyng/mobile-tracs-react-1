@@ -7,7 +7,7 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {AppRegistry, PermissionsAndroid} from 'react-native';
+import {AppRegistry, StatusBar, PermissionsAndroid} from 'react-native';
 import React, {Component} from 'react';
 import {connect, Provider} from 'react-redux';
 import FCM, {FCMEvent} from 'react-native-fcm';
@@ -27,6 +27,9 @@ import {getNotifications} from './src/actions/notifications';
 import {setCurrentScene} from './src/actions/routes';
 import TRACSWebView from './src/components/TRACSWebView/TRACSWebNative';
 import {tabBar} from './src/constants/colors';
+import AboutView from './src/components/About/AboutView';
+import './src/utils/reactotron';
+import Reactotron from 'reactotron-react-native';
 
 const store = configureStore();
 const RouterWithRedux = connect()(Router);
@@ -38,7 +41,8 @@ if (env.debug) {
 }
 
 const tabIconSize = 24;
-const tabIconColor = tabBar.inactive;
+
+console.tron = Reactotron;
 
 class App extends Component {
 	handleNotification = (notification) => {
@@ -57,7 +61,7 @@ class App extends Component {
 
 	constructor(props) {
 		super(props);
-
+		FCM.getFCMToken().then(token => console.tron.log(token));
 		this.TabIcons = {
 			announcements: (tabBarProps) => {
 				return <TabIcon name="bullhorn" size={tabIconSize} color={this.setTabBarColor(tabBarProps)}/>;
@@ -69,6 +73,8 @@ class App extends Component {
 				return <TabIcon name="cog" size={tabIconSize} color={this.setTabBarColor(tabBarProps)}/>;
 			}
 		};
+
+		StatusBar.setBackgroundColor('#501214');
 
 		this.requestStoragePermission = this.requestStoragePermission.bind(this);
 		this.requestStoragePermission();
@@ -180,9 +186,12 @@ class App extends Component {
 									 title="TRACS Support"
 									 component={SimpleWebView}
 									 url={global.urls.support}/>
-
 					</Stack>
 				</Tabs>
+				<Scene key={scenes.about}
+							 hideNavBar={true}
+							 back
+							 component={AboutView}/>
 			</Scene>
 		);
 	}
@@ -211,7 +220,7 @@ class App extends Component {
 				PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
 				{
 					'title': "TRACS Storage Permission",
-					'message': "TRACS needs access to store data on your phone."
+					'message': "TRACS needs access storage to download and save files."
 				}
 			);
 			if (granted === PermissionsAndroid.RESULTS.GRANTED) {

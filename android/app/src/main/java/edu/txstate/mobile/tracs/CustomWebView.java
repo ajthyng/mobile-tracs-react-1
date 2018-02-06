@@ -1,13 +1,19 @@
 package edu.txstate.mobile.tracs;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.net.MailTo;
+import android.net.Uri;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.webkit.DownloadListener;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import java.lang.ref.WeakReference;
 
 public class CustomWebView extends WebView {
     private FileDownloader fileDownloader;
@@ -32,7 +38,7 @@ public class CustomWebView extends WebView {
     @SuppressLint({"SetJavaScriptEnabled", "ClickableViewAccessibility"})
     private void init(Context context) {
         this.fileDownloader = new FileDownloader(context);
-        setWebViewClient(new CustomWebViewClient());
+        setWebViewClient(new CustomWebViewClient(context));
         getSettings().setSupportZoom(true);
         getSettings().setBuiltInZoomControls(true);
         getSettings().setDisplayZoomControls(false);
@@ -86,10 +92,31 @@ public class CustomWebView extends WebView {
     }
 
     static class CustomWebViewClient extends WebViewClient {
+        private WeakReference context;
+        public CustomWebViewClient(Context context) {
+            super();
+            this.context = new WeakReference<>(context);
+        }
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
             ((CustomWebView) view).callInjectedJavaScript();
+        }
+
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            if (url.startsWith("mailto:")) {
+                Intent mailIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse(url));
+                Context context = (Context) this.context.get();
+                context.startActivity(mailIntent);
+            } else if (url.startsWith("tel:")) {
+                Intent phoneIntent = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
+                Context context = (Context) this.context.get();
+                context.startActivity(phoneIntent);
+            } else {
+                view.loadUrl(url);
+            }
+            return true;
         }
     }
 }

@@ -34,7 +34,7 @@ export const initialState = {
 
 function requestRegistration(state, action) {
 	return {
-		...state,
+		...initialState,
 		isRegistering: true,
 		isRegistered: false,
 		errorMessage: ''

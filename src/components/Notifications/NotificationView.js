@@ -16,6 +16,8 @@ import DashboardHeader from './DashboardHeader'
 import {Swipeout} from 'react-native-swipeout';
 import FCM from 'react-native-fcm';
 
+const UNPUBLISHED_SITE_NAME = "Unpublished Site";
+
 class NotificationView extends Component {
 	renderSectionHeader = ({section}) => {
 		switch (section.type) {
@@ -65,12 +67,22 @@ class NotificationView extends Component {
 
 			if (props.renderForums && props.forums) {
 				this.forums = props.forums.filter(post => post.other_keys.site_id === props.siteData.id);
+				this.forums.sort(this.sortByDate);
 			} else {
 				this.forums = [];
 			}
 		} else {
 			this.announcements = props.announcements;
 		}
+		if (this.announcements.length > 0) {
+			this.announcements.sort(this.sortByDate);
+		}
+	};
+
+	sortByDate = (a, b) => {
+		let aDate = new Date(a.notify_after);
+		let bDate = new Date(b.notify_after);
+		return bDate - aDate;
 	};
 
 	setupNotificationSections = (props) => {
@@ -110,13 +122,13 @@ class NotificationView extends Component {
 			author: author.join(' '),
 			read: item.read,
 			onPress: () => {
+				this.props.batchUpdate(item.id, {read: true});
 				let toolPageId = "";
 				if (this.props.siteData.tools.hasOwnProperty('sakai.forums')) {
-					toolPageId = `${this.props.siteData.tools['sakai.forums'].id}`;
+					toolPageId = `${(((this.props.siteData || {}).tools['sakai.forums'] || {}).id || "")}`;
 				}
 
 				let forumUrl = `${global.urls.baseUrl}${global.urls.webUrl}${global.urls.getForumPage(this.props.siteData.id, toolPageId)}`;
-				console.log("base url: ", forumUrl);
 				Actions.push('tracsDashboard', {
 					baseUrl: forumUrl
 				});
@@ -128,22 +140,31 @@ class NotificationView extends Component {
 	};
 
 	renderAnnouncement = ({item}) => {
+		let siteId = item.other_keys.site_id;
+		let name = UNPUBLISHED_SITE_NAME;
+		if (siteId && this.props.sites.hasOwnProperty(siteId)) {
+			name = this.props.sites[siteId].name;
+		}
 		if (!item) return null;
+		let siteIsUnpublished = name === UNPUBLISHED_SITE_NAME;
 		let data = {
 			deviceWidth: this.state.deviceWidth,
 			title: item.tracs_data.title,
 			author: item.tracs_data.createdByDisplayName,
+			siteName: name,
 			read: item.read,
 			onPress: () => {
+				if (!siteIsUnpublished) {
+					this.props.batchUpdate([item.id], {read: true});
+				}
 				let sceneToCall = 'tracsAnnouncement';
 				if (this.props.renderDashboard) {
 					sceneToCall = 'tracsDashboard';
 				}
-				console.log(this.props.siteData);
 				let siteId = (this.props.siteData || {}).id || item.other_keys.site_id || "";
-				let toolPageId = ((this.props.sites[siteId] || {}).tools || {})['sakai.announcements'].id;
+				let toolPageId = ((((this.props.sites[siteId] || {}).tools || {})['sakai.announcements']) || {}).id || "";
 				let announcementUrl = `${global.urls.baseUrl}${global.urls.webUrl}${global.urls.getAnnouncementPage(siteId, toolPageId)}`;
-				console.log(announcementUrl);
+
 				Actions.push(sceneToCall, {
 					baseUrl: announcementUrl
 				});
@@ -161,6 +182,8 @@ class NotificationView extends Component {
 			isRefreshing: true,
 			firstLoad: true
 		};
+		this.announcements = [];
+		this.forums = [];
 		this.batchUpdateSeen = this.batchUpdateSeen.bind(this);
 		this.handleBack = this.handleBack.bind(this);
 	}
@@ -229,6 +252,7 @@ class NotificationView extends Component {
 
 	handleBack() {
 		Actions.pop();
+		return true;
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
@@ -294,7 +318,8 @@ class NotificationView extends Component {
 					keyExtractor={(item, index) => {
 						return item.id
 					}}
-					onRefresh={this.props.isGuestAccount ? (() => {}) : this.getNotifications}
+					onRefresh={this.props.isGuestAccount ? (() => {
+					}) : this.getNotifications}
 					refreshing={false}
 					renderSectionHeader={this.renderSectionHeader}
 					ListHeaderComponent={dashboard}
@@ -352,7 +377,6 @@ const mapStateToProps = (state, ownProps) => {
 			}
 		}
 	});
-
 	return {
 		notificationsLoaded: state.notifications.isLoaded,
 		dispatchToken: state.registrar.deviceToken,

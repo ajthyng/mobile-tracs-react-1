@@ -65,6 +65,9 @@ class Announcement extends Component {
 									ellipsizeMode="tail">{this.props.title || "Announcement title not found"}</Text>
 						<Text style={styles.creatorText}
 									numberOfLines={1}
+									ellipsizeMode="tail">{this.props.siteName || ""}</Text>
+						<Text style={styles.creatorText}
+									numberOfLines={1}
 									ellipsizeMode="tail">{`Created By: ${this.props.author || 'Anonymous' }`}</Text>
 					</View>
 					<Icon name="ios-arrow-forward"

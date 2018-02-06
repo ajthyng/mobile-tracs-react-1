@@ -10,6 +10,7 @@
 
 import { createStore, applyMiddleware } from 'redux';
 import { createLogger } from 'redux-logger';
+import Reactotron from 'reactotron-react-native';
 import thunk from 'redux-thunk';
 import rootReducer from '../reducers/index';
 
@@ -18,7 +19,7 @@ const logger = createLogger({
 });
 
 export default function configureStore() {
-	const store = createStore(
+	const store = Reactotron.createStore(
 		rootReducer,
 		applyMiddleware(thunk, logger)
 	);

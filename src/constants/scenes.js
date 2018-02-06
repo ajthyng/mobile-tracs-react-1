@@ -22,5 +22,6 @@ module.exports = {
 	settingsTab: 'settingsTab',
 	notificationSettings: 'notificationSettings',
 	feedback: 'feedback',
-	support: 'support'
+	support: 'support',
+	about: 'about'
 };

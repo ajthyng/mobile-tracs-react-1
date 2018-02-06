@@ -60,17 +60,6 @@ const requestLogout = (state, action) => {
 	}
 };
 
-const logoutSuccess = (state, action) => {
-	return {
-		...state,
-		isLoggingOut: false,
-		isAuthenticated: false,
-		errorMessage: "",
-		netid: "",
-		password: ""
-	}
-};
-
 const logoutFailure = (state, action) => {
 	return {
 		...initialState,
@@ -91,7 +80,6 @@ export function loginReducer(state = initialState, action) {
 		case LOGIN_SUCCESS: 		return loginSuccess(state, action);
 		case LOGIN_FAILURE: 		return loginFailure(state, action);
 		case REQUEST_LOGOUT: 		return requestLogout(state, action);
-		case LOGOUT_SUCCESS: 		return logoutSuccess(state, action);
 		case LOGOUT_FAILURE:		return logoutFailure(state, action);
 		case CLEAR_ERROR: 			return clearError(state, action);
 		default: 								return state;

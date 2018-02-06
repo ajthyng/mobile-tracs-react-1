@@ -7,19 +7,38 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
 import React, {Component} from 'react';
-import {BackHandler, requireNativeComponent} from 'react-native';
+import {Text, View, StyleSheet, BackHandler} from 'react-native';
 import {Actions} from 'react-native-router-flux';
+import Swiper from 'react-native-swiper';
 
-const TRACSWeb = requireNativeComponent('TRACSWeb', TRACSWebView);
+const styles = StyleSheet.create({
+	wrapper: {},
+	slides: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center'
+	},
+	slideText: {
+		color: '#fefefe',
+		fontSize: 24
+	},
+	slideOne: {
+		backgroundColor: '#7f2228'
+	},
+	slideTwo: {
+		backgroundColor: '#6a5638'
+	},
+	slideThree: {
+		backgroundColor: '#005481'
+	}
+});
 
-export default class TRACSWebView extends Component {
-	handleBack = () => {
-		if (Actions.currentScene.indexOf('tracs') >= 0) {
-			Actions.pop();
-		}
-		return true;
-	};
+export default class AboutView extends Component {
+	constructor(props) {
+		super(props);
+	}
 
 	componentWillMount() {
 		BackHandler.addEventListener(BackHandler.DEVICE_BACK_EVENT, this.handleBack);
@@ -29,7 +48,28 @@ export default class TRACSWebView extends Component {
 		BackHandler.removeEventListener(BackHandler.DEVICE_BACK_EVENT, this.handleBack);
 	}
 
+	handleBack = () => {
+		Actions.pop();
+		return true;
+	};
+
+	slideText = (text) => {
+		return (<Text style={styles.slideText}>{text}</Text>);
+	};
+
 	render() {
-		return <TRACSWeb style={{height: "100%", width: "100%"}} {...this.props}/>
+		return (
+			<Swiper style={styles.wrapper} showsButtons={true}>
+				<View style={[styles.slides, styles.slideOne]}>
+					{this.slideText("Slide One")}
+				</View>
+				<View style={[styles.slides, styles.slideTwo]}>
+					{this.slideText("Slide Two")}
+				</View>
+				<View style={[styles.slides, styles.slideThree]}>
+					{this.slideText("Slide Three")}
+				</View>
+			</Swiper>
+		);
 	}
 }

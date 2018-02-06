@@ -89,9 +89,6 @@ const mapDispatchToProps = (dispatch) => {
 			newNotif.seen = true;
 			newNotif.cleared = true;
 			dispatch(updateNotification(newNotif, oldNotif));
-		},
-		markSeen: (notification) => {
-			dispatch(batchUpdateNotification([notification.id], {seen: true}));
 		}
 	}
 };

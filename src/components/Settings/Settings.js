@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Button, View, ToastAndroid} from 'react-native';
+import {Button, Linking, View, ToastAndroid} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import * as Storage from '../../utils/storage';
 import Spacer from '../Helper/Spacer';
@@ -8,6 +8,8 @@ import SettingsItem from './SettingsItem';
 import {clearSites} from '../../actions/sites';
 import {logout} from '../../actions/login';
 import {unregister} from '../../actions/registrar';
+import AppLaunch from '../../utils/applaunch';
+
 
 const SPACER = "spacer";
 const NOTIFICATIONS = "Notification Settings";
@@ -42,11 +44,14 @@ class Settings extends Component {
 				}
 			}),
 			new MenuItem(SPACER, null),
-			new MenuItem(ABOUT, function(event) { console.log(this.title); }),
+			new MenuItem(ABOUT, function(event) { Actions.about(); }),
 			new MenuItem(FEEDBACK, function(event) { Actions.feedback(); }),
 			new MenuItem(SUPPORT, function(event) { Actions.support();}),
 			new MenuItem(SPACER, null),
-			new MenuItem(TXST_MOBILE, function(event) { console.log(this.title); }),
+			new MenuItem(TXST_MOBILE, function(event) {
+				const texasStateURL = 'edu.txstate.mobileapp';
+				AppLaunch.load(texasStateURL);
+			}),
 		];
 	}
 
@@ -89,11 +94,10 @@ class Settings extends Component {
 				{menus}
 				<View style={{margin: 32}}>
 					<Button title="Logout"
+									color="#501214"
 									onPress={() => {
 										Storage.credentials.reset();
-										Storage.sites.reset();
-										Storage.token.reset();
-										this.props.clearSites();
+										Storage.clear();
 										this.props.unregister();
 										this.props.userLogout();
 									}}/>
