@@ -67,13 +67,16 @@ class NotificationView extends Component {
 
 			if (props.renderForums && props.forums) {
 				this.forums = props.forums.filter(post => post.other_keys.site_id === props.siteData.id);
+				this.forums.sort(this.sortByDate);
 			} else {
 				this.forums = [];
 			}
 		} else {
 			this.announcements = props.announcements;
 		}
-		this.announcements.sort(this.sortByDate);
+		if (this.announcements.length > 0) {
+			this.announcements.sort(this.sortByDate);
+		}
 	};
 
 	sortByDate = (a, b) => {
@@ -159,8 +162,8 @@ class NotificationView extends Component {
 					sceneToCall = 'tracsDashboard';
 				}
 				let siteId = (this.props.siteData || {}).id || item.other_keys.site_id || "";
-				let	toolPageId = ((((this.props.sites[siteId] || {}).tools || {})['sakai.announcements']) || {}).id || "";
-				let	announcementUrl = `${global.urls.baseUrl}${global.urls.webUrl}${global.urls.getAnnouncementPage(siteId, toolPageId)}`;
+				let toolPageId = ((((this.props.sites[siteId] || {}).tools || {})['sakai.announcements']) || {}).id || "";
+				let announcementUrl = `${global.urls.baseUrl}${global.urls.webUrl}${global.urls.getAnnouncementPage(siteId, toolPageId)}`;
 
 				Actions.push(sceneToCall, {
 					baseUrl: announcementUrl
@@ -179,6 +182,8 @@ class NotificationView extends Component {
 			isRefreshing: true,
 			firstLoad: true
 		};
+		this.announcements = [];
+		this.forums = [];
 		this.batchUpdateSeen = this.batchUpdateSeen.bind(this);
 		this.handleBack = this.handleBack.bind(this);
 	}
