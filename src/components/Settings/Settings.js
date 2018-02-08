@@ -1,15 +1,12 @@
 import React, {Component} from 'react';
+import {ToastAndroid, View} from 'react-native';
 import {connect} from 'react-redux';
-import {Button, Linking, View, ToastAndroid} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import * as Storage from '../../utils/storage';
 import Spacer from '../Helper/Spacer';
 import SettingsItem from './SettingsItem';
-import {clearSites} from '../../actions/sites';
-import {logout} from '../../actions/login';
-import {unregister} from '../../actions/registrar';
 import AppLaunch from '../../utils/applaunch';
-
+import LogoutButton from './LogoutButton';
 
 const SPACER = "spacer";
 const NOTIFICATIONS = "Notification Settings";
@@ -30,6 +27,13 @@ class MenuItem {
 }
 
 class Settings extends Component {
+	handleLogout = () => {
+		Storage.credentials.reset();
+		Storage.clear();
+		this.props.unregister();
+		this.props.userLogout();
+	};
+
 	constructor(props) {
 		super(props);
 		this.spacerHeight = SPACER_HEIGHT;
@@ -44,11 +48,17 @@ class Settings extends Component {
 				}
 			}),
 			new MenuItem(SPACER, null),
-			new MenuItem(ABOUT, function(event) { Actions.about(); }),
-			new MenuItem(FEEDBACK, function(event) { Actions.feedback(); }),
-			new MenuItem(SUPPORT, function(event) { Actions.support();}),
+			new MenuItem(ABOUT, function (event) {
+				Actions.about();
+			}),
+			new MenuItem(FEEDBACK, function (event) {
+				Actions.feedback();
+			}),
+			new MenuItem(SUPPORT, function (event) {
+				Actions.support();
+			}),
 			new MenuItem(SPACER, null),
-			new MenuItem(TXST_MOBILE, function(event) {
+			new MenuItem(TXST_MOBILE, function (event) {
 				const texasStateURL = 'edu.txstate.mobileapp';
 				AppLaunch.load(texasStateURL);
 			}),
@@ -92,15 +102,13 @@ class Settings extends Component {
 		return (
 			<View>
 				{menus}
-				<View style={{margin: 32}}>
-					<Button title="Logout"
-									color="#501214"
-									onPress={() => {
-										Storage.credentials.reset();
-										Storage.clear();
-										this.props.unregister();
-										this.props.userLogout();
-									}}/>
+				<View style={{alignItems: 'center', marginTop: 48}}>
+					<LogoutButton
+						text="Logout"
+						color="#501214"
+						name="logout"
+						onPress={this.handleLogout}
+					/>
 				</View>
 			</View>
 		);
