@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">TRACSMobile</string>
+    <string name="app_name">TRACS</string>
     <string name="disabled_downloads">Downloads are disabled for this app, re-enable them?</string>
 </resources>
