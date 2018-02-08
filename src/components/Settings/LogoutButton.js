@@ -41,7 +41,7 @@ class LogoutButton extends Component {
 
 	render() {
 		return (
-			<Ripple style={this.styles.container} onPress={this.onPress || (() => {})}>
+			<Ripple style={this.styles.container} onPress={this.props.onPress || (() => {})}>
 				<Text style={this.styles.logoutText}>{this.logoutText}</Text>
 				<Icon name={this.props.name} style={this.styles.logoutIcon}/>
 			</Ripple>

@@ -7,6 +7,9 @@ import Spacer from '../Helper/Spacer';
 import SettingsItem from './SettingsItem';
 import AppLaunch from '../../utils/applaunch';
 import LogoutButton from './LogoutButton';
+import {unregister} from '../../actions/registrar';
+import {logout} from '../../actions/login';
+import {clearSites} from '../../actions/sites';
 
 const SPACER = "spacer";
 const NOTIFICATIONS = "Notification Settings";
@@ -27,15 +30,9 @@ class MenuItem {
 }
 
 class Settings extends Component {
-	handleLogout = () => {
-		Storage.credentials.reset();
-		Storage.clear();
-		this.props.unregister();
-		this.props.userLogout();
-	};
-
 	constructor(props) {
 		super(props);
+		this.handleLogout = this.handleLogout.bind(this);
 		this.spacerHeight = SPACER_HEIGHT;
 		this.spacerColor = SPACER_COLOR;
 		this.menuItems = [
@@ -74,6 +71,13 @@ class Settings extends Component {
 										onPress={onPress}/>
 		)
 	}
+
+	handleLogout() {
+		Storage.credentials.reset();
+		Storage.clear();
+		this.props.unregister();
+		this.props.userLogout();
+	};
 
 	componentDidUpdate() {
 		if (this.props.isLoggedIn === false) {
