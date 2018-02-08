@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'column',
 		alignItems: 'center',
 		justifyContent: 'center',
-		margin: 5
+		marginTop: 5,
 	},
 	badge: {
 		backgroundColor: site.badgeColor,

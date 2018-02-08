@@ -43,7 +43,7 @@ class Site extends Component {
 
 	render() {
 		let textColor = {
-			color: this.isCourse ? '#fff' : '#000'
+			color: this.isCourse ? '#fff' : '#222'
 		};
 		return (
 			<View style={styles.container}
@@ -65,7 +65,7 @@ class Site extends Component {
 									style={[styles.forwardArrow, textColor]}/>
 					</View>
 				</Ripple>
-				<SiteToolBar color={siteColor.courseTitleBackground} siteData={this.props.siteData}/>
+				<SiteToolBar color={siteColor.toolBarColor} siteData={this.props.siteData}/>
 			</View>
 		);
 	}

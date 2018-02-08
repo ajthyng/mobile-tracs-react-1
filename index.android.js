@@ -30,6 +30,8 @@ import {tabBar} from './src/constants/colors';
 import AboutView from './src/components/About/AboutView';
 import './src/utils/reactotron';
 import Reactotron from 'reactotron-react-native';
+import firebase from 'react-native-firebase';
+
 
 const store = configureStore();
 const RouterWithRedux = connect()(Router);
@@ -61,6 +63,8 @@ class App extends Component {
 
 	constructor(props) {
 		super(props);
+		firebase.analytics().logEvent('AppStart');
+
 		FCM.getFCMToken().then(token => console.tron.log(token));
 		this.TabIcons = {
 			announcements: (tabBarProps) => {
@@ -97,6 +101,7 @@ class App extends Component {
 							backToInitial
 							lazy={true}
 							showLabel={true}
+							labelStyle={{marginBottom: 5}}
 							tabBarPosition="bottom">
 
 					<Stack key={scenes.announcementsTab}

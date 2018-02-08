@@ -13,6 +13,8 @@ import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 
 import edu.txstate.applaunch.AppLaunchPackage;
+import io.invertase.firebase.RNFirebasePackage;
+import io.invertase.firebase.analytics.RNFirebaseAnalyticsPackage;
 import io.realm.react.RealmReactPackage;
 import org.pgsqlite.SQLitePluginPackage;
 import com.github.yamill.orientation.OrientationPackage;
@@ -37,6 +39,8 @@ public class MainApplication extends Application implements ReactApplication {
           new VectorIconsPackage(),
           new KeychainPackage(),
           new FIRMessagingPackage(),
+          new RNFirebasePackage(),
+          new RNFirebaseAnalyticsPackage(),
           new LockStatusPackage(),
           new AppLaunchPackage(),
           new CookieManagerPackage(),

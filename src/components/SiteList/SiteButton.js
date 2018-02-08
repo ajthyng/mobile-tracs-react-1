@@ -56,7 +56,7 @@ class SiteButton extends Component {
 				<Icon name={this.props.name}
 							size={this.props.size}
 							color={this.props.color}/>
-				<Text style={{fontSize: this.props.fontSize || 10, color: "rgba(0, 84, 129, 1)"}}>{this.props.label}</Text>
+				<Text style={{fontSize: this.props.fontSize || 10, color: this.props.color}}>{this.props.label}</Text>
 				{this.props.badgeCount > 0 ? badge : null}
 			</View>
 		</Ripple>

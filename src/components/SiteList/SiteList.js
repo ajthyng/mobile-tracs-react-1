@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
 	sectionHeader: {
 		marginLeft: 10,
 		marginTop: 10,
+		fontSize: 12,
 	}
 });
 
@@ -146,9 +147,9 @@ class SiteList extends Component {
 					let sectionHeader = null;
 					if (section.data.length > 0) {
 						if (section.type === 'courses') {
-							sectionHeader = <Text style={styles.sectionHeader}>Courses</Text>;
+							sectionHeader = <Text style={styles.sectionHeader}>COURSES</Text>;
 						} else if (section.type === 'projects') {
-							sectionHeader = <Text style={styles.sectionHeader}>Projects</Text>;
+							sectionHeader = <Text style={styles.sectionHeader}>PROJECT</Text>;
 						}
 					}
 					return sectionHeader;

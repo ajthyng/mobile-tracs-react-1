@@ -18,17 +18,18 @@ module.exports = {
 		forwardArrow: "#5b5b5b"
 	},
 	site: {
-		courseTitleBackground: 'rgba(0, 84, 129, 1)',
-		projectTitleBackground: 'rgba(208, 220, 233, 1)',
-		projectTitleText: '#000',
+		courseTitleBackground: '#504e4d',
+		projectTitleBackground: '#cacaca',
+		projectTitleText: '#222',
+		toolBarColor: '#501214',
 		backgroundColor: 'rgba(232, 232, 232, 1)',
-		dashboardTitleBackground: "#005481",
+		dashboardTitleBackground: "#363534",
 		dashboardTitleText: "#fefefe",
 		badgeColor: "#ff3b30"
 	},
 	workspace: {
 		textColor: "#501214",
-		backgroundColor: 'rgba(232, 227, 219, 1)'
+		backgroundColor: '#e8e3db'
 	},
 	tabBar: {
 		backgroundColor: '#501214',
