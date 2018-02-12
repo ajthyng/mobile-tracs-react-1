@@ -40,7 +40,7 @@ exports.credentials = {
 		});
 	},
 	reset() {
-		return Keychain.resetGenericPassword();
+		return Keychain.resetGenericPassword().catch(err => console.tron.log(err));
 	}
 };
 

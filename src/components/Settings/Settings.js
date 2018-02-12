@@ -74,7 +74,6 @@ class Settings extends Component {
 
 	handleLogout() {
 		Storage.credentials.reset();
-		Storage.clear();
 		this.props.unregister();
 		this.props.userLogout();
 	};

@@ -72,7 +72,8 @@ class LoginScreen extends Component {
 		};
 		this.underlineColor = '#000';
 		this.uppsRequiredText = `Use of computer and network facilities owned or operated by Texas State University requires prior authorization. Unauthorized access is prohibited. Usage may be subject to security testing and monitoring, and affords no privacy guarantees or expectations except as otherwise provided by applicable privacy laws. Abuse is subject to criminal prosecution. Use of these facilities implies agreement to comply with the policies of Texas State University.`;
-
+		StatusBar.setBackgroundColor('#fff');
+		StatusBar.setBarStyle('dark-content');
 		this.handleNetIDInput = this.handleNetIDInput.bind(this);
 		this.handlePasswordInput = this.handlePasswordInput.bind(this);
 		this.userLogin = this.userLogin.bind(this);
@@ -95,6 +96,7 @@ class LoginScreen extends Component {
 			}
 		}
 		Orientation.lockToPortrait();
+		Storage.clear();
 	}
 
 	handleNetIDInput(text) {
