@@ -61,7 +61,7 @@ class Settings extends Component {
 				AppLaunch.load(texasStateURL);
 			}),
 		];
-		Analytics().setCurrentScreen('Settings', 'Settings');
+		Analytics().setScreen('Settings', 'Settings');
 	}
 
 	static createMenuDOM(shouldBeTop, index, disabled, title, onPress) {

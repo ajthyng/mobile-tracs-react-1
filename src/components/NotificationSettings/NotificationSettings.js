@@ -45,7 +45,7 @@ class NotificationSettings extends Component {
 				name: "Courses"
 			});
 		}
-		Analytics().setCurrentScreen('NotificationSettings', 'NotificationSettings');
+		Analytics().setScreen('NotificationSettings', 'NotificationSettings');
 	}
 
 	createSettingDOM(isTop, index, setting, onPress) {

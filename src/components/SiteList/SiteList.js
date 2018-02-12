@@ -50,7 +50,7 @@ class SiteList extends Component {
 			refreshing: false
 		};
 		Analytics().setUserId();
-		Analytics().setCurrentScreen('Sites', 'SiteList');
+		Analytics().setScreen('Sites', 'SiteList');
 		StatusBar.setBackgroundColor('#501214');
 		StatusBar.setBarStyle('light-content');
 	}

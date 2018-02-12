@@ -25,7 +25,7 @@ export default class TRACSWebView extends Component {
 	componentWillMount() {
 		BackHandler.addEventListener(BackHandler.DEVICE_BACK_EVENT, this.handleBack);
 		Analytics().logTracsWebOpen();
-		Analytics().setCurrentScreen('TRACSWeb', 'TRACSWebView');
+		Analytics().setScreen('TRACSWeb', 'TRACSWebView');
 	}
 
 	componentWillUnmount() {

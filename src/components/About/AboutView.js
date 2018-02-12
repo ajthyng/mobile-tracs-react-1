@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
 export default class AboutView extends Component {
 	constructor(props) {
 		super(props);
-		Analytics().setCurrentScreen('About', 'AboutView');
+		Analytics().setScreen('About', 'AboutView');
 	}
 
 	componentWillMount() {

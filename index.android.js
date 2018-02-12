@@ -129,7 +129,7 @@ class App extends Component {
 								 navigationBarStyle={{backgroundColor: "#501214"}}
 								 navBarButtonColor="#fff"
 								 titleStyle={{color: "#fff"}}
-								 tabBarLabel="Courses">
+								 tabBarLabel="All Sites">
 						<Scene
 							key={scenes.sites}
 							title="TRACS"
