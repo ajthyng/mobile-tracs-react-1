@@ -12,6 +12,7 @@ import React, {Component} from 'react';
 import {Text, View, StyleSheet, BackHandler} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import Swiper from 'react-native-swiper';
+import {Analytics} from '../../utils/analytics';
 
 const styles = StyleSheet.create({
 	wrapper: {},
@@ -38,6 +39,7 @@ const styles = StyleSheet.create({
 export default class AboutView extends Component {
 	constructor(props) {
 		super(props);
+		Analytics().setCurrentScreen('About', 'AboutView');
 	}
 
 	componentWillMount() {

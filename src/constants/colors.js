@@ -35,5 +35,9 @@ module.exports = {
 		backgroundColor: '#501214',
 		active: '#fff',
 		inactive: 'rgba(188, 162, 164, 1)'
+	},
+	setting: {
+		settingOnColor: '#8080ff',
+		settingOffColor: '#80ff80'
 	}
 };

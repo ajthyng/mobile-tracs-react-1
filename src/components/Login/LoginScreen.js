@@ -10,6 +10,7 @@ import * as Storage from '../../utils/storage';
 import LoginButton from './LoginButton';
 import {clearError as clearLoginError} from '../../actions/login';
 import Orientation from 'react-native-orientation';
+import {Analytics} from '../../utils/analytics';
 
 const portraitStyles = StyleSheet.create({
 	container: {
@@ -77,6 +78,7 @@ class LoginScreen extends Component {
 		this.handleNetIDInput = this.handleNetIDInput.bind(this);
 		this.handlePasswordInput = this.handlePasswordInput.bind(this);
 		this.userLogin = this.userLogin.bind(this);
+		Analytics().setScreen('Login', 'LoginScreen');
 	}
 
 	userLogin() {

@@ -10,6 +10,7 @@ import LogoutButton from './LogoutButton';
 import {unregister} from '../../actions/registrar';
 import {logout} from '../../actions/login';
 import {clearSites} from '../../actions/sites';
+import {Analytics} from '../../utils/analytics';
 
 const SPACER = "spacer";
 const NOTIFICATIONS = "Notification Settings";
@@ -60,6 +61,7 @@ class Settings extends Component {
 				AppLaunch.load(texasStateURL);
 			}),
 		];
+		Analytics().setCurrentScreen('Settings', 'Settings');
 	}
 
 	static createMenuDOM(shouldBeTop, index, disabled, title, onPress) {

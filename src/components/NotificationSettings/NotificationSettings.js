@@ -12,6 +12,7 @@ import {setCurrentScene} from '../../actions/routes';
 import {types} from '../../constants/notifications';
 import {settings as SETTINGS} from '../../constants/scenes';
 import Settings from '../../utils/settings';
+import {Analytics} from '../../utils/analytics';
 
 const SPACER_COLOR = "#E9E9EF";
 const SPACER_HEIGHT = 35;
@@ -44,6 +45,7 @@ class NotificationSettings extends Component {
 				name: "Courses"
 			});
 		}
+		Analytics().setCurrentScreen('NotificationSettings', 'NotificationSettings');
 	}
 
 	createSettingDOM(isTop, index, setting, onPress) {

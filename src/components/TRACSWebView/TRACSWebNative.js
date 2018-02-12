@@ -10,6 +10,7 @@
 import React, {Component} from 'react';
 import {BackHandler, requireNativeComponent} from 'react-native';
 import {Actions} from 'react-native-router-flux';
+import {Analytics} from '../../utils/analytics';
 
 const TRACSWeb = requireNativeComponent('TRACSWeb', TRACSWebView);
 
@@ -23,6 +24,8 @@ export default class TRACSWebView extends Component {
 
 	componentWillMount() {
 		BackHandler.addEventListener(BackHandler.DEVICE_BACK_EVENT, this.handleBack);
+		Analytics().logTracsWebOpen();
+		Analytics().setCurrentScreen('TRACSWeb', 'TRACSWebView');
 	}
 
 	componentWillUnmount() {

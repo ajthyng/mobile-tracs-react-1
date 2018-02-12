@@ -7,7 +7,7 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {AppRegistry, StatusBar, PermissionsAndroid} from 'react-native';
+import {AppRegistry, PermissionsAndroid, StatusBar} from 'react-native';
 import React, {Component} from 'react';
 import {connect, Provider} from 'react-redux';
 import FCM, {FCMEvent} from 'react-native-fcm';
@@ -30,8 +30,7 @@ import {tabBar} from './src/constants/colors';
 import AboutView from './src/components/About/AboutView';
 import './src/utils/reactotron';
 import Reactotron from 'reactotron-react-native';
-import firebase from 'react-native-firebase';
-
+import {Analytics} from './src/utils/analytics';
 
 const store = configureStore();
 const RouterWithRedux = connect()(Router);
@@ -41,8 +40,6 @@ if (env.debug) {
 } else {
 	global.urls = urls.release;
 }
-
-const tabIconSize = 24;
 
 console.tron = Reactotron;
 
@@ -57,15 +54,12 @@ class App extends Component {
 		});
 	};
 
-	setTabBarColor(props) {
-		return props.focused ? props.activeTintColor : props.inactiveTintColor;
-	}
-
 	constructor(props) {
 		super(props);
-		firebase.analytics().logEvent('AppStart');
-
+		this.analytics = Analytics(store);
+		this.analytics.logAppStart();
 		FCM.getFCMToken().then(token => console.tron.log(token));
+		const tabIconSize = 24;
 		this.TabIcons = {
 			announcements: (tabBarProps) => {
 				return <TabIcon name="bullhorn" size={tabIconSize} color={this.setTabBarColor(tabBarProps)}/>;
@@ -77,8 +71,6 @@ class App extends Component {
 				return <TabIcon name="cog" size={tabIconSize} color={this.setTabBarColor(tabBarProps)}/>;
 			}
 		};
-
-		StatusBar.setBackgroundColor('#501214');
 
 		this.requestStoragePermission = this.requestStoragePermission.bind(this);
 		this.requestStoragePermission();
@@ -103,11 +95,10 @@ class App extends Component {
 							showLabel={true}
 							labelStyle={{marginBottom: 5}}
 							tabBarPosition="bottom">
-
-					<Stack key={scenes.announcementsTab}
+					<Scene key={scenes.announcementsTab}
 								 icon={this.TabIcons.announcements}
 								 onEnter={() => {
-								 	store.dispatch(setCurrentScene(scenes.announcementsTab))
+									 store.dispatch(setCurrentScene(scenes.announcementsTab))
 								 }}
 								 navigationBarStyle={{backgroundColor: "#501214"}}
 								 navBarButtonColor="#fff"
@@ -130,9 +121,8 @@ class App extends Component {
 									 hideNavBar={true}
 									 onEnter={() => {
 										 store.dispatch(setCurrentScene(scenes.tracsAnnouncement));
-									 }}
-									/>
-					</Stack>
+									 }}/>
+					</Scene>
 					<Stack key={scenes.sitesTab}
 								 icon={this.TabIcons.sites}
 								 initial
@@ -140,14 +130,15 @@ class App extends Component {
 								 navBarButtonColor="#fff"
 								 titleStyle={{color: "#fff"}}
 								 tabBarLabel="Courses">
-						<Scene key={scenes.sites}
-									 title="TRACS"
-									 component={SiteList}
-									 initial
-									 hideNavBar={false}
-									 onEnter={() => {
-										 store.dispatch(setCurrentScene(scenes.sitesTab));
-									 }}/>
+						<Scene
+							key={scenes.sites}
+							title="TRACS"
+							component={SiteList}
+							initial
+							hideNavBar={false}
+							onEnter={() => {
+								store.dispatch(setCurrentScene(scenes.sites));
+							}}/>
 						<Scene key={scenes.dashboard}
 									 title="Dashboard"
 									 swipeEnabled={false}
@@ -176,29 +167,48 @@ class App extends Component {
 									 initial
 									 title="Settings"
 									 hideNavBar={false}
-									 component={Settings}/>
+									 component={Settings}
+									 onEnter={() => {
+										 store.dispatch(setCurrentScene(scenes.settings));
+									 }}/>
 						<Scene key={scenes.notificationSettings}
 									 back
 									 title="Notification Settings"
-									 component={NotificationSettings}/>
+									 component={NotificationSettings}
+									 onEnter={() => {
+										 store.dispatch(setCurrentScene(scenes.notificationSettings));
+									 }}/>
 						<Scene key={scenes.feedback}
 									 back
 									 title="Feedback"
 									 component={SimpleWebView}
-									 url={global.urls.feedback}/>
+									 url={global.urls.feedback}
+									 onEnter={() => {
+										 store.dispatch(setCurrentScene(scenes.feedback));
+									 }}/>
 						<Scene key={scenes.support}
 									 back
 									 title="TRACS Support"
 									 component={SimpleWebView}
-									 url={global.urls.support}/>
+									 url={global.urls.support}
+									 onEnter={() => {
+										 store.dispatch(setCurrentScene(scenes.support));
+									 }}/>
 					</Stack>
 				</Tabs>
 				<Scene key={scenes.about}
 							 hideNavBar={true}
 							 back
-							 component={AboutView}/>
+							 component={AboutView}
+							 onEnter={() => {
+								 store.dispatch(setCurrentScene(scenes.support));
+							 }}/>
 			</Scene>
 		);
+	}
+
+	setTabBarColor(props) {
+		return props.focused ? props.activeTintColor : props.inactiveTintColor;
 	}
 
 	componentDidMount() {
@@ -233,7 +243,7 @@ class App extends Component {
 			} else {
 				console.log("Cache Disabled");
 			}
-		} catch(err) {
+		} catch (err) {
 			console.log("Cache Disabled");
 		}
 	}

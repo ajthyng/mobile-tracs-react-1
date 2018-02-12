@@ -13,6 +13,7 @@ import * as Storage from '../utils/storage';
 import FCM from 'react-native-fcm';
 import {types} from '../constants/notifications';
 import axios from 'axios';
+import {Analytics} from '../utils/analytics';
 
 const {
 	REQUEST_NOTIFICATIONS,
@@ -33,7 +34,8 @@ const requestNotifications = () => {
 	}
 };
 
-const notificationSuccess = (notifications) => {
+const notificationSuccess = (notifications, loadTime) => {
+	Analytics().logNotificationLoadTime(loadTime);
 	return {
 		type: NOTIFICATIONS_SUCCESS,
 		notifications
@@ -171,6 +173,7 @@ const getNotificationDetail = async (notifications) => {
 
 export const getNotifications = (token) => {
 	return async (dispatch) => {
+		let startTime = new Date();
 		dispatch(requestNotifications());
 		if (!token) {
 			await FCM.getFCMToken().then(deviceToken => token = deviceToken);
@@ -191,7 +194,8 @@ export const getNotifications = (token) => {
 			.then(async data => {
 				if (data) {
 					let notifications = await getNotificationDetail(data);
-					dispatch(notificationSuccess(notifications));
+					const loadTime = new Date() - startTime;
+					dispatch(notificationSuccess(notifications, loadTime));
 				}
 			}).catch(err => {
 			dispatch(notificationsFailure(err.message));

@@ -21,7 +21,9 @@ class LogoutButton extends Component {
 				flexDirection: 'row',
 				alignItems: 'center',
 				justifyContent: 'center',
-				backgroundColor: props.backgroundColor || "transparent"
+				backgroundColor: props.backgroundColor || "transparent",
+				width: 100,
+				height: 40
 			},
 			logoutText: {
 				fontSize: props.fontSize || 16,

@@ -11,6 +11,7 @@
 import {setGuestAccount, user} from './registrar';
 import {authActions} from '../constants/actions';
 import {credentials} from '../utils/storage';
+import {Analytics} from '../utils/analytics';
 import axios from 'axios';
 
 const {
@@ -30,11 +31,13 @@ const requestLogin = () => {
 	}
 };
 
-const loginSuccess = (netid, password) => {
+const loginSuccess = (netid, password, tracsID) => {
+	Analytics().setUserId(tracsID);
 	return {
 		type: LOGIN_SUCCESS,
 		netid,
 		password,
+		tracsID
 	}
 };
 
@@ -111,7 +114,7 @@ export function login(netid = '', password) {
 				console.log(session);
 				if (session.userEid === creds.netid) {
 					credentials.store(creds.netid, creds.password).then(() => {
-						dispatch(loginSuccess(session.userEid, creds.password));
+						dispatch(loginSuccess(session.userEid, creds.password, session.userId));
 					});
 				} else {
 					//This error is thrown when the user's creds don't match the session creds. This will happen
@@ -136,7 +139,6 @@ export function logout() {
 	return (dispatch) => {
 		dispatch(requestLogout());
 		const logoutUrl = `${global.urls.baseUrl}${global.urls.logout}`;
-		console.log(logoutUrl);
 		return fetch(logoutUrl, {
 			method: 'get'
 		}).then(res => {

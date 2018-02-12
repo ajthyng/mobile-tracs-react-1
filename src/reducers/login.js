@@ -22,7 +22,8 @@ export const initialState = {
 	isAuthenticated: false,
 	isLoggingIn: false,
 	netid: '',
-	password: ''
+	password: '',
+	tracsID: ''
 };
 
 const requestLogin = (state, action) => {
@@ -40,6 +41,7 @@ const loginSuccess = (state, action) => {
 		isAuthenticated: true,
 		isLoggingIn: false,
 		errorMessage: "",
+		tracsID: action.tracsID,
 		netid: action.netid,
 		password: action.password
 	}

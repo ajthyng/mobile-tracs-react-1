@@ -15,6 +15,7 @@ import {announcements, dashboard} from '../../constants/scenes';
 import DashboardHeader from './DashboardHeader'
 import {Swipeout} from 'react-native-swipeout';
 import FCM from 'react-native-fcm';
+import {Analytics} from '../../utils/analytics';
 
 const UNPUBLISHED_SITE_NAME = "Unpublished Site";
 
@@ -184,6 +185,23 @@ class NotificationView extends Component {
 		};
 		this.announcements = [];
 		this.forums = [];
+		switch (this.props.route) {
+			case 'announcements':
+				Analytics().logAnnouncementsOpen();
+				Analytics().setScreen('Announcements', 'NotificationView');
+				break;
+			case 'dashboard':
+				if (props.renderAnnouncements === true) {
+					Analytics().logDashboardOpen();
+					Analytics().setScreen('Dashboard', 'NotificationView');
+				} else {
+					Analytics().logForumsOpen();
+					Analytics().setScreen('Forums', 'NotificationView');
+				}
+				break;
+			default:
+				break;
+		}
 		this.batchUpdateSeen = this.batchUpdateSeen.bind(this);
 		this.handleBack = this.handleBack.bind(this);
 	}

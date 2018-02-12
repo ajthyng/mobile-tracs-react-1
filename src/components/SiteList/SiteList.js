@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Keyboard, SectionList, StyleSheet, Text} from 'react-native';
+import {Keyboard, SectionList, StatusBar, StyleSheet, Text} from 'react-native';
 import {connect} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
 import {clearSites, getSiteInfo} from '../../actions/sites';
@@ -10,6 +10,7 @@ import {types as siteTypes} from '../../constants/sites';
 import {getNotifications} from '../../actions/notifications';
 import {site as siteColor} from '../../constants/colors';
 import Workspace from './Workspace';
+import {Analytics} from '../../utils/analytics';
 
 const styles = StyleSheet.create({
 	sectionHeader: {
@@ -33,6 +34,7 @@ class SiteList extends Component {
 
 	siteOnPress = (site) => {
 		let siteUrl = `${global.urls.baseUrl}${global.urls.webUrl}/${site.info.id}`;
+		Analytics().logSiteClick(site.info.type, site.info.id);
 		site.info.onPress = () => {
 			Actions.push('tracsDashboard', {
 				baseUrl: siteUrl
@@ -47,6 +49,10 @@ class SiteList extends Component {
 			...this.state,
 			refreshing: false
 		};
+		Analytics().setUserId();
+		Analytics().setCurrentScreen('Sites', 'SiteList');
+		StatusBar.setBackgroundColor('#501214');
+		StatusBar.setBarStyle('light-content');
 	}
 
 	componentWillMount() {
@@ -58,7 +64,6 @@ class SiteList extends Component {
 		if (!this.props.isLoadingNotifications) {
 			this.props.getNotifications(this.props.token);
 		}
-
 	}
 
 	componentDidUpdate() {

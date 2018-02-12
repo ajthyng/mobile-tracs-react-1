@@ -11,10 +11,13 @@
 import {sites as Sites} from '../utils/storage'
 import {sitesActions} from '../constants/actions';
 import moment from 'moment';
+import {Analytics} from '../utils/analytics';
 
 let {GET_MEMBERSHIPS, IS_FETCHING_SITES, CLEAR_SITES, GET_SITES_FAILED} = sitesActions;
 
-const getMemberships = (userSites) => {
+const getMemberships = (userSites, loadTime) => {
+	Analytics().logSiteCounts(userSites);
+	Analytics().logSiteLoadTime(loadTime);
 	return {
 		type: GET_MEMBERSHIPS,
 		userSites: userSites,
@@ -51,6 +54,7 @@ export function getSiteInfo(netid) {
 	const tracsUrl = global.urls.baseUrl;
 
 	return (dispatch) => {
+		let start = new Date();
 		dispatch(isFetchingSites(true));
 		const options = {
 			url: `${tracsUrl}${global.urls.membership}`,
@@ -67,7 +71,8 @@ export function getSiteInfo(netid) {
 			.then(async sites => {
 				const userHasSites = sites !== undefined && sites.hasOwnProperty('membership_collection') && sites.membership_collection.length > 0;
 				if (!userHasSites) {
-					dispatch(getMemberships({}));
+					let siteLoadTime = new Date() - start;
+					dispatch(getMemberships({}, siteLoadTime));
 					dispatch(isFetchingSites(false));
 					return;
 				}
@@ -87,7 +92,8 @@ export function getSiteInfo(netid) {
 							...userSites,
 							...storedSites
 						};
-						dispatch(getMemberships(allSites));
+						let siteLoadTime = new Date() - start;
+						dispatch(getMemberships(allSites, siteLoadTime));
 						dispatch(isFetchingSites(false));
 					});
 				})
