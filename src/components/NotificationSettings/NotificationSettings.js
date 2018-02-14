@@ -10,7 +10,6 @@ import {getSettings, saveSettings} from '../../actions/settings';
 import {setCurrentScene} from '../../actions/routes';
 
 import {types} from '../../constants/notifications';
-import {settings as SETTINGS} from '../../constants/scenes';
 import Settings from '../../utils/settings';
 import {Analytics} from '../../utils/analytics';
 
@@ -45,6 +44,10 @@ class NotificationSettings extends Component {
 				name: "Courses"
 			});
 		}
+
+		this.state = {
+			firstLoad: true
+		};
 		Analytics().setScreen('NotificationSettings', 'NotificationSettings');
 	}
 
@@ -52,13 +55,28 @@ class NotificationSettings extends Component {
 		const blacklist = this.props.blacklist;
 		setting.enabled = true;
 
+		let siteAnnoucementsDisabled = false;
+		let siteForumsDisabled = false;
 		if (blacklist) {
 			blacklist.forEach((entry) => {
-				if (entry.keys.object_type === setting.id || entry.other_keys.site_id === setting.id) {
-					setting.enabled = false;
+				if (setting.id === ANNOUNCEMENT) {
+					let globalAnnouncementsAreOff = entry.keys.object_type === ANNOUNCEMENT && Object.keys(entry.other_keys).length === 0;
+					if (globalAnnouncementsAreOff) {
+						setting.enabled = false;
+					}
+				} else {
+					if (entry.other_keys.hasOwnProperty('site_id') && entry.other_keys.site_id === setting.id) { //we're on a setting for this site
+						if (entry.keys.object_type === ANNOUNCEMENT) {
+							siteAnnoucementsDisabled = true;
+						}
+						if (entry.keys.object_type === FORUM) {
+							siteForumsDisabled = true;
+						}
+					}
 				}
 			});
 		}
+		setting.enabled = !(siteAnnoucementsDisabled && siteForumsDisabled);
 		return (
 			<SettingSwitchControl key={index}
 														title={setting.name}
@@ -66,7 +84,20 @@ class NotificationSettings extends Component {
 														topItem={isTop}
 														enabled={setting.enabled}
 														onChange={onPress}/>
-		)
+		);
+	}
+
+	componentWillUpdate(nextProps) {
+		if (this.props.isFetching && !nextProps.isFetching && this.state.firstLoad) {
+			this.setState({
+				firstLoad: false
+			});
+		}
+		if (this.props.pending === true && nextProps.pending === false && nextProps.success) {
+			ToastAndroid.show('Settings Saved!', ToastAndroid.SHORT);
+		} else if (this.props.pending && !nextProps.pending && !nextProps.success) {
+			ToastAndroid.show('Could not save settings, try again later.', ToastAndroid.SHORT);
+		}
 	}
 
 	componentWillMount() {
@@ -110,7 +141,7 @@ class NotificationSettings extends Component {
 	}
 
 	render() {
-		if (this.props.isFetching === true || !this.props) {
+		if ((this.props.isFetching === true && this.state.firstLoad === true) || !this.props) {
 			return (
 				<ActivityIndicator/>
 			)
@@ -185,7 +216,9 @@ const mapStateToProps = (state, ownProps) => {
 		blacklist: state.settings.userSettings.blacklist,
 		global_disable: state.settings.userSettings.global_disable,
 		errorMessage: state.settings.errorMessage,
-		isFetching: state.settings.isFetching
+		isFetching: state.settings.isFetching,
+		pending: state.settings.isSaving,
+		success: state.settings.isSaved
 	}
 };
 

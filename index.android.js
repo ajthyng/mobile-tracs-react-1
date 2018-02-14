@@ -58,7 +58,10 @@ class App extends Component {
 		super(props);
 		this.analytics = Analytics(store);
 		this.analytics.logAppStart();
-		FCM.getFCMToken().then(token => console.tron.log(token));
+		FCM.getFCMToken().then(token => console.tron.log(`TOKEN: ${token}`));
+		//FCM.on('refreshToken', token => {
+		//	console.tron.log(`REFRESH TOKEN: ${token}`);
+		//});
 		const tabIconSize = 24;
 		this.TabIcons = {
 			announcements: (tabBarProps) => {

@@ -129,6 +129,8 @@ class LoginScreen extends Component {
 
 	render() {
 		if (this.props.loggingIn || this.props.registering) {
+			StatusBar.setBackgroundColor('rgb(233, 233, 239)');
+			StatusBar.setBarStyle('dark-content');
 			return (
 				<ActivityIndicator/>
 			);

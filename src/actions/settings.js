@@ -89,6 +89,7 @@ export function getSettings(token) {
 
 export function saveSettings(settings, token, local) {
 	return async (dispatch) => {
+		dispatch(requestSaveSettings());
 		if (!token) {
 			await FCM.getFCMToken().then(deviceToken => token = deviceToken);
 		}
@@ -100,7 +101,6 @@ export function saveSettings(settings, token, local) {
 			},
 			body: JSON.stringify(settings)
 		};
-		dispatch(requestSaveSettings());
 		if (local) {
 			 dispatch(saveSettingsSuccess(settings));
 			 return true;

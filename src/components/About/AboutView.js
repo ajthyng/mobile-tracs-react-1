@@ -54,7 +54,6 @@ export default class AboutView extends Component {
 		Actions.pop();
 		return true;
 	};
-
 	slideText = (text) => {
 		return (<Text style={styles.slideText}>{text}</Text>);
 	};

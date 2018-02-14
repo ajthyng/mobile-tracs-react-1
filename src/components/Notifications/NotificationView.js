@@ -24,10 +24,13 @@ class NotificationView extends Component {
 		switch (section.type) {
 			case types.FORUM:
 			case types.ANNOUNCEMENT:
-				return (<SectionHeader title={section.title}
-															 onToggle={section.onToggle}
-															 isOn={section.isOn}
-				/>);
+				if (this.props.renderDashboard === true) {
+					return (<SectionHeader title={section.title}
+																 onToggle={section.onToggle}
+																 isOn={section.isOn}
+					/>);
+				}
+				return null;
 			default:
 				return null;
 		}
@@ -56,8 +59,8 @@ class NotificationView extends Component {
 	settingsChanged = (nextProps) => {
 		const announceChange = nextProps.announcementSetting !== this.props.announcementSetting;
 		const forumChange = nextProps.forumSetting !== this.props.forumSetting;
-
-		return announceChange || forumChange;
+		const siteFilterChange = nextProps.filteredAnnouncementSites.length !== this.props.filteredAnnouncementSites.length;
+		return announceChange || forumChange || siteFilterChange;
 	};
 
 	filterNotifications = (props) => {
@@ -232,7 +235,8 @@ class NotificationView extends Component {
 		});
 		BackHandler.addEventListener('hardwareBackPress', this.handleBack);
 		if (this.props.isGuestAccount === false) {
-			this.getNotifications(true);
+			let shouldGetSettings = this.props.route === 'dashboard';
+			this.getNotifications(shouldGetSettings);
 			this.setupNotificationSections(this.props);
 		} else {
 			this.setState({
@@ -250,14 +254,18 @@ class NotificationView extends Component {
 		}
 
 		if (nextProps.notificationsLoaded && this.settingsChanged(nextProps)) {
-			debugger;
-			this.getNotifications(true);
+			let shouldGetSettings = this.props.route === 'announcements';
+			this.getNotifications(shouldGetSettings);
 		}
 
 		if (nextProps.errorMessage) {
 			if (Platform.OS === 'android') {
 				ToastAndroid.show(nextProps.errorMessage, ToastAndroid.LONG);
 			}
+		}
+
+		if (this.props.pending && !nextProps.pending && nextProps.success) {
+			this.props.getSettings();
 		}
 		this.setupNotificationSections(nextProps);
 	}
@@ -282,7 +290,11 @@ class NotificationView extends Component {
 			return true;
 		}
 
-		return nextProps.route === announcements && !this.props.renderDashboard
+		if (nextProps.route === announcements && !this.props.renderDashboard) {
+			return true;
+		}
+
+		return this.settingsChanged(nextProps);
 	}
 
 	render() {
@@ -296,7 +308,7 @@ class NotificationView extends Component {
 					</Text>
 				</View>
 			);
-		} else if (!this.props.notificationsLoaded && this.state.firstLoad) {
+		} else if (!this.props.notificationsLoaded && this.state.firstLoad && this.props.route === 'announcements') {
 			return (
 				<ActivityIndicator/>
 			);
@@ -382,19 +394,41 @@ class NotificationView extends Component {
 const mapStateToProps = (state, ownProps) => {
 	let announcementSetting = true;
 	let forumSetting = true;
+	let filteredAnnouncementSites = [];
 	state.settings.userSettings.blacklist.forEach(setting => {
-		if (setting.hasOwnProperty("other_keys") && setting.other_keys.site_id === (ownProps.siteData || {}).id) {
+		let settingIsApplicableToThisSite = setting.hasOwnProperty('other_keys') &&
+			ownProps.siteData && setting.other_keys.site_id === ownProps.siteData.id;
+
+		let settingIsApplicableToAnnouncements = setting.hasOwnProperty('keys') &&
+			setting.keys.object_type === 'announcement' &&
+			Object.keys(setting.other_keys).length === 0;
+
+		let settingIsApplicableToForums = setting.hasOwnProperty('keys') &&
+			setting.keys.object_type === 'discussion' &&
+			Object.keys(setting.other_keys).length === 0;
+
+		if (setting.other_keys.site_id) {
+			if (setting.keys.object_type === 'announcement') {
+				filteredAnnouncementSites.push(setting.other_keys.site_id);
+			}
+		}
+
+		if (settingIsApplicableToThisSite) {
 			if (setting.hasOwnProperty("keys")) {
 				if (setting.keys.object_type === "discussion") {
 					forumSetting = false;
 				}
-
 				if (setting.keys.object_type === "announcement") {
 					announcementSetting = false;
 				}
 			}
+		} else if (settingIsApplicableToAnnouncements) {
+			announcementSetting = false;
+		} else if (settingIsApplicableToForums) {
+			forumSetting = false;
 		}
 	});
+
 	return {
 		notificationsLoaded: state.notifications.isLoaded,
 		dispatchToken: state.registrar.deviceToken,
@@ -408,8 +442,11 @@ const mapStateToProps = (state, ownProps) => {
 		route: state.routes.scene,
 		sites: state.tracsSites.userSites,
 		isGuestAccount: state.registrar.isGuestAccount,
+		pending: state.settings.isSaving,
+		success: state.settings.isSaved,
 		announcementSetting,
 		forumSetting,
+		filteredAnnouncementSites
 	}
 };
 

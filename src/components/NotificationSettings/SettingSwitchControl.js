@@ -45,7 +45,8 @@ class SettingSwitchControl extends Component {
 
 const mapStateToProps = (state, ownProps) => {
 	return {
-		token: state.registrar.deviceToken
+		token: state.registrar.deviceToken,
+		pending: state.settings.isFetching
 	}
 };
 

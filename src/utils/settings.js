@@ -8,6 +8,8 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import {types as notificationTypes} from '../constants/notifications';
+
 const DEFAULT_SETTINGS = {
 	global_disable: false,
 	blacklist: []
@@ -62,13 +64,22 @@ export default class Settings {
 	 * @param id The site id that should be added to the filter
 	 */
 	_disableForSite(id) {
-		const entry = {
-			keys: {},
+		const entries = [{
+			keys: {
+				object_type: notificationTypes.ANNOUNCEMENT
+			},
 			other_keys: {
 				site_id: id
 			}
-		};
-		this.blacklist.push(entry);
+		}, {
+			keys: {
+				object_type: notificationTypes.FORUM
+			},
+			other_keys: {
+				site_id: id
+			}
+		}];
+		this.blacklist = [...this.blacklist, ...entries];
 		this.blacklist = [...new Set(this.blacklist)];
 	}
 
@@ -114,10 +125,11 @@ export default class Settings {
 		this.blacklist = this.blacklist.filter(entry => {
 			if (entry.hasOwnProperty("keys") && entry.hasOwnProperty("other_keys")) {
 				if (entry["keys"].hasOwnProperty("object_type") && entry["other_keys"].hasOwnProperty("site_id")) {
-					return type !== entry["keys"]["object_type"] && id !== entry["other_keys"]["site_id"];
+					return type !== entry.keys.object_type || id !== entry.other_keys.site_id;
 				}
 			}
 		});
+		console.tron.log(this.blacklist);
 	}
 
 	_disableTypeAndSite(type, id) {

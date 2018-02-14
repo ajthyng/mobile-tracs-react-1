@@ -136,6 +136,12 @@ const getNotificationDetail = async (notifications) => {
 			return accum;
 		}, {});
 
+		storedIDs.forEach(id => {
+			if (Object.keys(notifications).indexOf(id) < 0) {
+				delete stored[id];
+			}
+		});
+
 		Object.keys(notifications).forEach(id => {
 			let notification = notifications[id];
 			const storedIndex = storedIDs.indexOf(notification.id);
@@ -162,6 +168,7 @@ const getNotificationDetail = async (notifications) => {
 				...updatedNotifications
 			};
 
+			console.tron.log(stored);
 			await Storage.notifications.store(notificationsToStore);
 
 			return notificationsToStore;
