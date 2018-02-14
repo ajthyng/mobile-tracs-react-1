@@ -72,14 +72,9 @@ class NotificationView extends Component {
 			if (props.renderForums && props.forums) {
 				this.forums = props.forums.filter(post => post.other_keys.site_id === props.siteData.id);
 				this.forums.sort(this.sortByDate);
-			} else {
-				this.forums = [];
 			}
 		} else {
 			this.announcements = props.announcements;
-		}
-		if (this.announcements.length > 0) {
-			this.announcements.sort(this.sortByDate);
 		}
 	};
 
@@ -105,17 +100,30 @@ class NotificationView extends Component {
 		};
 
 		this.forumSection = {
-			data: props.forumSetting ? this.forums || [] : [],
+			data: props.forumSetting ? this.forums : [],
 			renderItem: this.renderForum,
 			title: "Forums",
 			type: types.FORUM,
 			isOn: props.forumSetting,
 			onToggle: this.toggleSetting(types.FORUM, id)
 		};
+		if (this.announcementSection.data.length === 0) {
+			this.announcementSection.data = [{id: null}];
+		}
+		if (this.forumSection.data.length === 0) {
+			this.forumSection.data = [{id: null}];
+		}
 	};
 
 	renderForum = ({item}) => {
 		if (!item) return null;
+		if (item.id === null) {
+			return (
+				<Notification type={types.FORUM}
+											emptyNotification={true}
+				/>
+			)
+		}
 		let author = item.tracs_data.authoredBy;
 		author = author.split(' ');
 		author.splice(author.length - 1, 1);
@@ -126,6 +134,7 @@ class NotificationView extends Component {
 			author: author.join(' '),
 			read: item.read,
 			onPress: () => {
+				if (item.id === null) return;
 				this.props.batchUpdate(item.id, {read: true});
 				let toolPageId = "";
 				if (this.props.siteData.tools.hasOwnProperty('sakai.forums')) {
@@ -144,6 +153,14 @@ class NotificationView extends Component {
 	};
 
 	renderAnnouncement = ({item}) => {
+		if (!item) return null;
+		if (item.id === null) {
+			return (
+				<Notification type={types.ANNOUNCEMENT}
+											emptyNotification={true}
+				/>
+			)
+		}
 		let siteId = item.other_keys.site_id;
 		let name = UNPUBLISHED_SITE_NAME;
 		if (siteId && this.props.sites.hasOwnProperty(siteId)) {
@@ -158,6 +175,7 @@ class NotificationView extends Component {
 			siteName: name,
 			read: item.read,
 			onPress: () => {
+				if (item.id === null) return;
 				if (!siteIsUnpublished) {
 					this.props.batchUpdate([item.id], {read: true});
 				}
@@ -176,6 +194,7 @@ class NotificationView extends Component {
 		};
 		return <Notification type={types.ANNOUNCEMENT}
 												 notification={item}
+												 emptyNotification={item.id === null}
 												 data={data}/>
 	};
 
@@ -186,8 +205,10 @@ class NotificationView extends Component {
 			isRefreshing: true,
 			firstLoad: true
 		};
-		this.announcements = [];
+
 		this.forums = [];
+		this.announcements = [];
+
 		switch (this.props.route) {
 			case 'announcements':
 				Analytics().logAnnouncementsOpen();
@@ -378,10 +399,12 @@ class NotificationView extends Component {
 			seen: true
 		};
 
-		const ids = [
+		let ids = [
 			...this.announcementSection.data.filter(item => !item.seen).map(item => item.id),
 			...this.forumSection.data.filter(item => !item.seen).map(item => item.id)
 		];
+
+		ids = ids.filter(id => id !== null);
 
 		let token = this.props.dispatchToken || await FCM.getFCMToken().then(token => token);
 

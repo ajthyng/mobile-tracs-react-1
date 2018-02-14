@@ -8,7 +8,7 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import React, {Component} from 'react';
-import {Animated, Easing} from 'react-native';
+import {Animated, Easing, StyleSheet, Text, View} from 'react-native';
 import {connect} from 'react-redux';
 import {types} from '../../constants/notifications';
 import Discussion from './Discussion';
@@ -16,6 +16,20 @@ import Announcement from './Announcement';
 import Swipeout from 'react-native-swipeout';
 import SwipeDelete from './SwipeDelete';
 import {batchUpdateNotification, updateNotification} from '../../actions/notifications';
+
+const styles = StyleSheet.create({
+	emptyNotification: {
+		height: 40,
+		width: '100%',
+		alignItems: 'center',
+		justifyContent: 'center',
+		backgroundColor: 'white'
+	},
+	emptyText: {
+		fontSize: 16,
+		color: '#363534'
+	}
+});
 
 class Notification extends Component {
 
@@ -57,6 +71,14 @@ class Notification extends Component {
 
 		//TODO: Activate animation when improved
 		//this.animateIn();
+
+		if (this.props.emptyNotification) {
+			return (
+				<View style={styles.emptyNotification}>
+					<Text style={styles.emptyText}>No new {this.props.type === types.ANNOUNCEMENT ? "announcements." : "forum posts."}</Text>
+				</View>
+			)
+		}
 
 		switch (this.props.type) {
 			case types.ANNOUNCEMENT:

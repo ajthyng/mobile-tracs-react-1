@@ -168,7 +168,6 @@ const getNotificationDetail = async (notifications) => {
 				...updatedNotifications
 			};
 
-			console.tron.log(stored);
 			await Storage.notifications.store(notificationsToStore);
 
 			return notificationsToStore;
