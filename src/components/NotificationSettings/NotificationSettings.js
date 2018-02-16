@@ -57,26 +57,38 @@ class NotificationSettings extends Component {
 
 		let siteAnnoucementsDisabled = false;
 		let siteForumsDisabled = false;
+		let globalAnnouncementsAreOff = false;
+		let globalForumsAreOff = false;
 		if (blacklist) {
 			blacklist.forEach((entry) => {
-				if (setting.id === ANNOUNCEMENT) {
-					let globalAnnouncementsAreOff = entry.keys.object_type === ANNOUNCEMENT && Object.keys(entry.other_keys).length === 0;
-					if (globalAnnouncementsAreOff) {
-						setting.enabled = false;
+				let otherKeysLength = Object.keys(entry.other_keys).length;
+				if (entry.keys.object_type === ANNOUNCEMENT && otherKeysLength === 0) {
+					globalAnnouncementsAreOff = true;
+				}
+				if (entry.keys.object_type === FORUM && otherKeysLength === 0) {
+					globalForumsAreOff = true
+				}
+				if (entry.other_keys.hasOwnProperty('site_id') && entry.other_keys.site_id === setting.id) {
+					if (entry.keys.object_type === ANNOUNCEMENT) {
+						siteAnnoucementsDisabled = true;
 					}
-				} else {
-					if (entry.other_keys.hasOwnProperty('site_id') && entry.other_keys.site_id === setting.id) { //we're on a setting for this site
-						if (entry.keys.object_type === ANNOUNCEMENT) {
-							siteAnnoucementsDisabled = true;
-						}
-						if (entry.keys.object_type === FORUM) {
-							siteForumsDisabled = true;
-						}
+					if (entry.keys.object_type === FORUM) {
+						siteForumsDisabled = true;
 					}
 				}
 			});
 		}
-		setting.enabled = !(siteAnnoucementsDisabled && siteForumsDisabled);
+		switch (setting.id) {
+			case ANNOUNCEMENT:
+				setting.enabled = !globalAnnouncementsAreOff;
+				break;
+			case FORUM:
+				setting.enabled = !globalForumsAreOff;
+				break;
+			default:
+				setting.enabled = !(siteAnnoucementsDisabled && siteForumsDisabled);
+				break;
+		}
 		return (
 			<SettingSwitchControl key={index}
 														title={setting.name}

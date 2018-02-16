@@ -9,7 +9,7 @@
  */
 
 import React, {Component} from 'react';
-import {Text, View, StyleSheet, BackHandler} from 'react-native';
+import {Text, View, StyleSheet, BackHandler, Image} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import Swiper from 'react-native-swiper';
 import {Analytics} from '../../utils/analytics';
@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
 	slides: {
 		flex: 1,
 		justifyContent: 'center',
-		alignItems: 'center'
+		alignItems: 'stretch',
 	},
 	slideText: {
 		color: '#fefefe',
@@ -54,6 +54,7 @@ export default class AboutView extends Component {
 		Actions.pop();
 		return true;
 	};
+
 	slideText = (text) => {
 		return (<Text style={styles.slideText}>{text}</Text>);
 	};
@@ -62,7 +63,7 @@ export default class AboutView extends Component {
 		return (
 			<Swiper style={styles.wrapper} showsButtons={true}>
 				<View style={[styles.slides, styles.slideOne]}>
-					{this.slideText("Slide One")}
+					<Image source={require('../../../img/screen1.png')} style={{flex: 1}}/>
 				</View>
 				<View style={[styles.slides, styles.slideTwo]}>
 					{this.slideText("Slide Two")}
