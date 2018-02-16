@@ -44,6 +44,13 @@ exports.credentials = {
 	}
 };
 
+const FirstLoadSchema = {
+	name: 'FirstLoad',
+	properties: {
+		isFirstLoad: {type: 'bool', default: true}
+	}
+};
+
 const SiteSchema = {
 	name: 'Site',
 	primaryKey: 'id',
@@ -159,9 +166,31 @@ const StorageRealm = Realm.open({
 		NotificationSchema,
 		KeysSchema,
 		OtherKeysSchema,
-		TracsDataSchema
+		TracsDataSchema,
+		FirstLoadSchema
 	]
 }).then(realm => realm);
+
+exports.firstLoad = {
+	async get() {
+		return Keychain.getInternetCredentials('firstload')
+			.then(credentials => {
+				if (credentials) {
+					console.tron.log(credentials);
+					return Promise.resolve(false);
+				} else {
+					return Keychain.setInternetCredentials('firstload', 'first', 'load').then(() => {
+						return Promise.resolve(true);
+					}).catch(() => {
+						return Promise.resolve(false);
+					});
+				}
+			}).catch(err => {
+				console.tron.log(err.message);
+				return Promise.resolve(false);
+			});
+	}
+};
 
 exports.sites = {
 	async get(netid) {

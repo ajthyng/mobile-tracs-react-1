@@ -51,8 +51,6 @@ class SiteList extends Component {
 		};
 		Analytics().setUserId();
 		Analytics().setScreen('Sites', 'SiteList');
-		StatusBar.setBackgroundColor('#501214');
-		StatusBar.setBarStyle('light-content');
 	}
 
 	componentWillMount() {
@@ -102,6 +100,8 @@ class SiteList extends Component {
 	}
 
 	render() {
+		StatusBar.setBackgroundColor('#501214');
+		StatusBar.setBarStyle('light-content');
 		let sites = {};
 		Keyboard.dismiss();
 		sites.projects = this.props.sites.filter((site) => {

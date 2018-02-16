@@ -7,6 +7,7 @@ import ActivityIndicator from '../Helper/ActivityIndicator';
 import {register} from '../../actions/registrar';
 import {setCurrentScene} from '../../actions/routes';
 import * as Storage from '../../utils/storage';
+import {firstLoad} from '../../utils/storage';
 import LoginButton from './LoginButton';
 import {clearError as clearLoginError} from '../../actions/login';
 import Orientation from 'react-native-orientation';
@@ -62,13 +63,10 @@ class LoginScreen extends Component {
 		super(props);
 		let netid = user ? user.netid : '';
 		let password = user ? user.password : '';
-		let netidTwo = user ? user.netidTwo : '';
-		let passwordTwo = user ? user.passwordTwo : '';
 		this.state = {
 			netid,
 			password,
-			netidTwo,
-			passwordTwo,
+			checkingCredentials: true,
 			view: null
 		};
 		this.underlineColor = '#000';
@@ -89,11 +87,26 @@ class LoginScreen extends Component {
 
 	componentWillMount() {
 		if (Actions.currentScene === 'login') {
+			firstLoad.get().then(firstLoad => {
+				if (firstLoad) {
+					Actions.about();
+				}
+			});
 			if (this.props.loggingIn === false && this.props.registering === false) {
+				this.setState({
+					checkingCredentials: true
+				});
 				Storage.credentials.get().then(creds => {
 					if (creds !== false) {
 						this.props.login(creds.username, creds.password);
 					}
+					this.setState({
+						checkingCredentials: false
+					});
+				}).catch(err => {
+					this.setState({
+						checkingCredentials: false
+					});
 				});
 			}
 		}
@@ -128,9 +141,7 @@ class LoginScreen extends Component {
 	}
 
 	render() {
-		if (this.props.loggingIn || this.props.registering) {
-			StatusBar.setBackgroundColor('rgb(233, 233, 239)');
-			StatusBar.setBarStyle('dark-content');
+		if (this.props.loggingIn || this.props.registering || this.state.checkingCredentials) {
 			return (
 				<ActivityIndicator/>
 			);
@@ -141,58 +152,59 @@ class LoginScreen extends Component {
 					Alert.alert(`Login Error`, `${this.props.loginError.message}`);
 				}
 			}
+
 			return (
-					<ScrollView ref={(ref) => this.scrollView = ref}>
-						<View style={portraitStyles.container}>
-							<View style={portraitStyles.loginPage}>
-								<View style={portraitStyles.loginGreeting}>
-									<Image
-										source={require('../../../img/tracs.png')}
-										style={portraitStyles.tracsImage}
-									/>
-									<Text style={{color: '#00557e', fontSize: 20}}>Welcome to TRACS</Text>
-									<Text style={{color: '#959595'}}>Sign in to your account</Text>
-								</View>
-								<View style={portraitStyles.loginForm}>
-									<TextInput
-										style={portraitStyles.inputText}
-										ref={ref => this.netid = ref}
-										placeholder="Net ID"
-										underlineColorAndroid={this.underlineColor}
-										selectionColor='#909090'
-										autoCapitalize='none'
-										returnKeyType='next'
-										value={this.state.netid}
-										onChangeText={(text) => this.setState({netid: text})}
-										onSubmitEditing={() => {
-											this.password.focus();
-										}}
-									/>
-									<TextInput
-										style={portraitStyles.inputText}
-										ref={ref => this.password = ref}
-										underlineColorAndroid={this.underlineColor}
-										placeholder="Password"
-										selectionColor='#909090'
-										autoCapitalize='none'
-										autoCorrect={false}
-										secureTextEntry={true}
-										returnKeyType='send'
-										value={this.state.password}
-										onChangeText={(text) => this.setState({password: text})}
-										onSubmitEditing={this.userLogin}
-									/>
-									<LoginButton
-										onPress={this.userLogin}/>
-								</View>
+				<ScrollView style={{backgroundColor: '#fff'}} ref={(ref) => this.scrollView = ref}>
+					<View style={portraitStyles.container}>
+						<View style={portraitStyles.loginPage}>
+							<View style={portraitStyles.loginGreeting}>
+								<Image
+									source={require('../../../img/tracs.png')}
+									style={portraitStyles.tracsImage}
+								/>
+								<Text style={{color: '#00557e', fontSize: 20}}>Welcome to TRACS</Text>
+								<Text style={{color: '#959595'}}>Sign in to your account</Text>
 							</View>
-							<View style={portraitStyles.uppsRequiredTextContainer}>
-								<Text style={portraitStyles.uppsRequiredText}>
-									{this.uppsRequiredText}
-								</Text>
+							<View style={portraitStyles.loginForm}>
+								<TextInput
+									style={portraitStyles.inputText}
+									ref={ref => this.netid = ref}
+									placeholder="Net ID"
+									underlineColorAndroid={this.underlineColor}
+									selectionColor='#909090'
+									autoCapitalize='none'
+									returnKeyType='next'
+									value={this.state.netid}
+									onChangeText={(text) => this.setState({netid: text})}
+									onSubmitEditing={() => {
+										this.password.focus();
+									}}
+								/>
+								<TextInput
+									style={portraitStyles.inputText}
+									ref={ref => this.password = ref}
+									underlineColorAndroid={this.underlineColor}
+									placeholder="Password"
+									selectionColor='#909090'
+									autoCapitalize='none'
+									autoCorrect={false}
+									secureTextEntry={true}
+									returnKeyType='send'
+									value={this.state.password}
+									onChangeText={(text) => this.setState({password: text})}
+									onSubmitEditing={this.userLogin}
+								/>
+								<LoginButton
+									onPress={this.userLogin}/>
 							</View>
 						</View>
-					</ScrollView>
+						<View style={portraitStyles.uppsRequiredTextContainer}>
+							<Text style={portraitStyles.uppsRequiredText}>
+								{this.uppsRequiredText}
+							</Text>
+						</View>
+					</View>
+				</ScrollView>
 			);
 		}
 	}

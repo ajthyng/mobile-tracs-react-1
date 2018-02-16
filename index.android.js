@@ -59,9 +59,6 @@ class App extends Component {
 		this.analytics = Analytics(store);
 		this.analytics.logAppStart();
 		FCM.getFCMToken().then(token => console.tron.log(`TOKEN: ${token}`));
-		//FCM.on('refreshToken', token => {
-		//	console.tron.log(`REFRESH TOKEN: ${token}`);
-		//});
 		const tabIconSize = 24;
 		this.TabIcons = {
 			announcements: (tabBarProps) => {
@@ -238,7 +235,7 @@ class App extends Component {
 				PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
 				{
 					'title': "TRACS Storage Permission",
-					'message': "TRACS needs access storage to download and save files."
+					'message': "TRACS needs permission to store downloads, notifications, and other data on your device; TRACS may not function properly without it."
 				}
 			);
 			if (granted === PermissionsAndroid.RESULTS.GRANTED) {

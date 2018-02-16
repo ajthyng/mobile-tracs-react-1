@@ -9,68 +9,96 @@
  */
 
 import React, {Component} from 'react';
-import {Text, View, StyleSheet, BackHandler, Image} from 'react-native';
+import {Animated, BackHandler, Image, StyleSheet, View} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import Swiper from 'react-native-swiper';
 import {Analytics} from '../../utils/analytics';
+import Orientation from 'react-native-orientation'
 
 const styles = StyleSheet.create({
 	wrapper: {},
-	slides: {
+	image: {
 		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'stretch',
+		resizeMode: 'cover',
+		width: null,
+		height: null
 	},
-	slideText: {
-		color: '#fefefe',
-		fontSize: 24
-	},
-	slideOne: {
-		backgroundColor: '#7f2228'
-	},
-	slideTwo: {
-		backgroundColor: '#6a5638'
-	},
-	slideThree: {
-		backgroundColor: '#005481'
-	}
 });
 
 export default class AboutView extends Component {
+	handleBack = () => {
+		Actions.pop();
+		return true;
+	};
+	onIndexChanged = (index) => {
+		this.setState({
+			index
+		});
+	};
+
 	constructor(props) {
 		super(props);
+		this.state = {
+			activeDotColor: '#fff',
+			activeDotSizeStyle: {
+				width: new Animated.Value(12),
+				height: new Animated.Value(12),
+				borderRadius: new Animated.Value(6)
+			},
+			index: 0
+		};
+		this.dot = (
+			<Animated.View
+				style={{
+					backgroundColor: '#808080',
+					width: 8,
+					height: 8,
+					borderRadius: 4,
+					margin: 3
+				}}
+			/>
+		);
+		this.activeDot = (
+			<Animated.View
+				style={{
+					backgroundColor: this.state.activeDotColor,
+					...this.state.activeDotSizeStyle,
+					margin: 3
+				}}
+			/>
+		);
+
+		this.slides = [
+			<Image key='0' source={require('../../../img/screen1.png')} style={styles.image} resizeMethod='scale'/>,
+			<Image key='1' source={require('../../../img/screen2.png')} style={styles.image} resizeMethod='scale'/>,
+			<Image key='2' source={require('../../../img/screen3.png')} style={styles.image} resizeMethod='scale'/>,
+			<Image key='3' source={require('../../../img/screen4.png')} style={styles.image} resizeMethod='scale'/>,
+			<Image key='4' source={require('../../../img/screen5.png')} style={styles.image} resizeMethod='scale'/>
+		];
 		Analytics().setScreen('About', 'AboutView');
 	}
 
 	componentWillMount() {
 		BackHandler.addEventListener(BackHandler.DEVICE_BACK_EVENT, this.handleBack);
+		Orientation.lockToPortrait();
 	}
 
 	componentWillUnmount() {
 		BackHandler.removeEventListener(BackHandler.DEVICE_BACK_EVENT, this.handleBack);
+		Orientation.unlockAllOrientations();
 	}
-
-	handleBack = () => {
-		Actions.pop();
-		return true;
-	};
-
-	slideText = (text) => {
-		return (<Text style={styles.slideText}>{text}</Text>);
-	};
 
 	render() {
 		return (
-			<Swiper style={styles.wrapper} showsButtons={true}>
-				<View style={[styles.slides, styles.slideOne]}>
-					<Image source={require('../../../img/screen1.png')} style={{flex: 1}}/>
-				</View>
-				<View style={[styles.slides, styles.slideTwo]}>
-					{this.slideText("Slide Two")}
-				</View>
-				<View style={[styles.slides, styles.slideThree]}>
-					{this.slideText("Slide Three")}
-				</View>
+			<Swiper
+				style={styles.wrapper}
+				showsButtons={false}
+				loop={false}
+				onIndexChanged={this.onIndexChanged}
+				dot={this.dot}
+				activeDot={this.activeDot}
+			>
+				{this.slides}
 			</Swiper>
 		);
 	}
