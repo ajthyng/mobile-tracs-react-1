@@ -43,8 +43,11 @@ const registrationSuccess = (deviceToken, netid) => {
 };
 
 const registrationFailure = (error, dispatch, netid, password) => {
-	let errorMessage;
-	switch((error.response || {}).status) {
+	let errorMessage = '';
+	switch ((error.response || {}).status) {
+		case 400:
+			errorMessage = 'There was an error logging you in. Please contact support.';
+			break;
 		case 401:
 			dispatch(login(netid, password));
 			errorMessage = 'There was an error logging you in. Please try again.';
@@ -52,8 +55,6 @@ const registrationFailure = (error, dispatch, netid, password) => {
 		default:
 			if (error.message === "Network Error") {
 				errorMessage = "Network Error. Please check your internet connection and try again."
-			} else {
-				errorMessage = "There was a problem logging you in. Please try again.";
 			}
 	}
 	return {
@@ -98,23 +99,36 @@ const postRegistration = async (payload, dispatch) => {
 	const postOptions = {
 		method: 'post',
 		headers: {'Content-Type': 'application/json'},
-		body: JSON.stringify(registration)
+		data: registration
 	};
+
+	const deleteOptions = {
+		method: 'delete',
+		headers: {'Content-Type': 'application/json'}
+	};
+
+	let postRegistrationRequest = axios(registrationUrl, postOptions).then(res => {
+		dispatch(registrationSuccess(deviceToken, netid));
+		dispatch(login(netid, password));
+	}).catch(err => {
+		dispatch(registrationFailure(err, dispatch, netid, password));
+	});
+
 	return fetch(getRegistrationUrl, getOptions).then(res => {
 		if (res.ok) {
 			return res.json();
 		}
 	}).then(res => {
-		if (res && res.hasOwnProperty("token") && res.token === deviceToken) {
-			dispatch(registrationSuccess(res.token, netid));
-			dispatch(login(netid, password));
-		} else {
-			return axios(registrationUrl, postOptions).then(res => {
-				dispatch(registrationSuccess(deviceToken, netid));
+		if (res && res.hasOwnProperty("token") && res.token === deviceToken) { //We found a token
+			if (res.token === deviceToken) { //The server token matches, already registered
+				dispatch(registrationSuccess(res.token, netid));
 				dispatch(login(netid, password));
-			}).catch(err => {
-				dispatch(registrationFailure(err, dispatch, netid, password));
-			});
+			} else { //The stored token is stale, delete and reregister
+				axios(registrationUrl, deleteOptions).catch(err => console.tron.log(err));
+				return postRegistrationRequest
+			}
+		} else { //No registration was there, we should register
+			return postRegistrationRequest
 		}
 	}).catch(err => {
 		dispatch(registrationFailure(err, dispatch, netid, password));
@@ -155,6 +169,7 @@ export const register = (netid = '', password) => {
 			dispatch(registrationFailure("A Net ID is required to register device"));
 			return;
 		}
+		netid = netid.toLowerCase().trim();
 		const dispatchUrl = global.urls.dispatchUrl;
 		let auth64 = `${netid}:${password}`;
 		let headers = {
@@ -166,7 +181,6 @@ export const register = (netid = '', password) => {
 		}).then(async res => {
 			if (res.data) {
 				let deviceToken = await FCM.getFCMToken();
-
 				const payload = {
 					netid,
 					password,

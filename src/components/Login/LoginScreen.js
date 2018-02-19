@@ -5,13 +5,13 @@ import {Alert, Dimensions, Image, ScrollView, StatusBar, StyleSheet, Text, TextI
 import user from '../../../config/config.json';
 import ActivityIndicator from '../Helper/ActivityIndicator';
 import {register} from '../../actions/registrar';
-import {setCurrentScene} from '../../actions/routes';
 import * as Storage from '../../utils/storage';
 import {firstLoad} from '../../utils/storage';
 import LoginButton from './LoginButton';
 import {clearError as clearLoginError} from '../../actions/login';
 import Orientation from 'react-native-orientation';
 import {Analytics} from '../../utils/analytics';
+import {main} from '../../constants/scenes';
 
 const portraitStyles = StyleSheet.create({
 	container: {
@@ -124,7 +124,7 @@ class LoginScreen extends Component {
 
 	componentWillUpdate(nextProps, nextState) {
 		if (nextProps.isAuthenticated && Actions.currentScene === 'login') {
-			Actions.mainApp();
+			Actions.reset(main);
 		}
 	}
 
@@ -226,7 +226,6 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		login: (netid, password) => dispatch(register(netid, password)),
-		setScene: (scene) => dispatch(setCurrentScene(scene)),
 		clearLoginError: () => dispatch(clearLoginError())
 	}
 };

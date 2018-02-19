@@ -10,9 +10,13 @@
 import Reactotron from 'reactotron-react-native';
 import { reactotronRedux } from 'reactotron-redux'
 
-
-Reactotron
-  .configure({host: '147.26.119.60'})
-	.use(reactotronRedux())
-	.useReactNative()
-	.connect();
+export default reacotron = () => {
+	Reactotron.clear();
+	Reactotron
+		.configure({host: '147.26.119.60'})
+		.use(reactotronRedux())
+		.useReactNative();
+	if (__DEV__) {
+		Reactotron.connect();
+	}
+}

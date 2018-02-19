@@ -82,8 +82,8 @@ export const clearError = () => {
 
 export function login(netid = '', password) {
 	return async (dispatch) => {
+		dispatch(requestLogin());
 		if (netid.length === 0) {
-			dispatch(requestLogin());
 			credentials.get().then(credentials => {
 				if (!credentials) {
 					dispatch(loginFailure("Net ID must be filled out"));
@@ -98,9 +98,6 @@ export function login(netid = '', password) {
 			});
 			return;
 		}
-
-		dispatch(requestLogin());
-
 		const loginUrl = `${global.urls.baseUrl}${global.urls.login(netid, encodeURI(password))}`;
 		const sessionUrl = `${global.urls.baseUrl}${global.urls.session}`;
 

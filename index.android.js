@@ -7,7 +7,7 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {AppRegistry, PermissionsAndroid, StatusBar} from 'react-native';
+import {AppRegistry, AppState, PermissionsAndroid} from 'react-native';
 import React, {Component} from 'react';
 import {connect, Provider} from 'react-redux';
 import FCM, {FCMEvent} from 'react-native-fcm';
@@ -25,12 +25,17 @@ import TabIcon from './src/components/TabBar/TabIcon';
 import SimpleWebView from './src/components/SimpleWebView/SimpleWebView';
 import {getNotifications} from './src/actions/notifications';
 import {setCurrentScene} from './src/actions/routes';
+import {register} from './src/actions/registrar';
+import {credentials} from './src/utils/storage';
 import TRACSWebView from './src/components/TRACSWebView/TRACSWebNative';
 import {tabBar} from './src/constants/colors';
 import AboutView from './src/components/About/AboutView';
-import './src/utils/reactotron';
+import axios from 'axios';
+import reactotron from './src/utils/reactotron';
 import Reactotron from 'reactotron-react-native';
 import {Analytics} from './src/utils/analytics';
+
+reactotron();
 
 const store = configureStore();
 const RouterWithRedux = connect()(Router);
@@ -53,6 +58,34 @@ class App extends Component {
 			icon: "ic_notification"
 		});
 	};
+	handleAppStateChange = (nextAppState) => {
+		if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
+			credentials.get().then(creds => {
+				if (creds.username && creds.password) {
+					let options = {
+						method: 'get',
+						headers: {'Content-Type': 'application/json'}
+					};
+					let sessionURL = `${global.urls.baseUrl}${global.urls.session}`;
+					axios(sessionURL, options).then(res => {
+						if (res.data.hasOwnProperty('userEid') && res.data.userEid !== creds.username) {
+							let loginUrl = `${global.urls.baseUrl}${global.urls.login(creds.username, creds.password)}`;
+							let loginOptions = {
+								method: 'post',
+								headers: {'Content-Type': 'application/json'}
+							};
+							axios(loginUrl, loginOptions).then(res => {
+
+							}).catch(err => {});
+						}
+					}).catch(err => {});
+				}
+			});
+		}
+		this.setState({
+			appState: nextAppState
+		});
+	};
 
 	constructor(props) {
 		super(props);
@@ -72,6 +105,10 @@ class App extends Component {
 			}
 		};
 
+		this.state = {
+			appState: AppState.currentState
+		};
+
 		this.requestStoragePermission = this.requestStoragePermission.bind(this);
 		this.requestStoragePermission();
 
@@ -82,6 +119,9 @@ class App extends Component {
 							 title="TRACS Mobile Login"
 							 initial={true}
 							 hideNavBar={true}
+							 onEnter={() => {
+								 store.dispatch(setCurrentScene(scenes.login));
+							 }}
 							 type={ActionConst.RESET}/>
 				<Tabs key={scenes.main}
 							type={ActionConst.RESET}
@@ -129,6 +169,9 @@ class App extends Component {
 								 navigationBarStyle={{backgroundColor: "#501214"}}
 								 navBarButtonColor="#fff"
 								 titleStyle={{color: "#fff"}}
+								 onEnter={() => {
+									 store.dispatch(setCurrentScene(scenes.sitesTab))
+								 }}
 								 tabBarLabel="All Sites">
 						<Scene
 							key={scenes.sites}
@@ -223,10 +266,12 @@ class App extends Component {
 				store.dispatch(getNotifications());
 			}
 		});
+		AppState.addEventListener('change', this.handleAppStateChange);
 	}
 
 	componentWillUnmount() {
 		this.notificationListener.remove();
+		AppState.removeEventListener('change', this.handleAppStateChange);
 	}
 
 	async requestStoragePermission() {

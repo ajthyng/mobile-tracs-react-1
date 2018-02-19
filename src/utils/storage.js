@@ -272,17 +272,18 @@ exports.sites = {
 	},
 	async clean(siteIDs) {
 		let siteRealm = await StorageRealm;
-		try {
-			siteRealm.write(() => {
-				let sites = siteRealm.objects('Site');
-				sites = sites.filter((site) => {
-					return siteIDs.indexOf(site.id) === -1;
-				});
-				sites.forEach(site => siteRealm.delete(site));
-			});
-		} catch (err) {
-			console.tron.log(err.message);
-		}
+		//try {
+		//	siteRealm.open(() => {
+		//		let sites = siteRealm.objects('Site');
+		//		sites.forEach(site => {
+		//			if (siteIDs.indexOf(site.id) === -1) {
+		//				siteRealm.delete(site);
+		//			}
+		//		});
+		//	});
+		//} catch (err) {
+		//	console.tron.log(err.message);
+		//}
 	}
 };
 
@@ -305,7 +306,7 @@ exports.notifications = {
 			let storedNotifications = notificationRealm.objects('Notification');
 			storedNotifications.forEach(notification => {
 				if (Object.keys(notifications).indexOf(notification.id) < 0) {
-					notificationRealm.write(() => {
+					notificationRealm.open(() => {
 						notificationRealm.delete(notification);
 					});
 				}
