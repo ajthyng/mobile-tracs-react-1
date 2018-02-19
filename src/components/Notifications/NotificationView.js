@@ -76,6 +76,9 @@ class NotificationView extends Component {
 		} else {
 			this.announcements = props.announcements;
 		}
+		if ((this.announcements || []).length > 0) {
+			this.announcements.sort(this.sortByDate);
+		}
 	};
 
 	sortByDate = (a, b) => {
@@ -100,7 +103,7 @@ class NotificationView extends Component {
 		};
 
 		this.forumSection = {
-			data: props.forumSetting ? this.forums : [],
+			data: props.forumSetting ? this.forums || [] : [],
 			renderItem: this.renderForum,
 			title: "Forums",
 			type: types.FORUM,
