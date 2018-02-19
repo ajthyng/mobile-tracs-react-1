@@ -42,7 +42,20 @@ const registrationSuccess = (deviceToken, netid) => {
 	}
 };
 
-const registrationFailure = (errorMessage) => {
+const registrationFailure = (error, dispatch, netid, password) => {
+	let errorMessage;
+	switch((error.response || {}).status) {
+		case 401:
+			dispatch(login(netid, password));
+			errorMessage = 'There was an error logging you in. Please try again.';
+			break;
+		default:
+			if (error.message === "Network Error") {
+				errorMessage = "Network Error. Please check your internet connection and try again."
+			} else {
+				errorMessage = "There was a problem logging you in. Please try again.";
+			}
+	}
 	return {
 		type: REGISTRATION_FAILURE,
 		isRegistering: false,
@@ -93,21 +106,18 @@ const postRegistration = async (payload, dispatch) => {
 		}
 	}).then(res => {
 		if (res && res.hasOwnProperty("token") && res.token === deviceToken) {
-			console.log("Stored Token: ", deviceToken);
-			console.log("Server Token: ", res.token);
-			dispatch(login(netid, password));
 			dispatch(registrationSuccess(res.token, netid));
+			dispatch(login(netid, password));
 		} else {
-			return fetch(registrationUrl, postOptions).then(res => {
+			return axios(registrationUrl, postOptions).then(res => {
+				dispatch(registrationSuccess(deviceToken, netid));
 				dispatch(login(netid, password));
-				if (res.ok) {
-					dispatch(registrationSuccess(deviceToken, netid));
-				} else {
-					const errorMessage = `${res.statusCode} error: Could not register device for push notifications`;
-					dispatch(registrationFailure(errorMessage));
-				}
+			}).catch(err => {
+				dispatch(registrationFailure(err, dispatch, netid, password));
 			});
 		}
+	}).catch(err => {
+		dispatch(registrationFailure(err, dispatch, netid, password));
 	});
 };
 
@@ -166,9 +176,7 @@ export const register = (netid = '', password) => {
 				postRegistration(payload, dispatch);
 			}
 		}).catch(err => {
-			dispatch(login(netid, password));
-			dispatch(registrationFailure("Could not register device to receive push notifications"));
-			console.log(err.message);
+			dispatch(registrationFailure(err, dispatch, netid, password));
 		});
 	}
 };

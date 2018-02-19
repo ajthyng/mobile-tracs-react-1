@@ -129,7 +129,6 @@ export default class Settings {
 				}
 			}
 		});
-		console.tron.log(this.blacklist);
 	}
 
 	_disableTypeAndSite(type, id) {

@@ -60,7 +60,7 @@ it('should fail registration with empty netid', async () => {
 	expect(store.getActions()).toEqual(expectedActions);
 });
 
-it('should be marked as guest with invalid ldap credentials', async () => {
+it.only('should be marked as guest with invalid ldap credentials', async () => {
 	const store = mockStore({
 		register: registrarInitialState,
 		login: loginInitialState

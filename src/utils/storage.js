@@ -176,7 +176,6 @@ exports.firstLoad = {
 		return Keychain.getInternetCredentials('firstload')
 			.then(credentials => {
 				if (credentials) {
-					console.tron.log(credentials);
 					return Promise.resolve(false);
 				} else {
 					return Keychain.setInternetCredentials('firstload', 'first', 'load').then(() => {

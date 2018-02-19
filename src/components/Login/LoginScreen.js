@@ -146,9 +146,10 @@ class LoginScreen extends Component {
 				<ActivityIndicator/>
 			);
 		} else {
-			if (this.props.loginError) {
-				if ((this.props.loginError.message || "").length > 0) {
-					console.log("Error message is ", this.props.loginError.message);
+			if (this.props.registerError || this.props.loginError) {
+				if ((this.props.registerError || "").length > 0) {
+					Alert.alert(`Login Error`, `${this.props.registerError}`);
+				} else if ((this.props.loginError.message || "").length > 0) {
 					Alert.alert(`Login Error`, `${this.props.loginError.message}`);
 				}
 			}
