@@ -185,7 +185,6 @@ exports.firstLoad = {
 					});
 				}
 			}).catch(err => {
-				console.tron.log(err.message);
 				return Promise.resolve(false);
 			});
 	}
@@ -272,18 +271,18 @@ exports.sites = {
 	},
 	async clean(siteIDs) {
 		let siteRealm = await StorageRealm;
-		//try {
-		//	siteRealm.open(() => {
-		//		let sites = siteRealm.objects('Site');
-		//		sites.forEach(site => {
-		//			if (siteIDs.indexOf(site.id) === -1) {
-		//				siteRealm.delete(site);
-		//			}
-		//		});
-		//	});
-		//} catch (err) {
-		//	console.tron.log(err.message);
-		//}
+		try {
+			siteRealm.write(() => {
+				let sites = siteRealm.objects('Site');
+				sites.forEach(site => {
+					if (siteIDs.indexOf(site.id) === -1) {
+						siteRealm.delete(site);
+					}
+				});
+			});
+		} catch (err) {
+			console.tron.log(err.message);
+		}
 	}
 };
 
@@ -306,7 +305,7 @@ exports.notifications = {
 			let storedNotifications = notificationRealm.objects('Notification');
 			storedNotifications.forEach(notification => {
 				if (Object.keys(notifications).indexOf(notification.id) < 0) {
-					notificationRealm.open(() => {
+					notificationRealm.write(() => {
 						notificationRealm.delete(notification);
 					});
 				}

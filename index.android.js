@@ -31,11 +31,9 @@ import TRACSWebView from './src/components/TRACSWebView/TRACSWebNative';
 import {tabBar} from './src/constants/colors';
 import AboutView from './src/components/About/AboutView';
 import axios from 'axios';
-import reactotron from './src/utils/reactotron';
+import './src/utils/reactotron';
 import Reactotron from 'reactotron-react-native';
 import {Analytics} from './src/utils/analytics';
-
-reactotron();
 
 const store = configureStore();
 const RouterWithRedux = connect()(Router);

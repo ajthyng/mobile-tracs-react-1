@@ -7,16 +7,16 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import Reactotron from 'reactotron-react-native';
-import { reactotronRedux } from 'reactotron-redux'
+import Reactotron, {asyncStorage, networking, openInEditor, overlay, trackGlobalErrors} from 'reactotron-react-native';
 
-export default reacotron = () => {
-	Reactotron.clear();
-	Reactotron
-		.configure({host: '147.26.119.60'})
-		.use(reactotronRedux())
-		.useReactNative();
-	if (__DEV__) {
-		Reactotron.connect();
-	}
-}
+import {reactotronRedux} from 'reactotron-redux';
+
+Reactotron
+	.configure({host: '147.26.119.60'})
+	.use(trackGlobalErrors())
+	.use(reactotronRedux())
+	.use(openInEditor())
+	.use(overlay())
+	.use(networking())
+	.useReactNative()
+	.connect();

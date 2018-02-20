@@ -4,7 +4,7 @@ import {Actions} from 'react-native-router-flux';
 import {Alert, Dimensions, Image, ScrollView, StatusBar, StyleSheet, Text, TextInput, View} from 'react-native';
 import user from '../../../config/config.json';
 import ActivityIndicator from '../Helper/ActivityIndicator';
-import {register} from '../../actions/registrar';
+import {clearRegisterError, register} from '../../actions/registrar';
 import * as Storage from '../../utils/storage';
 import {firstLoad} from '../../utils/storage';
 import LoginButton from './LoginButton';
@@ -129,9 +129,14 @@ class LoginScreen extends Component {
 	}
 
 	componentDidUpdate() {
-		if (this.props.loginError) {
+		if ((this.props.loginError || {}).message) {
 			if ((this.props.loginError.message || "").length > 0) {
 				this.props.clearLoginError();
+			}
+		}
+		if ((this.props.registerError || {}).message) {
+			if ((this.props.registerError.message || "").length > 0) {
+				this.props.clearRegisterError();
 			}
 		}
 	}
@@ -175,6 +180,7 @@ class LoginScreen extends Component {
 									selectionColor='#909090'
 									autoCapitalize='none'
 									returnKeyType='next'
+									keyboardType={'ascii-capable'}
 									value={this.state.netid}
 									onChangeText={(text) => this.setState({netid: text})}
 									onSubmitEditing={() => {
@@ -226,7 +232,8 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		login: (netid, password) => dispatch(register(netid, password)),
-		clearLoginError: () => dispatch(clearLoginError())
+		clearLoginError: () => dispatch(clearLoginError()),
+		clearRegisterError: () => dispatch(clearRegisterError())
 	}
 };
 

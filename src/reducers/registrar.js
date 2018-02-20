@@ -18,7 +18,8 @@ const {
 	REQUEST_UNREGISTER,
 	UNREGISTER_SUCCESS,
 	UNREGISTER_FAILURE,
-	IS_GUEST_ACCOUNT
+	IS_GUEST_ACCOUNT,
+	CLEAR_REGISTER_ERROR
 } = registrarActions;
 
 export const initialState = {
@@ -92,6 +93,13 @@ function setGuestAccount(state, action) {
 	}
 }
 
+function clearRegisterError(state, action) {
+	return {
+		...state,
+		errorMessage: ''
+	}
+}
+
 export function registerReducer(state = initialState, action) {
 	switch (action.type) {
 		case REQUEST_REGISTRATION: return requestRegistration(state, action);
@@ -101,6 +109,7 @@ export function registerReducer(state = initialState, action) {
 		case UNREGISTER_SUCCESS: return unregisterSuccess(state, action);
 		case UNREGISTER_FAILURE: return unregisterFailure(state, action);
 		case IS_GUEST_ACCOUNT: return setGuestAccount(state, action);
+		case CLEAR_REGISTER_ERROR: return clearRegisterError(state, action);
 		default: return state;
 	}
 }

@@ -21,7 +21,8 @@ const {
 	REQUEST_UNREGISTER,
 	UNREGISTER_SUCCESS,
 	UNREGISTER_FAILURE,
-	IS_GUEST_ACCOUNT
+	IS_GUEST_ACCOUNT,
+	CLEAR_REGISTER_ERROR
 } = registrarActions;
 
 const requestRegistration = () => {
@@ -62,6 +63,12 @@ const registrationFailure = (error, dispatch, netid, password) => {
 		isRegistering: false,
 		isRegistered: false,
 		errorMessage
+	}
+};
+
+export const clearRegisterError = () => {
+	return {
+		type: CLEAR_REGISTER_ERROR
 	}
 };
 
