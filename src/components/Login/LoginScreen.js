@@ -129,7 +129,6 @@ class LoginScreen extends Component {
 	}
 
 	componentDidUpdate() {
-		console.log(this.props.loginError);
 		if (!!(this.props.loginError || {}).message || !!(this.props.registerError || {}).message) {
 			this.props.clearLoginError();
 			this.props.clearRegisterError();
@@ -155,7 +154,8 @@ class LoginScreen extends Component {
 			}
 
 			return (
-				<ScrollView style={{backgroundColor: '#fff'}} ref={(ref) => this.scrollView = ref}>
+				<ScrollView style={{backgroundColor: '#fff'}} keyboardShouldPersistTaps={'handled'}
+										ref={(ref) => this.scrollView = ref}>
 					<View style={portraitStyles.container}>
 						<View style={portraitStyles.loginPage}>
 							<View style={portraitStyles.loginGreeting}>
@@ -174,13 +174,12 @@ class LoginScreen extends Component {
 									underlineColorAndroid={this.underlineColor}
 									selectionColor='#909090'
 									autoCapitalize='none'
+									autoCorrect={false}
 									returnKeyType='next'
-									keyboardType={'ascii-capable'}
+									keyboardType={'visible-password'}
 									value={this.state.netid}
 									onChangeText={(text) => this.setState({netid: text})}
-									onSubmitEditing={() => {
-										this.password.focus();
-									}}
+									onSubmitEditing={() => {this.password.focus()}}
 								/>
 								<TextInput
 									style={portraitStyles.inputText}
