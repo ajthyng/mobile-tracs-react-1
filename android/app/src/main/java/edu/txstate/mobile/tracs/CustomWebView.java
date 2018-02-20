@@ -91,7 +91,7 @@ public class CustomWebView extends WebView {
         }
     }
 
-    static class CustomWebViewClient extends WebViewClient {
+    class CustomWebViewClient extends WebViewClient {
         private WeakReference context;
         public CustomWebViewClient(Context context) {
             super();
@@ -101,6 +101,33 @@ public class CustomWebView extends WebView {
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
             ((CustomWebView) view).callInjectedJavaScript();
+        }
+
+        @Override
+        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+            super.onReceivedError(view, errorCode, description, failingUrl);
+            String html = "<!DOCTYPE html>\n" +
+                    "<html lang=\"en\">\n" +
+                    "<head>\n" +
+                    "    <meta charset=\"UTF-8\">\n" +
+                    "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n" +
+                    "    <title>No Internet Connection</title>\n" +
+                    "    <style>\n" +
+                    "        body {\n" +
+                    "            text-align: center;\n" +
+                    "        }\n" +
+                    "        h1 {\n" +
+                    "            vertical-align: top;\n" +
+                    "            horiz-align: center;\n" +
+                    "        }\n" +
+                    "    </style>\n" +
+                    "</head>\n" +
+                    "<body>\n" +
+                    "<h2>We were unable to access your TRACS Site; no internet connection.</h2>\n" +
+                    "<h2>Make sure Wi-Fi or cellular data is turned on, then try again.</h2>" +
+                    "</body>\n" +
+                    "</html>";
+            view.loadData(html, "text/html", null);
         }
 
         @Override
