@@ -129,15 +129,10 @@ class LoginScreen extends Component {
 	}
 
 	componentDidUpdate() {
-		if ((this.props.loginError || {}).message) {
-			if ((this.props.loginError.message || "").length > 0) {
-				this.props.clearLoginError();
-			}
-		}
-		if ((this.props.registerError || {}).message) {
-			if ((this.props.registerError.message || "").length > 0) {
-				this.props.clearRegisterError();
-			}
+		console.log(this.props.loginError);
+		if (!!(this.props.loginError || {}).message || !!(this.props.registerError || {}).message) {
+			this.props.clearLoginError();
+			this.props.clearRegisterError();
 		}
 	}
 
