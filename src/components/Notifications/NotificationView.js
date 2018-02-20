@@ -41,17 +41,17 @@ class NotificationView extends Component {
 			this.setState({
 				isRefreshing: true
 			});
-			let start = new Date();
 			let promises = [
-				this.props.getNotifications(),
-				getSettings ? this.props.getSettings() : null
+				this.props.getNotifications()
 			];
+			if (getSettings) {
+				promises.push(this.props.getSettings());
+			}
 
 			Promise.all(promises).then(result => {
 				this.setState({
 					isRefreshing: false
 				});
-				console.log(`Get Notifications: ${new Date() - start}`);
 			});
 		}
 	};

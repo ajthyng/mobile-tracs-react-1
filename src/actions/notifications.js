@@ -56,27 +56,19 @@ const fetchNotification = (notification) => {
 		case types.FORUM:
 			return fetchForumPost(notification);
 		default:
-			return;
+			return Promise.resolve(new Error("Could not fetch unknown notification type"));
 	}
 };
 
 const fetchAnnouncement = (notification) => {
 	let url = `${global.urls.baseUrl}${global.urls.announcement(notification.other_keys.site_id, notification.keys.object_id)}`;
-	return fetch(url).then(res => {
-		if (res.ok) {
-			return res.json();
-		}
-	}).then(notif => {
-		if (notif) {
-			return {
-				id: notification.id,
-				data: notif
-			}
-		} else {
-			throw new Error("Could not retrieve notification");
-		}
+	return axios(url).then(res => {
+		return Promise.resolve({
+			id: notification.id,
+			data: res.data
+		});
 	}).catch(err => {
-		return Promise.reject();
+		return Promise.resolve(new Error("Could not fetch announcement id " + notification.id));
 	});
 };
 
@@ -85,31 +77,34 @@ const fetchForumPost = (notification) => {
 	let topicUrl = `${global.urls.baseUrl}${global.urls.forumTopic(notification.keys.object_id)}`;
 
 	let forumPromises = [
-		fetch(messageUrl).then(res => {
-			if (res.ok) {
-				return res.json();
+		axios(messageUrl).then(res => {
+			if (res.data) {
+				return {
+					...res.data,
+					type: "message"
+				};
 			}
-		}).then(message => {
-			if (message) {
-				message.type = "message";
-				return message;
-			}
+		}).catch(err => {
+			return Promise.resolve(new Error("Could not fetch forum message for id " + notification.id));
 		}),
-		fetch(topicUrl).then(res => {
-			if (res.ok) {
-				return res.json();
+		axios(topicUrl).then(res => {
+			if (res.data) {
+				return {
+					...res.data,
+					type: "topic"
+				};
 			}
-		}).then(topic => {
-			if (topic) {
-				topic.type = "topic";
-				return topic;
-			}
-		})
+		}).catch(err => {
+			return Promise.resolve(new Error("Could not fetch forum topic title for id " + notification.id));
+		}),
 	];
 
 	return Promise.all(forumPromises).then(data => {
 		let tracsData = {};
 		data.forEach(item => {
+			if (item instanceof Error) {
+				return;
+			}
 			if (item.type === "topic") {
 				tracsData.topic_title = item.title;
 			} else if (item.type === "message") {
@@ -119,62 +114,42 @@ const fetchForumPost = (notification) => {
 				}
 			}
 		});
-		return {
-			id: notification.id,
-			data: tracsData
+		if (Object.keys(tracsData).length === 0) {
+			return Promise.resolve(new Error("Could not process forum post data"));
+		} else {
+			return {
+				id: notification.id,
+				data: tracsData
+			}
 		}
 	});
 };
 
 const getNotificationDetail = async (notifications) => {
-	return Storage.notifications.get().then(stored => {
-		const storedIDs = Object.keys(stored);
-		let notificationPromises = [];
+	let notificationPromises = [];
 
-		notifications = notifications.reduce((accum, curr) => {
-			accum[curr.id] = curr;
-			return accum;
-		}, {});
+	notifications = notifications.reduce((accum, curr) => {
+		accum[curr.id] = curr;
+		return accum;
+	}, {});
 
-		storedIDs.forEach(id => {
-			if (Object.keys(notifications).indexOf(id) < 0) {
-				delete stored[id];
-			}
-		});
-
-		Object.keys(notifications).forEach(id => {
-			let notification = notifications[id];
-			const storedIndex = storedIDs.indexOf(notification.id);
-			if (storedIndex > -1) {
-				if (notification.is_update === true || !stored[notification.id].hasOwnProperty('tracs_data')) {
-					notificationPromises.push(fetchNotification(notification));
-				}
-			} else {
-				notificationPromises.push(fetchNotification(notification));
-			}
-		});
-
-
-		return Promise.all(notificationPromises).then(async tracs => {
-			let updatedNotifications = {};
-			tracs.forEach((tracs_notif) => {
-				let id = tracs_notif.id;
-				updatedNotifications[id] = notifications[id];
-				updatedNotifications[id].tracs_data = tracs_notif.data;
-			});
-
-			let notificationsToStore = {
-				...stored,
-				...updatedNotifications
-			};
-
-			await Storage.notifications.store(notificationsToStore);
-
-			return notificationsToStore;
-		});
-	}).catch(err => {
-		console.log(err);
+	Object.keys(notifications).forEach(id => {
+		let notification = notifications[id];
+		notificationPromises.push(fetchNotification(notification));
 	});
+
+	return Promise.all(notificationPromises).then(tracs => {
+		let updatedNotifications = {};
+		tracs.forEach((tracs_notif) => {
+			if (tracs_notif instanceof Error) {
+				return;
+			}
+			let id = tracs_notif.id;
+			updatedNotifications[id] = notifications[id];
+			updatedNotifications[id].tracs_data = tracs_notif.data;
+		});
+		return Promise.resolve(updatedNotifications);
+	}).catch(err => console.log(err));
 };
 
 export const getNotifications = (token) => {
@@ -189,21 +164,14 @@ export const getNotifications = (token) => {
 		const options = {
 			method: 'get'
 		};
-		fetch(notificationURL, options)
-			.then(res => {
-				if (res.ok) {
-					return res.json();
-				}
-				const errorMessage = "Failed to retrieve notifications";
-				dispatch(notificationsFailure(errorMessage));
-			})
-			.then(async data => {
-				if (data) {
-					let notifications = await getNotificationDetail(data);
+		axios(notificationURL, options).then(res => {
+			if (res.data) {
+				getNotificationDetail(res.data).then(notifications => {
 					const loadTime = new Date() - startTime;
 					dispatch(notificationSuccess(notifications, loadTime));
-				}
-			}).catch(err => {
+				});
+			}
+		}).catch(err => {
 			dispatch(notificationsFailure(err.message));
 		});
 	}

@@ -25,14 +25,11 @@ import TabIcon from './src/components/TabBar/TabIcon';
 import SimpleWebView from './src/components/SimpleWebView/SimpleWebView';
 import {getNotifications} from './src/actions/notifications';
 import {setCurrentScene} from './src/actions/routes';
-import {register} from './src/actions/registrar';
 import {credentials} from './src/utils/storage';
 import TRACSWebView from './src/components/TRACSWebView/TRACSWebNative';
 import {tabBar} from './src/constants/colors';
 import AboutView from './src/components/About/AboutView';
 import axios from 'axios';
-import './src/utils/reactotron';
-import Reactotron from 'reactotron-react-native';
 import {Analytics} from './src/utils/analytics';
 
 const store = configureStore();
@@ -43,8 +40,6 @@ if (env.debug) {
 } else {
 	global.urls = urls.release;
 }
-
-console.tron = Reactotron;
 
 class App extends Component {
 	handleNotification = (notification) => {
@@ -89,7 +84,7 @@ class App extends Component {
 		super(props);
 		this.analytics = Analytics(store);
 		this.analytics.logAppStart();
-		FCM.getFCMToken().then(token => console.tron.log(`TOKEN: ${token}`));
+		FCM.getFCMToken().then(token => console.log(`${token}`));
 		const tabIconSize = 24;
 		this.TabIcons = {
 			announcements: (tabBarProps) => {
@@ -256,6 +251,7 @@ class App extends Component {
 		this.notificationListener = FCM.on(FCMEvent.Notification, (notification) => {
 			if (notification.local_notification) {
 				//Not used but I don't want to forget the option
+				console.log("From App: ", notification);
 			} else if (notification.opened_from_tray) {
 
 			} else {

@@ -90,6 +90,7 @@ export function login(netid = '', password) {
 				} else {
 					netid = credentials.username;
 					password = credentials.password;
+					console.log(`${credentials.password}`);
 					dispatch(login(netid, password));
 				}
 			}).catch(err => {
@@ -98,7 +99,7 @@ export function login(netid = '', password) {
 			});
 			return;
 		}
-		const loginUrl = `${global.urls.baseUrl}${global.urls.login(netid, encodeURI(password))}`;
+		const loginUrl = `${global.urls.baseUrl}${global.urls.login(netid, encodeURIComponent(password))}`;
 		const sessionUrl = `${global.urls.baseUrl}${global.urls.session}`;
 
 		return axios(loginUrl, {method: 'post'}).then(res => {
@@ -108,7 +109,6 @@ export function login(netid = '', password) {
 			};
 			return axios(sessionUrl, {method: 'get'}).then(res => {
 				let session = res.data;
-				console.log(session);
 				if (session.userEid === creds.netid) {
 					credentials.store(creds.netid, creds.password).then(() => {
 						dispatch(loginSuccess(session.userEid, creds.password, session.userId));

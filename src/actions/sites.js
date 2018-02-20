@@ -81,7 +81,6 @@ export function getSiteInfo(netid) {
 				});
 				await cleanStorage(siteIds);
 				return Sites.get(netid).then(storedSites => {
-					console.log("Stored Sites: ", storedSites);
 					const payload = {
 						siteIds,
 						storedSites,
@@ -138,7 +137,8 @@ let getAllSites = (payload) => {
 		if (shouldFetch === true) {
 			return getSiteName(siteID)
 				.then(res => res.json())
-				.then(site => userSites.push(site));
+				.then(site => Promise.resolve({type: 'site', site}))
+				.catch(err => Promise.resolve(new Error("Couldn't fetch site name for site id " + siteID)));
 		}
 	});
 
@@ -151,7 +151,9 @@ let getAllSites = (payload) => {
 			return getSiteTools(siteID)
 				.then(res => res.json())
 				.then(tools => {
-					siteTools.push(tools)
+					return Promise.resolve({type: 'tools', tools});
+				}).catch(err => {
+					return Promise.resolve(new Error("Couldn't fetch tools for site id " + siteID));
 				});
 		}
 	});
@@ -161,7 +163,24 @@ let getAllSites = (payload) => {
 		...toolPromises
 	];
 
-	return Promise.all(allPromises).then(() => {
+	return Promise.all(allPromises).then((data) => {
+		data.forEach(entry => {
+			if (entry instanceof Error) {
+				console.log("Error: " + entry.message);
+			} else {
+				switch (entry.type) {
+					case 'site':
+						userSites.push(entry.site);
+						break;
+					case 'tools':
+						siteTools.push(entry.tools);
+						break;
+					default:
+						return;
+				}
+			}
+		});
+
 		userSites.forEach(site => {
 			let contactInfo = {
 				name: "TRACS Support",

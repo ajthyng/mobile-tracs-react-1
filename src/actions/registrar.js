@@ -131,7 +131,7 @@ const postRegistration = async (payload, dispatch) => {
 				dispatch(registrationSuccess(res.token, netid));
 				dispatch(login(netid, password));
 			} else { //The stored token is stale, delete and reregister
-				axios(registrationUrl, deleteOptions).catch(err => console.tron.log(err));
+				axios(registrationUrl, deleteOptions).catch(err => console.log(err));
 				return postRegistrationRequest
 			}
 		} else { //No registration was there, we should register
