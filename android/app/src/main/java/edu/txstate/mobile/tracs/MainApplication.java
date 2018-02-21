@@ -15,8 +15,6 @@ import com.facebook.soloader.SoLoader;
 import edu.txstate.applaunch.AppLaunchPackage;
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.analytics.RNFirebaseAnalyticsPackage;
-import io.realm.react.RealmReactPackage;
-import org.pgsqlite.SQLitePluginPackage;
 import com.github.yamill.orientation.OrientationPackage;
 
 import java.util.Arrays;
@@ -45,8 +43,6 @@ public class MainApplication extends Application implements ReactApplication {
           new AppLaunchPackage(),
           new CookieManagerPackage(),
           new TRACSWebPackage(),
-          new RealmReactPackage(),
-          new SQLitePluginPackage(),
           new OrientationPackage()
       );
     }
