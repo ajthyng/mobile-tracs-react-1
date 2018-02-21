@@ -62,7 +62,7 @@ const registrationFailure = (error, dispatch, netid, password) => {
 		type: REGISTRATION_FAILURE,
 		isRegistering: false,
 		isRegistered: false,
-		errorMessage
+		errorMessage: new Error(errorMessage)
 	}
 };
 
@@ -173,7 +173,7 @@ export const register = (netid = '', password) => {
 	return (dispatch) => {
 		dispatch(requestRegistration());
 		if (netid.length === 0) {
-			dispatch(registrationFailure("A Net ID is required to register device"));
+			dispatch(registrationFailure(new Error("A NetID is required to login to this application"), dispatch, netid, password));
 			return;
 		}
 		netid = netid.toLowerCase().trim();
@@ -197,6 +197,7 @@ export const register = (netid = '', password) => {
 				postRegistration(payload, dispatch);
 			}
 		}).catch(err => {
+			console.log(err);
 			dispatch(registrationFailure(err, dispatch, netid, password));
 		});
 	}

@@ -103,7 +103,7 @@ class LoginScreen extends Component {
 					this.setState({
 						checkingCredentials: false
 					});
-				}).catch(err => {
+				}).catch(() => {
 					this.setState({
 						checkingCredentials: false
 					});
@@ -122,7 +122,7 @@ class LoginScreen extends Component {
 		this.setState({password: text});
 	}
 
-	componentWillUpdate(nextProps, nextState) {
+	componentWillUpdate(nextProps) {
 		if (nextProps.isAuthenticated && Actions.currentScene === 'login') {
 			Actions.reset(main);
 		}
@@ -130,8 +130,7 @@ class LoginScreen extends Component {
 
 	componentDidUpdate() {
 		if (!!(this.props.loginError || {}).message || !!(this.props.registerError || {}).message) {
-			this.props.clearLoginError();
-			this.props.clearRegisterError();
+			this.props.clearErrors();
 		}
 	}
 
@@ -145,17 +144,15 @@ class LoginScreen extends Component {
 				<ActivityIndicator/>
 			);
 		} else {
-			if (this.props.registerError || this.props.loginError) {
-				if ((this.props.registerError || "").length > 0) {
-					Alert.alert(`Login Error`, `${this.props.registerError}`);
-				} else if ((this.props.loginError.message || "").length > 0) {
-					Alert.alert(`Login Error`, `${this.props.loginError.message}`);
-				}
+			if (!!(this.props.loginError || {}).message || !!(this.props.registerError || {}).message) {
+				let errorMessage = this.props.registerError.message;
+				if ((errorMessage || "").length <= 0) errorMessage = this.props.loginError.message;
+				Alert.alert(`Login Error`, `${errorMessage}`);
 			}
 
 			return (
-				<ScrollView style={{backgroundColor: '#fff'}} keyboardShouldPersistTaps={'handled'}
-										ref={(ref) => this.scrollView = ref}>
+				<ScrollView style={{backgroundColor: '#fff'}}
+										keyboardShouldPersistTaps={'handled'}>
 					<View style={portraitStyles.container}>
 						<View style={portraitStyles.loginPage}>
 							<View style={portraitStyles.loginGreeting}>
@@ -211,7 +208,7 @@ class LoginScreen extends Component {
 	}
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
 	return {
 		isAuthenticated: state.login.isAuthenticated,
 		loggingIn: state.login.isLoggingIn,
@@ -226,8 +223,10 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		login: (netid, password) => dispatch(register(netid, password)),
-		clearLoginError: () => dispatch(clearLoginError()),
-		clearRegisterError: () => dispatch(clearRegisterError())
+		clearErrors: () => {
+			dispatch(clearLoginError());
+			dispatch(clearRegisterError());
+		}
 	}
 };
 
