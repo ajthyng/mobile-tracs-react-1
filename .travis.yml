@@ -36,7 +36,7 @@ android:
   - 'android-sdk-license-.+'
   - 'google-gdk-license-.+'
 script:
-- cd android && ./gradlew assembleRelease
+- cd android && ./gradlew assembleDebug
 deploy:
   provider: releases
   api_key:
