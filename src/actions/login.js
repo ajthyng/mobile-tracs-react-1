@@ -136,7 +136,6 @@ export function login(netid = '', password) {
 				} else if (session === undefined) {
 					dispatch(loginFailure(new Error("There was a problem logging you into TRACS. Please try again later.")));
 				} else {
-					console.log('SESSION: ', session);
 					if (session.userEid === creds.netid) {
 						credentials.store(creds.netid, creds.password).then(() => {
 							dispatch(loginSuccess(session.userEid, creds.password, session.userId));

@@ -211,7 +211,6 @@ let getAllSites = (payload) => {
 
 		Sites.store(fetchedSites, netid).then();
 		const end = new Date().getTime();
-		console.log(`Sites info fetched in ${end - promiseStart} ms.`);
 		return fetchedSites;
 	});
 };

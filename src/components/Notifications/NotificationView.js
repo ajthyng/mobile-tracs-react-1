@@ -306,9 +306,6 @@ class NotificationView extends Component {
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
-		console.log("Next Route: ", nextProps.route);
-		console.log("Dashboard Status: ", this.props.renderDashboard);
-
 		if (this.props.isGuestAccount === true) {
 			return false;
 		}
@@ -318,7 +315,6 @@ class NotificationView extends Component {
 		}
 
 		if (nextProps.route === announcements && !this.props.renderDashboard) {
-			console.log("I'm on the announcements screen");
 			return true;
 		}
 
@@ -458,8 +454,6 @@ const mapStateToProps = (state, ownProps) => {
 			forumSetting = false;
 		}
 	});
-
-	console.log('ROUTE: ', state.routes.scene);
 
 	return {
 		notificationsLoaded: state.notifications.isLoaded,

@@ -39,10 +39,8 @@ exports.credentials = {
 	store(netid, password) {
 		return LockStatus().then(secure => {
 			if (secure === true) {
-				console.log("Device Secure, saving credentials");
 				return Keychain.setGenericPassword(netid, password);
 			} else {
-				console.log("Device not secure, removing credentials");
 				return Keychain.resetGenericPassword();
 			}
 		});

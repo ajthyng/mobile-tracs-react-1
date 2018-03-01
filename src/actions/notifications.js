@@ -214,7 +214,7 @@ export const updateNotification = (newNotif, oldNotif) => {
 		delete updatedNotif.tracs_data;
 		const options = {
 			method: 'post',
-			body: JSON.stringify(updatedNotif),
+			data: updatedNotif,
 			headers: {
 				'Content-Type': 'application/json'
 			}
