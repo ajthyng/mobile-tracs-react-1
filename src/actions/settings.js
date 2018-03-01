@@ -90,7 +90,7 @@ export function saveSettings(settings, token, local) {
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify(settings)
+			data: settings
 		};
 		if (local) {
 			dispatch(saveSettingsSuccess(settings));

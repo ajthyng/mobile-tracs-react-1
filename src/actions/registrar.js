@@ -220,7 +220,7 @@ export const unregister = (token) => {
 		form.append('token', token);
 		const options = {
 			method: 'delete',
-			body: form,
+			data: form,
 			headers: {'Content-Type': 'multipart/form-data'}
 		};
 
