@@ -22,10 +22,10 @@ const styles = StyleSheet.create({
 		shadowColor: "#000",
 		shadowOffset: {
 			width: 0,
-			height: 3
+			height: 1
 		},
-		shadowRadius: 5,
-		shadowOpacity: 1.0
+		shadowRadius: 1,
+		shadowOpacity: 0.5
 	},
 	workspace: {
 		flexDirection: 'row',

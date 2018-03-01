@@ -10,10 +10,10 @@
 
 import {notificationActions} from '../constants/actions';
 import * as Storage from '../utils/storage';
-import FCM from 'react-native-fcm';
+import {token as TokenStore} from '../utils/storage';
 import {types} from '../constants/notifications';
-import axios from 'axios';
 import {Analytics} from '../utils/analytics';
+import {haxios as axios} from '../utils/networking'
 
 const {
 	REQUEST_NOTIFICATIONS,
@@ -101,10 +101,8 @@ const fetchForumPost = (notification) => {
 
 	return Promise.all(forumPromises).then(data => {
 		let tracsData = {};
+		data = data.filter(entry => (!entry instanceof Error));
 		data.forEach(item => {
-			if (item instanceof Error) {
-				return;
-			}
 			if (item.type === "topic") {
 				tracsData.topic_title = item.title;
 			} else if (item.type === "message") {
@@ -140,10 +138,10 @@ const getNotificationDetail = async (notifications) => {
 
 	return Promise.all(notificationPromises).then(tracs => {
 		let updatedNotifications = {};
+		tracs = tracs.filter((notif) => {
+			return !(notif instanceof Error);
+		});
 		tracs.forEach((tracs_notif) => {
-			if (tracs_notif instanceof Error) {
-				return;
-			}
 			let id = tracs_notif.id;
 			updatedNotifications[id] = notifications[id];
 			updatedNotifications[id].tracs_data = tracs_notif.data;
@@ -157,7 +155,7 @@ export const getNotifications = (token) => {
 		let startTime = new Date();
 		dispatch(requestNotifications());
 		if (!token) {
-			await FCM.getFCMToken().then(deviceToken => token = deviceToken);
+			await TokenStore.get().then(deviceToken => token = deviceToken);
 		}
 		const dispatchURL = global.urls.dispatchUrl;
 		const notificationURL = `${dispatchURL}${global.urls.getNotifications(token)}`;
@@ -209,7 +207,7 @@ export const updateNotification = (newNotif, oldNotif) => {
 	return async (dispatch) => {
 		dispatch(requestUpdateNotification());
 
-		let token = await FCM.getFCMToken().then(deviceToken => deviceToken);
+		let token = await TokenStore.get().then(deviceToken => deviceToken);
 		const dispatchURL = global.urls.dispatchUrl;
 		const updateURL = `${dispatchURL}${global.urls.updateNotification(token, newNotif)}`;
 		let updatedNotif = {...newNotif};
@@ -223,15 +221,10 @@ export const updateNotification = (newNotif, oldNotif) => {
 		};
 		dispatch(removeNotification(oldNotif));
 
-		return fetch(updateURL, options).then(res => {
-			if (res.ok) {
-				Storage.notifications.delete(oldNotif.id);
-				dispatch(updateNotificationSuccess(newNotif));
-				dispatch(getNotifications(token));
-			} else {
-				dispatch(getNotifications(token));
-				throw new Error("Failed to delete notification, please try again later");
-			}
+		return axios(updateURL, options).then(res => {
+			Storage.notifications.delete(oldNotif.id);
+			dispatch(updateNotificationSuccess(newNotif));
+			dispatch(getNotifications(token));
 		}).catch(err => {
 			console.log(err);
 			dispatch(updateNotificationFailure(err.message));
@@ -267,7 +260,7 @@ export const batchUpdateNotification = (ids = [], status = {}, token) => {
 			return;
 		}
 
-		token = token ? token : await FCM.getFCMToken().then(deviceToken => deviceToken);
+		token = token ? token : await TokenStore.get().then(deviceToken => deviceToken);
 
 		const url = `${global.urls.dispatchUrl}${global.urls.getNotifications(token)}`;
 		const options = {

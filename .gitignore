@@ -29,3 +29,4 @@ fastlane/screenshots
 storybook/**/*
 config.tar
 /android/keystore.properties
+.vscode/

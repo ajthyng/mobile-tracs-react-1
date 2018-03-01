@@ -22,7 +22,7 @@ module.exports = {
 		projectTitleBackground: '#cacaca',
 		projectTitleText: '#222',
 		toolBarColor: '#501214',
-		backgroundColor: 'rgba(232, 232, 232, 1)',
+		backgroundColor: '#e8e8e8',
 		dashboardTitleBackground: "#363534",
 		dashboardTitleText: "#fefefe",
 		badgeColor: "#ff3b30"
@@ -39,5 +39,8 @@ module.exports = {
 	setting: {
 		settingOnColor: '#8080ff',
 		settingOffColor: '#80ff80'
+	},
+	app: {
+		backgroundColor: '#e8e8e8'
 	}
 };

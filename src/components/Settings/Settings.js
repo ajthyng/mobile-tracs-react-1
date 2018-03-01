@@ -11,6 +11,7 @@ import {unregister} from '../../actions/registrar';
 import {logout} from '../../actions/login';
 import {clearSites} from '../../actions/sites';
 import {Analytics} from '../../utils/analytics';
+import CookieManager from 'react-native-cookies';
 
 const SPACER = "spacer";
 const NOTIFICATIONS = "Notification Settings";
@@ -76,8 +77,12 @@ class Settings extends Component {
 
 	handleLogout() {
 		Storage.credentials.reset();
-		this.props.unregister();
-		this.props.userLogout();
+		Storage.clear();
+		CookieManager.clearAll().then(() => {
+			this.props.unregister();
+			this.props.userLogout();
+		});
+
 	};
 
 	componentDidUpdate() {

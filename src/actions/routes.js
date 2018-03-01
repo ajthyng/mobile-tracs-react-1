@@ -12,7 +12,6 @@ import {routingActions} from '../constants/actions';
 let {CURRENT_SCENE} = routingActions;
 
 export function setCurrentScene(scene) {
-
 	return {
 		type: CURRENT_SCENE,
 		scene

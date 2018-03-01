@@ -12,6 +12,7 @@ import {sites as Sites} from '../utils/storage'
 import {sitesActions} from '../constants/actions';
 import moment from 'moment';
 import {Analytics} from '../utils/analytics';
+import {haxios as axios} from '../utils/networking';
 
 let {GET_MEMBERSHIPS, IS_FETCHING_SITES, CLEAR_SITES, GET_SITES_FAILED} = sitesActions;
 
@@ -56,19 +57,10 @@ export function getSiteInfo(netid) {
 	return (dispatch) => {
 		let start = new Date();
 		dispatch(isFetchingSites(true));
-		const options = {
-			url: `${tracsUrl}${global.urls.membership}`,
-			method: "get"
-		};
-		return fetch(options)
-			.then(res => {
-				if (res.ok) {
-					return res.json()
-				} else {
-					dispatch(getSitesFailed(true));
-				}
-			})
-			.then(async sites => {
+		let membershipUrl = `${tracsUrl}${global.urls.membership}`;
+		return axios(membershipUrl, {method: 'get'})
+			.then(async res => {
+				let sites = res.data;
 				const userHasSites = sites !== undefined && sites.hasOwnProperty('membership_collection') && sites.membership_collection.length > 0;
 				if (!userHasSites) {
 					let siteLoadTime = new Date() - start;
@@ -96,6 +88,10 @@ export function getSiteInfo(netid) {
 						dispatch(isFetchingSites(false));
 					});
 				})
+			}).catch(err => {
+				console.log('Membership Error: ', err.message);
+				dispatch(getSitesFailed(true));
+				dispatch(isFetchingSites(false));
 			});
 	}
 }
@@ -105,21 +101,13 @@ let cleanStorage = (siteIDs) => {
 };
 
 let getSiteName = (siteID) => {
-	const tracsUrl = global.urls.baseUrl;
-	let siteNameOptions = {
-		url: `${tracsUrl}${global.urls.site(siteID)}`,
-		method: 'get',
-	};
-	return fetch(siteNameOptions);
+	siteNameUrl = `${global.urls.baseUrl}${global.urls.site(siteID)}`;
+	return axios(siteNameUrl, {method: 'get'});
 };
 
 let getSiteTools = (siteID) => {
-	const tracsUrl = global.urls.baseUrl;
-	let siteToolOptions = {
-		url: `${tracsUrl}${global.urls.tools(siteID)}`,
-		method: 'get'
-	};
-	return fetch(siteToolOptions);
+	let siteToolsUrl = `${global.urls.baseUrl}${global.urls.tools(siteID)}`;
+	return axios(siteToolsUrl, {method: 'get'});
 };
 
 let getAllSites = (payload) => {
@@ -136,8 +124,7 @@ let getAllSites = (payload) => {
 
 		if (shouldFetch === true) {
 			return getSiteName(siteID)
-				.then(res => res.json())
-				.then(site => Promise.resolve({type: 'site', site}))
+				.then(site => Promise.resolve({type: 'site', site: site.data}))
 				.catch(err => Promise.resolve(new Error("Couldn't fetch site name for site id " + siteID)));
 		}
 	});
@@ -149,9 +136,8 @@ let getAllSites = (payload) => {
 		}
 		if (shouldFetch === true) {
 			return getSiteTools(siteID)
-				.then(res => res.json())
 				.then(tools => {
-					return Promise.resolve({type: 'tools', tools});
+					return Promise.resolve({type: 'tools', tools: tools.data});
 				}).catch(err => {
 					return Promise.resolve(new Error("Couldn't fetch tools for site id " + siteID));
 				});
@@ -164,20 +150,23 @@ let getAllSites = (payload) => {
 	];
 
 	return Promise.all(allPromises).then((data) => {
-		data.forEach(entry => {
+		data = data.filter((entry) => {
 			if (entry instanceof Error) {
 				console.log("Error: " + entry.message);
-			} else {
-				switch (entry.type) {
-					case 'site':
-						userSites.push(entry.site);
-						break;
-					case 'tools':
-						siteTools.push(entry.tools);
-						break;
-					default:
-						return;
-				}
+				return false
+			}
+			return true;
+		});
+		data.forEach((entry) => {
+			switch (entry.type) {
+				case 'site':
+					userSites.push(entry.site);
+					break;
+				case 'tools':
+					siteTools.push(entry.tools);
+					break;
+				default:
+					return;
 			}
 		});
 
@@ -205,15 +194,16 @@ let getAllSites = (payload) => {
 			};
 
 		});
-
 		siteTools.forEach(site => {
 			site.forEach(toolList => {
 				if (toolList.hasOwnProperty("tools")) {
 					toolList.tools.forEach(tool => {
-						fetchedSites[tool.siteId].tools[tool.toolId] = {
-							pageId: tool.pageId,
-							id: tool.id
-						};
+						if (fetchedSites.hasOwnProperty(tool.siteId)) {
+							fetchedSites[tool.siteId].tools[tool.toolId] = {
+								pageId: tool.pageId,
+								id: tool.id
+							};
+						}
 					});
 				}
 			});

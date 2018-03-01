@@ -9,10 +9,10 @@
  */
 import {Platform} from 'react-native';
 import {auth, login, loginHasFailed, loginIsGuestAccount} from './login';
-import FCM from 'react-native-fcm';
+import {token as TokenStore} from '../utils/storage';
 import base64 from 'base-64';
 import {registrarActions} from '../constants/actions';
-import axios from 'axios';
+import {haxios as axios} from '../utils/networking';
 
 const {
 	REQUEST_REGISTRATION,
@@ -22,6 +22,7 @@ const {
 	UNREGISTER_SUCCESS,
 	UNREGISTER_FAILURE,
 	IS_GUEST_ACCOUNT,
+	SET_TOKEN,
 	CLEAR_REGISTER_ERROR
 } = registrarActions;
 
@@ -80,7 +81,7 @@ const postRegistration = async (payload, dispatch) => {
 		deviceToken
 	} = payload;
 	if (!deviceToken) {
-		await FCM.getFCMToken().then((token) => {
+		await TokenStore.get().then((token) => {
 			deviceToken = token;
 		});
 	}
@@ -114,31 +115,33 @@ const postRegistration = async (payload, dispatch) => {
 		headers: {'Content-Type': 'application/json'}
 	};
 
-	let postRegistrationRequest = axios(registrationUrl, postOptions).then(res => {
-		dispatch(registrationSuccess(deviceToken, netid));
-		dispatch(login(netid, password));
-	}).catch(err => {
-		dispatch(registrationFailure(err, dispatch, netid, password));
-	});
+	const postRegistrationRequest = (url, options, deviceToken, netid, password) => {
+		return axios(url, options).then(res => {
+			dispatch(registrationSuccess(deviceToken, netid));
+			dispatch(login(netid, password));
+		}).catch(err => {
+			dispatch(registrationFailure(err, dispatch, netid, password));
+		});
+	};
 
-	return fetch(getRegistrationUrl, getOptions).then(res => {
-		if (res.ok) {
-			return res.json();
-		}
-	}).then(res => {
-		if (res && res.hasOwnProperty("token") && res.token === deviceToken) { //We found a token
-			if (res.token === deviceToken) { //The server token matches, already registered
-				dispatch(registrationSuccess(res.token, netid));
+	return axios(getRegistrationUrl, getOptions).then(res => {
+		if (res.data && res.data.hasOwnProperty("token") && res.data.token === deviceToken) { //We found a token
+			if (res.data.token === deviceToken) { //The server token matches, already registered
+				dispatch(registrationSuccess(res.data.token, netid));
 				dispatch(login(netid, password));
 			} else { //The stored token is stale, delete and reregister
 				axios(registrationUrl, deleteOptions).catch(err => console.log(err));
-				return postRegistrationRequest
+				return postRegistrationRequest(registrationUrl, postOptions, deviceToken, netid, password);
 			}
 		} else { //No registration was there, we should register
-			return postRegistrationRequest
+			return postRegistrationRequest(registrationUrl, postOptions, deviceToken, netid, password);
 		}
 	}).catch(err => {
-		dispatch(registrationFailure(err, dispatch, netid, password));
+		if ((err.response || {}).status === 404) {
+			return postRegistrationRequest(registrationUrl, postOptions, deviceToken, netid, password);
+		} else {
+			dispatch(registrationFailure(err, dispatch, netid, password));
+		}
 	});
 };
 
@@ -187,7 +190,7 @@ export const register = (netid = '', password) => {
 			headers: headers
 		}).then(async res => {
 			if (res.data) {
-				let deviceToken = await FCM.getFCMToken();
+				let deviceToken = await TokenStore.get();
 				const payload = {
 					netid,
 					password,
@@ -207,7 +210,7 @@ export const unregister = (token) => {
 	return async (dispatch) => {
 		dispatch(requestUnregister());
 		if (!token) {
-			await FCM.getFCMToken().then(deviceToken => {
+			await TokenStore.get().then(deviceToken => {
 				token = deviceToken;
 			});
 		}
@@ -221,15 +224,17 @@ export const unregister = (token) => {
 			headers: {'Content-Type': 'multipart/form-data'}
 		};
 
-		fetch(deleteRegistrationURL, options).then(res => {
-			if (res.ok) {
+		axios(deleteRegistrationURL, options).then(res => {
 				dispatch(unregisterSuccess());
-			} else {
-				const errorMessage = "Could not unregister device for push notifications";
-				dispatch(unregisterFailure(errorMessage));
-			}
 		}).catch(err => {
 			dispatch(unregisterFailure(err.message));
 		})
 	};
+};
+
+export const setToken = (token) => {
+	return {
+		type: SET_TOKEN,
+		token
+	}
 };

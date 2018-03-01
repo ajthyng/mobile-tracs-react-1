@@ -14,7 +14,7 @@ const initialState = {
 	scene: ""
 };
 
-let navigate = (state, action) => {
+const navigate = (state, action) => {
 	return {
 		...state,
 		scene: action.scene

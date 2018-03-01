@@ -33,7 +33,7 @@ class LoginButton extends Component {
 
 	render() {
 		return (
-			<Ripple style={styles.container} onPress={this.props.onPress || this.defaultOnPress}>
+			<Ripple style={styles.container} onPress={this.props.onPress || this.defaultOnPress} {...this.props}>
 				<Text style={styles.text}>
 					Login
 				</Text>

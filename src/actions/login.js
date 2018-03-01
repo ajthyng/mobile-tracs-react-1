@@ -10,9 +10,23 @@
 
 import {setGuestAccount, user} from './registrar';
 import {authActions} from '../constants/actions';
+import CookieManager from 'react-native-cookies';
 import {credentials} from '../utils/storage';
 import {Analytics} from '../utils/analytics';
-import axios from 'axios';
+import * as Storage from '../utils/storage';
+import {haxios as axios} from '../utils/networking';
+
+const styles = [
+	'background: linear-gradient( #db72b6, #c13891)'
+	, 'border: 1px solid #3E0E02'
+	, 'color: white'
+	, 'display: block'
+	, 'text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3)'
+	, 'box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4) inset, 0 5px 3px -5px rgba(0, 0, 0, 0.5), 0 -13px 5px -10px rgba(255, 255, 255, 0.4) inset'
+	, 'line-height: 40px'
+	, 'text-align: center'
+	, 'font-weight: bold'
+].join(';');
 
 const {
 	REQUEST_LOGIN,
@@ -41,10 +55,19 @@ const loginSuccess = (netid, password, tracsID) => {
 	}
 };
 
-const loginFailure = (errorMessage) => {
+const loginFailureAction = (errorMessage) => {
 	return {
 		type: LOGIN_FAILURE,
 		errorMessage
+	}
+};
+
+const loginFailure = (errorMessage) => {
+	return async (dispatch) => {
+		await CookieManager.clearAll();
+		Storage.credentials.reset().then(() => {
+			dispatch(loginFailureAction(errorMessage));
+		})
 	}
 };
 
@@ -86,42 +109,45 @@ export function login(netid = '', password) {
 		if (netid.length === 0) {
 			credentials.get().then(credentials => {
 				if (!credentials) {
-					dispatch(loginFailure("Net ID must be filled out"));
+					dispatch(loginFailure(new Error("Net ID must be filled out")));
 				} else {
 					netid = credentials.username;
 					password = credentials.password;
-					console.log(`${credentials.password}`);
 					dispatch(login(netid, password));
 				}
 			}).catch(err => {
 				console.log("Storage Error: ", err.message);
-				dispatch(loginFailure("Could not retrieve stored credentials"));
+				dispatch(loginFailure(new Error("Could not retrieve stored credentials")));
 			});
 			return;
 		}
 		const loginUrl = `${global.urls.baseUrl}${global.urls.login(netid, encodeURIComponent(password))}`;
 		const sessionUrl = `${global.urls.baseUrl}${global.urls.session}`;
 
-		return axios(loginUrl, {method: 'post'}).then(res => {
+		axios(loginUrl, {method: 'post'}).then(res => {
 			let creds = {
 				netid,
 				password
 			};
-			return axios(sessionUrl, {method: 'get'}).then(res => {
-				let session = res.data;
-				if (session.userEid === creds.netid) {
-					credentials.store(creds.netid, creds.password).then(() => {
-						dispatch(loginSuccess(session.userEid, creds.password, session.userId));
-					});
+			axios(sessionUrl, {method: 'get'}).then(async res => {
+				let session = res.headers['content-type'].indexOf('application/json') > -1 ? res.data : null;
+				if (session === null) {
+					dispatch(loginFailure(new Error("TRACS is down right now. Please try again later.")));
+				} else if (session === undefined) {
+					dispatch(loginFailure(new Error("There was a problem logging you into TRACS. Please try again later.")));
 				} else {
-					//This error is thrown when the user's creds don't match the session creds. This will happen
-					//on a failed login, or an expired session.
-					if (session.userEid === null) {
-						throw new Error("NetID or password is incorrect");
+					console.log('SESSION: ', session);
+					if (session.userEid === creds.netid) {
+						credentials.store(creds.netid, creds.password).then(() => {
+							dispatch(loginSuccess(session.userEid, creds.password, session.userId));
+						});
 					} else {
-						throw new Error("There was a problem logging into TRACS");
+						if (session.userEid === null) {
+							dispatch(loginFailure(new Error("NetID or password is incorrect.")));
+						} else {
+							dispatch(loginFailure(new Error("There was a problem logging you into TRACS. Please try again later.")));
+						}
 					}
-
 				}
 			}).catch(err => {
 				dispatch(loginFailure(err));
@@ -136,16 +162,16 @@ export function logout() {
 	return (dispatch) => {
 		dispatch(requestLogout());
 		const logoutUrl = `${global.urls.baseUrl}${global.urls.logout}`;
-		return fetch(logoutUrl, {
+		return axios(logoutUrl, {
 			method: 'get'
 		}).then(res => {
-			if (res.ok) {
-				dispatch(logoutSuccess());
-			} else {
-				throw new Error("Could not logout of TRACS");
-			}
+				CookieManager.clearAll().then(result => {
+					dispatch(logoutSuccess());
+				}).catch(err => {
+					dispatch(logoutFailure(err))
+				});
 		}).catch(err => {
-			dispatch(logoutFailure(err.message));
+			dispatch(logoutFailure(new Error("Could not log out of TRACS.")));
 		});
 	};
 }

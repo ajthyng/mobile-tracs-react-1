@@ -7,3 +7,23 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+import TabIcon from './TabIcon';
+import React from 'react';
+const tabIconSize = 24;
+
+const setTabBarColor = (props) => {
+	return props.focused ? props.activeTintColor : props.inactiveTintColor;
+};
+
+module.exports = {
+	announcements: (tabBarProps) => {
+		return <TabIcon name="bullhorn" size={tabIconSize} color={setTabBarColor(tabBarProps)}/>;
+	},
+	sites: (tabBarProps) => {
+		return <TabIcon name="list" size={tabIconSize} color={setTabBarColor(tabBarProps)}/>;
+	},
+	settings: (tabBarProps) => {
+		return <TabIcon name="cog" size={tabIconSize} color={setTabBarColor(tabBarProps)}/>;
+	}
+};

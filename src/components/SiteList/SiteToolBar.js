@@ -31,7 +31,7 @@ class SiteToolBar extends Component {
 	}
 
 	hasTool = (type) => {
-		return Object.keys(this.props.siteData.tools).indexOf(type) > -1;
+		return Object.keys((this.props.siteData || {}).tools).indexOf(type) > -1;
 	};
 
 	render() {

@@ -8,13 +8,25 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import * as Keychain from 'react-native-keychain';
+import {AsyncStorage} from 'react-native';
 import LockStatus from './lockstatus';
+import FCM from 'react-native-fcm';
+import PushNotification from 'react-native-push-notification';
 
 exports.credentials = {
 	get() {
 		return LockStatus().then(secure => {
 			if (secure === true) {
-				return Keychain.getGenericPassword();
+				return Keychain.getGenericPassword().then(creds => {
+					if (!!creds.username === false) {
+						return Promise.resolve(false);
+					} else {
+						return Promise.resolve({
+							username: creds.username,
+							password: creds.password
+						});
+					}
+				});
 			} else {
 				return new Promise((resolve) => {
 					Keychain.resetGenericPassword().then(didReset => {
@@ -35,8 +47,11 @@ exports.credentials = {
 			}
 		});
 	},
-	reset() {
-		return Keychain.resetGenericPassword().catch(err => console.log(err));
+	async reset() {
+		let result = await Keychain.resetGenericPassword()
+			.then(result => result)
+			.catch(err => console.log(err));
+		return Promise.resolve(result);
 	}
 };
 
@@ -92,3 +107,20 @@ exports.notifications = {
 exports.clear = async () => {
 	return Promise.resolve(true);
 };
+
+exports.token = {
+	async get() {
+		if (global.android) {
+			return FCM.getFCMToken().then(token => Promise.resolve(token));
+		} else {
+			return new Promise((resolve, reject) => {
+				PushNotification.configure({
+					onRegister: ({token, ios}) => {
+						return resolve(token);
+					}
+				});
+			});
+		}
+	}
+}
+;

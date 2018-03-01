@@ -19,6 +19,7 @@ const {
 	UNREGISTER_SUCCESS,
 	UNREGISTER_FAILURE,
 	IS_GUEST_ACCOUNT,
+	SET_TOKEN,
 	CLEAR_REGISTER_ERROR
 } = registrarActions;
 
@@ -100,6 +101,13 @@ function clearRegisterError(state, action) {
 	}
 }
 
+function setToken(state, action) {
+	return {
+		...state,
+		deviceToken: action.token
+	}
+}
+
 export function registerReducer(state = initialState, action) {
 	switch (action.type) {
 		case REQUEST_REGISTRATION: return requestRegistration(state, action);
@@ -110,6 +118,7 @@ export function registerReducer(state = initialState, action) {
 		case UNREGISTER_FAILURE: return unregisterFailure(state, action);
 		case IS_GUEST_ACCOUNT: return setGuestAccount(state, action);
 		case CLEAR_REGISTER_ERROR: return clearRegisterError(state, action);
+		case SET_TOKEN: return setToken(state, action);
 		default: return state;
 	}
 }

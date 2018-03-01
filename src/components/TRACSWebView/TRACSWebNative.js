@@ -8,9 +8,11 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import React, {Component} from 'react';
-import {BackHandler, requireNativeComponent} from 'react-native';
+import {BackHandler, WebView, requireNativeComponent} from 'react-native';
 import {Actions} from 'react-native-router-flux';
+import CookieManager from 'react-native-cookies';
 import {Analytics} from '../../utils/analytics';
+import WKWebView from 'react-native-wkwebview-reborn';
 
 const TRACSWeb = requireNativeComponent('TRACSWeb', TRACSWebView);
 
@@ -33,6 +35,26 @@ export default class TRACSWebView extends Component {
 	}
 
 	render() {
-		return <TRACSWeb style={{height: "100%", width: "100%"}} {...this.props}/>
+		if (global.android) {
+			return <TRACSWeb style={{height: "100%", width: "100%"}} {...this.props}/>
+		} else {
+			return (
+				<WebView
+					sendCookies={true}
+					onLoadStart={() => {
+						CookieManager.getAll().then(cookies => {
+							console.log(cookies);
+						});
+					}}
+					onNavigationStateChange={(data) => {
+						console.log(data);
+					}}
+					source={{
+						url: this.props.baseUrl
+					}}
+					{...this.props}
+				/>
+			);
+		}
 	}
 }

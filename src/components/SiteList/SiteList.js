@@ -4,21 +4,13 @@ import {connect} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
 import {clearSites, getSiteInfo} from '../../actions/sites';
 import Site from './Site';
-import {setCurrentScene} from '../../actions/routes';
 import {auth, netidLogout} from '../../actions/login';
 import {types as siteTypes} from '../../constants/sites';
 import {getNotifications} from '../../actions/notifications';
 import {site as siteColor} from '../../constants/colors';
 import Workspace from './Workspace';
 import {Analytics} from '../../utils/analytics';
-
-const styles = StyleSheet.create({
-	sectionHeader: {
-		marginLeft: 10,
-		marginTop: 10,
-		fontSize: 12,
-	}
-});
+import SectionHeader from './SectionHeader';
 
 class SiteList extends Component {
 	countNotifications = (site) => {
@@ -54,7 +46,6 @@ class SiteList extends Component {
 	}
 
 	componentWillMount() {
-		this.props.setScene(Actions.currentScene);
 		this.checkComponentState();
 	}
 
@@ -100,7 +91,9 @@ class SiteList extends Component {
 	}
 
 	render() {
-		StatusBar.setBackgroundColor('#501214');
+		if (global.android) {
+			StatusBar.setBackgroundColor('#501214');
+		}
 		StatusBar.setBarStyle('light-content');
 		let sites = {};
 		Keyboard.dismiss();
@@ -150,12 +143,8 @@ class SiteList extends Component {
 				sections={sections}
 				renderSectionHeader={({section}) => {
 					let sectionHeader = null;
-					if (section.data.length > 0) {
-						if (section.type === 'courses') {
-							sectionHeader = <Text style={styles.sectionHeader}>COURSES</Text>;
-						} else if (section.type === 'projects') {
-							sectionHeader = <Text style={styles.sectionHeader}>PROJECT</Text>;
-						}
+					if (section.data.length > 0 && section.type !== 'workspace') {
+						sectionHeader = <SectionHeader sectionTitle={section.type}/>
 					}
 					return sectionHeader;
 				}}
@@ -199,7 +188,6 @@ const mapDispatchToProps = (dispatch) => {
 		getMemberships: (netid) => dispatch(getSiteInfo(netid)),
 		getNotifications: (token) => dispatch(getNotifications(token)),
 		clearSites: () => dispatch(clearSites()),
-		setScene: (scene) => dispatch(setCurrentScene(scene))
 	}
 };
 

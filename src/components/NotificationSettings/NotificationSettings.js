@@ -7,7 +7,6 @@ import ActivityIndicator from '../Helper/ActivityIndicator';
 import SettingSwitchControl from './SettingSwitchControl';
 import Spacer from '../Helper/Spacer';
 import {getSettings, saveSettings} from '../../actions/settings';
-import {setCurrentScene} from '../../actions/routes';
 
 import {types} from '../../constants/notifications';
 import Settings from '../../utils/settings';
@@ -114,7 +113,6 @@ class NotificationSettings extends Component {
 
 	componentWillMount() {
 		BackHandler.addEventListener('hardwareBackPress', this.handleBack);
-		this.props.setScene(Actions.currentScene);
 		this.props.getSettings(this.props.token);
 	}
 
@@ -218,7 +216,6 @@ class NotificationSettings extends Component {
 			);
 		}
 	}
-
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -236,7 +233,6 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		setScene: (scene) => dispatch(setCurrentScene(scene)),
 		getSettings: (token) => dispatch(getSettings(token)),
 		saveSettings: (settings, token, local) => dispatch(saveSettings(settings, token, local)),
 	}

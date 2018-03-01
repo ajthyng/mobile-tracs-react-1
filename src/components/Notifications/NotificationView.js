@@ -14,7 +14,7 @@ import {types} from '../../constants/notifications';
 import {announcements, dashboard} from '../../constants/scenes';
 import DashboardHeader from './DashboardHeader'
 import {Swipeout} from 'react-native-swipeout';
-import FCM from 'react-native-fcm';
+import {token as TokenStore} from '../../utils/storage';
 import {Analytics} from '../../utils/analytics';
 
 const UNPUBLISHED_SITE_NAME = "Unpublished Site";
@@ -306,6 +306,9 @@ class NotificationView extends Component {
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
+		console.log("Next Route: ", nextProps.route);
+		console.log("Dashboard Status: ", this.props.renderDashboard);
+
 		if (this.props.isGuestAccount === true) {
 			return false;
 		}
@@ -315,6 +318,7 @@ class NotificationView extends Component {
 		}
 
 		if (nextProps.route === announcements && !this.props.renderDashboard) {
+			console.log("I'm on the announcements screen");
 			return true;
 		}
 
@@ -409,7 +413,7 @@ class NotificationView extends Component {
 
 		ids = ids.filter(id => id !== null);
 
-		let token = this.props.dispatchToken || await FCM.getFCMToken().then(token => token);
+		let token = this.props.dispatchToken || TokenStore.get().then(token => token);
 
 		if (!this.props.isBatchUpdating && !this.props.errorMessage && ids.length > 0) {
 			this.props.batchUpdate(ids, status, token);
@@ -454,6 +458,8 @@ const mapStateToProps = (state, ownProps) => {
 			forumSetting = false;
 		}
 	});
+
+	console.log('ROUTE: ', state.routes.scene);
 
 	return {
 		notificationsLoaded: state.notifications.isLoaded,

@@ -7,9 +7,9 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import Settings from '../utils/settings';
 import {settingsActions} from '../constants/actions';
-import FCM from 'react-native-fcm';
+import {token as TokenStore} from '../utils/storage';
+import {haxios as axios} from '../utils/networking';
 
 const {
 	REQUEST_SETTINGS,
@@ -64,20 +64,11 @@ export function getSettings(token) {
 	return async (dispatch) => {
 		dispatch(requestSettings());
 		if (!token) {
-			await FCM.getFCMToken().then(deviceToken => token = deviceToken);
+			await TokenStore.get().then(deviceToken => token = deviceToken);
 		}
 		const settingsURL = `${global.urls.dispatchUrl}${global.urls.settings(token)}`;
-		const options = {
-			url: settingsURL,
-			method: 'get'
-		};
-		return fetch(options).then(res => {
-			const errorMessage = "Failed to retrieve settings, assigning defaults";
-			if (res.ok) {
-				return res.json();
-			}
-			dispatch(settingsFailure(errorMessage));
-		}).then(settings => {
+		return axios(settingsURL, {method: 'get'}).then(res => {
+			let settings = res.data;
 			if (settings) {
 				dispatch(settingsSuccess(settings));
 			}
@@ -91,7 +82,7 @@ export function saveSettings(settings, token, local) {
 	return async (dispatch) => {
 		dispatch(requestSaveSettings());
 		if (!token) {
-			await FCM.getFCMToken().then(deviceToken => token = deviceToken);
+			await TokenStore.get().then(deviceToken => token = deviceToken);
 		}
 		const settingsURL = `${global.urls.dispatchUrl}${global.urls.settings(token)}`;
 		const options = {
@@ -102,18 +93,13 @@ export function saveSettings(settings, token, local) {
 			body: JSON.stringify(settings)
 		};
 		if (local) {
-			 dispatch(saveSettingsSuccess(settings));
-			 return true;
+			dispatch(saveSettingsSuccess(settings));
+			return true;
 		}
-		return fetch(settingsURL, options).then(res => {
+		return axios(settingsURL, options).then(res => {
 			console.log(options);
-			if (res.ok) {
-				dispatch(saveSettingsSuccess(settings));
-				return true;
-			} else {
-				dispatch(saveSettingsFailure("Failed to save settings remotely"));
-				return false;
-			}
+			dispatch(saveSettingsSuccess(settings));
+			return true;
 		}).catch(err => {
 			dispatch(saveSettingsFailure(err.message));
 		});

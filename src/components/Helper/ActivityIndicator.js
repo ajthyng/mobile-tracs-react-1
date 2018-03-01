@@ -12,7 +12,6 @@ class ActivityIndicator extends Component {
 	}
 
 	rotateImage() {
-		this.rotateValue.setValue(0);
 		Animated.timing(this.rotateValue, {
 			toValue: 1,
 			duration: this.props.duration || 2500,
