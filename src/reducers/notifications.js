@@ -10,6 +10,8 @@
 
 import {notificationActions} from '../constants/actions';
 import {types} from '../constants/notifications'
+import PushNotification from 'react-native-push-notification';
+
 const {
 	REQUEST_NOTIFICATIONS,
 	NOTIFICATIONS_SUCCESS,
@@ -107,6 +109,12 @@ const notificationsSuccess = (state, action) => {
 	}
 
 	let badgeCounts = updateBadgeCount(notifs);
+
+	if (global.ios) {
+		let appBadgeCount = (badgeCounts.announceCount || 0) + (badgeCounts.forumCount || 0);
+		debugger;
+		PushNotification.setApplicationIconBadgeNumber(appBadgeCount || 0);
+	}
 
 	return {
 		...state,
