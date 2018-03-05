@@ -9,7 +9,7 @@
  */
 
 import React, {Component} from 'react';
-import {StyleSheet, Text, ToastAndroid} from 'react-native';
+import {StyleSheet, Text} from 'react-native';
 import Ripple from 'react-native-material-ripple';
 
 const styles = StyleSheet.create({

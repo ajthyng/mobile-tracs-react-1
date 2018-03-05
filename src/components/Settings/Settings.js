@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {ToastAndroid, View} from 'react-native';
+import {View} from 'react-native';
 import {connect} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
 import * as Storage from '../../utils/storage';
@@ -12,6 +12,7 @@ import {logout} from '../../actions/login';
 import {clearSites} from '../../actions/sites';
 import {Analytics} from '../../utils/analytics';
 import CookieManager from 'react-native-cookies';
+import {Toast} from '../../utils/toast';
 
 const SPACER = "spacer";
 const NOTIFICATIONS = "Notification Settings";
@@ -41,7 +42,7 @@ class Settings extends Component {
 			new MenuItem(SPACER, null),
 			new MenuItem(NOTIFICATIONS, (event) => {
 				if (props.isGuestAccount) {
-					ToastAndroid.show("Guest accounts can't receive notifications", ToastAndroid.LONG);
+					Toast.show("Guest accounts can't receive notifications", Toast.LENGTH.LONG);
 				} else {
 					Actions.notificationSettings();
 				}

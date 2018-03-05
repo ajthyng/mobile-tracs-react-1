@@ -36,6 +36,7 @@
 		8276A0D4203F2F73009B216C /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8276A0D2203F2F50009B216C /* libRNFirebase.a */; };
 		8276A0D6203F31D9009B216C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8276A0D5203F31D9009B216C /* GoogleService-Info.plist */; };
 		8276A11F203F3671009B216C /* libRCTOrientation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8276A0FC203F3659009B216C /* libRCTOrientation.a */; };
+		82AA3132204D981300296DD0 /* libRCTToast.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 82AA3115204D980300296DD0 /* libRCTToast.a */; };
 		82B5F9481F9799930007F032 /* LockStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 82B5F9471F9799930007F032 /* LockStatus.m */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		8FBFB42D436F40F6879CB4B5 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 862DDE65B2A649E599E5CD5F /* Entypo.ttf */; };
@@ -373,6 +374,13 @@
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = RCTOrientation;
 		};
+		82AA3114204D980300296DD0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 82AA30FD204D980300296DD0 /* RCTToast.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 327633421BFAAD7E004DA88E;
+			remoteInfo = RCTToast;
+		};
 		832341B41AAA6A8300B99B32 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */;
@@ -430,6 +438,7 @@
 		8276A0CD203F2F50009B216C /* RNFirebase.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNFirebase.xcodeproj; path = "../node_modules/react-native-firebase/ios/RNFirebase.xcodeproj"; sourceTree = "<group>"; };
 		8276A0D5203F31D9009B216C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "TRACSMobile/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		8276A0EB203F3659009B216C /* RCTOrientation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTOrientation.xcodeproj; path = "../node_modules/react-native-orientation/iOS/RCTOrientation.xcodeproj"; sourceTree = "<group>"; };
+		82AA30FD204D980300296DD0 /* RCTToast.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTToast.xcodeproj; path = "../node_modules/@remobile/react-native-toast/ios/RCTToast.xcodeproj"; sourceTree = "<group>"; };
 		82B5F91F1F9796810007F032 /* LockStatus.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LockStatus.h; path = TRACSMobile/Modules/LockStatus.h; sourceTree = "<group>"; };
 		82B5F9471F9799930007F032 /* LockStatus.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = LockStatus.m; path = TRACSMobile/Modules/LockStatus.m; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
@@ -464,6 +473,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				82AA3132204D981300296DD0 /* libRCTToast.a in Frameworks */,
 				8276A11F203F3671009B216C /* libRCTOrientation.a in Frameworks */,
 				8276A0D4203F2F73009B216C /* libRNFirebase.a in Frameworks */,
 				8219AAB91F61B7DD00FC489C /* libRCTPushNotification.a in Frameworks */,
@@ -722,6 +732,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		82AA30FE204D980300296DD0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				82AA3115204D980300296DD0 /* libRCTToast.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		82B5F9461F9796D50007F032 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
@@ -746,6 +764,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				82AA30FD204D980300296DD0 /* RCTToast.xcodeproj */,
 				8276A0EB203F3659009B216C /* RCTOrientation.xcodeproj */,
 				8276A0CD203F2F50009B216C /* RNFirebase.xcodeproj */,
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
@@ -963,6 +982,10 @@
 				{
 					ProductGroup = 832341B11AAA6A8300B99B32 /* Products */;
 					ProjectRef = 832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */;
+				},
+				{
+					ProductGroup = 82AA30FE204D980300296DD0 /* Products */;
+					ProjectRef = 82AA30FD204D980300296DD0 /* RCTToast.xcodeproj */;
 				},
 				{
 					ProductGroup = 00C302E01ABCB9EE00DB3ED1 /* Products */;
@@ -1327,6 +1350,13 @@
 			fileType = archive.ar;
 			path = libRCTOrientation.a;
 			remoteRef = 8276A0FB203F3659009B216C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		82AA3115204D980300296DD0 /* libRCTToast.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTToast.a;
+			remoteRef = 82AA3114204D980300296DD0 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		832341B51AAA6A8300B99B32 /* libRCTText.a */ = {

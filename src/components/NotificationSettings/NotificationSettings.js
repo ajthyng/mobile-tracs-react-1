@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {ToastAndroid, BackHandler, ScrollView} from 'react-native';
+import {BackHandler, ScrollView} from 'react-native';
 import {connect} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
 
@@ -11,6 +11,7 @@ import {getSettings, saveSettings} from '../../actions/settings';
 import {types} from '../../constants/notifications';
 import Settings from '../../utils/settings';
 import {Analytics} from '../../utils/analytics';
+import {Toast} from '../../utils/toast';
 
 const SPACER_COLOR = "#E9E9EF";
 const SPACER_HEIGHT = 35;
@@ -105,9 +106,9 @@ class NotificationSettings extends Component {
 			});
 		}
 		if (this.props.pending === true && nextProps.pending === false && nextProps.success) {
-			ToastAndroid.show('Settings Saved!', ToastAndroid.SHORT);
+			Toast.show('Settings Saved!', Toast.LENGTH.SHORT);
 		} else if (this.props.pending && !nextProps.pending && !nextProps.success) {
-			ToastAndroid.show('Could not save settings, try again later.', ToastAndroid.SHORT);
+			Toast.show('Could not save settings, try again later.', Toast.LENGTH.SHORT);
 		}
 	}
 
@@ -206,7 +207,7 @@ class NotificationSettings extends Component {
 			];
 
 			if (this.props.errorMessage) {
-				ToastAndroid.show(this.props.errorMessage, ToastAndroid.LONG);
+				Toast.show(this.props.errorMessage, Toast.LENGTH.LONG);
 			}
 
 			return (

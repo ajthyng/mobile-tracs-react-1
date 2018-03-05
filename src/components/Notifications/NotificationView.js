@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {BackHandler, Dimensions, Platform, SectionList, Text, ToastAndroid, View} from 'react-native';
+import {BackHandler, Dimensions, Platform, SectionList, Text, View} from 'react-native';
 import {connect} from 'react-redux';
 import {batchUpdateNotification, getNotifications} from '../../actions/notifications';
 import {Actions} from 'react-native-router-flux';
@@ -16,6 +16,7 @@ import DashboardHeader from './DashboardHeader'
 import {Swipeout} from 'react-native-swipeout';
 import {token as TokenStore} from '../../utils/storage';
 import {Analytics} from '../../utils/analytics';
+import {Toast} from '../../utils/toast';
 
 const UNPUBLISHED_SITE_NAME = "Unpublished Site";
 
@@ -284,7 +285,7 @@ class NotificationView extends Component {
 
 		if (nextProps.errorMessage) {
 			if (Platform.OS === 'android') {
-				ToastAndroid.show(nextProps.errorMessage, ToastAndroid.LONG);
+				Toast.show(nextProps.errorMessage, Toast.LENGTH.LONG);
 			}
 		}
 
