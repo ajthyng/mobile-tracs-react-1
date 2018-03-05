@@ -85,6 +85,12 @@ const countForums = (badgeCounts) => {
 					forumCount: 1
 				}
 			}
+
+			if (badgeCounts.hasOwnProperty('forumCount')) {
+				badgeCounts.forumCount += 1;
+			} else {
+				badgeCounts.forumCount = 1;
+			}
 		}
 	}
 };
@@ -93,6 +99,11 @@ const updateBadgeCount = (notifs) => {
 	let badgeCounts = {};
 	(notifs[types.ANNOUNCEMENT] || []).forEach(countAnnouncements(badgeCounts));
 	(notifs[types.FORUM] || []).forEach(countForums(badgeCounts));
+
+	if (global.ios) {
+		let appBadgeCount = (badgeCounts.announceCount || 0) + (badgeCounts.forumCount || 0);
+		PushNotification.setApplicationIconBadgeNumber(appBadgeCount || 0);
+	}
 	return badgeCounts;
 };
 
@@ -109,11 +120,6 @@ const notificationsSuccess = (state, action) => {
 	}
 
 	let badgeCounts = updateBadgeCount(notifs);
-
-	if (global.ios) {
-		let appBadgeCount = (badgeCounts.announceCount || 0) + (badgeCounts.forumCount || 0);
-		PushNotification.setApplicationIconBadgeNumber(appBadgeCount || 0);
-	}
 
 	return {
 		...state,

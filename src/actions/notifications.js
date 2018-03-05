@@ -77,22 +77,18 @@ const fetchForumPost = (notification) => {
 	let topicUrl = `${global.urls.baseUrl}${global.urls.forumTopic(notification.keys.object_id)}`;
 
 	let forumPromises = [
-		axios(messageUrl).then(res => {
+		axios(messageUrl, {method: 'get'}).then(res => {
 			if (res.data) {
-				return {
-					...res.data,
-					type: "message"
-				};
+				res.data.type = 'message';
+				return Promise.resolve(res.data);
 			}
 		}).catch(err => {
 			return Promise.resolve(new Error("Could not fetch forum message for id " + notification.id));
 		}),
-		axios(topicUrl).then(res => {
+		axios(topicUrl, {method: 'get'}).then(res => {
 			if (res.data) {
-				return {
-					...res.data,
-					type: "topic"
-				};
+				res.data.type = 'topic';
+				return Promise.resolve(res.data);
 			}
 		}).catch(err => {
 			return Promise.resolve(new Error("Could not fetch forum topic title for id " + notification.id));
@@ -101,7 +97,7 @@ const fetchForumPost = (notification) => {
 
 	return Promise.all(forumPromises).then(data => {
 		let tracsData = {};
-		data = data.filter(entry => (!entry instanceof Error));
+		data = data.filter(entry => !(entry instanceof Error));
 		data.forEach(item => {
 			if (item.type === "topic") {
 				tracsData.topic_title = item.title;
@@ -115,17 +111,16 @@ const fetchForumPost = (notification) => {
 		if (Object.keys(tracsData).length === 0) {
 			return Promise.resolve(new Error("Could not process forum post data"));
 		} else {
-			return {
+			return Promise.resolve({
 				id: notification.id,
 				data: tracsData
-			}
+			});
 		}
 	});
 };
 
 const getNotificationDetail = async (notifications) => {
 	let notificationPromises = [];
-
 	notifications = notifications.reduce((accum, curr) => {
 		accum[curr.id] = curr;
 		return accum;
