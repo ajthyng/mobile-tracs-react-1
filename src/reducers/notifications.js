@@ -112,7 +112,6 @@ const notificationsSuccess = (state, action) => {
 
 	if (global.ios) {
 		let appBadgeCount = (badgeCounts.announceCount || 0) + (badgeCounts.forumCount || 0);
-		debugger;
 		PushNotification.setApplicationIconBadgeNumber(appBadgeCount || 0);
 	}
 
