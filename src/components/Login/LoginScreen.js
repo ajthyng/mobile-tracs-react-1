@@ -30,7 +30,7 @@ const portraitStyles = StyleSheet.create({
 	},
 	tracsImage: {
 		width: 80,
-		height: 80,
+		height: 80 * (1378 / 1438),
 		marginBottom: 16
 	},
 	loginPage: {

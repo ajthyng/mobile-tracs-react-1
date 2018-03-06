@@ -1,4 +1,4 @@
-import {AppRegistry, Platform, AppState} from 'react-native';
+import {AppRegistry, Platform, AppState, PushNotificationIOS} from 'react-native';
 import React, {Component} from 'react';
 import {connect, Provider} from 'react-redux';
 import {Router} from 'react-native-router-flux';
@@ -6,9 +6,8 @@ import configureStore from './src/store/configureStore';
 import * as urls from './config/urls'
 import PushNotification from 'react-native-push-notification';
 import {credentials} from './src/utils/storage';
-import axios from 'axios/index';
+import {haxios as axios} from './src/utils/networking';
 import {Analytics} from './src/utils/analytics';
-import {token as TokenStore} from './src/utils/storage';
 import {getNotifications} from './src/actions/notifications';
 
 const ConnectedRouter = connect()(Router);
@@ -52,6 +51,7 @@ class App extends Component {
 	handleAppStateChange(nextAppState) {
 		if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
 			credentials.get().then(creds => {
+				debugger;
 				if (creds.username && creds.password) {
 					let options = {
 						method: 'get',
@@ -67,10 +67,14 @@ class App extends Component {
 							};
 							axios(loginUrl, loginOptions)
 								.then(res => {
+									store.dispatch(getNotifications());
 								})
 								.catch(err => {
 								});
+						} else {
+							store.dispatch(getNotifications());
 						}
+
 					}).catch(err => {
 						console.log(err);
 					});
@@ -85,8 +89,11 @@ class App extends Component {
 	handleNotification(notification) {
 		console.log('IOS Notification: ', notification);
 		if (notification.data.remote) {
-			PushNotification.presentLocalNotification({
-				...notification
+			PushNotificationIOS.presentLocalNotification({
+				alertBody: notification.message,
+				isSilent: true,
+				foreground: false,
+				applicationIconBadgeNumber: notification.badge
 			});
 		}
 		store.dispatch(getNotifications());
