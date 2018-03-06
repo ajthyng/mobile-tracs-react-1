@@ -9,6 +9,7 @@ import {credentials} from './src/utils/storage';
 import axios from 'axios/index';
 import {Analytics} from './src/utils/analytics';
 import {token as TokenStore} from './src/utils/storage';
+import {getNotifications} from './src/actions/notifications';
 
 const ConnectedRouter = connect()(Router);
 const store = configureStore();
@@ -83,6 +84,12 @@ class App extends Component {
 
 	handleNotification(notification) {
 		console.log('IOS Notification: ', notification);
+		if (notification.data.remote) {
+			PushNotification.presentLocalNotification({
+				...notification
+			});
+		}
+		store.dispatch(getNotifications());
 	}
 
 	render() {

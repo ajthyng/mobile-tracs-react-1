@@ -58,7 +58,7 @@ class Notification extends Component {
 		this.delete = [{
 			component: <SwipeDelete onDelete={this.deleteNotification}/>
 		}];
-		this.height = new Animated.Value(88);
+		this.height = 70;
 		//TODO: Figure out a better way to animate
 		//this.height = new Animated.Value(0);
 		this.duration = 500;
@@ -85,7 +85,7 @@ class Notification extends Component {
 				return (
 					<Animated.View style={animatedStyle}>
 						<Swipeout right={this.delete}>
-							<Announcement {...this.props.data}/>
+							<Announcement {...this.props.data} height={this.height}/>
 						</Swipeout>
 					</Animated.View>
 				);
@@ -93,7 +93,7 @@ class Notification extends Component {
 				return (
 					<Animated.View style={animatedStyle}>
 						<Swipeout right={this.delete}>
-							<Discussion {...this.props.data}/>
+							<Discussion {...this.props.data} height={this.height}/>
 						</Swipeout>
 					</Animated.View>
 				);

@@ -23,7 +23,7 @@ class Discussion extends Component {
 				width: this.props.deviceWidth,
 				backgroundColor: notification.background,
 				borderRadius: 0,
-				height: 88
+				height: this.props.height
 			},
 			circle: {
 				width: circleSize,

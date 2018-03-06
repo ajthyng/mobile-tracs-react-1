@@ -139,7 +139,7 @@ class NotificationView extends Component {
 			read: item.read,
 			onPress: () => {
 				if (item.id === null) return;
-				this.props.batchUpdate(item.id, {read: true});
+				this.props.batchUpdate([item.id], {read: true});
 				let toolPageId = "";
 				if (this.props.siteData.tools.hasOwnProperty('sakai.forums')) {
 					toolPageId = `${(((this.props.siteData || {}).tools['sakai.forums'] || {}).id || "")}`;

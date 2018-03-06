@@ -31,7 +31,6 @@
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		6447E0CAB667459487AAE15A /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2669C4506D7B4D67BEC787A8 /* MaterialIcons.ttf */; };
 		790F81B19B21445DA952AF01 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4399A0C002F14BB19E4D04E3 /* MaterialCommunityIcons.ttf */; };
-		8219AA261F5EDF0500FC489C /* libRCTWKWebView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8219AA251F5EDEE600FC489C /* libRCTWKWebView.a */; };
 		8219AAB91F61B7DD00FC489C /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8219AAB61F61B7BC00FC489C /* libRCTPushNotification.a */; };
 		8276A0D4203F2F73009B216C /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8276A0D2203F2F50009B216C /* libRNFirebase.a */; };
 		8276A0D6203F31D9009B216C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8276A0D5203F31D9009B216C /* GoogleService-Info.plist */; };
@@ -226,13 +225,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = ADD01A681E09402E00F6D226;
 			remoteInfo = "RCTBlob-tvOS";
-		};
-		8219AA241F5EDEE600FC489C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 8219AA0B1F5EDEE600FC489C /* RCTWKWebView.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 0974579A1D2A440A000D9368;
-			remoteInfo = RCTWKWebView;
 		};
 		8219AA331F5F4D3600FC489C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -432,7 +424,6 @@
 		6DF3D67D97E5056DBA699A55 /* Pods-TRACSMobileTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TRACSMobileTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-TRACSMobileTests/Pods-TRACSMobileTests.release.xcconfig"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		7F912C66F31EC8C68A37591C /* Pods-TRACSMobile.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TRACSMobile.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TRACSMobile/Pods-TRACSMobile.debug.xcconfig"; sourceTree = "<group>"; };
-		8219AA0B1F5EDEE600FC489C /* RCTWKWebView.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWKWebView.xcodeproj; path = "../node_modules/react-native-wkwebview-reborn/ios/RCTWKWebView.xcodeproj"; sourceTree = "<group>"; };
 		8219AAAF1F6051C200FC489C /* TRACSMobile.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = TRACSMobile.entitlements; path = TRACSMobile/TRACSMobile.entitlements; sourceTree = "<group>"; };
 		8219AAB01F61B7BC00FC489C /* RCTPushNotification.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTPushNotification.xcodeproj; path = "../node_modules/react-native/Libraries/PushNotificationIOS/RCTPushNotification.xcodeproj"; sourceTree = "<group>"; };
 		8276A0CD203F2F50009B216C /* RNFirebase.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNFirebase.xcodeproj; path = "../node_modules/react-native-firebase/ios/RNFirebase.xcodeproj"; sourceTree = "<group>"; };
@@ -477,7 +468,6 @@
 				8276A11F203F3671009B216C /* libRCTOrientation.a in Frameworks */,
 				8276A0D4203F2F73009B216C /* libRNFirebase.a in Frameworks */,
 				8219AAB91F61B7DD00FC489C /* libRCTPushNotification.a in Frameworks */,
-				8219AA261F5EDF0500FC489C /* libRCTWKWebView.a in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
 				5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
@@ -650,14 +640,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		8219AA0C1F5EDEE600FC489C /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				8219AA251F5EDEE600FC489C /* libRCTWKWebView.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		8219AA481F5F56D000FC489C /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -764,6 +746,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				8219AAB01F61B7BC00FC489C /* RCTPushNotification.xcodeproj */,
 				82AA30FD204D980300296DD0 /* RCTToast.xcodeproj */,
 				8276A0EB203F3659009B216C /* RCTOrientation.xcodeproj */,
 				8276A0CD203F2F50009B216C /* RNFirebase.xcodeproj */,
@@ -800,8 +783,6 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				8219AAB01F61B7BC00FC489C /* RCTPushNotification.xcodeproj */,
-				8219AA0B1F5EDEE600FC489C /* RCTWKWebView.xcodeproj */,
 				13B07FAE1A68108700A75B9A /* TRACSMobile */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* TRACSMobileTests */,
@@ -994,10 +975,6 @@
 				{
 					ProductGroup = 139FDEE71B06529A00C62182 /* Products */;
 					ProjectRef = 139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */;
-				},
-				{
-					ProductGroup = 8219AA0C1F5EDEE600FC489C /* Products */;
-					ProjectRef = 8219AA0B1F5EDEE600FC489C /* RCTWKWebView.xcodeproj */;
 				},
 				{
 					ProductGroup = 8219AAF11F6333CC00FC489C /* Products */;
@@ -1203,13 +1180,6 @@
 			fileType = archive.ar;
 			path = "libRCTBlob-tvOS.a";
 			remoteRef = 8219AA131F5EDEE600FC489C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		8219AA251F5EDEE600FC489C /* libRCTWKWebView.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRCTWKWebView.a;
-			remoteRef = 8219AA241F5EDEE600FC489C /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		8219AA341F5F4D3600FC489C /* libthird-party.a */ = {
