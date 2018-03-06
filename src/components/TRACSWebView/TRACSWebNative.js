@@ -10,7 +10,6 @@
 import React, {Component} from 'react';
 import {BackHandler, WebView, requireNativeComponent} from 'react-native';
 import {Actions} from 'react-native-router-flux';
-import CookieManager from 'react-native-cookies';
 import {Analytics} from '../../utils/analytics';
 import WKWebView from 'react-native-wkwebview-reborn';
 
@@ -41,14 +40,6 @@ export default class TRACSWebView extends Component {
 			return (
 				<WebView
 					sendCookies={true}
-					onLoadStart={() => {
-						CookieManager.getAll().then(cookies => {
-							console.log(cookies);
-						});
-					}}
-					onNavigationStateChange={(data) => {
-						console.log(data);
-					}}
 					source={{
 						url: this.props.baseUrl
 					}}

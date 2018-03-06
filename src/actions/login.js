@@ -142,7 +142,7 @@ export function login(netid = '', password) {
 						});
 					} else {
 						if (session.userEid === null) {
-							dispatch(loginFailure(new Error("NetID or password is incorrect.")));
+							dispatch(loginFailure(new Error("Net ID or password is incorrect.")));
 						} else {
 							dispatch(loginFailure(new Error("There was a problem logging you into TRACS. Please try again later.")));
 						}
