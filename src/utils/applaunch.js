@@ -7,6 +7,20 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {NativeModules} from 'react-native';
+import {NativeModules, Linking} from 'react-native';
 
-module.exports = NativeModules.AppLaunch;
+if (global.android) {
+	module.exports = NativeModules.AppLaunch;
+} else {
+	module.exports = {
+		load: () => {
+			Linking.openURL('edu.txstate.mobile://')
+				.then(res => {
+				})
+				.catch(err => {
+					console.log(err.message);
+					Linking.openURL('itms://itunes.apple.com/us/app/apple-store/id373345139?mt=8')
+				});
+		}
+	}
+}

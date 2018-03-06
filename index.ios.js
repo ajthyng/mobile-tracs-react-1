@@ -51,7 +51,6 @@ class App extends Component {
 	handleAppStateChange(nextAppState) {
 		if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
 			credentials.get().then(creds => {
-				debugger;
 				if (creds.username && creds.password) {
 					let options = {
 						method: 'get',
