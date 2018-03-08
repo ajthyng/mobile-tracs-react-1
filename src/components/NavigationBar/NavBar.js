@@ -9,7 +9,7 @@
  */
 
 import React, {Component} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {View, Text, Animated, TouchableOpacity, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Actions} from 'react-native-router-flux';
 
@@ -20,15 +20,6 @@ const styles = StyleSheet.create({
 		alignContent: 'center',
 		justifyContent: 'center',
 		backgroundColor: "#501214"
-	},
-	leftIcon: {
-		color: 'white',
-		fontSize: 34,
-		position: 'absolute',
-		left: 2,
-		top: 12,
-		paddingLeft: 8,
-		flexDirection: 'row'
 	},
 	leftIconContainer: {
 		backgroundColor: 'transparent',
@@ -47,6 +38,15 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center'
 	},
+	leftIcon: {
+		color: 'white',
+		fontSize: 34,
+		position: 'absolute',
+		left: 2,
+		top: 12,
+		paddingLeft: 8,
+		flexDirection: 'row'
+	},
 	titleText: {
 		fontSize: 17,
 		fontWeight: '600',
@@ -57,7 +57,17 @@ const styles = StyleSheet.create({
 class NavBar extends Component {
 	constructor(props) {
 		super(props);
-		console.log(props);
+		this.state = {
+			leftIconOpacity: new Animated.Value(0)
+		};
+	}
+
+	componentDidMount() {
+		Animated.timing(this.state.leftIconOpacity, {
+			toValue: 1.0,
+			duration: 400,
+			useNativeDriver: true
+		}).start();
 	}
 
 	onBack() {
@@ -66,15 +76,18 @@ class NavBar extends Component {
 	}
 
 	render() {
+		let {leftIconOpacity} = this.state;
 		return (
 			<View style={styles.container}>
 				<View style={styles.titleContainer}>
 					<Text style={styles.titleText}>{this.props.title || ""}</Text>
 				</View>
 				<TouchableOpacity style={styles.leftIconContainer} onPress={this.onBack.bind(this)}>
-					<Icon name="ios-arrow-back"
-								style={styles.leftIcon}
-					/>
+					<Animated.View style={{opacity: leftIconOpacity}}>
+						<Icon name="ios-arrow-back"
+									style={styles.leftIcon}
+						/>
+					</Animated.View>
 				</TouchableOpacity>
 			</View>
 		)
