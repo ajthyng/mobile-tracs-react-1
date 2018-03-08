@@ -12,17 +12,22 @@ import axios from 'axios';
 
 module.exports = {
 	haxios: (url, config = {}) => {
+		config = {
+			...config,
+			maxRedirects: config.maxRedirects || 0,
+			url
+		};
 		if (config.hasOwnProperty('headers')) {
 			if (config.headers.hasOwnProperty('Cache-Control') && config.headers['Cache-Control'] === 'no-cache') {
-				return axios(url, config);
+				return axios(config);
 			} else {
-				return axios(url, {
+				return axios({
 					...config,
 					headers: {...config.headers, 'Cache-Control': 'no-cache'}
 				});
 			}
 		}
-		return axios(url, {
+		return axios({
 			...config,
 			headers: {'Cache-Control': 'no-cache'}
 		});

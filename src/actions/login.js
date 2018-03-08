@@ -124,11 +124,16 @@ export function login(netid = '', password) {
 		const loginUrl = `${global.urls.baseUrl}${global.urls.login(netid, encodeURIComponent(password))}`;
 		const sessionUrl = `${global.urls.baseUrl}${global.urls.session}`;
 
-		axios(loginUrl, {method: 'post'}).then(res => {
+		axios(loginUrl, {method: 'post'}).then(async res => {
 			let creds = {
 				netid,
 				password
 			};
+			if (res.data.indexOf('"loggedIn": true,') >= 0) {
+				console.log("%cTRACS Login Success", "background: #68ce61; color: white; font-size: x-large");
+			} else {
+				console.log("%cUser is not logged into TRACS", "background: red; color: white; font-size: x-large");
+			}
 			axios(sessionUrl, {method: 'get'}).then(async res => {
 				let session = res.headers['content-type'].indexOf('application/json') > -1 ? res.data : null;
 				if (session === null) {
@@ -141,6 +146,7 @@ export function login(netid = '', password) {
 							dispatch(loginSuccess(session.userEid, creds.password, session.userId));
 						});
 					} else {
+						debugger;
 						if (session.userEid === null) {
 							dispatch(loginFailure(new Error("Net ID or password is incorrect.")));
 						} else {

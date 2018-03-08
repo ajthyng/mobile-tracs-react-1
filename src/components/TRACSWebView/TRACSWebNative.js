@@ -28,6 +28,10 @@ export default class TRACSWebView extends Component {
 		return true;
 	};
 
+	static onLeft(props) {
+		console.log("LEFT");
+	}
+
 	componentWillMount() {
 		BackHandler.addEventListener(BackHandler.DEVICE_BACK_EVENT, this.handleBack);
 		Analytics().logTracsWebOpen();
@@ -46,6 +50,7 @@ export default class TRACSWebView extends Component {
 				<WebView
 					style={styles.webView}
 					sendCookies={true}
+					thirdPartyCookiesEnabled={true}
 					source={{
 						url: this.props.baseUrl
 					}}
