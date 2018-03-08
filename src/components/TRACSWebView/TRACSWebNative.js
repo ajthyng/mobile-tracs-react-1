@@ -8,13 +8,18 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import React, {Component} from 'react';
-import {BackHandler, WebView, requireNativeComponent} from 'react-native';
+import {BackHandler, WebView, StyleSheet, requireNativeComponent} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import {Analytics} from '../../utils/analytics';
 import WKWebView from 'react-native-wkwebview-reborn';
 
 const TRACSWeb = requireNativeComponent('TRACSWeb', TRACSWebView);
-
+const styles = StyleSheet.create({
+	webView: {
+		height: '100%',
+		width: '100%'
+	}
+});
 export default class TRACSWebView extends Component {
 	handleBack = () => {
 		if (Actions.currentScene.indexOf('tracs') >= 0) {
@@ -35,10 +40,11 @@ export default class TRACSWebView extends Component {
 
 	render() {
 		if (global.android) {
-			return <TRACSWeb style={{height: "100%", width: "100%"}} {...this.props}/>
+			return <TRACSWeb style={styles.webView} {...this.props}/>
 		} else {
 			return (
 				<WebView
+					style={styles.webView}
 					sendCookies={true}
 					source={{
 						url: this.props.baseUrl

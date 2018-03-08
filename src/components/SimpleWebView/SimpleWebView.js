@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import {Platform, WebView, BackHandler} from 'react-native';
-import {WKWebView} from 'react-native-wkwebview-reborn';
+import {WebView, BackHandler} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 
 const WEBVIEW_REF = "WEBVIEW_REF";
@@ -11,7 +10,6 @@ class SimpleWebView extends Component {
 		this.state = {
 			canGoBack: false
 		};
-
 
 	}
 
@@ -39,19 +37,13 @@ class SimpleWebView extends Component {
 	};
 
 	render() {
-		let webView;
-		if (Platform.OS === 'android') {
-			webView = (
-				<WebView
-					ref={WEBVIEW_REF}
-					source={{uri: this.props.url}}
-					onNavigationStateChange={this.onNavigationStateChange.bind(this)}
-				/>
-			);
-		} else {
-			webView = <WKWebView source={{uri: this.props.url}}/>;
-		}
-		return webView;
+		return (
+			<WebView
+				ref={WEBVIEW_REF}
+				source={{uri: this.props.url}}
+				onNavigationStateChange={this.onNavigationStateChange.bind(this)}
+			/>
+		);
 	}
 }
 
