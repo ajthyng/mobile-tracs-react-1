@@ -7,8 +7,7 @@ cache:
   directories:
     - node_modules
 before_install:
-- openssl aes-256-cbc -K $encrypted_a68daf7cc111_key -iv $encrypted_a68daf7cc111_iv
-  -in config.tar.enc -out config.tar -d
+- openssl aes-256-cbc -K $encrypted_a68daf7cc111_key -iv $encrypted_a68daf7cc111_iv -in config.tar.enc -out config.tar -d
 - tar xvf config.tar
 - ls
 - mkdir /home/travis/build/.keystore
