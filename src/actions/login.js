@@ -121,19 +121,23 @@ export function login(netid = '', password) {
 			});
 			return;
 		}
-		const loginUrl = `${global.urls.baseUrl}${global.urls.login(netid, encodeURIComponent(password))}`;
+		//(netid, encodeURIComponent(password))
+		const loginUrl = `${global.urls.baseUrl}${global.urls.login}`;
 		const sessionUrl = `${global.urls.baseUrl}${global.urls.session}`;
-
-		axios(loginUrl, {method: 'post'}).then(async res => {
+		const loginData = new FormData();
+		loginData.append('_username', netid);
+		loginData.append('_password', password);
+		axios(loginUrl, {
+			method: 'post',
+			data: loginData,
+			headers: {
+				"content-type": "multipart/form-data"
+			}
+		}).then(async res => {
 			let creds = {
 				netid,
 				password
 			};
-			if (res.data.indexOf('"loggedIn": true,') >= 0) {
-				console.log("%cTRACS Login Success", "background: #68ce61; color: white; font-size: x-large");
-			} else {
-				console.log("%cUser is not logged into TRACS", "background: red; color: white; font-size: x-large");
-			}
 			axios(sessionUrl, {method: 'get'}).then(async res => {
 				let session = res.headers['content-type'].indexOf('application/json') > -1 ? res.data : null;
 				if (session === null) {

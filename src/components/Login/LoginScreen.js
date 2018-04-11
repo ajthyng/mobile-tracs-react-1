@@ -55,6 +55,14 @@ const portraitStyles = StyleSheet.create({
 		width: '100%',
 		height: 40
 	},
+	netidInput: {
+		borderBottomWidth: 1,
+		borderBottomColor: '#00557e'
+	},
+	passwordInput: {
+		borderBottomWidth: 1,
+		borderBottomColor: '#00557e'
+	},
 	uppsRequiredTextContainer: {
 		margin: 10,
 		width: '100%',
@@ -208,9 +216,10 @@ class LoginScreen extends Component {
 							</View>
 							<View style={portraitStyles.loginForm}>
 								<TextInput
-									style={portraitStyles.inputText}
+									style={[portraitStyles.inputText, portraitStyles.netidInput]}
 									ref={ref => this.netid = ref}
 									placeholder="Net ID"
+									placeholderTextColor="#000000"
 									underlineColorAndroid={this.underlineColor}
 									selectionColor='#909090'
 									autoCapitalize='none'
@@ -222,10 +231,11 @@ class LoginScreen extends Component {
 									onSubmitEditing={() => {this.password.focus()}}
 								/>
 								<TextInput
-									style={portraitStyles.inputText}
+									style={[portraitStyles.inputText, portraitStyles.passwordInput]}
 									ref={ref => this.password = ref}
 									underlineColorAndroid={this.underlineColor}
 									placeholder="Password"
+									placeholderTextColor="#000000"
 									selectionColor='#909090'
 									autoCapitalize='none'
 									autoCorrect={false}
