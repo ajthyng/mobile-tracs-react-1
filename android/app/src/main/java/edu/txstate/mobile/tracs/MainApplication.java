@@ -3,6 +3,8 @@ package edu.txstate.mobile.tracs;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.aakashns.reactnativedialogs.ReactNativeDialogsPackage;
+import com.remobile.toast.RCTToastPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.oblador.keychain.KeychainPackage;
 import com.evollu.react.fcm.FIRMessagingPackage;
@@ -15,7 +17,6 @@ import com.facebook.soloader.SoLoader;
 import edu.txstate.applaunch.AppLaunchPackage;
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.analytics.RNFirebaseAnalyticsPackage;
-import com.github.yamill.orientation.OrientationPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,6 +35,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+          new ReactNativeDialogsPackage(),
+          new RCTToastPackage(),
           new VectorIconsPackage(),
           new KeychainPackage(),
           new FIRMessagingPackage(),
@@ -42,8 +45,7 @@ public class MainApplication extends Application implements ReactApplication {
           new LockStatusPackage(),
           new AppLaunchPackage(),
           new CookieManagerPackage(),
-          new TRACSWebPackage(),
-          new OrientationPackage()
+          new TRACSWebPackage()
       );
     }
 

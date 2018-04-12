@@ -13,7 +13,6 @@ import {Animated, BackHandler, Image, StyleSheet, View} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import Swiper from 'react-native-swiper';
 import {Analytics} from '../../utils/analytics';
-import Orientation from 'react-native-orientation'
 
 const styles = StyleSheet.create({
 	wrapper: {},
@@ -80,12 +79,10 @@ export default class AboutView extends Component {
 
 	componentWillMount() {
 		BackHandler.addEventListener(BackHandler.DEVICE_BACK_EVENT, this.handleBack);
-		Orientation.lockToPortrait();
 	}
 
 	componentWillUnmount() {
 		BackHandler.removeEventListener(BackHandler.DEVICE_BACK_EVENT, this.handleBack);
-		Orientation.unlockAllOrientations();
 	}
 
 	render() {

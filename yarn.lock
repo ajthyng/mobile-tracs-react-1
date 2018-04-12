@@ -1753,7 +1753,7 @@ fbjs-scripts@^0.8.1:
     semver "^5.1.0"
     through2 "^2.0.0"
 
-fbjs@^0.8.14, fbjs@^0.8.16, fbjs@^0.8.3, fbjs@^0.8.9:
+fbjs@^0.8.14, fbjs@^0.8.16, fbjs@^0.8.9:
   version "0.8.16"
   resolved "https://registry.yarnpkg.com/fbjs/-/fbjs-0.8.16.tgz#5e67432f550dc41b572bf55847b8aca64e5337db"
   dependencies:
@@ -3820,10 +3820,6 @@ react-native-material-ripple@^0.7.5:
   dependencies:
     prop-types "^15.5.10"
 
-react-native-orientation@^3.1.3:
-  version "3.1.3"
-  resolved "https://registry.yarnpkg.com/react-native-orientation/-/react-native-orientation-3.1.3.tgz#d45803841fe94b6cce9acbe904fd5ca191a3711e"
-
 react-native-push-notification@^3.0.1:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/react-native-push-notification/-/react-native-push-notification-3.0.2.tgz#3fa7d654cfd915436597b0dd5ba8b0f898c4b0f5"
@@ -3881,12 +3877,6 @@ react-native-vector-icons@^4.4.2:
     lodash "^4.0.0"
     prop-types "^15.5.10"
     yargs "^8.0.2"
-
-react-native-wkwebview-reborn@^1.14.0:
-  version "1.17.0"
-  resolved "https://registry.yarnpkg.com/react-native-wkwebview-reborn/-/react-native-wkwebview-reborn-1.17.0.tgz#ab959d15ea9fe63e97bb66e895cd2ecfbe0a3f0e"
-  dependencies:
-    fbjs "^0.8.3"
 
 react-native@0.52.2:
   version "0.52.2"

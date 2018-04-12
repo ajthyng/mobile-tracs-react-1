@@ -1,7 +1,18 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
-import {Alert, Keyboard, Dimensions, Image, ScrollView, StatusBar, StyleSheet, Text, TextInput, View} from 'react-native';
+import {
+	Alert,
+	Keyboard,
+	Dimensions,
+	Image,
+	ScrollView,
+	StatusBar,
+	StyleSheet,
+	Text,
+	TextInput,
+	View
+} from 'react-native';
 import user from '../../../config/config.json';
 import ActivityIndicator from '../Helper/ActivityIndicator';
 import {clearRegisterError, register} from '../../actions/registrar';
@@ -9,9 +20,9 @@ import * as Storage from '../../utils/storage';
 import {firstLoad} from '../../utils/storage';
 import LoginButton from './LoginButton';
 import {clearError as clearLoginError} from '../../actions/login';
-import Orientation from 'react-native-orientation';
 import {Analytics} from '../../utils/analytics';
 import {main} from '../../constants/scenes';
+import * as Orientation from '../../utils/orientation';
 
 const KEYBOARD_EVENT = {
 	SHOW: global.android ? 'keyboardDidShow' : 'keyboardWillShow',
@@ -25,7 +36,6 @@ const portraitStyles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'space-between',
 		width: '100%',
-		height: Dimensions.get('window').height - (global.android ? StatusBar.currentHeight : 0),
 		backgroundColor: '#fff'
 	},
 	tracsImage: {
@@ -55,11 +65,67 @@ const portraitStyles = StyleSheet.create({
 		width: '100%',
 		height: 40
 	},
-	netidInput: {
+	netidInput: global.android ? {} : {
 		borderBottomWidth: 1,
 		borderBottomColor: '#00557e'
 	},
-	passwordInput: {
+	passwordInput: global.android ? {} : {
+		borderBottomWidth: 1,
+		borderBottomColor: '#00557e'
+	},
+	uppsRequiredTextContainer: {
+		margin: 10,
+		width: '100%',
+		bottom: 0,
+	},
+	uppsRequiredText: {
+		textAlign: 'center',
+		fontSize: 10
+	}
+});
+
+const landscapeStyles = StyleSheet.create({
+	container: {
+		flex: 1,
+		flexDirection: 'column',
+		alignItems: 'center',
+		justifyContent: 'space-between',
+		width: '100%',
+		backgroundColor: '#fff'
+	},
+	tracsImage: {
+		width: 120,
+		height: 120 * (1378 / 1438),
+		marginBottom: 16
+	},
+	loginPage: {
+		flex: 1,
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'space-around',
+		backgroundColor: '#fff',
+		width: '100%'
+	},
+	loginGreeting: {
+		flexDirection: 'column',
+		alignItems: 'center',
+		justifyContent: 'center'
+	},
+	loginForm: {
+		flexDirection: 'column',
+		alignItems: 'center',
+		justifyContent: 'center',
+		width: '40%'
+	},
+	inputText: {
+		width: '100%',
+		height: 40
+	},
+	netidInput: global.android ? {} : {
+		borderBottomWidth: 1,
+		borderBottomColor: '#00557e'
+	},
+	passwordInput: global.android ? {} : {
 		borderBottomWidth: 1,
 		borderBottomColor: '#00557e'
 	},
@@ -148,7 +214,6 @@ class LoginScreen extends Component {
 				});
 			}
 		}
-		Orientation.lockToPortrait();
 	}
 
 	componentDidMount() {
@@ -157,7 +222,6 @@ class LoginScreen extends Component {
 	}
 
 	componentWillUnmount() {
-		Orientation.unlockAllOrientations();
 		this.keyboardShowListener.remove();
 		this.keyboardHideListener.remove();
 	}
@@ -182,8 +246,6 @@ class LoginScreen extends Component {
 		}
 	}
 
-
-
 	render() {
 		if (this.props.loggingIn || this.props.registering || this.state.checkingCredentials) {
 			return (
@@ -196,6 +258,10 @@ class LoginScreen extends Component {
 				Alert.alert(`Login Error`, `${errorMessage}`);
 			}
 
+			let currentOrientation = Orientation.getOrientation();
+			let selectedStyle = currentOrientation === Orientation.PORTRAIT ? portraitStyles : landscapeStyles;
+			let signInText = <Text style={{color: '#959595'}}>Sign in to your account</Text>;
+
 			return (
 				<ScrollView style={{backgroundColor: '#fff'}}
 										ref={ref => this.scrollView = ref}
@@ -204,19 +270,25 @@ class LoginScreen extends Component {
 										keyboardDismissMode={'none'}
 										alwaysBounceVertical={false}
 										keyboardShouldPersistTaps={'handled'}>
-					<View style={portraitStyles.container}>
-						<View style={portraitStyles.loginPage}>
-							<View style={portraitStyles.loginGreeting}>
+					<View style={[
+						selectedStyle.container,
+						{
+							height: Dimensions.get('window').height - (global.android ? StatusBar.currentHeight : 0)
+						}
+					]}>
+						<View style={selectedStyle.loginPage}>
+							<View style={selectedStyle.loginGreeting}>
 								<Image
 									source={require('../../../img/tracs.png')}
-									style={portraitStyles.tracsImage}
+									style={selectedStyle.tracsImage}
 								/>
 								<Text style={{color: '#00557e', fontSize: 20}}>Welcome to TRACS</Text>
-								<Text style={{color: '#959595'}}>Sign in to your account</Text>
+								{currentOrientation === Orientation.PORTRAIT ? signInText : null}
 							</View>
-							<View style={portraitStyles.loginForm}>
+							<View style={selectedStyle.loginForm}>
+								{currentOrientation === Orientation.LANDSCAPE ? signInText : null}
 								<TextInput
-									style={[portraitStyles.inputText, portraitStyles.netidInput]}
+									style={[selectedStyle.inputText, selectedStyle.netidInput]}
 									ref={ref => this.netid = ref}
 									placeholder="Net ID"
 									placeholderTextColor="#000000"
@@ -228,10 +300,12 @@ class LoginScreen extends Component {
 									keyboardType={global.android ? 'visible-password' : 'default'}
 									value={this.state.netid}
 									onChangeText={(text) => this.setState({netid: text})}
-									onSubmitEditing={() => {this.password.focus()}}
+									onSubmitEditing={() => {
+										this.password.focus()
+									}}
 								/>
 								<TextInput
-									style={[portraitStyles.inputText, portraitStyles.passwordInput]}
+									style={[selectedStyle.inputText, selectedStyle.passwordInput]}
 									ref={ref => this.password = ref}
 									underlineColorAndroid={this.underlineColor}
 									placeholder="Password"
@@ -246,19 +320,19 @@ class LoginScreen extends Component {
 									onSubmitEditing={() => this.userLogin(this.state.netid, this.state.password)}
 								/>
 								<LoginButton
-									onLayout={({nativeEvent}) => {
+									onLayout={({nativeEvent: {layout}}) => {
 										this.setState({
 											loginPosition: {
-												x: nativeEvent.layout.x,
-												y: nativeEvent.layout.y
+												x: layout.x,
+												y: layout.y
 											}
 										});
 									}}
 									onPress={() => this.userLogin(this.state.netid, this.state.password)}/>
 							</View>
 						</View>
-						<View style={portraitStyles.uppsRequiredTextContainer}>
-							<Text style={portraitStyles.uppsRequiredText}>
+						<View style={selectedStyle.uppsRequiredTextContainer}>
+							<Text style={selectedStyle.uppsRequiredText}>
 								{this.uppsRequiredText}
 							</Text>
 						</View>

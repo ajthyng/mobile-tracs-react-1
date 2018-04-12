@@ -9,22 +9,25 @@
 
 #import "AppDelegate.h"
 #import <UserNotifications/UserNotifications.h>
+#import <Firebase.h>
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 #import <React/RCTPushNotificationManager.h>
+
 @import Firebase;
 
 @implementation AppDelegate
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+
   [FIRApp configure];
   NSURL *jsCodeLocation;
   
   BOOL isSimulator = NO;
-#if TARGET_IPHONE_SIMULATOR
-  isSimulator = YES;
-#endif
+  #if TARGET_IPHONE_SIMULATOR
+    isSimulator = YES;
+  #endif
 
 //  jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index.ios" fallbackResource:nil];
   jsCodeLocation = [NSURL URLWithString:@"http://147.26.119.60:8081/index.ios.bundle?platform=ios&dev=true"];

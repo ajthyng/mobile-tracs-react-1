@@ -11,7 +11,6 @@ import React, {Component} from 'react';
 import {BackHandler, WebView, StyleSheet, requireNativeComponent} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import {Analytics} from '../../utils/analytics';
-import WKWebView from 'react-native-wkwebview-reborn';
 
 const TRACSWeb = requireNativeComponent('TRACSWeb', TRACSWebView);
 const styles = StyleSheet.create({
