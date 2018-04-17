@@ -50,7 +50,6 @@ export default class TRACSWebView extends Component {
 				<WebView
 					style={styles.webView}
 					sendCookies={true}
-					thirdPartyCookiesEnabled={true}
 					source={{
 						url: this.props.baseUrl
 					}}
@@ -58,13 +57,6 @@ export default class TRACSWebView extends Component {
 					renderError={(error) => {
 						return (
 							<WebError/>
-						)
-					}}
-					onError={() => {
-						return (
-							<View>
-								<Text>This page has an error</Text>
-							</View>
 						)
 					}}
 				/>
