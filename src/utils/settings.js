@@ -123,11 +123,19 @@ export default class Settings {
 
 	_enableTypeAndSite(type, id) {
 		this.blacklist = this.blacklist.filter(entry => {
-			if (entry.hasOwnProperty("keys") && entry.hasOwnProperty("other_keys")) {
-				if (entry["keys"].hasOwnProperty("object_type") && entry["other_keys"].hasOwnProperty("site_id")) {
-					return type !== entry.keys.object_type || id !== entry.other_keys.site_id;
-				}
+			/**
+			 * I need to return false if the setting is JUST for this type (no other_keys)
+			 * or if the setting is specifically for this this site.
+			 */
+
+			let settingShouldStayInBlacklist = true;
+			if (entry.keys.object_type === type && Object.keys(entry.other_keys).length === 0) {
+				settingShouldStayInBlacklist = false;
 			}
+			if (entry.keys.object_type === type && entry.other_keys.site_id === id) {
+				settingShouldStayInBlacklist = false;
+			}
+			return settingShouldStayInBlacklist;
 		});
 	}
 

@@ -245,7 +245,6 @@ class NotificationView extends Component {
 			} else {
 				userSettings.setType(type, value);
 			}
-
 			this.props.saveSettings(userSettings.getSettings(), this.props.token, false);
 		};
 	};

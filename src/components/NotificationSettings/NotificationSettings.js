@@ -86,7 +86,13 @@ class NotificationSettings extends Component {
 				setting.enabled = !globalForumsAreOff;
 				break;
 			default:
-				setting.enabled = !(siteAnnoucementsDisabled && siteForumsDisabled);
+				if (siteAnnoucementsDisabled && siteForumsDisabled) {
+					setting.enabled = false;
+				} else if (siteAnnoucementsDisabled && globalForumsAreOff) {
+					setting.enabled = false;
+				} else {
+					setting.enabled = !(siteForumsDisabled && globalAnnouncementsAreOff);
+				}
 				break;
 		}
 		return (
