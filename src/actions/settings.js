@@ -64,7 +64,7 @@ export function getSettings(token) {
 	return async (dispatch) => {
 		dispatch(requestSettings());
 		if (!token) {
-			await TokenStore.get().then(deviceToken => token = deviceToken);
+			await TokenStore.getDeviceToken().then(deviceToken => token = deviceToken);
 		}
 		const settingsURL = `${global.urls.dispatchUrl}${global.urls.settings(token)}`;
 		return axios(settingsURL, {method: 'get'}).then(res => {
@@ -82,7 +82,7 @@ export function saveSettings(settings, token, local) {
 	return async (dispatch) => {
 		dispatch(requestSaveSettings());
 		if (!token) {
-			await TokenStore.get().then(deviceToken => token = deviceToken);
+			await TokenStore.getDeviceToken().then(deviceToken => token = deviceToken);
 		}
 		const settingsURL = `${global.urls.dispatchUrl}${global.urls.settings(token)}`;
 		const options = {

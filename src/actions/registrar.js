@@ -57,6 +57,8 @@ const registrationFailure = (error, dispatch, netid, password) => {
 		default:
 			if (error.message === "Network Error") {
 				errorMessage = "Network Error. Please check your internet connection and try again."
+			} else {
+				errorMessage = error ? error.message : "There was an error logging you in. Please check your NetID and password."
 			}
 	}
 	return {
@@ -81,7 +83,7 @@ const postRegistration = async (payload, dispatch) => {
 		deviceToken
 	} = payload;
 	if (!deviceToken) {
-		await TokenStore.get().then((token) => {
+		await TokenStore.getDeviceToken().then((token) => {
 			deviceToken = token;
 		});
 	}
@@ -186,11 +188,11 @@ export const register = (netid = '', password) => {
 			'Authorization': 'Basic ' + base64.encode(auth64),
 		};
 		return axios(`${dispatchUrl}${global.urls.jwt}`, {
-			method: 'get',
+			method: 'post',
 			headers: headers
 		}).then(async res => {
 			if (res.data) {
-				let deviceToken = await TokenStore.get();
+				let deviceToken = await TokenStore.getDeviceToken();
 				const payload = {
 					netid,
 					password,
@@ -210,7 +212,7 @@ export const unregister = (token) => {
 	return async (dispatch) => {
 		dispatch(requestUnregister());
 		if (!token) {
-			await TokenStore.get().then(deviceToken => {
+			await TokenStore.getDeviceToken().then(deviceToken => {
 				token = deviceToken;
 			});
 		}

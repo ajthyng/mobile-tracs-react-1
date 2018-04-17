@@ -54,7 +54,7 @@ exports.credentials = {
 };
 
 exports.firstLoad = {
-	async get() {
+	async isFirstLoad() {
 		return Keychain.getInternetCredentials('firstload')
 			.then(credentials => {
 				if (credentials) {
@@ -72,6 +72,9 @@ exports.firstLoad = {
 	}
 };
 
+/**
+ * I don't think I need any of this but it's here for reference
+ */
 exports.sites = {
 	async get(netid) {
 		return Promise.resolve({});
@@ -107,7 +110,7 @@ exports.clear = async () => {
 };
 
 exports.token = {
-	async get() {
+	async getDeviceToken() {
 		if (global.android) {
 			return FCM.getFCMToken().then(token => Promise.resolve(token));
 		} else {

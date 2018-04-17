@@ -410,7 +410,7 @@ class NotificationView extends Component {
 
 		ids = ids.filter(id => id !== null);
 
-		let token = this.props.dispatchToken || TokenStore.get().then(token => token);
+		let token = this.props.dispatchToken || TokenStore.getDeviceToken().then(token => token);
 
 		if (!this.props.isBatchUpdating && !this.props.errorMessage && ids.length > 0) {
 			this.props.batchUpdate(ids, status, token);

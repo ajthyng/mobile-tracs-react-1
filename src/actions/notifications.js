@@ -150,7 +150,7 @@ export const getNotifications = (token) => {
 		let startTime = new Date();
 		dispatch(requestNotifications());
 		if (!token) {
-			await TokenStore.get().then(deviceToken => token = deviceToken);
+			await TokenStore.getDeviceToken().then(deviceToken => token = deviceToken);
 		}
 		const dispatchURL = global.urls.dispatchUrl;
 		const notificationURL = `${dispatchURL}${global.urls.getNotifications(token)}`;
@@ -202,7 +202,7 @@ export const updateNotification = (newNotif, oldNotif) => {
 	return async (dispatch) => {
 		dispatch(requestUpdateNotification());
 
-		let token = await TokenStore.get().then(deviceToken => deviceToken);
+		let token = await TokenStore.getDeviceToken().then(deviceToken => deviceToken);
 		const dispatchURL = global.urls.dispatchUrl;
 		const updateURL = `${dispatchURL}${global.urls.updateNotification(token, newNotif)}`;
 		let updatedNotif = {...newNotif};
@@ -255,7 +255,7 @@ export const batchUpdateNotification = (ids = [], status = {}, token) => {
 			return;
 		}
 
-		token = token ? token : await TokenStore.get().then(deviceToken => deviceToken);
+		token = token ? token : await TokenStore.getDeviceToken().then(deviceToken => deviceToken);
 
 		const url = `${global.urls.dispatchUrl}${global.urls.getNotifications(token)}`;
 		const options = {

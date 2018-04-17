@@ -23,6 +23,7 @@ import {clearError as clearLoginError} from '../../actions/login';
 import {Analytics} from '../../utils/analytics';
 import {main} from '../../constants/scenes';
 import * as Orientation from '../../utils/orientation';
+import {loginScreen} from '../../constants/colors';
 
 const KEYBOARD_EVENT = {
 	SHOW: global.android ? 'keyboardDidShow' : 'keyboardWillShow',
@@ -36,7 +37,7 @@ const portraitStyles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'space-between',
 		width: '100%',
-		backgroundColor: '#fff'
+		backgroundColor: loginScreen.backgroundColor
 	},
 	tracsImage: {
 		width: 80,
@@ -67,11 +68,11 @@ const portraitStyles = StyleSheet.create({
 	},
 	netidInput: global.android ? {} : {
 		borderBottomWidth: 1,
-		borderBottomColor: '#00557e'
+		borderBottomColor: loginScreen.inputUnderline
 	},
 	passwordInput: global.android ? {} : {
 		borderBottomWidth: 1,
-		borderBottomColor: '#00557e'
+		borderBottomColor: loginScreen.inputUnderline
 	},
 	uppsRequiredTextContainer: {
 		margin: 10,
@@ -91,7 +92,7 @@ const landscapeStyles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'space-between',
 		width: '100%',
-		backgroundColor: '#fff'
+		backgroundColor: loginScreen.backgroundColor
 	},
 	tracsImage: {
 		width: 120,
@@ -103,7 +104,7 @@ const landscapeStyles = StyleSheet.create({
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'space-around',
-		backgroundColor: '#fff',
+		backgroundColor: loginScreen.backgroundColor,
 		width: '100%'
 	},
 	loginGreeting: {
@@ -123,11 +124,11 @@ const landscapeStyles = StyleSheet.create({
 	},
 	netidInput: global.android ? {} : {
 		borderBottomWidth: 1,
-		borderBottomColor: '#00557e'
+		borderBottomColor: loginScreen.inputUnderline
 	},
 	passwordInput: global.android ? {} : {
 		borderBottomWidth: 1,
-		borderBottomColor: '#00557e'
+		borderBottomColor: loginScreen.inputUnderline
 	},
 	uppsRequiredTextContainer: {
 		margin: 10,
@@ -159,7 +160,7 @@ class LoginScreen extends Component {
 		this.uppsRequiredText = `Use of computer and network facilities owned or operated by Texas State University requires prior authorization. Unauthorized access is prohibited. Usage may be subject to security testing and monitoring, and affords no privacy guarantees or expectations except as otherwise provided by applicable privacy laws. Abuse is subject to criminal prosecution. Use of these facilities implies agreement to comply with the policies of Texas State University.`;
 
 		if (global.android) {
-			StatusBar.setBackgroundColor('#fff');
+			StatusBar.setBackgroundColor(loginScreen.backgroundColor);
 		}
 		StatusBar.setBarStyle('dark-content');
 
@@ -191,7 +192,7 @@ class LoginScreen extends Component {
 
 	componentWillMount() {
 		if (Actions.currentScene === 'login') {
-			firstLoad.get().then(firstLoad => {
+			firstLoad.isFirstLoad().then(firstLoad => {
 				if (firstLoad) {
 					Actions.about();
 				}
@@ -204,10 +205,7 @@ class LoginScreen extends Component {
 					if (creds !== false) {
 						this.userLogin(creds.username, creds.password);
 					}
-					this.setState({
-						checkingCredentials: false
-					});
-				}).catch(() => {
+				}).finally(() => {
 					this.setState({
 						checkingCredentials: false
 					});
@@ -260,10 +258,10 @@ class LoginScreen extends Component {
 
 			let currentOrientation = Orientation.getOrientation();
 			let selectedStyle = currentOrientation === Orientation.PORTRAIT ? portraitStyles : landscapeStyles;
-			let signInText = <Text style={{color: '#959595'}}>Sign in to your account</Text>;
+			let signInText = <Text style={{color: loginScreen.signInText}}>Sign in to your account</Text>;
 
 			return (
-				<ScrollView style={{backgroundColor: '#fff'}}
+				<ScrollView style={{backgroundColor: loginScreen.backgroundColor}}
 										ref={ref => this.scrollView = ref}
 										contentViewStyle={{height: '100%'}}
 										scrollEnabled={true}
@@ -282,7 +280,7 @@ class LoginScreen extends Component {
 									source={require('../../../img/tracs.png')}
 									style={selectedStyle.tracsImage}
 								/>
-								<Text style={{color: '#00557e', fontSize: 20}}>Welcome to TRACS</Text>
+								<Text style={{color: loginScreen.welcomeText, fontSize: 20}}>Welcome to TRACS</Text>
 								{currentOrientation === Orientation.PORTRAIT ? signInText : null}
 							</View>
 							<View style={selectedStyle.loginForm}>
@@ -291,9 +289,9 @@ class LoginScreen extends Component {
 									style={[selectedStyle.inputText, selectedStyle.netidInput]}
 									ref={ref => this.netid = ref}
 									placeholder="Net ID"
-									placeholderTextColor="#000000"
+									placeholderTextColor={loginScreen.placeHolderText}
 									underlineColorAndroid={this.underlineColor}
-									selectionColor='#909090'
+									selectionColor={loginScreen.selectionColor}
 									autoCapitalize='none'
 									autoCorrect={false}
 									returnKeyType='next'
@@ -309,8 +307,8 @@ class LoginScreen extends Component {
 									ref={ref => this.password = ref}
 									underlineColorAndroid={this.underlineColor}
 									placeholder="Password"
-									placeholderTextColor="#000000"
-									selectionColor='#909090'
+									placeholderTextColor={loginScreen.placeHolderText}
+									selectionColor={loginScreen.selectionColor}
 									autoCapitalize='none'
 									autoCorrect={false}
 									secureTextEntry={true}
@@ -328,7 +326,9 @@ class LoginScreen extends Component {
 											}
 										});
 									}}
-									onPress={() => this.userLogin(this.state.netid, this.state.password)}/>
+									onPress={() => {
+										this.userLogin(this.state.netid, this.state.password)
+									}}/>
 							</View>
 						</View>
 						<View style={selectedStyle.uppsRequiredTextContainer}>
