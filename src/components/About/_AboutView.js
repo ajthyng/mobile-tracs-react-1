@@ -9,12 +9,10 @@
  */
 
 import React, {Component} from 'react';
-import {Animated, BackHandler, StyleSheet} from 'react-native';
+import {Animated, BackHandler, Image, StyleSheet, View} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import Swiper from 'react-native-swiper';
 import {Analytics} from '../../utils/analytics';
-import {aboutPage as aboutPageColors} from '../../constants/colors';
-import AboutPage from './AboutPage';
 
 const styles = StyleSheet.create({
 	wrapper: {},
@@ -70,9 +68,11 @@ export default class AboutView extends Component {
 		);
 
 		this.slides = [
-			<AboutPage key='0'
-								 colors={aboutPageColors}
-			/>
+			<Image key='0' source={require('../../../img/screen1.png')} style={styles.image} resizeMethod='scale'/>,
+			<Image key='1' source={require('../../../img/screen2.png')} style={styles.image} resizeMethod='scale'/>,
+			<Image key='2' source={require('../../../img/screen3.png')} style={styles.image} resizeMethod='scale'/>,
+			<Image key='3' source={require('../../../img/screen4.png')} style={styles.image} resizeMethod='scale'/>,
+			<Image key='4' source={require('../../../img/screen5.png')} style={styles.image} resizeMethod='scale'/>
 		];
 		Analytics().setScreen('About', 'AboutView');
 	}
@@ -90,9 +90,11 @@ export default class AboutView extends Component {
 			<Swiper
 				style={styles.wrapper}
 				showsButtons={false}
-				showsPagination={false}
 				loop={false}
-				onIndexChanged={this.onIndexChanged}>
+				onIndexChanged={this.onIndexChanged}
+				dot={this.dot}
+				activeDot={this.activeDot}
+			>
 				{this.slides}
 			</Swiper>
 		);

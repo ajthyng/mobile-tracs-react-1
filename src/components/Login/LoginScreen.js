@@ -193,7 +193,7 @@ class LoginScreen extends Component {
 	componentWillMount() {
 		if (Actions.currentScene === 'login') {
 			firstLoad.isFirstLoad().then(firstLoad => {
-				if (firstLoad) {
+				if (true) {
 					Actions.about();
 				}
 			});

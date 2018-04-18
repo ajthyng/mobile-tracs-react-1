@@ -44,12 +44,24 @@ module.exports = {
 		backgroundColor: '#e8e8e8'
 	},
 	loginScreen: {
-		loginButton: "#00557e",
-		inputUnderline: "#00557e",
-		welcomeText: "#00557e",
+		loginButton: "#00547e",
+		inputUnderline: "#00547e",
+		welcomeText: "#00547e",
 		backgroundColor: "#fff",
 		signInText: "#959595",
 		selectionColor: "#909090",
 		placeHolderText: "#000"
+	},
+	aboutPageDefaults: {
+		backgroundColor: "#202020",
+		headerColor: "#501214",
+		textColor: "#fff",
+		iconColor: "#fff"
+	},
+	aboutPage: {
+		headerColor: "#00547e",
+		backgroundColor: "#E8E3DB",
+		headerTextColor: "#fff",
+		bodyTextColor: "#363534"
 	}
 };
