@@ -7,6 +7,7 @@ import * as urls from './config/urls'
 import PushNotification from 'react-native-push-notification';
 import {credentials} from './src/utils/storage';
 import {haxios as axios} from './src/utils/networking';
+import {login} from './src/actions/login';
 import {Analytics} from './src/utils/analytics';
 import {getNotifications} from './src/actions/notifications';
 
@@ -52,31 +53,7 @@ class App extends Component {
 		if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
 			credentials.get().then(creds => {
 				if (creds.username && creds.password) {
-					let options = {
-						method: 'get',
-						headers: {'Content-Type': 'application/json'}
-					};
-					let sessionURL = `${global.urls.baseUrl}${global.urls.session}`;
-					axios(sessionURL, options).then(res => {
-						if (res.data.hasOwnProperty('userEid') && res.data.userEid !== creds.username) {
-							let loginUrl = `${global.urls.baseUrl}${global.urls.login(creds.username, creds.password)}`;
-							let loginOptions = {
-								method: 'post',
-								headers: {'Content-Type': 'application/json'}
-							};
-							axios(loginUrl, loginOptions)
-								.then(res => {
-									store.dispatch(getNotifications());
-								})
-								.catch(err => {
-								});
-						} else {
-							store.dispatch(getNotifications());
-						}
-
-					}).catch(err => {
-						console.log(err);
-					});
+					store.dispatch(login(creds.username, creds.password));
 				}
 			});
 		}

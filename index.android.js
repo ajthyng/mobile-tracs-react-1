@@ -18,6 +18,7 @@ import {getNotifications} from './src/actions/notifications';
 import {credentials} from './src/utils/storage';
 import axios from 'axios';
 import {Analytics} from './src/utils/analytics';
+import {login} from './src/actions/login';
 
 const store = configureStore();
 const RouterWithRedux = connect()(Router);
@@ -28,6 +29,21 @@ global.android = Platform.OS === 'android';
 const Scenes = require('./src/scenes/Scenes')(store);
 
 class App extends Component {
+	constructor(props) {
+		super(props);
+		this.analytics = Analytics(store);
+		this.analytics.logAppStart();
+		FCM.getFCMToken().then(token => console.log(`${token}`));
+
+		this.state = {
+			appState: AppState.currentState
+		};
+
+		this.handleAppStateChange = this.handleAppStateChange.bind(this);
+		this.requestStoragePermission = this.requestStoragePermission.bind(this);
+		this.requestStoragePermission();
+	}
+
 	handleNotification = (notification) => {
 		console.log(notification);
 		if (notification.local_notification) {
@@ -48,47 +64,18 @@ class App extends Component {
 			store.dispatch(getNotifications());
 		}
 	};
-	handleAppStateChange = (nextAppState) => {
+
+	handleAppStateChange(nextAppState) {
 		if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
 			credentials.get().then(creds => {
 				if (creds.username && creds.password) {
-					let options = {
-						method: 'get',
-						headers: {'Content-Type': 'application/json'}
-					};
-					let sessionURL = `${global.urls.baseUrl}${global.urls.session}`;
-					axios(sessionURL, options).then(res => {
-						if (res.data.hasOwnProperty('userEid') && res.data.userEid !== creds.username) {
-							let loginUrl = `${global.urls.baseUrl}${global.urls.login(creds.username, creds.password)}`;
-							let loginOptions = {
-								method: 'post',
-								headers: {'Content-Type': 'application/json'}
-							};
-							axios(loginUrl, loginOptions).then(res => {
-
-							}).catch(err => {});
-						}
-					}).catch(err => {});
+					store.dispatch(login(creds.username, creds.password));
 				}
 			});
 		}
 		this.setState({
 			appState: nextAppState
 		});
-	};
-
-	constructor(props) {
-		super(props);
-		this.analytics = Analytics(store);
-		this.analytics.logAppStart();
-		FCM.getFCMToken().then(token => console.log(`${token}`));
-
-		this.state = {
-			appState: AppState.currentState
-		};
-
-		this.requestStoragePermission = this.requestStoragePermission.bind(this);
-		this.requestStoragePermission();
 	}
 
 	componentDidMount() {

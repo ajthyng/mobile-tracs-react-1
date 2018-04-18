@@ -17,7 +17,6 @@ import user from '../../../config/config.json';
 import ActivityIndicator from '../Helper/ActivityIndicator';
 import {clearRegisterError, register} from '../../actions/registrar';
 import * as Storage from '../../utils/storage';
-import {firstLoad} from '../../utils/storage';
 import LoginButton from './LoginButton';
 import {clearError as clearLoginError} from '../../actions/login';
 import {Analytics} from '../../utils/analytics';
@@ -192,11 +191,6 @@ class LoginScreen extends Component {
 
 	componentWillMount() {
 		if (Actions.currentScene === 'login') {
-			firstLoad.isFirstLoad().then(firstLoad => {
-				if (true) {
-					Actions.about();
-				}
-			});
 			if (this.props.loggingIn === false && this.props.registering === false) {
 				this.setState({
 					checkingCredentials: true

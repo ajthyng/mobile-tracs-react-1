@@ -72,7 +72,7 @@ export function getSiteInfo(netid) {
 					return site.id.split(':').last();
 				});
 				await cleanStorage(siteIds);
-				return Sites.get(netid).then(storedSites => {
+				return Sites.getSites(netid).then(storedSites => {
 					const payload = {
 						siteIds,
 						storedSites,

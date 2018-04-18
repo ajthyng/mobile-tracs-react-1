@@ -15,35 +15,19 @@ import PushNotification from 'react-native-push-notification';
 
 exports.credentials = {
 	get() {
-		return LockStatus().then(secure => {
-			if (secure === true) {
-				return Keychain.getGenericPassword().then(creds => {
-					if (!!creds.username === false) {
-						return Promise.resolve(false);
-					} else {
-						return Promise.resolve({
-							username: creds.username,
-							password: creds.password
-						});
-					}
-				});
+		return Keychain.getGenericPassword().then(creds => {
+			if (!!creds.username === false) {
+				return Promise.resolve(false);
 			} else {
-				return new Promise((resolve) => {
-					Keychain.resetGenericPassword().then(didReset => {
-						resolve(!didReset);
-					});
+				return Promise.resolve({
+					username: creds.username,
+					password: creds.password
 				});
 			}
 		});
 	},
 	store(netid, password) {
-		return LockStatus().then(secure => {
-			if (secure === true) {
-				return Keychain.setGenericPassword(netid, password);
-			} else {
-				return Keychain.resetGenericPassword();
-			}
-		});
+		return Keychain.setGenericPassword(netid, password);
 	},
 	async reset() {
 		let result = await Keychain.resetGenericPassword()
@@ -53,30 +37,12 @@ exports.credentials = {
 	}
 };
 
-exports.firstLoad = {
-	async isFirstLoad() {
-		return Keychain.getInternetCredentials('firstload')
-			.then(credentials => {
-				if (credentials) {
-					return Promise.resolve(false);
-				} else {
-					return Keychain.setInternetCredentials('firstload', 'first', 'load').then(() => {
-						return Promise.resolve(true);
-					}).catch(() => {
-						return Promise.resolve(false);
-					});
-				}
-			}).catch(err => {
-				return Promise.resolve(false);
-			});
-	}
-};
-
 /**
- * I don't think I need any of this but it's here for reference
+ * The following sections are still being called.
+ * All the logic is in place to make it work but it's not necessary to cache at this time.
  */
 exports.sites = {
-	async get(netid) {
+	async getSites(netid) {
 		return Promise.resolve({});
 	},
 	async store(sites, netid) {
@@ -88,7 +54,7 @@ exports.sites = {
 };
 
 exports.notifications = {
-	async get() {
+	async getNotifications() {
 		return Promise.resolve({});
 	},
 	async store(notifications) {
