@@ -107,19 +107,29 @@ export function login(netid = '', password) {
 			});
 			return;
 		}
-		const loginUrl = `${global.urls.baseUrl}${global.urls.login}`;
+
+		const loginUrl = `${global.urls.baseUrl}/portal/relogin?eid=${netid}&pw=${encodeURIComponent(password)}`;
 		const sessionUrl = `${global.urls.baseUrl}${global.urls.session}`;
 		const loginData = new FormData();
 		loginData.append('_username', netid);
 		loginData.append('_password', password);
 		axios(loginUrl, {
 			method: 'post',
-			data: loginData,
-			headers: {
-				"content-type": "multipart/form-data",
-				"cookie": ""
-			}
 		}).then(async res => {
+
+		//const loginUrl = `${global.urls.baseUrl}${global.urls.login}`;
+		//const sessionUrl = `${global.urls.baseUrl}${global.urls.session}`;
+		//const loginData = new FormData();
+		//loginData.append('_username', netid);
+		//loginData.append('_password', password);
+		//axios(loginUrl, {
+		//	method: 'post',
+		//	data: loginData,
+		//	headers: {
+		//		"content-type": "multipart/form-data",
+		//		"cookie": ""
+		//	}
+		//}).then(async res => {
 			let creds = {
 				netid,
 				password
