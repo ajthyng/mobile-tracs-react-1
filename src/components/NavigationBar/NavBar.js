@@ -71,7 +71,6 @@ class NavBar extends Component {
 	}
 
 	onBack() {
-		console.log("Back");
 		Actions.pop();
 	}
 

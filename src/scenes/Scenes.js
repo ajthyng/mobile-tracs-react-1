@@ -22,12 +22,10 @@ import SiteList from '../components/SiteList/SiteList';
 import * as TabIcons from '../components/TabBar/TabIcons';
 import TRACSWebView from '../components/TRACSWebView/TRACSWebNative';
 import {Actions, Scene, Tabs, Stack, ActionConst} from 'react-native-router-flux';
-import {LeftButton} from 'react-native-router-flux/dist/NavBar';
-import Icon from 'react-native-vector-icons/Ionicons';
-import {View} from 'react-native';
-import NavBar from '../components/NavigationBar/NavBar';
+import Rx from 'rxjs/Rx';
 
 Scenes = function (store) {
+	let goBackSubject = new Rx.Subject();
 	return Actions.create(
 		<Scene key="root">
 			<Scene key={scenes.login}
@@ -70,11 +68,12 @@ Scenes = function (store) {
 									 return props;
 								 }}/>
 					<Scene key={scenes.tracsAnnouncement}
-								 component={TRACSWebView}
-								 hideNavBar={global.android}
-								 navBar={(props) => {
-								 	return (<NavBar {...props} title="TRACS"/>);
+								 back
+								 onBack={() => {
+								 	goBackSubject.next();
 								 }}
+								 component={(props) => <TRACSWebView {...props} backSubject={goBackSubject} /> }
+								 hideNavBar={global.android}
 								 onEnter={() => {
 									 store.dispatch(setCurrentScene(scenes.tracsAnnouncement));
 								 }}/>
@@ -103,11 +102,13 @@ Scenes = function (store) {
 									 store.dispatch(setCurrentScene(scenes.dashboard));
 								 }}/>
 					<Scene key={scenes.tracsDashboard}
-								 component={TRACSWebView}
 								 hideNavBar={global.android}
-								 navBar={(props) => {
-								 	return (<NavBar {...props} title="TRACS"/>);
+								 back
+								 title="TRACS"
+								 onBack={() => {
+									 goBackSubject.next();
 								 }}
+								 component={(props) => <TRACSWebView {...props} backSubject={goBackSubject}/>}
 								 onEnter={() => {
 									 store.dispatch(setCurrentScene(scenes.tracsDashboard));
 								 }}

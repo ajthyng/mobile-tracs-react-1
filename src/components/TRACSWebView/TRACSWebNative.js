@@ -20,7 +20,32 @@ const styles = StyleSheet.create({
 		width: '100%'
 	}
 });
+
+const WEBVIEW_REF = "webview";
+
 export default class TRACSWebView extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			canGoBack: false
+		};
+
+		this.backSubscription = this.props.backSubject.subscribe({
+			next: () => {
+				if (this.state.canGoBack) {
+					try {
+						this.refs.webview.goBack();
+						return;
+					} catch (error) {
+						console.log(error);
+					}
+				}
+
+				Actions.pop();
+			}
+		});
+	}
+
 	handleBack = () => {
 		if (Actions.currentScene.indexOf('tracs') >= 0) {
 			Actions.pop();
@@ -28,17 +53,14 @@ export default class TRACSWebView extends Component {
 		return true;
 	};
 
-	static onLeft(props) {
-		console.log("LEFT");
-	}
-
-	componentWillMount() {
+	componentDidMount() {
 		BackHandler.addEventListener(BackHandler.DEVICE_BACK_EVENT, this.handleBack);
 		Analytics().logTracsWebOpen();
 		Analytics().setScreen('TRACSWeb', 'TRACSWebView');
 	}
 
 	componentWillUnmount() {
+		this.backSubscription.unsubscribe();
 		BackHandler.removeEventListener(BackHandler.DEVICE_BACK_EVENT, this.handleBack);
 	}
 
@@ -48,16 +70,23 @@ export default class TRACSWebView extends Component {
 		} else {
 			return (
 				<WebView
+					ref={WEBVIEW_REF}
 					style={styles.webView}
 					sendCookies={true}
 					source={{
 						url: this.props.baseUrl
 					}}
 					{...this.props}
-					renderError={(error) => {
+					renderError={() => {
 						return (
 							<WebError/>
 						)
+					}}
+					onNavigationStateChange={({canGoBack}) => {
+						console.log("CanGoBack is :", canGoBack);
+						this.setState(() => {
+							return {canGoBack};
+						});
 					}}
 				/>
 			);

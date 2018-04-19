@@ -9,6 +9,7 @@
  */
 import React, {Component} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+import {connect} from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {workspace} from '../../constants/colors';
 import {Actions} from 'react-native-router-flux';
@@ -57,7 +58,7 @@ class Workspace extends Component {
 				}}>
 					<View style={styles.workspace}>
 						<Text style={styles.text}>
-							My Workspace
+							{__DEV__ ? `${this.props.netid}'s `: "My "}Workspace
 						</Text>
 						<View style={styles.moreEllipses}>
 							<Icon name="ellipsis-h" size={20} color={workspace.textColor}/>
@@ -72,4 +73,10 @@ class Workspace extends Component {
 	}
 }
 
-export default Workspace;
+const mapStateToProps = (state, ownProps) => {
+	return {
+		netid: state.login.netid
+	}
+};
+
+export default connect(mapStateToProps, null)(Workspace);
