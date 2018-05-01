@@ -72,9 +72,27 @@ const fetchAnnouncement = (notification) => {
 	});
 };
 
-const fetchForumPost = (notification) => {
+const fetchForumPost = async (notification) => {
 	let messageUrl = `${global.urls.baseUrl}${global.urls.forumMessage(notification.keys.object_id)}`;
 	let topicUrl = `${global.urls.baseUrl}${global.urls.forumTopic(notification.keys.object_id)}`;
+	let forumUrl = `${global.urls.baseUrl}${global.urls.forumUrl(notification.other_keys.site_id)}`;
+	let forumIsHidden = false;
+	let siteForums = await axios(forumUrl).catch(err => {
+		return Promise.resolve(new Error("Forum can't be accessed " + notification.id));
+	});
+
+	if (siteForums.hasOwnProperty("data") && siteForums.data.hasOwnProperty("forums_collection")) {
+		let forums = siteForums.data["forums_collection"].reduce((acc, forum) => {
+			acc.push(forum.id);
+			return acc;
+		}, []);
+		let forumId = parseInt(notification.keys.object_id.split('/')[5]);
+		forumIsHidden = forums.indexOf(forumId) < 0;
+	}
+
+	if (forumIsHidden) {
+		return Promise.resolve(new Error("Forum can't be accessed " + notification.id));
+	}
 
 	let forumPromises = [
 		axios(messageUrl, {method: 'get'}).then(res => {

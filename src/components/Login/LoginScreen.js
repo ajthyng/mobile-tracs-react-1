@@ -148,6 +148,7 @@ class LoginScreen extends Component {
 		this.state = {
 			netid,
 			password,
+			storedCreds: {},
 			checkingCredentials: true,
 			view: null,
 			loginPosition: {
@@ -197,6 +198,9 @@ class LoginScreen extends Component {
 				});
 				Storage.credentials.get().then(creds => {
 					if (creds !== false) {
+						this.setState({
+							storedCreds: creds
+						});
 						this.userLogin(creds.username, creds.password);
 					}
 				}).finally(() => {
@@ -209,6 +213,7 @@ class LoginScreen extends Component {
 	}
 
 	componentDidMount() {
+		console.log("LoginScreen Mounted");
 		this.keyboardShowListener = Keyboard.addListener(KEYBOARD_EVENT.HIDE, this.scrollToTop);
 		this.keyboardHideListener = Keyboard.addListener(KEYBOARD_EVENT.SHOW, this.scrollToForm);
 	}

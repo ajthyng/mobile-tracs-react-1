@@ -13,8 +13,8 @@ import {authActions} from '../constants/actions';
 import CookieManager from 'react-native-cookies';
 import {credentials} from '../utils/storage';
 import {Analytics} from '../utils/analytics';
-import * as Storage from '../utils/storage';
 import {haxios as axios} from '../utils/networking';
+import Toast from '@remobile/react-native-toast';
 
 const {
 	REQUEST_LOGIN,
@@ -110,26 +110,13 @@ export function login(netid = '', password) {
 
 		const loginUrl = `${global.urls.baseUrl}/portal/relogin?eid=${netid}&pw=${encodeURIComponent(password)}`;
 		const sessionUrl = `${global.urls.baseUrl}${global.urls.session}`;
-		const loginData = new FormData();
-		loginData.append('_username', netid);
-		loginData.append('_password', password);
+
 		axios(loginUrl, {
 			method: 'post',
 		}).then(async res => {
+			let loginFailed = (res.data || "").indexOf('"loggedIn": true') < 0;
+			Toast.showLongBottom(`Logged In: ${loginFailed ? "false" : "true"}`);
 
-		//const loginUrl = `${global.urls.baseUrl}${global.urls.login}`;
-		//const sessionUrl = `${global.urls.baseUrl}${global.urls.session}`;
-		//const loginData = new FormData();
-		//loginData.append('_username', netid);
-		//loginData.append('_password', password);
-		//axios(loginUrl, {
-		//	method: 'post',
-		//	data: loginData,
-		//	headers: {
-		//		"content-type": "multipart/form-data",
-		//		"cookie": ""
-		//	}
-		//}).then(async res => {
 			let creds = {
 				netid,
 				password
