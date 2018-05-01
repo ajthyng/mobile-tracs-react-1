@@ -37,23 +37,15 @@ class NotificationView extends Component {
 		}
 	};
 
-	getNotifications = (getSettings = false) => {
+	getNotifications = async (getSettings = false) => {
 		if (!this.props.loadingNotifications) {
 			this.setState({
 				isRefreshing: true
 			});
-			let promises = [
-				this.props.getNotifications()
-			];
+			await this.props.getNotifications();
 			if (getSettings) {
-				promises.push(this.props.getSettings());
+				await this.props.getSettings();
 			}
-
-			Promise.all(promises).then(result => {
-				this.setState({
-					isRefreshing: false
-				});
-			});
 		}
 	};
 
@@ -129,7 +121,7 @@ class NotificationView extends Component {
 			)
 		}
 		let author = item.tracs_data.authoredBy;
-		author = author.split(' ');
+		author = (author || "").split(' ');
 		author.splice(author.length - 1, 1);
 		let data = {
 			deviceWidth: this.state.deviceWidth,
@@ -232,6 +224,8 @@ class NotificationView extends Component {
 		}
 		this.batchUpdateSeen = this.batchUpdateSeen.bind(this);
 		this.handleBack = this.handleBack.bind(this);
+		this.toggleSetting = this.toggleSetting.bind(this);
+
 	}
 
 	toggleSetting(type, id = null) {
@@ -266,8 +260,9 @@ class NotificationView extends Component {
 			this.setState({
 				firstLoad: false,
 				isRefreshing: false
-			})
+			});
 		}
+		this.batchUpdateSeen();
 	}
 
 	componentWillUpdate(nextProps, nextState) {
@@ -305,7 +300,7 @@ class NotificationView extends Component {
 		return true;
 	}
 
-	shouldComponentUpdate(nextProps, nextState) {
+	shouldComponentUpdate(nextProps) {
 		if (this.props.isGuestAccount === true) {
 			return false;
 		}
@@ -323,7 +318,6 @@ class NotificationView extends Component {
 
 	render() {
 		this.start = new Date();
-
 		if (this.props.isGuestAccount && this.props.renderDashboard === false) {
 			return (
 				<View style={{height: 80, backgroundColor: "#fff", alignItems: 'center', justifyContent: 'center'}}>
@@ -384,10 +378,6 @@ class NotificationView extends Component {
 			);
 		}
 
-	}
-
-	componentDidMount() {
-		this.batchUpdateSeen();
 	}
 
 	componentDidUpdate() {

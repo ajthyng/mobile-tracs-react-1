@@ -31,6 +31,7 @@ const WebError = () => (
 	<View style={styles.container}>
 		<Text style={styles.text}>We were unable to access your TRACS Site, it looks you have no internet connection.</Text>
 		<Text style={styles.text}>Make sure Wi-Fi or celluar data is turned on, then try again.</Text>
+		<View style={styles.button}><Text>Try Again</Text></View>
 	</View>
 );
 export default WebError;
