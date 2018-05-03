@@ -42,10 +42,14 @@ class NotificationView extends Component {
 			this.setState({
 				isRefreshing: true
 			});
-			await this.props.getNotifications();
 			if (getSettings) {
 				await this.props.getSettings();
 			}
+			await this.props.getNotifications();
+
+			this.setState({
+				isRefreshing: false
+			});
 		}
 	};
 
@@ -229,7 +233,7 @@ class NotificationView extends Component {
 	}
 
 	toggleSetting(type, id = null) {
-		return (value) => {
+		return async (value) => {
 			let userSettings = new Settings({
 				blacklist: this.props.blacklist,
 				global_disable: this.props.global_disable
@@ -239,6 +243,7 @@ class NotificationView extends Component {
 			} else {
 				userSettings.setType(type, value);
 			}
+			let token = this.props.token || await TokenStore.getDeviceToken().then(token => token);
 			this.props.saveSettings(userSettings.getSettings(), this.props.token, false);
 		};
 	};
@@ -399,7 +404,7 @@ class NotificationView extends Component {
 
 		ids = ids.filter(id => id !== null);
 
-		let token = this.props.dispatchToken || TokenStore.getDeviceToken().then(token => token);
+		let token = this.props.dispatchToken || await TokenStore.getDeviceToken().then(token => token);
 
 		if (!this.props.isBatchUpdating && !this.props.errorMessage && ids.length > 0) {
 			this.props.batchUpdate(ids, status, token);
