@@ -45,7 +45,7 @@ class NotificationView extends Component {
 			if (getSettings) {
 				await this.props.getSettings();
 			}
-			await this.props.getNotifications();
+			await this.props.getNotifications(this.props.deviceToken);
 
 			this.setState({
 				isRefreshing: false
@@ -203,7 +203,8 @@ class NotificationView extends Component {
 		this.state = {
 			deviceWidth: Dimensions.get('window').width,
 			isRefreshing: true,
-			firstLoad: true
+			firstLoad: true,
+			settingsChanged: false
 		};
 
 		this.forums = [];
@@ -229,7 +230,6 @@ class NotificationView extends Component {
 		this.batchUpdateSeen = this.batchUpdateSeen.bind(this);
 		this.handleBack = this.handleBack.bind(this);
 		this.toggleSetting = this.toggleSetting.bind(this);
-
 	}
 
 	toggleSetting(type, id = null) {
@@ -404,7 +404,7 @@ class NotificationView extends Component {
 
 		ids = ids.filter(id => id !== null);
 
-		let token = this.props.dispatchToken || await TokenStore.getDeviceToken().then(token => token);
+		let token = this.props.deviceToken || await TokenStore.getDeviceToken().then(token => token);
 
 		if (!this.props.isBatchUpdating && !this.props.errorMessage && ids.length > 0) {
 			this.props.batchUpdate(ids, status, token);
@@ -452,7 +452,7 @@ const mapStateToProps = (state, ownProps) => {
 
 	return {
 		notificationsLoaded: state.notifications.isLoaded,
-		dispatchToken: state.registrar.deviceToken,
+		deviceToken: state.registrar.deviceToken,
 		isBatchUpdating: state.notifications.isBatchUpdating,
 		loadingNotifications: state.notifications.isLoading,
 		errorMessage: state.notifications.errorMessage,
@@ -473,7 +473,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		getNotifications: () => dispatch(getNotifications()),
+		getNotifications: (token) => dispatch(getNotifications(token)),
 		getSettings: () => dispatch(getSettings()),
 		saveSettings: (settings, token, local) => dispatch(saveSettings(settings, token, local)),
 		batchUpdate: (ids, status, token) => dispatch(batchUpdateNotification(ids, status, token))
