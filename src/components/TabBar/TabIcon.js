@@ -10,19 +10,15 @@ const styles = StyleSheet.create({
 		flexDirection: 'column',
 		alignItems: 'center',
 		justifyContent: 'center',
-		marginTop: 5,
+		marginTop: 5
 	},
 	badge: {
 		backgroundColor: site.badgeColor,
 		height: BADGE_SIDE,
 		width: BADGE_SIDE,
 		borderRadius: BADGE_SIDE / 2,
-		top: -3,
-		left: "12%",
-		margin: 'auto',
 		position: 'absolute',
 		alignItems: 'center',
-		flexDirection: 'row',
 		justifyContent: 'center'
 	},
 	badgeText: {
@@ -39,7 +35,12 @@ class TabIcon extends Component {
 	}
 
 	render() {
-		let badge = <View style={styles.badge}><Text style={styles.badgeText}>{this.props.badgeCount}</Text></View>;
+		let platformStyle = global.android ? {top: 0, left: '12%'} : {right: -5, bottom: 0};
+		let badge = (
+			<View style={[styles.badge, platformStyle]}>
+				<Text style={styles.badgeText}>{this.props.badgeCount}</Text>
+			</View>
+		);
 		return (
 			<View style={styles.container}>
 				<Icon name={this.props.name} size={this.props.size} color={this.props.color}/>

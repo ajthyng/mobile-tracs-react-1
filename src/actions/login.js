@@ -114,9 +114,6 @@ export function login(netid = '', password) {
 		axios(loginUrl, {
 			method: 'post',
 		}).then(async res => {
-			let loginFailed = (res.data || "").indexOf('"loggedIn": true') < 0;
-			Toast.showLongBottom(`Logged In: ${loginFailed ? "false" : "true"}`);
-
 			let creds = {
 				netid,
 				password
