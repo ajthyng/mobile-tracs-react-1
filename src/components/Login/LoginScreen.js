@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import user from '../../../config/config.json';
 import ActivityIndicator from '../Helper/ActivityIndicator';
-import {clearRegisterError, register} from '../../actions/registrar';
+import {clearRegisterError, register, registrationFailure} from '../../actions/registrar';
 import * as Storage from '../../utils/storage';
 import LoginButton from './LoginButton';
 import {clearError as clearLoginError} from '../../actions/login';
@@ -357,7 +357,11 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		login: (netid, password) => dispatch(register(netid, password)),
+		login: (netid, password) => {
+			dispatch(register(netid, password)).catch(err => {
+				dispatch(registrationFailure(err, dispatch, netid, password));
+			})
+		},
 		clearErrors: () => {
 			dispatch(clearLoginError());
 			dispatch(clearRegisterError());

@@ -44,7 +44,7 @@ const registrationSuccess = (deviceToken, netid) => {
 	}
 };
 
-const registrationFailure = (error, dispatch, netid, password) => {
+export const registrationFailure = (error, dispatch, netid, password) => {
 	let errorMessage = '';
 	switch ((error.response || {}).status) {
 		case 400:
@@ -175,7 +175,7 @@ export const setGuestAccount = (isGuestAccount = false) => {
 };
 
 export const register = (netid = '', password) => {
-	return (dispatch) => {
+	return async (dispatch) => {
 		dispatch(requestRegistration());
 		if (netid.length === 0) {
 			dispatch(registrationFailure(new Error("A NetID is required to login to this application"), dispatch, netid, password));
@@ -199,9 +199,13 @@ export const register = (netid = '', password) => {
 					jwt: res.data,
 					deviceToken,
 				};
-				postRegistration(payload, dispatch);
+				postRegistration(payload, dispatch).catch(err => {
+					console.log(err);
+					dispatch(registrationFailure(err, dispatch, netid, password));
+				});
 			}
 		}).catch(err => {
+			debugger;
 			console.log(err);
 			dispatch(registrationFailure(err, dispatch, netid, password));
 		});
