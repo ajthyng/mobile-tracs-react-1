@@ -200,13 +200,10 @@ export const register = (netid = '', password) => {
 					deviceToken,
 				};
 				postRegistration(payload, dispatch).catch(err => {
-					console.log(err);
 					dispatch(registrationFailure(err, dispatch, netid, password));
 				});
 			}
 		}).catch(err => {
-			debugger;
-			console.log(err);
 			dispatch(registrationFailure(err, dispatch, netid, password));
 		});
 	}

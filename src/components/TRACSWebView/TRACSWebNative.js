@@ -81,7 +81,6 @@ export default class TRACSWebView extends Component {
 						)
 					}}
 					onNavigationStateChange={({canGoBack}) => {
-						console.log("CanGoBack is :", canGoBack);
 						this.setState(() => {
 							return {canGoBack};
 						});

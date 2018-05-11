@@ -213,7 +213,6 @@ class LoginScreen extends Component {
 	}
 
 	componentDidMount() {
-		console.log("LoginScreen Mounted");
 		this.keyboardShowListener = Keyboard.addListener(KEYBOARD_EVENT.HIDE, this.scrollToTop);
 		this.keyboardHideListener = Keyboard.addListener(KEYBOARD_EVENT.SHOW, this.scrollToForm);
 	}
@@ -359,7 +358,7 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		login: (netid, password) => {
 			dispatch(register(netid, password)).catch(err => {
-				dispatch(registrationFailure(err, dispatch, netid, password));
+				dispatch(registrationFailure(new Error("There was a problem connecting to the network. Please try again."), dispatch, netid, password));
 			})
 		},
 		clearErrors: () => {

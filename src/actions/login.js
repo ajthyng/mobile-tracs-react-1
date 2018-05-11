@@ -43,10 +43,18 @@ const loginSuccess = (netid, password, tracsID) => {
 	}
 };
 
-const loginFailureAction = (errorMessage) => {
+const loginFailureAction = (error) => {
+	let errorMessage = '';
+	switch ((error.response || {}).status) {
+		case 404:
+			errorMessage = 'Could not connect to TRACS, please contact support.';
+			break;
+		default:
+			errorMessage = 'Network Error. Please check your internet connection and try again.';
+	}
 	return {
 		type: LOGIN_FAILURE,
-		errorMessage
+		errorMessage: new Error(errorMessage)
 	}
 };
 
