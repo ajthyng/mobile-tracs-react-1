@@ -17,6 +17,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.util.LongSparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -128,8 +129,12 @@ class FileDownloader {
                             DownloadManager.STATUS_SUCCESSFUL
             );
 
-            this.downloadId = downloadManager.enqueue(request);
-            this.downloadStatus.put(downloadId, false);
+            try {
+                this.downloadId = downloadManager.enqueue(request);
+                this.downloadStatus.put(downloadId, false);
+            } catch (Exception e) {
+                Log.i("FileDownloader", e.toString());
+            }
         }
     }
 
