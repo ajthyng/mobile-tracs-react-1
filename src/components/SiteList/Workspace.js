@@ -58,7 +58,7 @@ class Workspace extends Component {
 				}}>
 					<View style={styles.workspace}>
 						<Text style={styles.text}>
-							{__DEV__ ? `${this.props.netid}'s `: "My "}TRACS Home
+							My TRACS Home
 						</Text>
 						<View style={styles.moreEllipses}>
 							<Icon name="ellipsis-h" size={20} color={workspace.textColor}/>
