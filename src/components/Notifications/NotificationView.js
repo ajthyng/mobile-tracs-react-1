@@ -37,22 +37,18 @@ class NotificationView extends Component {
 		}
 	};
 
-	getNotifications = (getSettings = false) => {
+	getNotifications = async (getSettings = false) => {
 		if (!this.props.loadingNotifications) {
 			this.setState({
 				isRefreshing: true
 			});
-			let promises = [
-				this.props.getNotifications()
-			];
 			if (getSettings) {
-				promises.push(this.props.getSettings());
+				await this.props.getSettings();
 			}
+			await this.props.getNotifications(this.props.deviceToken);
 
-			Promise.all(promises).then(result => {
-				this.setState({
-					isRefreshing: false
-				});
+			this.setState({
+				isRefreshing: false
 			});
 		}
 	};
@@ -129,7 +125,7 @@ class NotificationView extends Component {
 			)
 		}
 		let author = item.tracs_data.authoredBy;
-		author = author.split(' ');
+		author = (author || "").split(' ');
 		author.splice(author.length - 1, 1);
 		let data = {
 			deviceWidth: this.state.deviceWidth,
@@ -207,7 +203,8 @@ class NotificationView extends Component {
 		this.state = {
 			deviceWidth: Dimensions.get('window').width,
 			isRefreshing: true,
-			firstLoad: true
+			firstLoad: true,
+			settingsChanged: false
 		};
 
 		this.forums = [];
@@ -232,10 +229,11 @@ class NotificationView extends Component {
 		}
 		this.batchUpdateSeen = this.batchUpdateSeen.bind(this);
 		this.handleBack = this.handleBack.bind(this);
+		this.toggleSetting = this.toggleSetting.bind(this);
 	}
 
 	toggleSetting(type, id = null) {
-		return (value) => {
+		return async (value) => {
 			let userSettings = new Settings({
 				blacklist: this.props.blacklist,
 				global_disable: this.props.global_disable
@@ -245,6 +243,7 @@ class NotificationView extends Component {
 			} else {
 				userSettings.setType(type, value);
 			}
+			let token = this.props.token || await TokenStore.getDeviceToken().then(token => token);
 			this.props.saveSettings(userSettings.getSettings(), this.props.token, false);
 		};
 	};
@@ -266,8 +265,9 @@ class NotificationView extends Component {
 			this.setState({
 				firstLoad: false,
 				isRefreshing: false
-			})
+			});
 		}
+		this.batchUpdateSeen();
 	}
 
 	componentWillUpdate(nextProps, nextState) {
@@ -305,7 +305,7 @@ class NotificationView extends Component {
 		return true;
 	}
 
-	shouldComponentUpdate(nextProps, nextState) {
+	shouldComponentUpdate(nextProps) {
 		if (this.props.isGuestAccount === true) {
 			return false;
 		}
@@ -323,7 +323,6 @@ class NotificationView extends Component {
 
 	render() {
 		this.start = new Date();
-
 		if (this.props.isGuestAccount && this.props.renderDashboard === false) {
 			return (
 				<View style={{height: 80, backgroundColor: "#fff", alignItems: 'center', justifyContent: 'center'}}>
@@ -386,10 +385,6 @@ class NotificationView extends Component {
 
 	}
 
-	componentDidMount() {
-		this.batchUpdateSeen();
-	}
-
 	componentDidUpdate() {
 		this.batchUpdateSeen();
 	}
@@ -409,7 +404,7 @@ class NotificationView extends Component {
 
 		ids = ids.filter(id => id !== null);
 
-		let token = this.props.dispatchToken || TokenStore.getDeviceToken().then(token => token);
+		let token = this.props.deviceToken || await TokenStore.getDeviceToken().then(token => token);
 
 		if (!this.props.isBatchUpdating && !this.props.errorMessage && ids.length > 0) {
 			this.props.batchUpdate(ids, status, token);
@@ -457,7 +452,7 @@ const mapStateToProps = (state, ownProps) => {
 
 	return {
 		notificationsLoaded: state.notifications.isLoaded,
-		dispatchToken: state.registrar.deviceToken,
+		deviceToken: state.registrar.deviceToken,
 		isBatchUpdating: state.notifications.isBatchUpdating,
 		loadingNotifications: state.notifications.isLoading,
 		errorMessage: state.notifications.errorMessage,
@@ -478,7 +473,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		getNotifications: () => dispatch(getNotifications()),
+		getNotifications: (token) => dispatch(getNotifications(token)),
 		getSettings: () => dispatch(getSettings()),
 		saveSettings: (settings, token, local) => dispatch(saveSettings(settings, token, local)),
 		batchUpdate: (ids, status, token) => dispatch(batchUpdateNotification(ids, status, token))

@@ -6,15 +6,12 @@ const styles = StyleSheet.create({
 	container: {
 		backgroundColor: '#FFF',
 		alignItems: 'center',
-		justifyContent: 'space-between',
 		padding: 8,
 		flexDirection: 'row',
 	},
 	label: {
+		flex: 1,
 		fontSize: 18
-	},
-	switch: {
-		alignSelf: 'flex-end'
 	}
 });
 
@@ -23,14 +20,17 @@ class SettingSwitch extends Component {
 		super(props);
 	}
 
-
-
 	render() {
 		return (
 			<View style={styles.container}>
-				<Text style={styles.label}>{this.props.label}</Text>
+				<Text
+					style={styles.label}
+					numberOfLines={1}
+					ellipsizeMode="tail"
+				>
+					{this.props.label}
+				</Text>
 				<Switch
-					style={styles.switch}
 					onValueChange={this.props.toggleSwitch}
 					value={this.props.switchValue}
 					disabled={this.props.pending}

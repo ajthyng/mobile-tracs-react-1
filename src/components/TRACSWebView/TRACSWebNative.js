@@ -21,8 +21,6 @@ const styles = StyleSheet.create({
 	}
 });
 
-const WEBVIEW_REF = "webview";
-
 export default class TRACSWebView extends Component {
 	constructor(props) {
 		super(props);
@@ -34,7 +32,7 @@ export default class TRACSWebView extends Component {
 			next: () => {
 				if (this.state.canGoBack) {
 					try {
-						this.refs.webview.goBack();
+						this.webview.goBack();
 						return;
 					} catch (error) {
 						console.log(error);
@@ -70,7 +68,7 @@ export default class TRACSWebView extends Component {
 		} else {
 			return (
 				<WebView
-					ref={WEBVIEW_REF}
+					ref={c => this.webview = c}
 					style={styles.webView}
 					sendCookies={true}
 					source={{
@@ -79,11 +77,10 @@ export default class TRACSWebView extends Component {
 					{...this.props}
 					renderError={() => {
 						return (
-							<WebError/>
+							<WebError refresh={this.webview.reload}/>
 						)
 					}}
 					onNavigationStateChange={({canGoBack}) => {
-						console.log("CanGoBack is :", canGoBack);
 						this.setState(() => {
 							return {canGoBack};
 						});

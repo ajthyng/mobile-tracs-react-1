@@ -9,6 +9,9 @@
  */
 
 import axios from 'axios';
+import {Platform} from 'react-native';
+import * as pckg from '../../package';
+import * as DeviceInfo from 'react-native-device-info';
 
 module.exports = {
 	haxios: (url, config = {}) => {

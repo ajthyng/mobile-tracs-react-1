@@ -13,8 +13,8 @@ import {authActions} from '../constants/actions';
 import CookieManager from 'react-native-cookies';
 import {credentials} from '../utils/storage';
 import {Analytics} from '../utils/analytics';
-import * as Storage from '../utils/storage';
 import {haxios as axios} from '../utils/networking';
+import Toast from '@remobile/react-native-toast';
 
 const {
 	REQUEST_LOGIN,
@@ -43,10 +43,18 @@ const loginSuccess = (netid, password, tracsID) => {
 	}
 };
 
-const loginFailureAction = (errorMessage) => {
+const loginFailureAction = (error) => {
+	let errorMessage = '';
+	switch ((error.response || {}).status) {
+		case 404:
+			errorMessage = 'Could not connect to TRACS, please contact support.';
+			break;
+		default:
+			errorMessage = 'Network Error. Please check your internet connection and try again.';
+	}
 	return {
 		type: LOGIN_FAILURE,
-		errorMessage
+		errorMessage: new Error(errorMessage)
 	}
 };
 
@@ -110,26 +118,10 @@ export function login(netid = '', password) {
 
 		const loginUrl = `${global.urls.baseUrl}/portal/relogin?eid=${netid}&pw=${encodeURIComponent(password)}`;
 		const sessionUrl = `${global.urls.baseUrl}${global.urls.session}`;
-		const loginData = new FormData();
-		loginData.append('_username', netid);
-		loginData.append('_password', password);
+
 		axios(loginUrl, {
 			method: 'post',
 		}).then(async res => {
-
-		//const loginUrl = `${global.urls.baseUrl}${global.urls.login}`;
-		//const sessionUrl = `${global.urls.baseUrl}${global.urls.session}`;
-		//const loginData = new FormData();
-		//loginData.append('_username', netid);
-		//loginData.append('_password', password);
-		//axios(loginUrl, {
-		//	method: 'post',
-		//	data: loginData,
-		//	headers: {
-		//		"content-type": "multipart/form-data",
-		//		"cookie": ""
-		//	}
-		//}).then(async res => {
 			let creds = {
 				netid,
 				password

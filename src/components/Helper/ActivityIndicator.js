@@ -50,7 +50,7 @@ class ActivityIndicator extends Component {
 		});
 	}
 
-	componentDidMount() {
+	componentWillMount() {
 		this.rotateImage();
 	}
 

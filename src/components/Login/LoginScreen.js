@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import user from '../../../config/config.json';
 import ActivityIndicator from '../Helper/ActivityIndicator';
-import {clearRegisterError, register} from '../../actions/registrar';
+import {clearRegisterError, register, registrationFailure} from '../../actions/registrar';
 import * as Storage from '../../utils/storage';
 import LoginButton from './LoginButton';
 import {clearError as clearLoginError} from '../../actions/login';
@@ -148,6 +148,7 @@ class LoginScreen extends Component {
 		this.state = {
 			netid,
 			password,
+			storedCreds: {},
 			checkingCredentials: true,
 			view: null,
 			loginPosition: {
@@ -197,6 +198,9 @@ class LoginScreen extends Component {
 				});
 				Storage.credentials.get().then(creds => {
 					if (creds !== false) {
+						this.setState({
+							storedCreds: creds
+						});
 						this.userLogin(creds.username, creds.password);
 					}
 				}).finally(() => {
@@ -352,7 +356,11 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		login: (netid, password) => dispatch(register(netid, password)),
+		login: (netid, password) => {
+			dispatch(register(netid, password)).catch(err => {
+				dispatch(registrationFailure(new Error("There was a problem connecting to the network. Please try again."), dispatch, netid, password));
+			})
+		},
 		clearErrors: () => {
 			dispatch(clearLoginError());
 			dispatch(clearRegisterError());

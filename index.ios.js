@@ -10,7 +10,7 @@ import {haxios as axios} from './src/utils/networking';
 import {login} from './src/actions/login';
 import {Analytics} from './src/utils/analytics';
 import {getNotifications} from './src/actions/notifications';
-
+import {setToken} from './src/actions/registrar';
 const ConnectedRouter = connect()(Router);
 const store = configureStore();
 
@@ -33,6 +33,9 @@ class App extends Component {
 		};
 		PushNotification.configure({
 			onRegister: ({token, os}) => {
+				if (!!token) {
+					store.dispatch(setToken(token));
+				}
 				console.log(`Token: ${token}\nOS: ${os}`);
 			},
 			permissions: {
