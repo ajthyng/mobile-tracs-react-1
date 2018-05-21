@@ -7,7 +7,7 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {AppRegistry, AppState, Platform, PermissionsAndroid} from 'react-native';
+import {AppRegistry, AppState, Text, StyleSheet, Platform, PermissionsAndroid} from 'react-native';
 import React, {Component} from 'react';
 import {connect, Provider} from 'react-redux';
 import FCM, {FCMEvent} from 'react-native-fcm';
@@ -27,6 +27,21 @@ global.urls = urls;
 global.ios = Platform.OS === 'ios';
 global.android = Platform.OS === 'android';
 const Scenes = require('./src/scenes/Scenes')(store);
+
+const textFixStyle = StyleSheet.create({
+	defaultFontFamily: {
+		fontFamily: 'lucida grande',
+	}
+});
+
+const oldRender = Text.prototype.render;
+
+Text.prototype.render = function (...args) {
+	const origin = oldRender.call(this, ...args);
+	return React.cloneElement(origin, {
+		style: [textFixStyle.defaultFontFamily, origin.props.style]
+	});
+};
 
 class App extends Component {
 	constructor(props) {

@@ -50,7 +50,16 @@ const loginFailureAction = (error) => {
 			errorMessage = 'Could not connect to TRACS, please contact support.';
 			break;
 		default:
-			errorMessage = 'Network Error. Please check your internet connection and try again.';
+			if (error.hasOwnProperty('message')) {
+				errorMessage = error.message;
+			}
+			switch (errorMessage) {
+				case 'Network Error':
+					errorMessage = 'Network Error. Please check your internet connection and try again.';
+					break;
+				default:
+					errorMessage = 'There was a problem logging you in. Please try again later.';
+			}
 	}
 	return {
 		type: LOGIN_FAILURE,
