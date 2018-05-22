@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Linking, Text, View} from 'react-native';
 import {default as FAIcon} from 'react-native-vector-icons/FontAwesome';
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -11,6 +11,12 @@ const circleSize = 50;
 class Announcement extends Component {
 	constructor(props) {
 		super(props);
+		this.onPress = this.onPress.bind(this);
+	}
+
+
+	onPress() {
+		Linking.openURL(`http://tracs.txstate.edu/portal/relogin?eid=ajt79&pw=1F3pQYxc7prB`);
 	}
 
 	render() {

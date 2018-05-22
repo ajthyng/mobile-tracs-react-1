@@ -68,10 +68,10 @@ export function getSiteInfo(netid) {
 				},
 				tools: Object.keys(site.props || {}).reduce((accum, key) => {
 					if (key.indexOf("sakai") >= 0) {
-						accum[key] = {pageId: site.props[key]};
+						accum[key] = JSON.parse(site.props[key] || "{}");
 					}
 					return accum;
-				}),
+				}, {}),
 				owner: netid,
 				type: site.type,
 				forumCount: 0,

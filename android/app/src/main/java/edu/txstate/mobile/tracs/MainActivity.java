@@ -42,7 +42,9 @@ public class MainActivity extends ReactActivity {
                     }
                 }
             }
-            fileMessage.onReceiveValue(results);
+            if (fileMessage != null) {
+                fileMessage.onReceiveValue(results);
+            }
             fileMessage = null;
         }
     }
@@ -60,6 +62,7 @@ public class MainActivity extends ReactActivity {
     }
 
     public void setCameraPhotoPath(String cameraPhotoPath) {
+
         this.cameraPhotoPath = cameraPhotoPath;
     }
 }
