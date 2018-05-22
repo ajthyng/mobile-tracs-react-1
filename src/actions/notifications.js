@@ -139,13 +139,28 @@ const fetchForumPost = async (notification) => {
 
 const getNotificationDetail = async (notifications) => {
 	let notificationPromises = [];
-	notifications = notifications.reduce((accum, curr) => {
-		accum[curr.id] = curr;
+	let forumPosts = notifications.reduce((accum, curr) => {
+		if (curr.keys.object_type === types.FORUM) {
+			accum[curr.id] = curr;
+		}
 		return accum;
 	}, {});
 
-	Object.keys(notifications).forEach(id => {
-		let notification = notifications[id];
+	let announcements = notifications.reduce((accum, curr) => {
+		if (curr.keys.object_type === types.ANNOUNCEMENT) {
+			accum.push(curr);
+		}
+		return accum;
+	}, []);
+
+	let tracsAnnouncements = await axios(`${global.urls.baseUrl}${global.urls.allAnnouncements}`, {
+		method: 'get'
+	}).catch(err => err);
+
+
+
+	Object.keys(forumPosts).forEach(id => {
+		let notification = forumPosts[id];
 		notificationPromises.push(fetchNotification(notification));
 	});
 
@@ -156,8 +171,19 @@ const getNotificationDetail = async (notifications) => {
 		});
 		tracs.forEach((tracs_notif) => {
 			let id = tracs_notif.id;
-			updatedNotifications[id] = notifications[id];
+			updatedNotifications[id] = forumPosts[id];
 			updatedNotifications[id].tracs_data = tracs_notif.data;
+		});
+		let tracsAnnounceData = (tracsAnnouncements.data.announcement_collection || {}).reduce((accum, curr) => {
+			accum[curr.announcementId] = curr;
+			return accum;
+		}, {});
+		Object.entries(announcements).forEach(([key, announcement]) => {
+			let id = announcement.id;
+			if (Object.keys(tracsAnnounceData).indexOf(announcement.keys.object_id) >= 0) {
+				updatedNotifications[id] = announcement;
+				updatedNotifications[id].tracs_data = tracsAnnounceData[announcement.keys.object_id];
+			}
 		});
 		return Promise.resolve(updatedNotifications);
 	}).catch(err => console.log(err));
