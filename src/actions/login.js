@@ -14,7 +14,6 @@ import CookieManager from 'react-native-cookies';
 import {credentials} from '../utils/storage';
 import {Analytics} from '../utils/analytics';
 import {haxios as axios} from '../utils/networking';
-import Toast from '@remobile/react-native-toast';
 
 const {
 	REQUEST_LOGIN,

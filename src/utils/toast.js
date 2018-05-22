@@ -10,7 +10,6 @@
 
 import {ToastAndroid, NativeModules} from 'react-native';
 import React from 'react';
-//import Toast from '@remobile/react-native-toast';
 
 let Toast = NativeModules.Toast;
 let show = {};

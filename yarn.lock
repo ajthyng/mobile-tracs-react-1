@@ -4391,10 +4391,6 @@ react-native-debugger-open@^0.3.15:
     minimist "^1.2.0"
     semver "^5.4.1"
 
-react-native-device-info@^0.21.5:
-  version "0.21.5"
-  resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-0.21.5.tgz#99478a2d68182e012297f2d63f2bd1b788106dee"
-
 react-native-dialogs@^0.0.21:
   version "0.0.21"
   resolved "https://registry.yarnpkg.com/react-native-dialogs/-/react-native-dialogs-0.0.21.tgz#57ea0d0cfcebbbe035e79282e0febca9ef1e6a2c"

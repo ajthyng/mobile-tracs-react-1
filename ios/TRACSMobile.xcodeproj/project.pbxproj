@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -32,7 +31,6 @@
 		790F81B19B21445DA952AF01 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4399A0C002F14BB19E4D04E3 /* MaterialCommunityIcons.ttf */; };
 		8219AAB91F61B7DD00FC489C /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8219AAB61F61B7BC00FC489C /* libRCTPushNotification.a */; };
 		8276A0D6203F31D9009B216C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8276A0D5203F31D9009B216C /* GoogleService-Info.plist */; };
-		829461C720A3B71500F1C2AA /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 829461C420A3B64500F1C2AA /* libRNDeviceInfo.a */; };
 		82AA3132204D981300296DD0 /* libRCTToast.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 82AA3115204D980300296DD0 /* libRCTToast.a */; };
 		82AA90E0207ED08400CD5ECC /* libRNCookieManagerIOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8219AA6C1F5F56D100FC489C /* libRNCookieManagerIOS.a */; };
 		82AA90E1207ED0CA00CD5ECC /* libRNKeychain.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8219AB301F686D4C00FC489C /* libRNKeychain.a */; };
@@ -351,20 +349,6 @@
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = RNFirebase;
 		};
-		829461C320A3B64500F1C2AA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 829461BE20A3B64500F1C2AA /* RNDeviceInfo.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = DA5891D81BA9A9FC002B4DB2;
-			remoteInfo = RNDeviceInfo;
-		};
-		829461C520A3B64500F1C2AA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 829461BE20A3B64500F1C2AA /* RNDeviceInfo.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = E72EC1401F7ABB5A0001BC90;
-			remoteInfo = "RNDeviceInfo-tvOS";
-		};
 		82AA3114204D980300296DD0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 82AA30FD204D980300296DD0 /* RCTToast.xcodeproj */;
@@ -426,7 +410,6 @@
 		8219AAB01F61B7BC00FC489C /* RCTPushNotification.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTPushNotification.xcodeproj; path = "../node_modules/react-native/Libraries/PushNotificationIOS/RCTPushNotification.xcodeproj"; sourceTree = "<group>"; };
 		8276A0CD203F2F50009B216C /* RNFirebase.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNFirebase.xcodeproj; path = "../node_modules/react-native-firebase/ios/RNFirebase.xcodeproj"; sourceTree = "<group>"; };
 		8276A0D5203F31D9009B216C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "TRACSMobile/GoogleService-Info.plist"; sourceTree = "<group>"; };
-		829461BE20A3B64500F1C2AA /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNDeviceInfo.xcodeproj; path = "../node_modules/react-native-device-info/ios/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; };
 		82AA30FD204D980300296DD0 /* RCTToast.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTToast.xcodeproj; path = "../node_modules/@remobile/react-native-toast/ios/RCTToast.xcodeproj"; sourceTree = "<group>"; };
 		82B5F91F1F9796810007F032 /* LockStatus.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LockStatus.h; path = TRACSMobile/Modules/LockStatus.h; sourceTree = "<group>"; };
 		82B5F9471F9799930007F032 /* LockStatus.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = LockStatus.m; path = TRACSMobile/Modules/LockStatus.m; sourceTree = "<group>"; };
@@ -457,7 +440,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				829461C720A3B71500F1C2AA /* libRNDeviceInfo.a in Frameworks */,
 				82AA3132204D981300296DD0 /* libRCTToast.a in Frameworks */,
 				8219AAB91F61B7DD00FC489C /* libRCTPushNotification.a in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
@@ -690,15 +672,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		829461BF20A3B64500F1C2AA /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				829461C420A3B64500F1C2AA /* libRNDeviceInfo.a */,
-				829461C620A3B64500F1C2AA /* libRNDeviceInfo-tvOS.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		82AA30FE204D980300296DD0 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -726,7 +699,6 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				829461BE20A3B64500F1C2AA /* RNDeviceInfo.xcodeproj */,
 				8219AAB01F61B7BC00FC489C /* RCTPushNotification.xcodeproj */,
 				82AA30FD204D980300296DD0 /* RCTToast.xcodeproj */,
 				8276A0CD203F2F50009B216C /* RNFirebase.xcodeproj */,
@@ -958,10 +930,6 @@
 				{
 					ProductGroup = 8219AA481F5F56D000FC489C /* Products */;
 					ProjectRef = 2D193121158C47BCAEF9A788 /* RNCookieManagerIOS.xcodeproj */;
-				},
-				{
-					ProductGroup = 829461BF20A3B64500F1C2AA /* Products */;
-					ProjectRef = 829461BE20A3B64500F1C2AA /* RNDeviceInfo.xcodeproj */;
 				},
 				{
 					ProductGroup = 8276A0CE203F2F50009B216C /* Products */;
@@ -1283,13 +1251,6 @@
 			remoteRef = 8276A0D1203F2F50009B216C /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		829461C420A3B64500F1C2AA /* libRNDeviceInfo.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRNDeviceInfo.a;
-			remoteRef = 829461C320A3B64500F1C2AA /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		829461C620A3B64500F1C2AA /* libRNDeviceInfo-tvOS.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1531,13 +1492,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1570,13 +1524,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
