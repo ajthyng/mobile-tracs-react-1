@@ -68,7 +68,9 @@ export function getSiteInfo(netid) {
 				},
 				tools: Object.keys(site.props || {}).reduce((accum, key) => {
 					if (key.indexOf("sakai") >= 0) {
-						accum[key] = JSON.parse(site.props[key] || "{}");
+						try {
+							accum[key] = JSON.parse(site.props[key] || "{}");
+						} catch (err) {}
 					}
 					return accum;
 				}, {}),
