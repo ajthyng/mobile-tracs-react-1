@@ -8,10 +8,6 @@ target 'TRACSMobile' do
   # Pods for TRACSMobile
   pod 'Firebase/Core'
 
-  pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
-
-  pod 'react-native-wkwebview', :path => '../node_modules/react-native-wkwebview-reborn'
-
   target 'TRACSMobileTests' do
     inherit! :search_paths
     # Pods for testing

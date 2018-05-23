@@ -14,9 +14,12 @@ import {setToken} from './src/actions/registrar';
 const ConnectedRouter = connect()(Router);
 const store = configureStore();
 
+import { YellowBox } from 'react-native';
+YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
+
 global.urls = urls;
-global.ios = Platform.OS === 'ios';
-global.android = Platform.OS === 'android';
+global['ios'] = Platform.OS === 'ios';
+global['android'] = Platform.OS === 'android';
 
 const Scenes = require('./src/scenes/Scenes')(store);
 

@@ -18,6 +18,7 @@ const setTabBarColor = (props) => {
 
 module.exports = {
 	announcements: (tabBarProps) => {
+		console.log(tabBarProps);
 		return <TabIcon name="bullhorn" size={tabIconSize} color={setTabBarColor(tabBarProps)}/>;
 	},
 	sites: (tabBarProps) => {
