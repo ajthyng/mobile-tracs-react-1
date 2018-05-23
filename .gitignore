@@ -23,10 +23,13 @@ npm-debug.log
 buck-out/
 \.buckd/
 *.keystore
-fastlane/report.xml
-fastlane/Preview.html
-fastlane/screenshots
-storybook/**/*
+
+*/fastlane/report.xml
+*/fastlane/Preview.html
+*/fastlane/screenshots
 config.tar
 /android/keystore.properties
 .vscode/
+
+# Bundle artifact
+*.jsbundle

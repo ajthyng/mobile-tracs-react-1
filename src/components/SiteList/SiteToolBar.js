@@ -14,14 +14,13 @@ import SiteButtonPlaceholder from './SiteButtonPlaceholder';
 import {Actions} from 'react-native-router-flux';
 import {tool} from '../../constants/tools';
 
-const margin = "25%";
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		flexDirection: "row",
 		justifyContent: "space-between",
-		marginLeft: margin,
-		marginRight: margin
+		marginLeft: '25%',
+		marginRight: '25%'
 	}
 });
 

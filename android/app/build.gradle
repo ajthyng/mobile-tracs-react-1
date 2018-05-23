@@ -173,7 +173,6 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-device-info')
     compile project(':react-native-dialogs')
     compile project(':@remobile/react-native-toast')
     compile project(':react-native-vector-icons')
