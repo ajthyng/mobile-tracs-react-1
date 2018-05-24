@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Actions} from 'react-native-router-flux';
 import {
 	Alert,
 	Keyboard,
@@ -20,7 +19,7 @@ import * as Storage from '../../utils/storage';
 import LoginButton from './LoginButton';
 import {clearError as clearLoginError} from '../../actions/login';
 import {Analytics} from '../../utils/analytics';
-import {main} from '../../constants/scenes';
+
 import * as Orientation from '../../utils/orientation';
 import {loginScreen} from '../../constants/colors';
 
@@ -28,7 +27,6 @@ const KEYBOARD_EVENT = {
 	SHOW: global.android ? 'keyboardDidShow' : 'keyboardWillShow',
 	HIDE: global.android ? 'keyboardDidHide' : 'keyboardWillHide'
 };
-
 const portraitStyles = StyleSheet.create({
 	container: {
 		flex: 1,
@@ -64,14 +62,6 @@ const portraitStyles = StyleSheet.create({
 	inputText: {
 		width: '100%',
 		height: 40
-	},
-	netidInput: global.android ? {} : {
-		borderBottomWidth: 1,
-		borderBottomColor: loginScreen.inputUnderline
-	},
-	passwordInput: global.android ? {} : {
-		borderBottomWidth: 1,
-		borderBottomColor: loginScreen.inputUnderline
 	},
 	uppsRequiredTextContainer: {
 		margin: 10,
@@ -121,14 +111,6 @@ const landscapeStyles = StyleSheet.create({
 		width: '100%',
 		height: 40
 	},
-	netidInput: global.android ? {} : {
-		borderBottomWidth: 1,
-		borderBottomColor: loginScreen.inputUnderline
-	},
-	passwordInput: global.android ? {} : {
-		borderBottomWidth: 1,
-		borderBottomColor: loginScreen.inputUnderline
-	},
 	uppsRequiredTextContainer: {
 		margin: 10,
 		width: '100%',
@@ -156,9 +138,14 @@ class LoginScreen extends Component {
 				y: 0
 			}
 		};
+		this.underlineStyle = global.android ? {} : {
+			borderBottomWidth: 1,
+			borderBottomColor: loginScreen.inputUnderline
+		};
 		this.underlineColor = '#000';
 		this.uppsRequiredText = `Use of computer and network facilities owned or operated by Texas State University requires prior authorization. Unauthorized access is prohibited. Usage may be subject to security testing and monitoring, and affords no privacy guarantees or expectations except as otherwise provided by applicable privacy laws. Abuse is subject to criminal prosecution. Use of these facilities implies agreement to comply with the policies of Texas State University.`;
 
+		console.log(global.android);
 		if (global.android) {
 			StatusBar.setBackgroundColor(loginScreen.backgroundColor);
 		}
@@ -191,24 +178,22 @@ class LoginScreen extends Component {
 	}
 
 	componentWillMount() {
-		if (Actions.currentScene === 'login') {
-			if (this.props.loggingIn === false && this.props.registering === false) {
-				this.setState({
-					checkingCredentials: true
-				});
-				Storage.credentials.get().then(creds => {
-					if (creds !== false) {
-						this.setState({
-							storedCreds: creds
-						});
-						this.userLogin(creds.username, creds.password);
-					}
-				}).finally(() => {
+		if (this.props.loggingIn === false && this.props.registering === false) {
+			this.setState({
+				checkingCredentials: true
+			});
+			Storage.credentials.get().then(creds => {
+				if (creds !== false) {
 					this.setState({
-						checkingCredentials: false
+						storedCreds: creds
 					});
+					this.userLogin(creds.username, creds.password);
+				}
+			}).finally(() => {
+				this.setState({
+					checkingCredentials: false
 				});
-			}
+			});
 		}
 	}
 
@@ -231,8 +216,8 @@ class LoginScreen extends Component {
 	}
 
 	componentWillUpdate(nextProps) {
-		if (nextProps.isAuthenticated && Actions.currentScene === 'login') {
-			Actions.reset(main);
+		if (nextProps.isAuthenticated) {
+			this.props.navigation.navigate('Home');
 		}
 	}
 
@@ -243,7 +228,7 @@ class LoginScreen extends Component {
 	}
 
 	render() {
-		if (this.props.loggingIn || this.props.registering || this.state.checkingCredentials) {
+		if (this.props.loggingIn || this.props.registering || this.state.checkingCredentials || this.props.isAuthenticated) {
 			return (
 				<ActivityIndicator/>
 			);
@@ -257,7 +242,6 @@ class LoginScreen extends Component {
 			let currentOrientation = Orientation.getOrientation();
 			let selectedStyle = currentOrientation === Orientation.PORTRAIT ? portraitStyles : landscapeStyles;
 			let signInText = <Text style={{color: loginScreen.signInText}}>Sign in to your account</Text>;
-
 			return (
 				<ScrollView style={{backgroundColor: loginScreen.backgroundColor}}
 										ref={ref => this.scrollView = ref}
@@ -284,7 +268,7 @@ class LoginScreen extends Component {
 							<View style={selectedStyle.loginForm}>
 								{currentOrientation === Orientation.LANDSCAPE ? signInText : null}
 								<TextInput
-									style={[selectedStyle.inputText, selectedStyle.netidInput]}
+									style={[selectedStyle.inputText, this.underlineStyle]}
 									ref={ref => this.netid = ref}
 									placeholder="Net ID"
 									placeholderTextColor={loginScreen.placeHolderText}
@@ -301,7 +285,7 @@ class LoginScreen extends Component {
 									}}
 								/>
 								<TextInput
-									style={[selectedStyle.inputText, selectedStyle.passwordInput]}
+									style={[selectedStyle.inputText, this.underlineStyle]}
 									ref={ref => this.password = ref}
 									underlineColorAndroid={this.underlineColor}
 									placeholder="Password"

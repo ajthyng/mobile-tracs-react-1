@@ -9,24 +9,24 @@
  */
 import {AppRegistry, AppState, Text, StyleSheet, Platform, PermissionsAndroid} from 'react-native';
 import React, {Component} from 'react';
-import {connect, Provider} from 'react-redux';
+import {Provider} from 'react-redux';
 import FCM, {FCMEvent} from 'react-native-fcm';
-import {Router} from 'react-native-router-flux';
 import configureStore from './src/store/configureStore';
 import * as urls from './config/urls';
 import {getNotifications} from './src/actions/notifications';
 import {credentials} from './src/utils/storage';
-import axios from 'axios';
 import {Analytics} from './src/utils/analytics';
 import {login} from './src/actions/login';
 
+import {YellowBox} from 'react-native';
+import {Scenes} from './src/scenes/Scenes';
+
+YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
 const store = configureStore();
-const RouterWithRedux = connect()(Router);
 
 global.urls = urls;
 global.ios = Platform.OS === 'ios';
 global.android = Platform.OS === 'android';
-const Scenes = require('./src/scenes/Scenes')(store);
 
 const textFixStyle = StyleSheet.create({
 	defaultFontFamily: {
@@ -125,7 +125,7 @@ class App extends Component {
 	render() {
 		return (
 			<Provider store={store}>
-				<RouterWithRedux scenes={Scenes}/>
+				<Scenes/>
 			</Provider>
 		);
 	}
