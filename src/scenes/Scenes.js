@@ -12,15 +12,32 @@ import LoginScreen from '../_components/Login/LoginScreen';
 import HomeScreen from '../components/Home/HomeScreen';
 import Header from '../components/Header/Header';
 
+import {View, Text} from 'react-native';
+import React from 'react';
+
 import {createSwitchNavigator, createMaterialTopTabNavigator} from 'react-navigation';
 
+const FakeScene = (title) => {
+	return () => (
+		<View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+			<Text style={{color: '#363534', fontSize: 36, textAlign: 'center'}}>{title}</Text>
+		</View>
+	)
+};
+
 const HomeNavigator = createMaterialTopTabNavigator({
+	Left: {
+		screen: FakeScene("Left")
+	},
 	Home: {
 		screen: HomeScreen
+	},
+	Right: {
+		screen: FakeScene("Right")
 	}
 }, {
-	tabBarComponent: Header,
-	useNativeDriver: true,
+	initialRouteName: 'Home',
+	tabBarComponent: null
 });
 
 const AuthenticationNavigator = createSwitchNavigator({

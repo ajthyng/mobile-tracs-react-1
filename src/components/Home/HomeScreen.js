@@ -3,14 +3,16 @@ import {connect} from 'react-redux';
 import Ripple from 'react-native-material-ripple';
 import {View, StyleSheet, Text} from 'react-native';
 import {logout} from '../../actions/login';
-import {NavigationActions, StackActions} from 'react-navigation';
 import * as Storage from '../../utils/storage';
+import Icon from 'react-native-vector-icons/SimpleLineIcons';
+import CourseList from './CourseList';
 
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		alignItems: 'center',
 		justifyContent: 'space-around',
+		backgroundColor: '#8ecfd5',
 		width: '100%'
 	}
 });
@@ -22,19 +24,35 @@ const LogoutButtonHOC = Comp => ({newRef, children, ...props}) => (
 			alignContent: 'center',
 			justifyContent: 'center',
 			backgroundColor: props.backgroundColor || "#1b3c80",
-			width: 150,
-			height: 50,
+			width: 70,
+			height: 70,
+			borderRadius: 35,
+			position: 'absolute',
+			right: 20,
+			bottom: 20,
+			elevation: 4,
+			shadowColor: '#000',
+			shadowOffset: {
+				width: 0,
+				height: 2
+			},
+			shadowRadius: 3,
+			shadowOpacity: 0.7
 		}}
 		ref={newRef}
 		{...props}
 	>
-		<Text style={{
-			color: "#fff",
-			textAlign: 'center',
-			alignSelf: 'center'
-		}}>
-			{props.text}
-		</Text>
+		<Icon
+			style={{
+				color: "#fff",
+				fontSize: 25,
+				textAlign: 'center',
+				alignSelf: 'center',
+				marginRight: 7,
+				marginTop: 2
+			}}
+			name="logout"
+		/>
 	</Comp>
 );
 
@@ -54,9 +72,7 @@ class HomeScreen extends Component {
 	render() {
 		return (
 			<View style={styles.container}>
-				<Text>
-					Home Screen
-				</Text>
+				<CourseList />
 				<LogoutButton
 					onPress={() => this.props.logout()}
 					text="Logout"

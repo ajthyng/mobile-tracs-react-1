@@ -1,31 +1,67 @@
 import React, {Component} from 'react';
-import {View, StatusBar, StatusBarIOS, StyleSheet, Text, NativeModules} from 'react-native';
+import {View, StatusBar, Dimensions, Animated, Easing, StyleSheet} from 'react-native';
+import Ripple from 'react-native-material-ripple';
 
-const {StatusBarManager} = NativeModules;
-const styles = StyleSheet.create({
-	container: {
-		height: 65 + 24,
-		backgroundColor: '#365ba9'
-	}
-});
-
+const RADIUS = 80;
+const AnimatedRipple = Animated.createAnimatedComponent(Ripple);
 class Header extends Component {
+	static MIN_HEIGHT = 65;
+	static MAX_HEIGHT = 150;
+
 	constructor(props) {
 		super(props);
-		console.log(props);
-		this.state = {
-			statusBarHeight: global.android ? StatusBar.currentHeight : 0
-		};
+		if (global.android) StatusBar.setBackgroundColor('#365ba9');
+		StatusBar.setBarStyle('light-content');
 	}
 
 	render() {
+		let animation = {
+			transform: [{
+				translateY: this.props.animationRange.interpolate({
+					inputRange: [0, 1],
+					outputRange: [0, -Header.MIN_HEIGHT]
+				})
+			}]
+		};
+
 		return (
-			<View style={styles.container}>
-				<Text>
-				</Text>
+			<View style={styles.container} pointerEvents='box-none'>
+				<Animated.View style={[styles.header, animation]}/>
+				<AnimatedRipple
+					style={[styles.circle, animation]}
+					rippleContainerBorderRadius={RADIUS / 2}
+				/>
 			</View>
 		);
 	}
 }
+
+const styles = StyleSheet.create({
+	container: {
+		position: 'absolute',
+		flex: 0,
+		zIndex: 2,
+		height: (Header.MAX_HEIGHT + RADIUS / 2),
+		width: '100%',
+		backgroundColor: 'transparent'
+	},
+	header: {
+		position: 'absolute',
+		flex: 0,
+		height: Header.MAX_HEIGHT,
+		width: '100%',
+		backgroundColor: '#224575',
+		zIndex: 2
+	},
+	circle: {
+		width: RADIUS, height: RADIUS, borderRadius: RADIUS / 2,
+		position: 'absolute',
+		bottom: 0,
+		left: (Dimensions.get('window').width - RADIUS) / 2,
+		backgroundColor: '#4a89f4',
+		overflow: 'visible',
+		zIndex: 4
+	}
+});
 
 export default Header;
