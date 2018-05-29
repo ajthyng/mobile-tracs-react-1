@@ -1,12 +1,15 @@
 import React, {Component} from 'react';
 import {View, StatusBar, Dimensions, Animated, Easing, StyleSheet} from 'react-native';
 import Ripple from 'react-native-material-ripple';
+import {connect} from 'react-redux';
 
 const RADIUS = 80;
 const AnimatedRipple = Animated.createAnimatedComponent(Ripple);
+const MAX_HEIGHT = 150;
+
 class Header extends Component {
-	static MIN_HEIGHT = 65;
-	static MAX_HEIGHT = 150;
+	static MAX_HEIGHT = MAX_HEIGHT;
+	static MIN_HEIGHT = MAX_HEIGHT - 65;
 
 	constructor(props) {
 		super(props);
@@ -64,4 +67,10 @@ const styles = StyleSheet.create({
 	}
 });
 
-export default Header;
+const mapStateToProps = (state) => {
+	return {
+		animationRange: state.header.scrollY
+	}
+};
+
+export default connect(mapStateToProps, null)(Header);

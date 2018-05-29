@@ -30,7 +30,7 @@ const HomeNavigator = createMaterialTopTabNavigator({
 		screen: FakeScene("Left")
 	},
 	Home: {
-		screen: HomeScreen
+		screen: HomeScreen,
 	},
 	Right: {
 		screen: FakeScene("Right")

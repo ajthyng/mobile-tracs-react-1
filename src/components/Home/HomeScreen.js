@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import Ripple from 'react-native-material-ripple';
-import {View, StyleSheet, Text} from 'react-native';
+import {View, StyleSheet, Animated} from 'react-native';
 import {logout} from '../../actions/login';
 import * as Storage from '../../utils/storage';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import CourseList from './CourseList';
+import Header from '../Header/Header';
 
 const styles = StyleSheet.create({
 	container: {
@@ -75,8 +76,8 @@ class HomeScreen extends Component {
 				<CourseList />
 				<LogoutButton
 					onPress={() => this.props.logout()}
-					text="Logout"
 				/>
+				<Header />
 			</View>
 		);
 	}
@@ -84,7 +85,7 @@ class HomeScreen extends Component {
 
 const mapStateToProps = (state) => {
 	return {
-		authenticated: state.login.isAuthenticated
+		authenticated: state.login.isAuthenticated,
 	}
 };
 

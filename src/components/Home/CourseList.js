@@ -2,6 +2,9 @@ import React, {Component} from 'react';
 import {View, Animated, StyleSheet, Text} from 'react-native';
 import Ripple from 'react-native-material-ripple';
 
+import {connect} from 'react-redux';
+import {setScrollY} from '../../actions/header';
+
 import Header from '../Header/Header';
 
 class CourseList extends Component {
@@ -44,21 +47,17 @@ class CourseList extends Component {
 							}
 						],
 						{
-							useNativeDriver: true
+							useNativeDriver: true,
+							listener: () => {
+								this.props.setScrollY(this._scrollY);
+							}
 						}
 					)}
 					scrollEventThrottle={16}
 				>
-					<View style={{flex: 0, height: Header.MAX_HEIGHT + 50, width: '100%'}}/>
+					<View style={{flex: 0, height: Header.MAX_HEIGHT + 40, width: '100%'}}/>
 					{this.data}
 				</Animated.ScrollView>
-				<Header animationRange={
-					this._scrollY.interpolate({
-						inputRange: [0, Header.MIN_HEIGHT],
-						outputRange: [0, 1],
-						extrapolate: 'clamp'
-					})
-				}/>
 			</View>
 		);
 	}
@@ -70,9 +69,19 @@ const styles = StyleSheet.create({
 		width: '100%'
 	},
 	scrollView: {
-		flex:1,
+		flex: 1,
 		zIndex: 1
 	}
 });
 
-export default CourseList;
+const mapDispatchToProps = (dispatch) => {
+	return {
+		setScrollY: (scrollY) => dispatch(setScrollY(scrollY.interpolate({
+			inputRange: [0, Header.MIN_HEIGHT],
+			outputRange: [0, 1],
+			extrapolate: 'clamp'
+		})))
+	}
+};
+
+export default connect(null, mapDispatchToProps)(CourseList);
