@@ -77,7 +77,6 @@ class HomeScreen extends Component {
 				<LogoutButton
 					onPress={() => this.props.logout()}
 				/>
-				<Header />
 			</View>
 		);
 	}

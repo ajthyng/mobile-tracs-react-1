@@ -1,14 +1,24 @@
 import React, {Component} from 'react';
-import {View, StatusBar, Dimensions, Animated, Easing, StyleSheet} from 'react-native';
-import Ripple from 'react-native-material-ripple';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import {View, StatusBar, Dimensions, Animated, StyleSheet} from 'react-native';
 import {connect} from 'react-redux';
+import HomeIcon from './HomeIcon';
+import styled from 'styled-components';
 
 const RADIUS = 80;
 const HOME_ICON_SIZE = RADIUS * 0.6;
-const AnimatedRipple = Animated.createAnimatedComponent(Ripple);
-const AnimatedIcon = Animated.createAnimatedComponent(Icon);
 const MAX_HEIGHT = 150;
+
+const Circle = Animated.createAnimatedComponent(styled.View`
+	width: ${props => props.radius}; 
+	height: ${props => props.radius}; 
+	border-radius: ${props => props.radius / 2}px;
+	position: absolute;
+	bottom: 0;
+	left: ${props => (Dimensions.get('window').width - props.radius) / 2};
+	background-color: #4a89f4;
+	overflow: visible;
+	z-index: 4;
+`);
 
 class Header extends Component {
 	static MAX_HEIGHT = MAX_HEIGHT;
@@ -50,69 +60,14 @@ class Header extends Component {
 			}]
 		};
 
-		let iconPopIn = {
-			opacity: this.state.icon.isSet ? Animated.timing(new Animated.Value(0), {
-				toValue: 1,
-				duration: 500,
-				easing: Easing.linear
-			}).start() : 0
-		};
-
-		let iconExtraSlide = {
-			transform: [{
-				translateY: this.props.animationRange.interpolate({
-					inputRange: [0, 1],
-					outputRange: [0, -Header.MIN_HEIGHT - this.state.icon.height / 3.5]
-				})
-			}]
-		};
-
 		return (
 			<View style={styles.container} pointerEvents='box-none'>
 				<Animated.View style={[styles.header, animation]}/>
 				<Animated.View
 					style={[styles.circle, circleFade]}
 				/>
-				<AnimatedRipple
-					style={[
-						styles.circle,
-						styles.homeIcon,
-						iconPopIn,
-						{
-							backgroundColor: 'transparent',
-							left: (Dimensions.get('window').width - this.state.icon.width) / 2,
-							bottom: RADIUS / 2 - this.state.icon.height / 2
-						},
-						iconExtraSlide
-					]}
-					rippleContainerBorderRadius={RADIUS / 2}
-					onLayout={({nativeEvent: {layout}}) => {
-						if (!this.state.icon.isSet) {
-							this.setState({
-								icon: {
-									height: layout.height,
-									width: layout.width,
-									isSet: true
-								}
-							});
-						}
-					}}
-				>
-					<AnimatedIcon
-						style={{
-							transform: [{
-								scale: this.props.animationRange.interpolate({
-									inputRange: [0, 1],
-									outputRange: [1, 0.7]
-								})
-							}]
-						}}
-						size={HOME_ICON_SIZE}
-						name="home"
-						color='#fff'
-					/>
-				</AnimatedRipple>
-				/>
+				<Circle style={circleFade} radius={RADIUS} />
+				<HomeIcon radius={RADIUS}/>
 			</View>
 		);
 	}
@@ -145,10 +100,6 @@ const styles = StyleSheet.create({
 		zIndex: 4,
 		alignItems: 'center',
 		justifyContent: 'center'
-	},
-	homeIcon: {
-		zIndex: 5,
-		position: 'absolute'
 	}
 });
 

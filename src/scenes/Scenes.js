@@ -37,7 +37,7 @@ const HomeNavigator = createMaterialTopTabNavigator({
 	}
 }, {
 	initialRouteName: 'Home',
-	tabBarComponent: null
+	tabBarComponent: Header
 });
 
 const AuthenticationNavigator = createSwitchNavigator({
