@@ -21,7 +21,7 @@ import {login} from './src/actions/login';
 import {YellowBox} from 'react-native';
 import {Scenes} from './src/scenes/Scenes';
 
-YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
+YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'You are setting the style', 'Module RCTImageLoader']);
 const store = configureStore();
 
 global.urls = urls;

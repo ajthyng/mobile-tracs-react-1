@@ -1,19 +1,31 @@
 import React, {Component} from 'react';
 import {StyleSheet, Animated, Dimensions, Easing} from 'react-native';
+import styled from 'styled-components';
 import Header from './Header';
 import Ripple from 'react-native-material-ripple';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {connect} from 'react-redux';
 
-const AnimatedRipple = Animated.createAnimatedComponent(Ripple);
+const AnimatedCircle = styled(Animated.createAnimatedComponent(Ripple))`
+	width: ${props => props.diameter};
+	height: ${props => props.diameter};
+	border-radius: ${props => props.diameter / 2}px;
+	position: absolute;
+	bottom: 0;
+	left: ${props => (Dimensions.get('window').width - props.diameter) / 2}px;
+	background-color: #4a89f4;
+	overflow: visible;
+	zIndex: 5;
+	alignItems: center;
+	justify-content: center;
+`;
 const AnimatedIcon = Animated.createAnimatedComponent(Icon);
 
 class HomeIcon extends Component {
 	constructor(props) {
 		super(props);
 
-		this.radius = props.radius || 80;
-		this.size = props.radius * 0.6;
+		this.diameter = props.diameter || 80;
+		this.size = props.diameter * 0.6;
 
 		this.state = {
 			icon: {
@@ -23,8 +35,8 @@ class HomeIcon extends Component {
 			}
 		};
 
-		this.radius = props.radius || 80;
-		this.size = props.radius * 0.6;
+		this.diameter = props.diameter || 80;
+		this.size = props.diameter * 0.6;
 	}
 
 	render() {
@@ -38,18 +50,16 @@ class HomeIcon extends Component {
 		};
 
 		return (
-			<AnimatedRipple
+			<AnimatedCircle
 				style={[
-					styles.circle,
 					styles.homeIcon,
 					{
-						backgroundColor: 'transparent',
-						left: (Dimensions.get('window').width - this.state.icon.width) / 2,
-						bottom: this.radius / 2 - this.state.icon.height / 2
+						backgroundColor: 'transparent'
 					},
 					iconExtraSlide
 				]}
-				rippleContainerBorderRadius={this.radius / 2}
+				diameter={this.diameter}
+				rippleContainerBorderRadius={this.diameter / 2}
 				onLayout={({nativeEvent: {layout}}) => {
 					if (!this.state.icon.isSet) {
 						this.setState((prevState) => ({
@@ -60,6 +70,10 @@ class HomeIcon extends Component {
 								isSet: true
 							}
 						}));
+						this.props.updateSize({
+							height: layout.height,
+							width: layout.width
+						});
 					}
 				}}
 			>
@@ -72,21 +86,22 @@ class HomeIcon extends Component {
 							})
 						}]
 					}}
+					ref={c => this.icon = c}
 					size={this.size}
 					name="home"
 					color='#fff'
 				/>
-			</AnimatedRipple>
+			</AnimatedCircle>
 		);
 	}
 }
 
 const styles = StyleSheet.create({
 	circle: {
-		width: this.radius, height: this.radius, borderRadius: this.radius / 2,
+		width: this.diameter, height: this.diameter, borderRadius: this.diameter / 2,
 		position: 'absolute',
 		bottom: 0,
-		left: (Dimensions.get('window').width - this.radius) / 2,
+		left: (Dimensions.get('window').width - this.diameter) / 2,
 		backgroundColor: '#4a89f4',
 		overflow: 'visible',
 		zIndex: 4,
@@ -95,14 +110,7 @@ const styles = StyleSheet.create({
 	},
 	homeIcon: {
 		zIndex: 5,
-		position: 'absolute',
 	}
 });
 
-const mapStateToProps = (state) => {
-	return {
-		animationRange: state.header.scrollY
-	}
-};
-
-export default connect(mapStateToProps, null)(HomeIcon);
+export default HomeIcon;
