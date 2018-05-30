@@ -44,7 +44,7 @@ class HomeIcon extends Component {
 			transform: [{
 				translateY: this.props.animationRange.interpolate({
 					inputRange: [0, 1],
-					outputRange: [0, -Header.MIN_HEIGHT - this.state.icon.height * 0.45]
+					outputRange: [0, -Header.MIN_HEIGHT - this.state.icon.height]
 				})
 			}]
 		};
@@ -58,6 +58,7 @@ class HomeIcon extends Component {
 					},
 					iconExtraSlide
 				]}
+				onPress={this.props.onPress}
 				diameter={this.diameter}
 				rippleContainerBorderRadius={this.diameter / 2}
 				onLayout={({nativeEvent: {layout}}) => {

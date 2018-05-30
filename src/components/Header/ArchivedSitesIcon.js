@@ -7,6 +7,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 const AnimatedRipple = styled(Animated.createAnimatedComponent(Ripple))`
 	height: ${props => props.diameter};
 	width: ${props => props.diameter};
+	background-color: ${props => props.active ? '#4a89f4' : 'transparent'};
+	border-radius: ${props => props.diameter / 2}px;
 	flex-direction: row;
 	align-items: center;
 	justify-content: center;
@@ -19,11 +21,10 @@ class ArchivedSitesIcon extends Component {
 	render() {
 		return (
 			<AnimatedRipple
-				diameter={this.props.diameter / 2}
-				rippleContainerBorderRadius={this.props.diameter / 2}
-				style={{
-					opacity: this.props.animationRange,
-				}}
+				active={this.props.active}
+				onPress={this.props.onPress}
+				diameter={this.props.diameter * 0.6}
+				rippleContainerBorderRadius={this.props.diameter * 0.6}
 			>
 				<StyledSitesIcon
 					size={this.props.size}

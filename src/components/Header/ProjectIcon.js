@@ -2,11 +2,13 @@ import React, {Component} from 'react';
 import {Image, Platform, View, StyleSheet, Text, Animated} from 'react-native';
 import styled from 'styled-components';
 import Ripple from 'react-native-material-ripple';
-import Icon from 'react-native-vector-icons/Octicons';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const AnimatedRipple = styled(Animated.createAnimatedComponent(Ripple))`
 	height: ${props => props.diameter};
 	width: ${props => props.diameter};
+	background-color: ${props => props.active ? '#4a89f4' : 'transparent'};
+	border-radius: ${props => props.diameter / 2}px;
 	flex-direction: row;
 	align-items: center;
 	justify-content: center;
@@ -19,17 +21,16 @@ class ProjectIcon extends Component {
 	render() {
 		return (
 			<AnimatedRipple
-				style={{
-					opacity: this.props.animationRange
-				}}
-				diameter={this.props.diameter / 2}
-				rippleContainerBorderRadius={this.props.diameter / 2}
+				active={this.props.active}
+				onPress={this.props.onPress}
+				diameter={this.props.diameter * 0.6}
+				rippleContainerBorderRadius={this.props.diameter * 0.6}
 			>
 				<StyledProjectIcon
 					diameter={this.props.diameter / 2}
 					size={this.props.size}
 					color="#fff"
-					name="project"
+					name="asl-interpreting"
 				/>
 			</AnimatedRipple>
 		);
