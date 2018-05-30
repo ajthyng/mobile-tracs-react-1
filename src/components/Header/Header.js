@@ -13,12 +13,12 @@ const MAX_HEIGHT = 150;
 const HOME_ICON_SIZE = DIAMETER * 0.6;
 
 const Circle = Animated.createAnimatedComponent(styled.View`
-	width: ${props => props.active ? props.radius : props.radius * 0.7}; 
-	height: ${props => props.active ? props.radius : props.radius * 0.7}; 
-	border-radius: ${props => props.active ? props.radius / 2 : 0}px;
+	width: ${props => props.active ? props.radius : props.radius * 0.8}; 
+	height: ${props => props.active ? props.radius : props.radius * 0.8}; 
+	border-radius: ${props => props.radius / 2}px;
 	position: absolute;
-	bottom: ${props => props.active ? 0 : props.radius * 0.15}px;
-	margin-left: ${props => props.active ? 0 : props.radius*0.15};
+	bottom: ${props => props.active ? 0 : props.radius * 0.1}px;
+	margin-left: ${props => props.active ? 0 : props.radius*0.1};
 	flex: 0;
 	background-color: ${props => props.active ? '#4a89f4' : '#224575'};
 	z-index: 4;
@@ -92,7 +92,7 @@ class Header extends Component {
 			circle: {
 				left: (Dimensions.get('window').width - DIAMETER) / 2
 			},
-			activeIcon: Header.ICON.HIDDEN
+			activeIcon: Header.ICON.HOME
 		};
 	}
 

@@ -26,7 +26,7 @@ const ProfileImage = styled.Image`
 
 const ProfileText = styled.Text`
 	color: white;
-	margin-left: 4px;
+	margin-left: 8px;
 	font-size: 16px;
 	font-weight: bold;
 `;

@@ -5,15 +5,14 @@ import {View, StyleSheet, Animated} from 'react-native';
 import {logout} from '../../actions/login';
 import * as Storage from '../../utils/storage';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
-import CourseList from './CourseList';
-import Header from '../Header/Header';
+import CourseList from '../CourseList/CourseList';
 
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		alignItems: 'center',
 		justifyContent: 'space-around',
-		backgroundColor: '#8ecfd5',
+		backgroundColor: 'white',
 		width: '100%'
 	}
 });
