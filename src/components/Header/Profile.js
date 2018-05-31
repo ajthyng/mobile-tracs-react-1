@@ -32,6 +32,7 @@ const ProfileText = styled.Text`
 `;
 
 class Profile extends Component {
+	kitten = Math.floor(Math.random() * 200);
 	render() {
 		return (
 			<AnimatedRipple
@@ -40,7 +41,7 @@ class Profile extends Component {
 				<StyledProfile>
 					<ProfileImage
 						diameter={this.props.diameter * 0.4}
-						source={{uri: "https://staging.tracs.txstate.edu/profile2-tool/images/no_image.gif"}}
+						source={{uri: `https://placekitten.com/200/${this.kitten}`}}
 					/>
 					<ProfileText>
 						Maria

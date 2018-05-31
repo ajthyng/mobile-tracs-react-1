@@ -14,9 +14,10 @@ const CardBoundary = styled.View`
 	shadow-offset: 0px 2px;
 	shadow-opacity: 0.5;
 	shadow-radius: 2px;
+	elevation: 3;
 `;
 
-const GradeContainer = styled.View`
+const GradeContainer = styled(Ripple)`
 	width: ${HEIGHT};
 	height: 100%;
 	background-color: transparent;
@@ -57,7 +58,7 @@ const Grade = styled.Text`
 	font-size: 16px;
 `;
 
-const CourseInfoContainer = styled.View`
+const CourseInfoContainer = styled(Ripple)`
 	flex: 1;
 	padding-left: 5px;
 	padding-top: 5px;

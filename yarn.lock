@@ -1767,6 +1767,10 @@ compare-versions@^3.1.0:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/compare-versions/-/compare-versions-3.2.1.tgz#a49eb7689d4caaf0b6db5220173fd279614000f7"
 
+complex.js@2.0.10:
+  version "2.0.10"
+  resolved "https://registry.yarnpkg.com/complex.js/-/complex.js-2.0.10.tgz#afac74e4fb9131e8709f9c300420ce58fa36f18d"
+
 component-emitter@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/component-emitter/-/component-emitter-1.2.1.tgz#137918d6d78283f7df7a6b7c5a63e140e69425e6"
@@ -1930,6 +1934,10 @@ debug@^3.1.0:
 decamelize@^1.0.0, decamelize@^1.1.1:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/decamelize/-/decamelize-1.2.0.tgz#f6534d15148269b20352e7bee26f501f9a191290"
+
+decimal.js@9.0.1:
+  version "9.0.1"
+  resolved "https://registry.yarnpkg.com/decimal.js/-/decimal.js-9.0.1.tgz#1cc8b228177da7ab6498c1cc06eb130a290e6e1e"
 
 decode-uri-component@^0.2.0:
   version "0.2.0"
@@ -2116,6 +2124,10 @@ es6-template@^1.0.4:
 escape-html@~1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/escape-html/-/escape-html-1.0.3.tgz#0258eae4d3d0c0974de1c169188ef0051d1d1988"
+
+escape-latex@1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/escape-latex/-/escape-latex-1.0.3.tgz#1b9085e3e66570faabe21f05655643f64e78717a"
 
 escape-string-regexp@^1.0.2, escape-string-regexp@^1.0.5:
   version "1.0.5"
@@ -2450,6 +2462,10 @@ form-data@~2.1.1:
     asynckit "^0.4.0"
     combined-stream "^1.0.5"
     mime-types "^2.1.12"
+
+fraction.js@4.0.8:
+  version "4.0.8"
+  resolved "https://registry.yarnpkg.com/fraction.js/-/fraction.js-4.0.8.tgz#e53618112e3b36b348c61a81323173bceb01e418"
 
 fragment-cache@^0.2.1:
   version "0.2.1"
@@ -3196,6 +3212,10 @@ istanbul-reports@^1.3.0:
   dependencies:
     handlebars "^4.0.3"
 
+javascript-natural-sort@0.7.1:
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/javascript-natural-sort/-/javascript-natural-sort-0.7.1.tgz#f9e2303d4507f6d74355a73664d1440fb5a0ef59"
+
 jest-changed-files@^22.2.0:
   version "22.4.3"
   resolved "https://registry.yarnpkg.com/jest-changed-files/-/jest-changed-files-22.4.3.tgz#8882181e022c38bd46a2e4d18d44d19d90a90fb2"
@@ -3836,6 +3856,19 @@ map-visit@^1.0.0:
   resolved "https://registry.yarnpkg.com/map-visit/-/map-visit-1.0.0.tgz#ecdca8f13144e660f1b5bd41f12f3479d98dfb8f"
   dependencies:
     object-visit "^1.0.0"
+
+mathjs@^4.4.1:
+  version "4.4.1"
+  resolved "https://registry.yarnpkg.com/mathjs/-/mathjs-4.4.1.tgz#8ddb799f2c6eaed6a9c9b80c76956850e8e72c37"
+  dependencies:
+    complex.js "2.0.10"
+    decimal.js "9.0.1"
+    escape-latex "1.0.3"
+    fraction.js "4.0.8"
+    javascript-natural-sort "0.7.1"
+    seed-random "2.2.0"
+    tiny-emitter "2.0.2"
+    typed-function "1.0.3"
 
 mem@^1.1.0:
   version "1.1.0"
@@ -4768,6 +4801,13 @@ react-native-firebase@^3.2.4:
     postinstall-build "^5.0.1"
     prop-types "^15.6.0"
 
+react-native-foldview@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-foldview/-/react-native-foldview-1.1.1.tgz#0eb9181439d85d82b70670d626aaf44ab0203562"
+  dependencies:
+    invariant "^2.2.2"
+    warning "^3.0.0"
+
 react-native-keychain@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/react-native-keychain/-/react-native-keychain-1.2.1.tgz#6b2bed32ca0460d641974193715d18c808b0f12f"
@@ -5368,6 +5408,10 @@ sax@~1.1.1:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.1.6.tgz#5d616be8a5e607d54e114afae55b7eaf2fcc3240"
 
+seed-random@2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/seed-random/-/seed-random-2.2.0.tgz#2a9b19e250a817099231a5b99a4daf80b7fbed54"
+
 "semver@2 || 3 || 4 || 5", semver@5.x, semver@^5.0.1, semver@^5.0.3, semver@^5.1.0, semver@^5.3.0, semver@^5.4.1:
   version "5.5.0"
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.5.0.tgz#dc4bbc7a6ca9d916dee5d43516f0092b58f7b8ab"
@@ -5825,6 +5869,10 @@ time-stamp@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/time-stamp/-/time-stamp-1.1.0.tgz#764a5a11af50561921b133f3b44e618687e0f5c3"
 
+tiny-emitter@2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/tiny-emitter/-/tiny-emitter-2.0.2.tgz#82d27468aca5ade8e5fd1e6d22b57dd43ebdfb7c"
+
 tmp@^0.0.33:
   version "0.0.33"
   resolved "https://registry.yarnpkg.com/tmp/-/tmp-0.0.33.tgz#6d34335889768d21b2bcda0aa277ced3b1bfadf9"
@@ -5906,6 +5954,10 @@ type-check@~0.3.2:
   resolved "https://registry.yarnpkg.com/type-check/-/type-check-0.3.2.tgz#5884cab512cf1d355e3fb784f30804b2b520db72"
   dependencies:
     prelude-ls "~1.1.2"
+
+typed-function@1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/typed-function/-/typed-function-1.0.3.tgz#57026246214b664a5af45ef0a06679f4453bd090"
 
 typedarray@^0.0.6:
   version "0.0.6"
@@ -6048,6 +6100,12 @@ walker@~1.0.5:
   resolved "https://registry.yarnpkg.com/walker/-/walker-1.0.7.tgz#2f7f9b8fd10d677262b18a884e28d19618e028fb"
   dependencies:
     makeerror "1.0.x"
+
+warning@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/warning/-/warning-3.0.0.tgz#32e5377cb572de4ab04753bdf8821c01ed605b7c"
+  dependencies:
+    loose-envify "^1.0.0"
 
 watch@~0.18.0:
   version "0.18.0"

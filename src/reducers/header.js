@@ -11,10 +11,11 @@
 
 import {headerActions} from '../constants/actions';
 import {Animated} from 'react-native';
-const {SET_SCROLL_Y} = headerActions;
+const {SET_SCROLL_Y, SET_HEADER_STATE} = headerActions;
 
 const initialState = {
-	scrollY: new Animated.Value(0)
+	scrollY: new Animated.Value(0),
+	isCollapsed: false
 };
 
 const setScrollY = (state, action) => {
@@ -24,9 +25,17 @@ const setScrollY = (state, action) => {
 	}
 };
 
+const setHeaderState = (state, action) => {
+	return {
+		...state,
+		isCollapsed: action.isCollapsed
+	}
+};
+
 export function headerReducer(state = initialState, action) {
 	switch(action.type) {
 		case SET_SCROLL_Y: return setScrollY(state, action);
+		case SET_HEADER_STATE: return setHeaderState(state, action);
 		default: return state;
 	}
 }

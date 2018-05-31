@@ -21,6 +21,10 @@ const AnimatedCircle = styled(Animated.createAnimatedComponent(Ripple))`
 const AnimatedIcon = Animated.createAnimatedComponent(Icon);
 
 class HomeIcon extends Component {
+	static defaultProps = {
+		topRowCenter: 0
+	};
+
 	constructor(props) {
 		super(props);
 
@@ -44,7 +48,7 @@ class HomeIcon extends Component {
 			transform: [{
 				translateY: this.props.animationRange.interpolate({
 					inputRange: [0, 1],
-					outputRange: [0, -Header.MIN_HEIGHT - this.state.icon.height]
+					outputRange: [0, -Header.MAX_HEIGHT + this.state.icon.height * 0.51]
 				})
 			}]
 		};
@@ -83,7 +87,7 @@ class HomeIcon extends Component {
 						transform: [{
 							scale: this.props.animationRange.interpolate({
 								inputRange: [0, 1],
-								outputRange: [1, 0.7]
+								outputRange: [1, 0.8]
 							})
 						}]
 					}}

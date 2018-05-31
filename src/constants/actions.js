@@ -71,6 +71,7 @@ module.exports = {
 		BATCH_UPDATE_FAILURE: 'BATCH_UPDATE_FAILURE'
 	},
 	headerActions: {
-		SET_SCROLL_Y: 'SET_SCROLL_Y'
+		SET_SCROLL_Y: 'SET_SCROLL_Y',
+		SET_HEADER_STATE: 'SET_HEADER_STATE'
 	}
 };

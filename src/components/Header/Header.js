@@ -27,7 +27,7 @@ const Circle = Animated.createAnimatedComponent(styled.View`
 const VisibleHeader = Animated.createAnimatedComponent(styled.View`
 		position: absolute;
 		top: 0;
-		height: ${props => props.height};
+		height: ${props => props.visibleHeaderHeight};
 		width: 100%;
 		background-color: #224575;
 		zIndex: 2;
@@ -39,7 +39,7 @@ const HeaderContainer = styled.View`
 		position: absolute;
 		flex: 1;
 		zIndex: 2;
-		height: ${props => (props.height + props.radius / 2)}px;
+		height: ${props => (props.headerHeight + props.radius / 2)}px;
 		width: 100%;
 		background-color: transparent;
 		justify-content: flex-end;
@@ -52,7 +52,7 @@ const TopIconRow = styled.View`
 	margin-left: 16px;
 	margin-right: 16px;
 	margin-bottom: 0;
-	height: ${props => props.height};
+	height: ${props => props.topIconRowHeight};
 	background-color: transparent;
 	z-index: 4;
 `;
@@ -63,10 +63,10 @@ const BottomIconRow = styled(Animated.View)`
 	justify-content: space-between;
 	margin-left: 16px;
 	margin-right: 16px;
-	height: ${props => props.height};
+	height: ${props => props.bottomRowHeight};
 	margin-bottom: ${props => props.diameter / 2}px;
 	background-color: transparent;
-	z-index: 4;
+	z-index: 3;
 `;
 
 class Header extends Component {
@@ -92,12 +92,16 @@ class Header extends Component {
 			circle: {
 				left: (Dimensions.get('window').width - DIAMETER) / 2
 			},
-			activeIcon: Header.ICON.HOME
+			activeIcon: Header.ICON.HOME,
+			topRowHeight: 0
 		};
 	}
 
 	componentDidMount() {
 		Dimensions.addEventListener('change', this.updateCenter);
+		this.setState({
+			topRowHeight: this.topIconRow.props.height
+		})
 	}
 
 	componentWillUnmount() {
@@ -125,8 +129,43 @@ class Header extends Component {
 		);
 	};
 
-	render() {
+	renderBottomRow = (bottomIconsTranslate, iconOpacityRange) => {
+		let archivedSitesIcon = (
+			<ArchivedSitesIcon
+				onPress={() => {
+					this.setState(prevState => ({...prevState, activeIcon: Header.ICON.HIDDEN}));
+				}}
+				active={this.state.activeIcon === Header.ICON.HIDDEN}
+				size={28}
+				diameter={DIAMETER}
+				bottomSpacing={this.state.icon.height * 0.4}
+			/>
+		);
+		let projectIcon = (
+			<ProjectIcon
+				onPress={() => {
+					this.setState(prevState => ({...prevState, activeIcon: Header.ICON.PROJECT}));
+				}}
+				active={this.state.activeIcon === Header.ICON.PROJECT}
+				size={28}
+				diameter={DIAMETER}
+				bottomSpacing={this.state.icon.height * 0.4}
+			/>
+		);
+		return (
+			<BottomIconRow
+				ref={c => this.bottomIconRow = c}
+				bottomRowHeight={Header.MAX_HEIGHT - Header.MIN_HEIGHT}
+				diameter={DIAMETER}
+				style={[bottomIconsTranslate, iconOpacityRange]}
+			>
+				{this.props.isCollapsed ? null : archivedSitesIcon}
+				{this.props.isCollapsed ? null : projectIcon}
+			</BottomIconRow>
+		);
+	};
 
+	render() {
 		let normalTransform = [{
 			translateY: this.props.animationRange.interpolate({
 				inputRange: [0, 1],
@@ -161,16 +200,24 @@ class Header extends Component {
 
 		return (
 			<HeaderContainer
-				height={Header.MAX_HEIGHT}
+				headerHeight={Header.MAX_HEIGHT}
 				radius={DIAMETER}
 				pointerEvents='box-none'
 			>
 				<VisibleHeader
-					height={Header.MAX_HEIGHT}
+					visibleHeaderHeight={Header.MAX_HEIGHT}
 					style={scrollAnimation}
 				/>
-				<TopIconRow height={Header.MAX_HEIGHT - Header.MIN_HEIGHT + 24}>
+				<TopIconRow
+					ref={c => this.topIconRow = c}
+					topIconRowHeight={Header.MAX_HEIGHT - Header.MIN_HEIGHT + 24}
+				>
 					<CalendarIcon
+						onLayout={({nativeEvent}) => {
+							this.setState({
+								topRowCenter: nativeEvent.layout.height / 2
+							})
+						}}
 						size={28}
 						diameter={DIAMETER}
 						animationRange={this.props.animationRange}
@@ -181,30 +228,7 @@ class Header extends Component {
 						animationRange={this.props.animationRange}
 					/>
 				</TopIconRow>
-				<BottomIconRow
-					height={Header.MAX_HEIGHT - Header.MIN_HEIGHT}
-					diameter={DIAMETER}
-					style={[bottomIconsTranslate, iconOpacityRange]}
-				>
-					<ArchivedSitesIcon
-						onPress={() => {
-							this.setState(prevState => ({...prevState, activeIcon: Header.ICON.HIDDEN}));
-						}}
-						active={this.state.activeIcon === Header.ICON.HIDDEN}
-						size={28}
-						diameter={DIAMETER}
-						bottomSpacing={this.state.icon.height * 0.4}
-					/>
-					<ProjectIcon
-						onPress={() => {
-							this.setState(prevState => ({...prevState, activeIcon: Header.ICON.PROJECT}));
-						}}
-						active={this.state.activeIcon === Header.ICON.PROJECT}
-						size={28}
-						diameter={DIAMETER}
-						bottomSpacing={this.state.icon.height * 0.4}
-					/>
-				</BottomIconRow>
+				{this.renderBottomRow(bottomIconsTranslate, iconOpacityRange)}
 				<Circle
 					active={this.state.activeIcon === Header.ICON.HOME}
 					style={circleAnimation}
@@ -216,6 +240,7 @@ class Header extends Component {
 						this.setState(prevState => ({...prevState, activeIcon: Header.ICON.HOME}));
 					}}
 					animationRange={this.props.animationRange}
+					topRowCenter={this.state.topRowHeight / 2}
 					updateSize={this.updateSize}
 					diameter={DIAMETER}
 				/>
@@ -226,7 +251,8 @@ class Header extends Component {
 
 const mapStateToProps = (state) => {
 	return {
-		animationRange: state.header.scrollY
+		animationRange: state.header.scrollY,
+		isCollapsed: state.header.isCollapsed
 	}
 };
 

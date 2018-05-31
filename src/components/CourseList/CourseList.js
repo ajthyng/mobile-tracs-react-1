@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {View, FlatList, Animated, StyleSheet, Text} from 'react-native';
 
 import {connect} from 'react-redux';
-import {setScrollY} from '../../actions/header';
+import {setScrollY, setHeaderState} from '../../actions/header';
 
 import Header from '../Header/Header';
 import CourseCard from './CourseCard';
@@ -14,6 +14,9 @@ const renderHeader = () => (<View style={{flex: 0, height: Header.MAX_HEIGHT + 4
 class CourseList extends Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			y: 0
+		};
 		this.data = [
 			{
 				key: '0',
@@ -22,7 +25,7 @@ class CourseList extends Component {
 				grades: [
 					{name: "Gradebook Item 1", grade: 90, points: 100},
 					{name: "Gradebook Item 2", grade: 90, points: 100},
-					{name: "Gradebook Item 3", grade: 90, points: 100},
+					{name: "Gradebook Item 3", grade: null, points: 100},
 					{name: "Gradebook Item 4", grade: 89.95, points: 100}
 				]
 			},
@@ -62,6 +65,28 @@ class CourseList extends Component {
 					{name: "Gradebook Item 4", grade: 89.95, points: 100}
 				]
 			},
+			{
+				key: '5',
+				name: "HST 103.456 v2018.1030",
+				instructor: "Professor Cyclops",
+				grades: [
+					{name: "Gradebook Item 1", grade: 90, points: 100},
+					{name: "Gradebook Item 2", grade: 90, points: 100},
+					{name: "Gradebook Item 3", grade: 90, points: 100},
+					{name: "Gradebook Item 4", grade: 89.95, points: 100}
+				]
+			},
+			{
+				key: '6',
+				name: "Worst Class Ever 👌👌",
+				instructor: "Professor Metal Guy",
+				grades: [
+					{name: "Gradebook Item 1", grade: 90, points: 100},
+					{name: "Gradebook Item 2", grade: 90, points: 100},
+					{name: "Gradebook Item 3", grade: 90, points: 100},
+					{name: "Gradebook Item 4", grade: 89.95, points: 100}
+				]
+			},
 		];
 		this._scrollY = new Animated.Value(0);
 		props.setScrollY(this._scrollY);
@@ -80,8 +105,11 @@ class CourseList extends Component {
 						],
 						{
 							useNativeDriver: true,
-							listener: () => {
-								this.props.setScrollY(this._scrollY);
+							listener: (event) => {
+								let y = event.nativeEvent.contentOffset.y;
+								let max = Header.MIN_HEIGHT;
+								let isCollapsed = y >= max;
+								this.props.setHeaderState(isCollapsed);
 							}
 						}
 					)}
@@ -114,7 +142,8 @@ const mapDispatchToProps = (dispatch) => {
 			inputRange: [0, Header.MIN_HEIGHT],
 			outputRange: [0, 1],
 			extrapolate: 'clamp'
-		})))
+		}))),
+		setHeaderState: (isCollapsed) => dispatch(setHeaderState(isCollapsed))
 	}
 };
 

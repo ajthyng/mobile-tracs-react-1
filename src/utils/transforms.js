@@ -8,20 +8,43 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {headerActions} from '../constants/actions';
+import * as math from 'mathjs';
 
-const {SET_SCROLL_Y, SET_HEADER_STATE} = headerActions;
+const rotateX = (deg = 0) => {
+	const rad = (Math.PI / 180) * deg;
+	const cos = Math.cos(rad);
+	const sin = Math.sin(rad);
 
-export const setScrollY = (scroll) => {
-	return {
-		type: SET_SCROLL_Y,
-		scrollY: scroll
-	}
+	return math.matrix([
+		[1, 0, 0, 0],
+		[0, cos, -sin, 0],
+		[0, sin, cos, 0],
+		[1, 0, 0, 0]
+	]);
 };
 
-export const setHeaderState = (isCollapsed) => {
-	return {
-		type: SET_HEADER_STATE,
-		isCollapsed
-	}
+const transformOrigin = (matrix, origin) => {
+	const {x, y, z} = origin;
+
+	const translate = math.matrix([
+		[1, 0, 0, 0],
+		[0, 1, 0, 0],
+		[0, 0, 1, 0],
+		[x, y/2, z, 1]
+	]);
+
+	const reverseTranslate = math.matrix([
+		[1, 0, 0, 0],
+		[0, 1, 0, 0],
+		[0, 0, 1, 0],
+		[-x, -y/2, -z, 1]
+	]);
+
+	const translateY = math.multiply(translate, matrix);
+	return math.multiply(translateY, reverseTranslate);
+};
+
+module.exports = {
+	rotateX,
+	transformOrigin
 };
