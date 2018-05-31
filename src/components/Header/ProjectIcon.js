@@ -30,7 +30,7 @@ class ProjectIcon extends Component {
 					diameter={this.props.diameter / 2}
 					size={this.props.size}
 					color="#fff"
-					name="asl-interpreting"
+					name="folder-open-o"
 				/>
 			</AnimatedRipple>
 		);

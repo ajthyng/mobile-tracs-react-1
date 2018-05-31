@@ -49,8 +49,8 @@ const TopIconRow = styled.View`
 	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
-	margin-left: 16px;
-	margin-right: 16px;
+	padding-left: 16px;
+	padding-right: 16px;
 	margin-bottom: 0;
 	height: ${props => props.topIconRowHeight};
 	background-color: transparent;

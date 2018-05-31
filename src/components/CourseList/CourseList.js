@@ -7,9 +7,9 @@ import {setScrollY, setHeaderState} from '../../actions/header';
 import Header from '../Header/Header';
 import CourseCard from './CourseCard';
 
-const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
-
 const renderHeader = () => (<View style={{flex: 0, height: Header.MAX_HEIGHT + 40, width: '100%'}}/>);
+
+const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 class CourseList extends Component {
 	constructor(props) {
@@ -92,11 +92,25 @@ class CourseList extends Component {
 		props.setScrollY(this._scrollY);
 	}
 
+	onScrollEndSnapToEdge = (event) => {
+		if (!this.scrollView) return;
+
+		const y = event.nativeEvent.contentOffset.y;
+		const shouldSnapToOpen = 0 < y && y < Header.MIN_HEIGHT / 2;
+		const shouldSnapToShut = Header.MIN_HEIGHT / 2 <= y && y < Header.MIN_HEIGHT;
+		if (shouldSnapToOpen) {
+			this.scrollView.scrollTo({y: 0});
+		} else if (shouldSnapToShut) {
+			this.scrollView.scrollTo({y: Header.MIN_HEIGHT});
+		}
+	};
+
 	render() {
 		return (
 			<View style={styles.container}>
-				<AnimatedFlatList
+				<Animated.ScrollView
 					styles={styles.scrollView}
+					ref={ref => this.scrollView = ref ? ref._component : {scrollTo: () => {}}}
 					onScroll={Animated.event(
 						[
 							{
@@ -109,17 +123,21 @@ class CourseList extends Component {
 								let y = event.nativeEvent.contentOffset.y;
 								let max = Header.MIN_HEIGHT;
 								let isCollapsed = y >= max;
-								this.props.setHeaderState(isCollapsed);
+								if (isCollapsed !== this.props.isCollapsed) {
+									this.props.setHeaderState(isCollapsed);
+								}
 							}
 						}
 					)}
-					data={this.data}
+					onScrollEndDrag={this.onScrollEndSnapToEdge}
+					onMomentumScrollEnd={this.onScrollEndSnapToEdge}
 					scrollEventThrottle={16}
-					ListHeaderComponent={renderHeader}
-					renderItem={({item}) => {
+				>
+					{renderHeader()}
+					{this.data.map(item => {
 						return <CourseCard {...item}/>
-					}}
-				/>
+					})}
+				</Animated.ScrollView>
 			</View>
 		);
 	}
@@ -136,6 +154,12 @@ const styles = StyleSheet.create({
 	}
 });
 
+const mapStateToProps = (state) => {
+	return {
+		isCollapsed: state.header.isCollapsed
+	}
+};
+
 const mapDispatchToProps = (dispatch) => {
 	return {
 		setScrollY: (scrollY) => dispatch(setScrollY(scrollY.interpolate({
@@ -147,4 +171,4 @@ const mapDispatchToProps = (dispatch) => {
 	}
 };
 
-export default connect(null, mapDispatchToProps)(CourseList);
+export default connect(mapStateToProps, mapDispatchToProps)(CourseList);
