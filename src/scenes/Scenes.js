@@ -16,6 +16,7 @@ import {View, Easing, Platform, Animated, Text} from 'react-native';
 import React from 'react';
 
 import {createSwitchNavigator, createStackNavigator} from 'react-navigation';
+import CalendarScreen from '../components/CalendarScreen';
 
 Array.prototype.contains = function(value) {
 	return this.indexOf(value) >= 0;
@@ -23,7 +24,7 @@ Array.prototype.contains = function(value) {
 
 const FakeScene = (title) => {
 	return () => (
-		<View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+		<View style={{flex: 1, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center'}}>
 			<Text style={{color: '#363534', fontSize: 36, textAlign: 'center'}}>{title}</Text>
 		</View>
 	)
@@ -45,7 +46,7 @@ const HomeNavigator = createStackNavigator({
 		})
 	},
 	Calendar: {
-		screen: FakeScene("Calendar"),
+		screen: CalendarScreen,
 		navigationOptions: ({navigation}) => ({
 			header: <Header navigation={navigation}/>,
 			gesturesEnabled: false,
@@ -56,7 +57,7 @@ const HomeNavigator = createStackNavigator({
 	transitionConfig: () => {
 		return {
 			transitionSpec: {
-				duration: Platform.select({android: 250, ios: 750}),
+				duration: Platform.select({android: 250, ios: 500}),
 				easing: Easing.out(Easing.poly(4)),
 				timing: Animated.timing,
 				useNativeDriver: true,

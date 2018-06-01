@@ -27,7 +27,6 @@ const Circle = Animated.createAnimatedComponent(styled.View`
 	shadow-opacity: 0.5;
 	shadow-offset: 0px 2px;
 	shadow-radius: 2;
-	elevation: 3;
 `);
 
 const VisibleHeader = Animated.createAnimatedComponent(styled.View`
@@ -42,7 +41,6 @@ const VisibleHeader = Animated.createAnimatedComponent(styled.View`
 		shadow-opacity: 0.5;
 		shadow-offset: 0px 2px;
 		shadow-radius: 2;
-		elevation: 3;
 `);
 
 const HeaderContainer = styled.View`
@@ -77,7 +75,7 @@ const BottomIconRow = styled(Animated.View)`
 	height: ${props => props.bottomRowHeight};
 	margin-bottom: ${props => props.diameter / 2}px;
 	background-color: transparent;
-	z-index: 3;
+	z-index: 4;
 `;
 
 class Header extends Component {

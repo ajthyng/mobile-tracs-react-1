@@ -8,6 +8,8 @@ target 'TRACSMobile' do
   # Pods for TRACSMobile
   pod 'Firebase/Core'
 
+  pod 'RNSVG', :path => '../node_modules/react-native-svg'
+
   target 'TRACSMobileTests' do
     inherit! :search_paths
     # Pods for testing
