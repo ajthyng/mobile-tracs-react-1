@@ -6,6 +6,8 @@ import {logout} from '../../actions/login';
 import * as Storage from '../../utils/storage';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import CourseList from '../CourseList/CourseList';
+import Header from '../Header/Header';
+import {setHeaderState} from '../../actions/header';
 
 const styles = StyleSheet.create({
 	container: {
@@ -61,6 +63,7 @@ const LogoutButton = LogoutButtonHOC(Ripple);
 class HomeScreen extends Component {
 	constructor(props) {
 		super(props);
+		this.props.setHeaderState(Header.EXPANDED);
 	}
 
 	componentDidUpdate() {
@@ -83,7 +86,7 @@ class HomeScreen extends Component {
 
 const mapStateToProps = (state) => {
 	return {
-		authenticated: state.login.isAuthenticated,
+		authenticated: state.login.isAuthenticated
 	}
 };
 
@@ -92,7 +95,8 @@ const mapDispatchToProps = (dispatch) => {
 		logout: () => {
 			Storage.credentials.reset();
 			dispatch(logout())
-		}
+		},
+		setHeaderState: (isCollapsed) => dispatch(setHeaderState(isCollapsed))
 	}
 };
 

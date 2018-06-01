@@ -7,6 +7,7 @@ import Profile from './Profile';
 import styled from 'styled-components';
 import ProjectIcon from './ProjectIcon';
 import CalendarIcon from './CalendarIcon';
+import {setHeaderState} from '../../actions/header';
 
 const DIAMETER = 80;
 const MAX_HEIGHT = 150;
@@ -82,6 +83,8 @@ const BottomIconRow = styled(Animated.View)`
 class Header extends Component {
 	static MAX_HEIGHT = MAX_HEIGHT;
 	static MIN_HEIGHT = MAX_HEIGHT - 65;
+	static COLLAPSED = true;
+	static EXPANDED = false;
 
 	static ICON = {
 		HOME: 0,
@@ -93,7 +96,6 @@ class Header extends Component {
 		super(props);
 		if (global.android) StatusBar.setBackgroundColor('#224575');
 		StatusBar.setBarStyle('light-content');
-
 		this.state = {
 			icon: {
 				height: HOME_ICON_SIZE,
@@ -105,6 +107,7 @@ class Header extends Component {
 			activeIcon: Header.ICON.HOME,
 			topRowHeight: 0
 		};
+		this.animationRange = this.props.animationRange;
 	}
 
 	componentDidMount() {
@@ -164,7 +167,6 @@ class Header extends Component {
 		);
 		return (
 			<BottomIconRow
-				ref={c => this.bottomIconRow = c}
 				bottomRowHeight={Header.MAX_HEIGHT - Header.MIN_HEIGHT}
 				diameter={DIAMETER}
 				style={[bottomIconsTranslate, iconOpacityRange]}
@@ -175,16 +177,26 @@ class Header extends Component {
 		);
 	};
 
+
+
+
+	goToCalendar = () => {
+		this.props.setHeaderState(Header.COLLAPSED);
+		this.props.navigation.navigate('Calendar');
+	};
+
 	render() {
+		let animationRange = this.animationRange;
+
 		let normalTransform = [{
-			translateY: this.props.animationRange.interpolate({
+			translateY: animationRange.interpolate({
 				inputRange: [0, 1],
 				outputRange: [0, -Header.MIN_HEIGHT]
 			})
 		}];
 
 		let iconOpacityRange = {
-			opacity: this.props.animationRange.interpolate({
+			opacity: animationRange.interpolate({
 				inputRange: [0, 1],
 				outputRange: [1, 0]
 			})
@@ -197,7 +209,7 @@ class Header extends Component {
 		let circleAnimation = {
 			opacity: iconOpacityRange.opacity,
 			transform: [{
-				translateY: this.props.animationRange.interpolate({
+				translateY: animationRange.interpolate({
 					inputRange: [0, 1],
 					outputRange: [0, -Header.MIN_HEIGHT - this.state.icon.height / 3.5]
 				})
@@ -229,13 +241,14 @@ class Header extends Component {
 							})
 						}}
 						size={28}
+						onPress={this.goToCalendar}
 						diameter={DIAMETER}
-						animationRange={this.props.animationRange}
+						animationRange={animationRange}
 					/>
 					<Profile
 						size={28}
 						diameter={DIAMETER}
-						animationRange={this.props.animationRange}
+						animationRange={animationRange}
 					/>
 				</TopIconRow>
 				{this.renderBottomRow(bottomIconsTranslate, iconOpacityRange)}
@@ -248,8 +261,10 @@ class Header extends Component {
 				<HomeIcon
 					onPress={() => {
 						this.setState(prevState => ({...prevState, activeIcon: Header.ICON.HOME}));
+						this.props.setHeaderState(Header.EXPANDED);
+						this.props.navigation.navigate('Home');
 					}}
-					animationRange={this.props.animationRange}
+					animationRange={animationRange}
 					topRowCenter={this.state.topRowHeight / 2}
 					updateSize={this.updateSize}
 					diameter={DIAMETER}
@@ -266,4 +281,10 @@ const mapStateToProps = (state) => {
 	}
 };
 
-export default connect(mapStateToProps, null)(Header);
+const mapDispatchToProps = (dispatch) => {
+	return {
+		setHeaderState: (isCollapsed) => dispatch(setHeaderState(isCollapsed))
+	}
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

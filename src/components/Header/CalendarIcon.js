@@ -22,6 +22,7 @@ class CalendarIcon extends Component {
 			<AnimatedRipple
 				onLayout={this.props.onLayout}
 				diameter={this.props.diameter}
+				onPress={this.props.onPress}
 				iconSize={this.props.size}
 				rippleContainerBorderRadius={this.props.diameter / 2}
 			>
@@ -37,7 +38,8 @@ class CalendarIcon extends Component {
 
 CalendarIcon.defaultProps = {
 	size: 0,
-	diameter: 0
+	diameter: 0,
+	onPress: () => {}
 };
 
 export default CalendarIcon;

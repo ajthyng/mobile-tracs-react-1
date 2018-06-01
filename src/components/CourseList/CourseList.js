@@ -9,13 +9,13 @@ import CourseCard from './CourseCard';
 
 const renderHeader = () => (<View style={{flex: 0, height: Header.MAX_HEIGHT + 40, width: '100%'}}/>);
 
-const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
-
 class CourseList extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			y: 0
+			y: 0,
+			shouldCollapse: false,
+			shouldExpand: false
 		};
 		this.data = [
 			{
@@ -96,14 +96,27 @@ class CourseList extends Component {
 		if (!this.scrollView) return;
 
 		const y = event.nativeEvent.contentOffset.y;
-		const shouldSnapToOpen = 0 < y && y < Header.MIN_HEIGHT / 2;
-		const shouldSnapToShut = Header.MIN_HEIGHT / 2 <= y && y < Header.MIN_HEIGHT;
+		const minHeight = Header.MIN_HEIGHT + 40;
+		const shouldSnapToOpen = 0 < y && y < minHeight / 2;
+		const shouldSnapToShut = minHeight / 2 <= y && y < minHeight;
 		if (shouldSnapToOpen) {
 			this.scrollView.scrollTo({y: 0});
 		} else if (shouldSnapToShut) {
-			this.scrollView.scrollTo({y: Header.MIN_HEIGHT});
+			this.scrollView.scrollTo({y: minHeight});
 		}
 	};
+
+	moveHeaderBy = (units) => {
+		if (this.scrollView) {
+			this.scrollView.scrollTo({y: units});
+		}
+	};
+
+	componentDidUpdate(prevProps) {
+		if (prevProps.isCollapsed !== this.props.isCollapsed) {
+			this.moveHeaderBy(prevProps.isCollapsed ? 0 : Header.MIN_HEIGHT + 40);
+		}
+	}
 
 	render() {
 		return (
@@ -121,11 +134,7 @@ class CourseList extends Component {
 							useNativeDriver: true,
 							listener: (event) => {
 								let y = event.nativeEvent.contentOffset.y;
-								let max = Header.MIN_HEIGHT;
-								let isCollapsed = y >= max;
-								if (isCollapsed !== this.props.isCollapsed) {
-									this.props.setHeaderState(isCollapsed);
-								}
+								this.setState({y});
 							}
 						}
 					)}
