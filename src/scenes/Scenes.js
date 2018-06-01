@@ -26,6 +26,19 @@ const FakeScene = (title) => {
 	)
 };
 
+const isNavigationBetweenScenes = (to, from, targetOne, targetTwo) => {
+	if (from === to) return true;
+
+	switch(to) {
+		case targetOne:
+			return from === targetTwo;
+		case targetTwo:
+			return from === targetOne;
+		default:
+			return false;
+	}
+};
+
 const HomeNavigator = createStackNavigator({
 	Right: {
 		screen: FakeScene("Right")
@@ -48,7 +61,7 @@ const HomeNavigator = createStackNavigator({
 	transitionConfig: () => {
 		return {
 			transitionSpec: {
-				duration: 500,
+				duration: 750,
 				easing: Easing.out(Easing.poly(4)),
 				timing: Animated.timing,
 				useNativeDriver: true,
@@ -61,12 +74,7 @@ const HomeNavigator = createStackNavigator({
 				const toName = scenes[toIndex].route.routeName;
 				const fromName = scenes[thisSceneIndex].route.routeName;
 
-				const sameScene = toName === fromName;
-				const homeOrCalendar = toName === "Calendar" || toName === "Home";
-				const calendarToHome = toName === "Home" && fromName === "Calendar";
-				const homeToCalendar = toName === "Calendar" && fromName === "Home";
-
-				const shouldSlideFromLeft = calendarToHome || homeToCalendar || (sameScene && homeOrCalendar);
+				const shouldSlideFromLeft = isNavigationBetweenScenes(toName, fromName, "Home", "Calendar");
 
 				const width = layout.initWidth;
 				const slideFromLeft = {
