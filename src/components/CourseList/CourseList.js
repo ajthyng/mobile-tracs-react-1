@@ -130,7 +130,6 @@ class CourseList extends Component {
 						}
 					)}
 					onScrollEndDrag={this.onScrollEndSnapToEdge}
-					onMomentumScrollEnd={this.onScrollEndSnapToEdge}
 					scrollEventThrottle={16}
 				>
 					{renderHeader()}

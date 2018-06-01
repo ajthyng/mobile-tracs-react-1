@@ -22,6 +22,11 @@ const Circle = Animated.createAnimatedComponent(styled.View`
 	flex: 0;
 	background-color: ${props => props.active ? '#4a89f4' : '#224575'};
 	z-index: 4;
+	shadow-color: #363534;
+	shadow-opacity: 0.5;
+	shadow-offset: 0px 2px;
+	shadow-radius: 2;
+	elevation: 3;
 `);
 
 const VisibleHeader = Animated.createAnimatedComponent(styled.View`
@@ -32,11 +37,16 @@ const VisibleHeader = Animated.createAnimatedComponent(styled.View`
 		background-color: #224575;
 		zIndex: 2;
 		justify-content: flex-end;
-
+		shadow-color: #363534;
+		shadow-opacity: 0.5;
+		shadow-offset: 0px 2px;
+		shadow-radius: 2;
+		elevation: 3;
 `);
 
 const HeaderContainer = styled.View`
 		position: absolute;
+		top: 0;
 		flex: 1;
 		zIndex: 2;
 		height: ${props => (props.headerHeight + props.radius / 2)}px;

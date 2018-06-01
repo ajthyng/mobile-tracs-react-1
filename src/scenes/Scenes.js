@@ -15,7 +15,7 @@ import Header from '../components/Header/Header';
 import {View, Text} from 'react-native';
 import React from 'react';
 
-import {createSwitchNavigator, createMaterialTopTabNavigator} from 'react-navigation';
+import {createSwitchNavigator, createStackNavigator} from 'react-navigation';
 
 const FakeScene = (title) => {
 	return () => (
@@ -25,19 +25,21 @@ const FakeScene = (title) => {
 	)
 };
 
-const HomeNavigator = createMaterialTopTabNavigator({
+const HomeNavigator = createStackNavigator({
 	Left: {
 		screen: FakeScene("Left")
 	},
 	Home: {
 		screen: HomeScreen,
+		navigationOptions: {
+			header: (<Header />),
+		}
 	},
 	Right: {
 		screen: FakeScene("Right")
 	}
 }, {
 	initialRouteName: 'Home',
-	tabBarComponent: Header
 });
 
 const AuthenticationNavigator = createSwitchNavigator({
