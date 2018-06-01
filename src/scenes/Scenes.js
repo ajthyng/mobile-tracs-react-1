@@ -12,11 +12,14 @@ import LoginScreen from '../_components/Login/LoginScreen';
 import HomeScreen from '../components/Home/HomeScreen';
 import Header from '../components/Header/Header';
 
-import {View, Easing, Animated, Text} from 'react-native';
+import {View, Easing, Platform, Animated, Text} from 'react-native';
 import React from 'react';
 
 import {createSwitchNavigator, createStackNavigator} from 'react-navigation';
-import HomeIcon from '../components/Header/HomeIcon';
+
+Array.prototype.contains = function(value) {
+	return this.indexOf(value) >= 0;
+};
 
 const FakeScene = (title) => {
 	return () => (
@@ -27,16 +30,8 @@ const FakeScene = (title) => {
 };
 
 const isNavigationBetweenScenes = (to, from, targetOne, targetTwo) => {
-	if (from === to) return true;
-
-	switch(to) {
-		case targetOne:
-			return from === targetTwo;
-		case targetTwo:
-			return from === targetOne;
-		default:
-			return false;
-	}
+	const destinations = [targetOne, targetTwo];
+	return destinations.contains(to) && destinations.contains(from);
 };
 
 const HomeNavigator = createStackNavigator({
@@ -61,7 +56,7 @@ const HomeNavigator = createStackNavigator({
 	transitionConfig: () => {
 		return {
 			transitionSpec: {
-				duration: 750,
+				duration: Platform.select({android: 250, ios: 750}),
 				easing: Easing.out(Easing.poly(4)),
 				timing: Animated.timing,
 				useNativeDriver: true,
