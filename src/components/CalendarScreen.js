@@ -5,6 +5,7 @@ import {Calendar} from 'react-native-calendars';
 import styled from 'styled-components';
 import Header from './Header/Header';
 import ItemSeparator from '../_components/Notifications/ItemSeparator';
+import Ripple from 'react-native-material-ripple';
 
 const ContainerView = styled.View`
 	alignItems: center;
@@ -28,12 +29,15 @@ const DueDatesList = styled(FlatList)`
 	width: 100%;
 `;
 
-const DueDateItem = styled.View`
+const DueDateItem = styled(Ripple)`
 	width: 100%;
 	height: 50px;
 	background-color: transparent;
 	align-items: center;
-	justify-content: center;
+	justify-content: space-between;
+	padding-left: 16px;
+	padding-right: 16px;
+	flex-direction: row;
 `;
 
 const PullHandle = styled.View`
@@ -41,6 +45,26 @@ const PullHandle = styled.View`
 	height: 5px;
 	background-color: #363534;
 `;
+
+const SideColor = styled.View`
+	position: absolute;
+	left: 0;
+	width: 8px;
+	height: 50px;
+	background-color: ${props => props.color};
+`;
+
+const colors = [
+	'#fe4880',
+	'#c6427b',
+	'#8e3c77',
+	'#563672',
+	'#1e306e',
+];
+
+const getRandomColor = () => {
+	return colors[Math.floor(Math.random() * 100) % colors.length];
+};
 
 class CalendarScreen extends Component {
 	constructor(props) {
@@ -55,7 +79,7 @@ class CalendarScreen extends Component {
 			{key: '6', name: 'Assignment 7'},
 			{key: '7', name: 'Assignment 8'},
 			{key: '8', name: 'Assignment 9'},
-		]
+		];
 	}
 
 	render() {
@@ -73,10 +97,11 @@ class CalendarScreen extends Component {
 					ItemSeparatorComponent={() => (<ItemSeparator/>)}
 					renderItem={({item}) => (
 						<DueDateItem key={item.key}>
+							<SideColor color={getRandomColor()} />
+							<Text>{new Date().toDateString()}</Text>
 							<Text>{item.name}</Text>
 						</DueDateItem>
 					)}
-
 				/>
 			</ContainerView>
 		);

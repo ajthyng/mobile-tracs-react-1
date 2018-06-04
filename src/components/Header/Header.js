@@ -29,7 +29,7 @@ const Circle = Animated.createAnimatedComponent(styled.View`
 	shadow-radius: 2;
 `);
 
-const VisibleHeader = Animated.createAnimatedComponent(styled.View`
+const VisibleHeader = styled(Animated.View)`
 		position: absolute;
 		top: 0;
 		height: ${props => props.visibleHeaderHeight};
@@ -41,9 +41,9 @@ const VisibleHeader = Animated.createAnimatedComponent(styled.View`
 		shadow-opacity: 0.5;
 		shadow-offset: 0px 2px;
 		shadow-radius: 2;
-`);
+`;
 
-const HeaderContainer = styled.View`
+const HeaderContainer = styled(Animated.View)`
 		position: absolute;
 		top: 0;
 		flex: 1;
@@ -222,7 +222,7 @@ class Header extends Component {
 			<HeaderContainer
 				headerHeight={Header.MAX_HEIGHT}
 				radius={DIAMETER}
-				pointerEvents='box-none'
+				pointerEvents='auto'
 			>
 				<VisibleHeader
 					visibleHeaderHeight={Header.MAX_HEIGHT}

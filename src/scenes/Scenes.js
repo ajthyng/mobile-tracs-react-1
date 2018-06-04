@@ -18,7 +18,7 @@ import React from 'react';
 import {createSwitchNavigator, createStackNavigator} from 'react-navigation';
 import CalendarScreen from '../components/CalendarScreen';
 
-Array.prototype.contains = function(value) {
+Array.prototype.contains = function (value) {
 	return this.indexOf(value) >= 0;
 };
 
@@ -72,12 +72,12 @@ const HomeNavigator = createStackNavigator({
 
 				const shouldSlideFromLeft = isNavigationBetweenScenes(toName, fromName, "Home", "Calendar");
 
-				const width = layout.initWidth;
+				const width = layout.initHeight;
 				const slideFromLeft = {
 					transform: [{
-						translateX: position.interpolate({
+						translateY: position.interpolate({
 							inputRange: [thisSceneIndex - 1, thisSceneIndex],
-							outputRange: [-width, 0]
+							outputRange: [width, 0]
 						})
 					}]
 				};
@@ -100,13 +100,7 @@ const HomeNavigator = createStackNavigator({
 
 const AuthenticationNavigator = createSwitchNavigator({
 	Home: HomeNavigator,
-	Login: {
-		screen: LoginScreen,
-		navigationOptions: {
-			header: null
-		}
-	}
-}, {initialRouteName: 'Login'});
+}, {initialRouteName: 'Home'});
 
 module.exports = {
 	Scenes: AuthenticationNavigator
