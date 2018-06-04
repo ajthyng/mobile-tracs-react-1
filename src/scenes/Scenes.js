@@ -63,37 +63,28 @@ const HomeNavigator = createStackNavigator({
 				useNativeDriver: true,
 			},
 			screenInterpolator: sceneProps => {
-				const {layout, position, scene, index, scenes} = sceneProps;
-				const toIndex = index;
-				const thisSceneIndex = scene.index;
+				const {layout, position, scene} = sceneProps;
+				const {index} = scene;
 
-				const toName = scenes[toIndex].route.routeName;
-				const fromName = scenes[thisSceneIndex].route.routeName;
+				const width = layout.initWidth;
 
-				const shouldSlideFromLeft = isNavigationBetweenScenes(toName, fromName, "Home", "Calendar");
+				const translateX = position.interpolate({
+					inputRange: [index - 1, index, index + 1],
+					outputRange: [-width, 0, 0]
+				});
 
-				const width = layout.initHeight;
-				const slideFromLeft = {
-					transform: [{
-						translateY: position.interpolate({
-							inputRange: [thisSceneIndex - 1, thisSceneIndex],
-							outputRange: [width, 0]
-						})
-					}]
-				};
+				const opacity = position.interpolate({
+					inputRange: [index - 1, index, index+0.99, index + 1],
+					outputRange: [1, 1, 0.3, 0]
+				});
 
-				const slideFromRight = {
-					transform: [{
-						translateX: position.interpolate({
-							inputRange: [thisSceneIndex - 1, thisSceneIndex],
-							outputRange: [width, 0]
-						})
-					}]
-				};
-
-				return shouldSlideFromLeft ? slideFromLeft : slideFromRight;
+				return {opacity, transform: [{translateX: translateX}]};
 			}
 		}
+	},
+	cardStyle: {
+		backgroundColor: 'rgba(0,0,0,0)',
+		opacity: 1,
 	},
 	gestures: {},
 });

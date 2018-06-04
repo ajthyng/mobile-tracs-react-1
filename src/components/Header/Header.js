@@ -179,8 +179,8 @@ class Header extends Component {
 
 
 	goToCalendar = () => {
-		this.props.setHeaderState(Header.COLLAPSED);
 		this.props.navigation.navigate('Calendar');
+		this.props.setHeaderState(Header.COLLAPSED);
 	};
 
 	render() {
