@@ -118,6 +118,11 @@ class CourseList extends Component {
 		}
 	}
 
+	goToCourse = () => {
+		this.props.navigation.navigate('Course', {transition: 'cardFromRight'});
+		this.props.setHeaderState(Header.COLLAPSED);
+	};
+
 	render() {
 		return (
 			<View style={styles.container}>
@@ -143,7 +148,7 @@ class CourseList extends Component {
 				>
 					{renderHeader()}
 					{this.data.map(item => {
-						return <CourseCard {...item}/>
+						return <CourseCard {...item} goToCourse={this.goToCourse}/>
 					})}
 				</Animated.ScrollView>
 			</View>

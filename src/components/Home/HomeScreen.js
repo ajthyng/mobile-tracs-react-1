@@ -75,7 +75,7 @@ class HomeScreen extends Component {
 	render() {
 		return (
 			<View style={styles.container}>
-				<CourseList />
+				<CourseList navigation={this.props.navigation}/>
 			</View>
 		);
 	}

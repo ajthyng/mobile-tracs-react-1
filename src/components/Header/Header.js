@@ -11,15 +11,16 @@ import {setHeaderState} from '../../actions/header';
 
 const DIAMETER = 80;
 const MAX_HEIGHT = 150;
+const HEIGHT = 65;
 const HOME_ICON_SIZE = DIAMETER * 0.6;
 
-const Circle = Animated.createAnimatedComponent(styled.View`
-	width: ${props => props.active ? props.radius : props.radius * 0.8}; 
-	height: ${props => props.active ? props.radius : props.radius * 0.8}; 
-	border-radius: ${props => props.radius / 2}px;
+const Circle = styled(Animated.View)`
+	width: ${props => props.radius * props.scale}; 
+	height: ${props => props.radius * props.scale}; 
+	border-radius: ${props => props.radius * props.scale / 2}px;
 	position: absolute;
-	bottom: ${props => props.active ? 0 : props.radius * 0.1}px;
-	margin-left: ${props => props.active ? 0 : props.radius*0.1};
+	bottom: ${props => DIAMETER - (props.radius * (1 + props.scale) / 2)};
+	left: ${props => (Dimensions.get('window').width - props.radius * props.scale) / 2}
 	flex: 0;
 	background-color: ${props => props.active ? '#4a89f4' : '#224575'};
 	z-index: 4;
@@ -27,7 +28,12 @@ const Circle = Animated.createAnimatedComponent(styled.View`
 	shadow-opacity: 0.5;
 	shadow-offset: 0px 2px;
 	shadow-radius: 2;
-`);
+`;
+
+Circle.defaultProps = {
+	scale: 0.8,
+	radius: DIAMETER
+};
 
 const VisibleHeader = styled(Animated.View)`
 		position: absolute;
@@ -47,10 +53,10 @@ const HeaderContainer = styled(Animated.View)`
 		position: absolute;
 		top: 0;
 		flex: 1;
-		zIndex: 2;
+		zIndex: 4;
 		height: ${props => (props.headerHeight + props.radius / 2)}px;
 		width: 100%;
-		background-color: transparent;
+		background-color: #00000032;
 		justify-content: flex-end;
 `;
 
@@ -79,8 +85,9 @@ const BottomIconRow = styled(Animated.View)`
 `;
 
 class Header extends Component {
+	static HEIGHT = HEIGHT;
 	static MAX_HEIGHT = MAX_HEIGHT;
-	static MIN_HEIGHT = MAX_HEIGHT - 65;
+	static MIN_HEIGHT = MAX_HEIGHT - HEIGHT;
 	static COLLAPSED = true;
 	static EXPANDED = false;
 
@@ -175,11 +182,8 @@ class Header extends Component {
 		);
 	};
 
-
-
-
 	goToCalendar = () => {
-		this.props.navigation.navigate('Calendar');
+		this.props.navigation.navigate('Calendar', {transition: 'cardFromTop'});
 		this.props.setHeaderState(Header.COLLAPSED);
 	};
 
@@ -218,6 +222,7 @@ class Header extends Component {
 			transform: normalTransform
 		};
 
+		console.log(iconOpacityRange.opacity.__getValue());
 		return (
 			<HeaderContainer
 				headerHeight={Header.MAX_HEIGHT}
@@ -254,13 +259,24 @@ class Header extends Component {
 					active={this.state.activeIcon === Header.ICON.HOME}
 					style={circleAnimation}
 					radius={DIAMETER}
-					left={this.state.circle.left}
 				/>
 				<HomeIcon
 					onPress={() => {
 						this.setState(prevState => ({...prevState, activeIcon: Header.ICON.HOME}));
 						this.props.setHeaderState(Header.EXPANDED);
-						this.props.navigation.navigate('Home');
+						let transition = '';
+						switch (this.props.navigation.state.routeName) {
+							case 'Calendar':
+								transition = 'cardFromTop';
+								break;
+							case 'Course':
+								transition = 'cardFromRight';
+								break;
+							default:
+								transition = 'none';
+								break;
+						}
+						this.props.navigation.navigate('Home', {transition});
 					}}
 					animationRange={animationRange}
 					topRowCenter={this.state.topRowHeight / 2}

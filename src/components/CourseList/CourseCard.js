@@ -5,26 +5,25 @@ import styled from 'styled-components';
 
 const HEIGHT = 100;
 
-const CardBoundary = styled.View`
-	height: ${HEIGHT}px;
-	background-color: #fefefe;
+const CardBoundary = styled(Ripple)`
+	height: ${100}px;
+	background-color: #fff;
 	margin: 10px;
-	border-radius: ${props => props.borderRadius || 0}px;
-	border-color: #b0b0b080;
-	border-width: ${StyleSheet.hairlineWidth};
+	border-radius: ${props => props.borderRad || 0};
 	flex-direction: row;
 	shadow-color: #142945;
 	shadow-offset: 1px 2px;
 	shadow-opacity: 0.4;
 	shadow-radius: 1px;
 	elevation: 3;
+	flex: 1;
 `;
 
-const GradeContainer = styled(Ripple)`
-	width: ${HEIGHT};
-	height: 100%;
-	border-top-left-radius: ${props => props.borderRadius}px;
-	border-bottom-left-radius: ${props => props.borderRadius}px;
+const GradeContainer = styled.View`
+	width: ${HEIGHT}px;
+	height: ${HEIGHT}px;
+	border-top-left-radius: ${props => props.borderRad};
+	border-bottom-left-radius: ${props => props.borderRad};
 	border-bottom-right-radius: 0;
 	border-top-right-radius: 0;
 	background-color: transparent;
@@ -32,33 +31,22 @@ const GradeContainer = styled(Ripple)`
 	flex-direction: row;
 `;
 
-const GradeContainerBorder = styled.View`
-	width: ${HEIGHT};
-	border-bottom-left-radius: 3px;
-	border-top-left-radius: 3px;
-	height: 100%;
-	position: absolute;
-	background-color: transparent;
-	align-items: flex-start;
-	flex-direction: row;
-	border-color: #36353480;
-	border-width: 1px;
-	border-style: ${props => props.hasGrade ? 'solid' : 'dashed'};
-`;
-
 const SideBar = styled.View`
 	width: ${props => props.hasGrade ? HEIGHT : HEIGHT * 0.1};
 	height: ${HEIGHT};
 	position: absolute;
 	left: 0;
-	border-bottom-left-radius: 3px;
-	border-top-left-radius: 3px;
+	top: 0;
+	border-bottom-left-radius: ${props => props.borderRad};
+	border-top-left-radius: ${props => props.borderRad};
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
 	background-color: dodgerblue;
 `;
 
 const GradeValueContainer = styled.View`
 	flex: 1;
-	height: 100%;
+	height: ${HEIGHT};
 	justify-content: center;
 	background-color: transparent;
 `;
@@ -69,33 +57,14 @@ const Grade = styled.Text`
 	font-size: 16px;
 `;
 
-const CourseInfoContainer = styled(Ripple)`
+const CourseInfoContainer = styled.View`
 	background-color: transparent;
 	padding-top: 8px;
-	border-top-right-radius: ${props => props.borderRadius || 0}px;
-	border-bottom-right-radius: ${props => props.borderRadius || 0}px;
+	border-top-right-radius: ${props => props.borderRad || 0};
+	border-bottom-right-radius: ${props => props.borderRad || 0};
 	border-bottom-left-radius: 0;
 	border-top-left-radius: 0;
 	flex: 1;
-`;
-
-const CardContentRow = styled(Ripple)`
-	height: ${HEIGHT * 0.8}px;
-`;
-
-const BorderMask = styled.View`
-	width: ${HEIGHT - 1};
-	height: 100%;
-	border-bottom-left-radius: 3px;
-	border-top-left-radius: 3px;
-	border-color: #b0b0b080;
-	border-top-width: 1px;
-	border-bottom-width: 1px;
-	position: absolute;
-	background-color: ${props => props.hasGrade ? 'dodgerblue' : 'white'};
-	align-items: flex-start;
-	flex-direction: row;
-	left: 0;
 `;
 
 const CourseName = styled.Text`
@@ -111,14 +80,6 @@ const CourseInstructor = styled.Text`
 	margin-left: 8px;
 	color: #363534;
 	text-align: left;
-`;
-
-const GradeToContentBoundary = styled.View`
-	width: 2px;
-	height: 100%;
-	position: absolute;
-	left: ${HEIGHT};
-	background-color: #36353430;
 `;
 
 const Dash = styled.View`
@@ -178,6 +139,9 @@ const formatGrade = ({earned, total}) => {
 class CourseCard extends Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			extraContent: null
+		};
 	}
 
 	render() {
@@ -191,25 +155,30 @@ class CourseCard extends Component {
 		let hasGrade = points.earned !== null;
 
 		return (
-			<CardBoundary borderRadius={borderRadius}>
-				<GradeContainer borderRadius={borderRadius}>
-					<SideBar hasGrade={hasGrade}/>
-					<GradeValueContainer>
-						<Grade hasGrade={hasGrade}>{!hasGrade ? "--" : formatGrade(points)}</Grade>
-					</GradeValueContainer>
-				</GradeContainer>
-				<GradeRightBorder dashStyle={hasGrade ? '' : 'dash'} color='#36353440'/>
-				<CourseInfoContainer borderRadius={borderRadius}>
-					<CourseName numberOfLines={1} ellipsizeMode="tail">{name}</CourseName>
-					<CourseInstructor numberOfLines={1} ellipsizeMode="tail">{instructor}</CourseInstructor>
-				</CourseInfoContainer>
-			</CardBoundary>
+			<View style={{flex: 1}}>
+				<CardBoundary borderRad={borderRadius} onPress={this.props.goToCourse}>
+					<GradeContainer borderRad={borderRadius}>
+						<SideBar hasGrade={hasGrade} borderRad={borderRadius}/>
+						<GradeValueContainer>
+							<Grade hasGrade={hasGrade}>{!hasGrade ? "--" : formatGrade(points)}</Grade>
+						</GradeValueContainer>
+					</GradeContainer>
+					<GradeRightBorder dashStyle={hasGrade ? '' : 'dash'} color='#36353440'/>
+					<CourseInfoContainer borderRad={borderRadius}>
+						<CourseName numberOfLines={1} ellipsizeMode="tail">{name}</CourseName>
+						<CourseInstructor numberOfLines={1} ellipsizeMode="tail">{instructor}</CourseInstructor>
+					</CourseInfoContainer>
+				</CardBoundary>
+			</View>
 		)
 	}
 }
 
 CourseCard.defaultProps = {
-	borderRadius: 3
+	borderRadius: 3,
+	name: "Course Name Not Found",
+	instructor: "Instructor TBA",
+	grades: []
 };
 
 export default CourseCard;

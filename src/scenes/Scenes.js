@@ -17,77 +17,57 @@ import React from 'react';
 
 import {createSwitchNavigator, createStackNavigator} from 'react-navigation';
 import CalendarScreen from '../components/CalendarScreen';
+import CourseScreen from '../components/CourseScreen/CourseScreen';
+import {cardFromRight, cardFromTop, defaultTransition} from './Transitions';
 
 Array.prototype.contains = function (value) {
 	return this.indexOf(value) >= 0;
 };
 
-const FakeScene = (title) => {
-	return () => (
-		<View style={{flex: 1, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center'}}>
-			<Text style={{color: '#363534', fontSize: 36, textAlign: 'center'}}>{title}</Text>
-		</View>
-	)
-};
-
-const isNavigationBetweenScenes = (to, from, targetOne, targetTwo) => {
-	const destinations = [targetOne, targetTwo];
-	return destinations.contains(to) && destinations.contains(from);
+const transitionSpec = {
+	duration: Platform.select({android: 500, ios: 500}),
+	easing: Easing.out(Easing.poly(4)),
+	timing: Animated.timing,
+	useNativeDriver: true,
 };
 
 const HomeNavigator = createStackNavigator({
-	Right: {
-		screen: FakeScene("Right")
-	},
-	Home: {
-		screen: HomeScreen,
-		navigationOptions: ({navigation}) => ({
-			header: <Header navigation={navigation}/>
-		})
-	},
-	Calendar: {
-		screen: CalendarScreen,
-		navigationOptions: ({navigation}) => ({
-			header: <Header navigation={navigation}/>,
-			gesturesEnabled: false,
-		})
-	}
-}, {
-	initialRouteName: 'Home',
-	transitionConfig: () => {
-		return {
-			transitionSpec: {
-				duration: Platform.select({android: 250, ios: 500}),
-				easing: Easing.out(Easing.poly(4)),
-				timing: Animated.timing,
-				useNativeDriver: true,
-			},
-			screenInterpolator: sceneProps => {
-				const {layout, position, scene} = sceneProps;
-				const {index} = scene;
-
-				const width = layout.initWidth;
-
-				const translateX = position.interpolate({
-					inputRange: [index - 1, index, index + 1],
-					outputRange: [-width, 0, 0]
-				});
-
-				const opacity = position.interpolate({
-					inputRange: [index - 1, index, index+0.99, index + 1],
-					outputRange: [1, 1, 0.3, 0]
-				});
-
-				return {opacity, transform: [{translateX: translateX}]};
-			}
+		Home: {
+			screen: HomeScreen,
+		},
+		Calendar: {
+			screen: CalendarScreen,
+		},
+		Course: {
+				screen: CourseScreen
 		}
-	},
-	cardStyle: {
-		backgroundColor: 'rgba(0,0,0,0)',
-		opacity: 1,
-	},
-	gestures: {},
-});
+	}, {
+		initialRouteName: 'Home',
+		navigationOptions: {
+			header: ({navigation}) => (<Header navigation={navigation}/>),
+			gesturesEnabled: false
+		},
+		transitionConfig: () => ({
+			transitionSpec,
+			screenInterpolator: (sceneProps) => {
+				const {scene: {index, route}} = sceneProps;
+				const params = route.params || {};
+				const transition = params.transition || 'default';
+
+				return {
+					cardFromRight: cardFromRight(sceneProps),
+					cardFromTop: cardFromTop(sceneProps),
+					default: defaultTransition(sceneProps)
+				}[transition]
+			}
+		}),
+		cardStyle: {
+			backgroundColor: 'white',
+			opacity: 1,
+		},
+		gestures: {},
+	}
+);
 
 const AuthenticationNavigator = createSwitchNavigator({
 	Home: HomeNavigator,
