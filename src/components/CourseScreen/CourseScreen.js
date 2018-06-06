@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Dimensions} from 'react-native';
 import styled from 'styled-components';
-import Header from '../Header/Header';
+import Header from '../CircleHeader/Header';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Ripple from 'react-native-material-ripple';
 import RecentGrade from './RecentGrade';

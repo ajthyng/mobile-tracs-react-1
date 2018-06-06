@@ -56,7 +56,7 @@ const HeaderContainer = styled(Animated.View)`
 		zIndex: 4;
 		height: ${props => (props.headerHeight + props.radius / 2)}px;
 		width: 100%;
-		background-color: #00000032;
+		background-color: transparent;
 		justify-content: flex-end;
 `;
 
@@ -222,7 +222,6 @@ class Header extends Component {
 			transform: normalTransform
 		};
 
-		console.log(iconOpacityRange.opacity.__getValue());
 		return (
 			<HeaderContainer
 				headerHeight={Header.MAX_HEIGHT}

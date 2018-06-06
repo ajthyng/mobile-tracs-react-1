@@ -3,7 +3,7 @@ import {FlatList, Text} from 'react-native';
 
 import {Calendar} from 'react-native-calendars';
 import styled from 'styled-components';
-import Header from './Header/Header';
+import Header from './CircleHeader/Header';
 import ItemSeparator from '../_components/Notifications/ItemSeparator';
 import Ripple from 'react-native-material-ripple';
 
@@ -85,7 +85,6 @@ class CalendarScreen extends Component {
 	render() {
 		return (
 			<ContainerView>
-				<HeaderSpacer/>
 				<CalendarView
 					current={new Date()}
 					minDate={'2018-05-01'}

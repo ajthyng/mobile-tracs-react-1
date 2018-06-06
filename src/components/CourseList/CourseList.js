@@ -4,7 +4,7 @@ import {View, FlatList, Animated, StyleSheet, Text} from 'react-native';
 import {connect} from 'react-redux';
 import {setScrollY, setHeaderState} from '../../actions/header';
 
-import Header from '../Header/Header';
+import Header from '../CircleHeader/Header';
 import CourseCard from './CourseCard';
 
 const renderHeader = () => (<View style={{flex: 0, height: Header.MAX_HEIGHT + 40, width: '100%'}}/>);
@@ -146,7 +146,6 @@ class CourseList extends Component {
 					onScrollEndDrag={this.onScrollEndSnapToEdge}
 					scrollEventThrottle={16}
 				>
-					{renderHeader()}
 					{this.data.map(item => {
 						return <CourseCard {...item} goToCourse={this.goToCourse}/>
 					})}

@@ -19,9 +19,9 @@ const StyledProfile = styled.View`
 `;
 
 const ProfileImage = styled.Image`
-	height: ${props => props.diameter};
-	width: ${props => props.diameter};
-	border-radius: ${props => props.diameter / 2}px;
+	height: ${props => props.diameter * 0.8};
+	width: ${props => props.diameter * 0.8};
+	border-radius: ${props => props.diameter * 0.5 * 0.8}px;
 `;
 
 const ProfileText = styled.Text`
@@ -51,5 +51,9 @@ class Profile extends Component {
 		);
 	}
 }
+
+Profile.defaultProps = {
+	diameter: 60
+};
 
 export default Profile;

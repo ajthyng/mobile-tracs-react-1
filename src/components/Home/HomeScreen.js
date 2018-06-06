@@ -6,7 +6,7 @@ import {logout} from '../../actions/login';
 import * as Storage from '../../utils/storage';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import CourseList from '../CourseList/CourseList';
-import Header from '../Header/Header';
+import Header from '../CircleHeader/Header';
 import {setHeaderState} from '../../actions/header';
 
 const styles = StyleSheet.create({
