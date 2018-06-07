@@ -71,23 +71,21 @@ export function getSiteInfo(netid) {
 				let siteIds = sites.membership_collection.map((site) => {
 					return site.id.split(':').last();
 				});
-				await cleanStorage(siteIds);
-				return Sites.getSites(netid).then(storedSites => {
-					const payload = {
-						siteIds,
-						storedSites,
-						netid
+
+				const payload = {
+					siteIds,
+					netid
+				};
+
+				return getAllSites(payload).then(userSites => {
+					let allSites = {
+						...userSites,
 					};
-					return getAllSites(payload).then(userSites => {
-						let allSites = {
-							...userSites,
-							...storedSites
-						};
-						let siteLoadTime = new Date() - start;
-						dispatch(getMemberships(allSites, siteLoadTime));
-						dispatch(isFetchingSites(false));
-					});
-				})
+					let siteLoadTime = new Date() - start;
+					dispatch(getMemberships(allSites, siteLoadTime));
+					dispatch(isFetchingSites(false));
+				});
+
 			}).catch(err => {
 				console.log('Membership Error: ', err.message);
 				dispatch(getSitesFailed(true));
@@ -111,37 +109,23 @@ let getSiteTools = (siteID) => {
 };
 
 let getAllSites = (payload) => {
-	const {siteIds, storedSites, netid} = payload;
+	const {siteIds, netid} = payload;
 	let userSites = [];
 	let siteTools = [];
 	let fetchedSites = {};
-	let promiseStart = new Date().getTime();
 	let sitePromises = siteIds.map(siteID => {
-		let shouldFetch = true;
-		if (storedSites !== null) {
-			shouldFetch = !storedSites.hasOwnProperty(siteID) || storedSites[siteID].expiration - moment() < 0;
-		}
-
-		if (shouldFetch === true) {
-			return getSiteName(siteID)
-				.then(site => Promise.resolve({type: 'site', site: site.data}))
-				.catch(err => Promise.resolve(new Error("Couldn't fetch site name for site id " + siteID)));
-		}
+		return getSiteName(siteID)
+			.then(site => Promise.resolve({type: 'site', site: site.data}))
+			.catch(err => Promise.resolve(new Error("Couldn't fetch site name for site id " + siteID)));
 	});
 
 	let toolPromises = siteIds.map(siteID => {
-		let shouldFetch = true;
-		if (storedSites !== null) {
-			shouldFetch = !storedSites.hasOwnProperty(siteID) || storedSites[siteID].expiration - moment() < 0;
-		}
-		if (shouldFetch === true) {
-			return getSiteTools(siteID)
-				.then(tools => {
-					return Promise.resolve({type: 'tools', tools: tools.data});
-				}).catch(err => {
-					return Promise.resolve(new Error("Couldn't fetch tools for site id " + siteID));
-				});
-		}
+		return getSiteTools(siteID)
+			.then(tools => {
+				return Promise.resolve({type: 'tools', tools: tools.data});
+			}).catch(err => {
+				return Promise.resolve(new Error("Couldn't fetch tools for site id " + siteID));
+			});
 	});
 
 	let allPromises = [
@@ -209,8 +193,6 @@ let getAllSites = (payload) => {
 			});
 		});
 
-		Sites.store(fetchedSites, netid).then();
-		const end = new Date().getTime();
 		return fetchedSites;
 	});
 };

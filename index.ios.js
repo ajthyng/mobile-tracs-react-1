@@ -5,7 +5,7 @@ import {Router} from 'react-native-router-flux';
 import configureStore from './src/store/configureStore';
 import * as urls from './config/urls'
 import PushNotification from 'react-native-push-notification';
-import {credentials} from './src/utils/storage';
+import {credentials, token as DeviceToken} from './src/utils/storage';
 import {haxios as axios} from './src/utils/networking';
 import {login} from './src/actions/login';
 import {Analytics} from './src/utils/analytics';
@@ -35,6 +35,9 @@ class App extends Component {
 		this.state = {
 			appState: AppState.currentState
 		};
+		if (global.simulator) {
+			store.dispatch(setToken("9561548f635aad3fd3361c3dfe4c345d0aa0d3a32542675563eea05a6212dc95"))
+		}
 		PushNotification.configure({
 			onRegister: ({token, os}) => {
 				if (!!token) {

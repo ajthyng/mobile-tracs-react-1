@@ -81,6 +81,7 @@ exports.token = {
 			return FCM.getFCMToken().then(token => Promise.resolve(token));
 		} else {
 			return new Promise((resolve, reject) => {
+				if (global.simulator) return resolve("9561548f635aad3fd3361c3dfe4c345d0aa0d3a32542675563eea05a6212dc95");
 				PushNotification.configure({
 					onRegister: ({token, ios}) => {
 						return resolve(token);
