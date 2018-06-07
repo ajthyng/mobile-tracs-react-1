@@ -119,6 +119,18 @@ export function login(netid = '', password) {
 		const loginUrl = `${global.urls.baseUrl}/portal/relogin?eid=${netid}&pw=${encodeURIComponent(password)}`;
 		const sessionUrl = `${global.urls.baseUrl}${global.urls.session}`;
 
+		let session = await axios(sessionUrl, {method: 'get'}).catch(err => err);
+		let needsNewSession = true;
+
+		if (!(needsNewSession instanceof Error)) {
+			needsNewSession = session.data.userEid !== netid;
+		}
+
+		if (!needsNewSession) {
+			dispatch(loginSuccess(netid, password, session.data.userId));
+			return;
+		}
+
 		axios(loginUrl, {
 			method: 'post',
 		}).then(async res => {
@@ -161,11 +173,11 @@ export function logout() {
 		return axios(logoutUrl, {
 			method: 'get'
 		}).then(res => {
-				CookieManager.clearAll().then(result => {
-					dispatch(logoutSuccess());
-				}).catch(err => {
-					dispatch(logoutFailure(err))
-				});
+			CookieManager.clearAll().then(result => {
+				dispatch(logoutSuccess());
+			}).catch(err => {
+				dispatch(logoutFailure(err))
+			});
 		}).catch(err => {
 			dispatch(logoutFailure(new Error("Could not log out of TRACS.")));
 		});

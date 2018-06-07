@@ -15,7 +15,7 @@ const ConnectedRouter = connect()(Router);
 const store = configureStore();
 
 import { YellowBox } from 'react-native';
-YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
+YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader', 'Class RCTCxxModule']);
 
 global.urls = urls;
 global['ios'] = Platform.OS === 'ios';
@@ -27,6 +27,7 @@ class App extends Component {
 	constructor(props) {
 		super(props);
 		global.simulator = this.props.isSimulator;
+		if (this.props.isFirstRun) { credentials.reset() }
 		this.handleAppStateChange = this.handleAppStateChange.bind(this);
 		this.handleNotification = this.handleNotification.bind(this);
 		this.analytics = Analytics(store);
