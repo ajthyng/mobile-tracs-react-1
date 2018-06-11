@@ -10,26 +10,41 @@
 
 import axios from 'axios';
 
-module.exports = {
-	haxios: (url, config = {}) => {
-		config = {
-			...config,
-			maxRedirects: config.maxRedirects || 0,
-			url
-		};
-		if (config.hasOwnProperty('headers')) {
-			if (config.headers.hasOwnProperty('Cache-Control') && config.headers['Cache-Control'] === 'no-cache') {
-				return axios(config);
-			} else {
-				return axios({
-					...config,
-					headers: {...config.headers, 'Cache-Control': 'no-cache'}
-				});
-			}
-		}
-		return axios({
-			...config,
-			headers: {'Cache-Control': 'no-cache'}
-		});
+const exponentialAxios = axios.create();
+exponentialAxios.defaults.maxRedirects = 0;
+exponentialAxios.defaults.retries = 5;
+exponentialAxios.defaults.retryCount = 0;
+exponentialAxios.defaults.baseRetryDelay = 322;
+
+exponentialAxios.interceptors.request.use(function headerAddition(config) {
+	config.headers['Cache-Control'] = 'no-cache';
+	return config;
+}, undefined);
+
+exponentialAxios.interceptors.response.use(undefined, function retryInterceptor(error) {
+	let config = error.config || {};
+	const response = error.response || {};
+	const shouldAbort = 400 <= response.status && response.status < 500;
+
+	if (shouldAbort) {
+		return Promise.reject(error);
 	}
+
+	if (config.retryCount >= config.retries) {
+		return Promise.reject(error);
+	}
+
+	config.retryCount += 1;
+
+	const retryDelay = Math.pow(2, config.retryCount - 1) * config.baseRetryDelay;
+
+	const backoff = new Promise((resolve) => {
+		setTimeout(() => { resolve() }, retryDelay);
+	});
+
+	return backoff.then(() => exponentialAxios(config));
+});
+
+module.exports = {
+	haxios: exponentialAxios
 };

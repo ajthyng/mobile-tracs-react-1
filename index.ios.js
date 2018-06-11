@@ -25,6 +25,7 @@ class App extends Component {
 	constructor(props) {
 		super(props);
 		global.simulator = this.props.isSimulator;
+		if (this.props.isFirstRun) { credentials.reset() }
 		this.handleAppStateChange = this.handleAppStateChange.bind(this);
 		this.handleNotification = this.handleNotification.bind(this);
 		this.analytics = Analytics(store);
@@ -32,6 +33,9 @@ class App extends Component {
 		this.state = {
 			appState: AppState.currentState
 		};
+		if (global.simulator) {
+			store.dispatch(setToken("9561548f635aad3fd3361c3dfe4c345d0aa0d3a32542675563eea05a6212dc95"))
+		}
 		PushNotification.configure({
 			onRegister: ({token, os}) => {
 				if (!!token) {

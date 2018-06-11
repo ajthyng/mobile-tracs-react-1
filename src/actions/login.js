@@ -181,11 +181,11 @@ export function logout() {
 		return axios(logoutUrl, {
 			method: 'get'
 		}).then(res => {
-				CookieManager.clearAll().then(result => {
-					dispatch(logoutSuccess());
-				}).catch(err => {
-					dispatch(logoutFailure(err))
-				});
+			CookieManager.clearAll().then(result => {
+				dispatch(logoutSuccess());
+			}).catch(err => {
+				dispatch(logoutFailure(err))
+			});
 		}).catch(err => {
 			dispatch(logoutFailure(new Error("Could not log out of TRACS.")));
 		});

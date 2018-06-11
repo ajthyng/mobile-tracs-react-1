@@ -229,7 +229,7 @@ class LoginScreen extends Component {
 	render() {
 		if (this.props.loggingIn || this.props.registering || this.state.checkingCredentials || this.props.isAuthenticated) {
 			return (
-				<ActivityIndicator/>
+				<ActivityIndicator />
 			);
 		} else {
 			if (!!(this.props.loginError || {}).message || !!(this.props.registerError || {}).message) {

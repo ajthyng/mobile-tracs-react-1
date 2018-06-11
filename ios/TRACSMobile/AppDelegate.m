@@ -18,7 +18,12 @@
 @implementation AppDelegate
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  BOOL firstRun = ![[NSUserDefaults standardUserDefaults] objectForKey:@"FirstRun"];
 
+  if (firstRun) {
+    [[NSUserDefaults standardUserDefaults] setValue: @"firstrun" forKey:@"FirstRun"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+  }
   [FIRApp configure];
   NSURL *jsCodeLocation;
   
@@ -28,11 +33,11 @@
   #endif
 
 //  jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index.ios" fallbackResource:nil];
-  jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.ios.bundle?platform=ios&dev=true"];
+  jsCodeLocation = [NSURL URLWithString:@"http://147.26.119.60:8081/index.ios.bundle?platform=ios&dev=true"];
 //  jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"TRACSMobile"
-                                               initialProperties:@{@"isSimulator": @(isSimulator)}
+                                               initialProperties:@{@"isSimulator": @(isSimulator), @"isFirstRun": @(firstRun)}
                                                    launchOptions:launchOptions];
   rootView.backgroundColor = [[UIColor alloc] initWithRed:1.0f green:1.0f blue:1.0f alpha:1];
 
