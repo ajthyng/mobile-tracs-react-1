@@ -122,7 +122,7 @@ export function login(netid = '', password) {
 		let session = await axios(sessionUrl, {method: 'get'}).catch(err => err);
 		let needsNewSession = true;
 
-		if (!(needsNewSession instanceof Error)) {
+		if (!(session instanceof Error)) {
 			needsNewSession = session.data.userEid !== netid;
 		}
 

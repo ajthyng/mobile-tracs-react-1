@@ -7,23 +7,24 @@ class ActivityIndicator extends Component {
 	constructor(props) {
 		super(props);
 		this.getStyle = this.getStyle.bind(this);
-		this.rotateValue = new Animated.Value(0);
+		this.spinValue = new Animated.Value(0);
 		this.rotateImage = this.rotateImage.bind(this);
 	}
 
 	rotateImage() {
-		Animated.timing(this.rotateValue, {
+		this.animation = Animated.timing(this.spinValue, {
 			toValue: 1,
 			duration: this.props.duration || 2500,
 			easing: Easing.linear,
 			useNativeDriver: true
 		}).start(() => {
+			this.spinValue = new Animated.Value(0);
 			this.rotateImage();
 		});
 	}
 
 	getStyle() {
-		const rotateData = this.rotateValue.interpolate({
+		const rotateData = this.spinValue.interpolate({
 			inputRange: [0, 1],
 			outputRange: ['0deg', '360deg']
 		});
@@ -50,8 +51,12 @@ class ActivityIndicator extends Component {
 		});
 	}
 
-	componentWillMount() {
+	componentDidMount() {
 		this.rotateImage();
+	}
+
+	componentWillUnmount() {
+		if (this.animation) this.animation.stop()
 	}
 
 	render() {
