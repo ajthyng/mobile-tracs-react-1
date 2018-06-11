@@ -24,11 +24,7 @@ const Container = styled(Animated.View)`
 	padding-left: 16px;
 	padding-right: 16px;
 	padding-top: 24px;
-	${props => props.home ? '' : 	
-	`shadow-offset: 0px 2px;
-	shadow-color: #b0b0b0;
-	shadow-radius: 2px;
-	shadow-opacity: 0.5;`}
+	${props => props.home ? '' : ''}
 `;
 
 class Header extends Component {
@@ -47,7 +43,7 @@ class Header extends Component {
 			<Container home>
 				<CalendarIcon
 					diameter={60}
-					size={28}
+					size={22}
 					onPress={this.goToCalendar}
 				/>
 				<Profile

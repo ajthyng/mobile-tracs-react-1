@@ -83,7 +83,7 @@ const CourseScreenTabs = createMaterialTopTabNavigator(
 			Project: 'ProjectCourseList'
 		},
 		initialLayout: {
-			height: 30,
+			height: 65,
 			width: Dimensions.get('window').width
 		},
 		tabBarOptions: {
