@@ -5,16 +5,17 @@ import styled from 'styled-components';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const AnimatedRipple = styled(Animated.createAnimatedComponent(Ripple))`
-	height: ${props => props.diameter};
-	width: ${props => props.diameter};
-	margin-left: ${props => -props.iconSize / 2}px;
 	flex-direction: row;
 	align-items: center;
 	justify-content: center;
+	margin-left: 8px;
 	z-index: 4;
+	background-color: transparent;
 `;
 
-const StyledCalendarIcon = styled(Icon)``;
+const StyledCalendarIcon = styled(Icon)`
+
+`;
 
 class CalendarIcon extends Component {
 	render() {
@@ -23,7 +24,6 @@ class CalendarIcon extends Component {
 				onLayout={this.props.onLayout}
 				diameter={this.props.diameter}
 				onPress={this.props.onPress}
-				iconSize={this.props.size}
 				rippleContainerBorderRadius={this.props.diameter / 2}
 			>
 				<StyledCalendarIcon

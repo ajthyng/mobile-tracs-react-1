@@ -20,14 +20,13 @@ const Circle = styled(Animated.View)`
 	border-radius: ${props => props.radius * props.scale / 2}px;
 	position: absolute;
 	bottom: ${props => DIAMETER - (props.radius * (1 + props.scale) / 2)};
-	left: ${props => (Dimensions.get('window').width - props.radius * props.scale) / 2}
-	flex: 0;
+	left: ${props => (Dimensions.get('window').width - props.radius * props.scale) / 2};
 	background-color: ${props => props.active ? '#4a89f4' : '#224575'};
 	z-index: 4;
 	shadow-color: #363534;
 	shadow-opacity: 0.5;
 	shadow-offset: 0px 2px;
-	shadow-radius: 2;
+	shadow-radius: 1;
 `;
 
 Circle.defaultProps = {
@@ -53,7 +52,6 @@ const HeaderContainer = styled(Animated.View)`
 		position: absolute;
 		top: 0;
 		flex: 1;
-		zIndex: 4;
 		height: ${props => (props.headerHeight + props.radius / 2)}px;
 		width: 100%;
 		background-color: transparent;
@@ -62,10 +60,13 @@ const HeaderContainer = styled(Animated.View)`
 
 const TopIconRow = styled.View`
 	flex-direction: row;
-	align-items: center;
+	align-items: flex-end;
 	justify-content: space-between;
-	padding-left: 16px;
-	padding-right: 16px;
+	padding: 0 16px 12px 16px;
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: 0;
 	margin-bottom: 0;
 	height: ${props => props.topIconRowHeight};
 	background-color: transparent;
@@ -76,16 +77,19 @@ const BottomIconRow = styled(Animated.View)`
 	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
-	margin-left: 16px;
-	margin-right: 16px;
+	position: absolute;
+	padding: 0 16px 0 16px;
+	left: 0;
+	right: 0;
+	bottom: ${props => props.diameter / 2}px;
 	height: ${props => props.bottomRowHeight};
-	margin-bottom: ${props => props.diameter / 2}px;
 	background-color: transparent;
-	z-index: 4;
+	z-index: 3;
 `;
 
 class Header extends Component {
 	static HEIGHT = HEIGHT;
+	static CIRCLE_DIAMETER = DIAMETER;
 	static MAX_HEIGHT = MAX_HEIGHT;
 	static MIN_HEIGHT = MAX_HEIGHT - HEIGHT;
 	static COLLAPSED = true;
@@ -226,7 +230,7 @@ class Header extends Component {
 			<HeaderContainer
 				headerHeight={Header.MAX_HEIGHT}
 				radius={DIAMETER}
-				pointerEvents='auto'
+				pointerEvents='box-none'
 			>
 				<VisibleHeader
 					visibleHeaderHeight={Header.MAX_HEIGHT}
@@ -234,7 +238,7 @@ class Header extends Component {
 				/>
 				<TopIconRow
 					ref={c => this.topIconRow = c}
-					topIconRowHeight={Header.MAX_HEIGHT - Header.MIN_HEIGHT + 24}
+					topIconRowHeight={Header.MAX_HEIGHT - Header.MIN_HEIGHT}
 				>
 					<CalendarIcon
 						onLayout={({nativeEvent}) => {

@@ -10,12 +10,12 @@
 
 import LoginScreen from '../_components/Login/LoginScreen';
 import HomeScreen from '../components/Home/HomeScreen';
-import Header from '../components/TabHeader/Header';
+import Header from '../components/CircleHeader/Header';
 
-import {View, Easing, Platform, Animated, Dimensions, 	Text} from 'react-native';
+import {View, Easing, Platform, Animated, Dimensions, Text} from 'react-native';
 import React from 'react';
 
-import {createSwitchNavigator, createMaterialTopTabNavigator, createStackNavigator} from 'react-navigation';
+import {createSwitchNavigator, createStackNavigator} from 'react-navigation';
 import CalendarScreen from '../components/CalendarScreen';
 import CourseScreen from '../components/CourseScreen/CourseScreen';
 import {cardFromRight, cardFromTop, defaultTransition} from './Transitions';
@@ -28,12 +28,6 @@ Array.prototype.contains = function (value) {
 	return this.indexOf(value) >= 0;
 };
 
-const TabLabel = styled.Text`
-	margin-top: 8px;
-	font-size: 12px;
-	color: ${props => props.tintColor};
-`;
-
 const transitionSpec = {
 	duration: Platform.select({android: 500, ios: 500}),
 	easing: Easing.out(Easing.poly(4)),
@@ -41,82 +35,9 @@ const transitionSpec = {
 	useNativeDriver: true,
 };
 
-const makeTabIcon = (title) => {
-	return ({focused, tintColor}) => (
-		<TabIcon scene={title} focused={focused} color={tintColor} />
-	);
-};
-
-let store = configureStore();
-const animationRange = store.getState().header.scrollY;
-
-const CourseScreenTabs = createMaterialTopTabNavigator(
-	{
-		HiddenCourseList: {
-			screen: HomeScreen,
-			navigationOptions: {
-				tabBarLabel: ({focused, tintColor}) => (<TabLabel tintColor={tintColor}>Hidden</TabLabel>),
-				tabBarIcon: makeTabIcon('Hidden')
-			}
-		},
-		CourseList: {
-			screen: HomeScreen,
-			navigationOptions: {
-				tabBarLabel: ({focused, tintColor}) => (<TabLabel tintColor={tintColor}>Home</TabLabel>),
-				tabBarIcon: makeTabIcon('Home')
-			}
-		},
-		ProjectCourseList: {
-			screen: HomeScreen,
-			navigationOptions: {
-				tabBarLabel: ({focused, tintColor}) => (<TabLabel tintColor={tintColor}>Projects</TabLabel>),
-				tabBarIcon: makeTabIcon('Projects')
-			}
-		}
-	},
-	{
-		initialRouteName: 'CourseList',
-		order: ['HiddenCourseList', 'CourseList', 'ProjectCourseList'],
-		paths: {
-			Hidden: 'HiddenCourseList',
-			Home: 'CourseList',
-			Project: 'ProjectCourseList'
-		},
-		initialLayout: {
-			height: 65,
-			width: Dimensions.get('window').width
-		},
-		tabBarOptions: {
-			activeTintColor: 'white',
-			inactiveTintColor: '#ffffffA0',
-			indicatorStyle: {backgroundColor: 'white', height: 2},
-			style: {
-				backgroundColor: '#224575',
-				transform: [{
-					translateY: animationRange.interpolate({
-						inputRange: [0 ,1],
-						outputRange: [0, -65]
-					})
-				}],
-				height: 65,
-				shadowOffset: {width: 0, height: 1},
-				shadowRadius: 1,
-				shadowOpacity: 0.4,
-			},
-			showIcon: true,
-			tabStyle: {
-				backgroundColor: 'transparent',
-				flexDirection: 'column',
-				alignItems: 'center',
-				justifyContent: 'center',
-			}
-		}
-	}
-);
-
 const MainNavigator = createStackNavigator({
 		Home: {
-			screen: CourseScreenTabs,
+			screen: HomeScreen,
 		},
 		Calendar: {
 			screen: CalendarScreen,
@@ -147,7 +68,7 @@ const MainNavigator = createStackNavigator({
 			}
 		}),
 		cardStyle: {
-			backgroundColor: 'white',
+			backgroundColor: 'transparent',
 			opacity: 1,
 		},
 		gestures: {},

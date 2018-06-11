@@ -146,6 +146,7 @@ class CourseList extends Component {
 					onScrollEndDrag={this.onScrollEndSnapToEdge}
 					scrollEventThrottle={16}
 				>
+					{renderHeader()}
 					{this.data.map(item => {
 						return <CourseCard {...item} goToCourse={this.goToCourse}/>
 					})}

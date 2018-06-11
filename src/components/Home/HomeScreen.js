@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import CourseList from '../CourseList/CourseList';
 import Header from '../CircleHeader/Header';
 import {setHeaderState} from '../../actions/header';
+import styled from 'styled-components';
 
 const styles = StyleSheet.create({
 	container: {
@@ -75,7 +76,7 @@ class HomeScreen extends Component {
 	render() {
 		return (
 			<View style={styles.container}>
-				<CourseList navigation={this.props.navigation}/>
+				<CourseList navigation={this.props.navigation} />
 			</View>
 		);
 	}

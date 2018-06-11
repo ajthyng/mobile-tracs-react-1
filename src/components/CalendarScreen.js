@@ -85,6 +85,7 @@ class CalendarScreen extends Component {
 	render() {
 		return (
 			<ContainerView>
+				<HeaderSpacer />
 				<CalendarView
 					current={new Date()}
 					minDate={'2018-05-01'}
