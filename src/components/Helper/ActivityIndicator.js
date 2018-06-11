@@ -1,35 +1,37 @@
-import React, {Component} from 'react';
-import {Animated, Easing, Image, StyleSheet, View} from 'react-native';
+import React, {Component} from 'react'
+import {Animated, Easing, Image, StyleSheet, View} from 'react-native'
 
-const tracsLogo = require('../../../img/tracs.png');
+const tracsLogo = require('../../../img/tracs.png')
 
 class ActivityIndicator extends Component {
 	constructor(props) {
-		super(props);
-		this.getStyle = this.getStyle.bind(this);
-		this.spinValue = new Animated.Value(0);
-		this.rotateImage = this.rotateImage.bind(this);
+		super(props)
+		this.getStyle = this.getStyle.bind(this)
+		this.state = {
+			animationRange: new Animated.Value(0)
+		}
+		this.rotateBeachBall = Animated.loop(
+			Animated.timing(this.state.animationRange, {
+				toValue: 1,
+				duration: 2500,
+				easing: Easing.linear,
+				useNativeDriver: true
+			})
+		);
+		this.rotateImage = this.rotateImage.bind(this)
 	}
 
 	rotateImage() {
-		this.animation = Animated.timing(this.spinValue, {
-			toValue: 1,
-			duration: this.props.duration || 2500,
-			easing: Easing.linear,
-			useNativeDriver: true
-		}).start(() => {
-			this.spinValue = new Animated.Value(0);
-			this.rotateImage();
-		});
+		this.rotateBeachBall.start()
 	}
 
 	getStyle() {
-		const rotateData = this.spinValue.interpolate({
+		const rotateData = this.state.animationRange.interpolate({
 			inputRange: [0, 1],
 			outputRange: ['0deg', '360deg']
-		});
-		const aspectRatio = 1438 / 1378;
-		const imageSize = this.props.size || 80;
+		})
+		const aspectRatio = 1438 / 1378
+		const imageSize = this.props.size || 80
 		return StyleSheet.create({
 			container: {
 				flex: 1,
@@ -48,15 +50,11 @@ class ActivityIndicator extends Component {
 				alignItems: 'center',
 				justifyContent: 'flex-end',
 			}
-		});
+		})
 	}
 
 	componentDidMount() {
-		this.rotateImage();
-	}
-
-	componentWillUnmount() {
-		if (this.animation) this.animation.stop()
+		this.rotateImage()
 	}
 
 	render() {
@@ -64,11 +62,11 @@ class ActivityIndicator extends Component {
 			<View style={this.getStyle().container}>
 				<Animated.View style={this.getStyle().animatedView}>
 					<Image style={this.getStyle().image}
-								 source={tracsLogo} />
+								 source={tracsLogo}/>
 				</Animated.View>
 			</View>
 		)
 	}
 }
 
-export default ActivityIndicator;
+export default ActivityIndicator
