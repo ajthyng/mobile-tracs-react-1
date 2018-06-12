@@ -54,6 +54,24 @@ const SideColor = styled.View`
 	background-color: ${props => props.color};
 `;
 
+const ViewAllGrades = styled(Ripple)`
+	height: 40px;
+	background-color: white;
+	align-items: center;
+	justify-content: center;
+	position: absolute;
+	border-top-color: #8b898680;
+	border-top-width: 2px;
+	left: 0;
+	right: 0;
+	bottom: 0;
+`
+
+const ViewAllGradesText = styled.Text`
+	color: #363534;
+	font-size: 20px;
+`
+
 const colors = [
 	'#fe4880',
 	'#c6427b',
@@ -82,6 +100,10 @@ class CalendarScreen extends Component {
 		];
 	}
 
+	goToGradebook = () => {
+		this.props.navigation.navigate('Gradebook');
+	}
+
 	render() {
 		return (
 			<ContainerView>
@@ -103,6 +125,9 @@ class CalendarScreen extends Component {
 						</DueDateItem>
 					)}
 				/>
+				<ViewAllGrades onPress={this.goToGradebook}>
+					<ViewAllGradesText>View All Grades</ViewAllGradesText>
+				</ViewAllGrades>
 			</ContainerView>
 		);
 	}

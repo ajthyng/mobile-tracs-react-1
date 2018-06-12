@@ -18,11 +18,12 @@ import React from 'react';
 import {createSwitchNavigator, createStackNavigator} from 'react-navigation';
 import CalendarScreen from '../components/CalendarScreen';
 import CourseScreen from '../components/CourseScreen/CourseScreen';
-import {cardFromRight, cardFromTop, defaultTransition} from './Transitions';
+import {cardFromRight, cardFromBottom, cardFromTop, defaultTransition} from './Transitions';
 import TabIcon from '../components/TabHeader/TabIcon';
 import styled from 'styled-components';
 import HiddenCourses from '../components/HiddenCourses/HiddenCourses';
 import configureStore from '../store/configureStore';
+import GradebookItems from '../components/GradebookItems/GradebookItems'
 
 Array.prototype.contains = function (value) {
 	return this.indexOf(value) >= 0;
@@ -44,6 +45,9 @@ const MainNavigator = createStackNavigator({
 		},
 		Course: {
 			screen: CourseScreen
+		},
+		Gradebook: {
+			screen: GradebookItems
 		}
 	}, {
 		initialRouteName: 'Home',
@@ -53,23 +57,24 @@ const MainNavigator = createStackNavigator({
 			headerMode: 'float',
 			headerTransitionPreset: 'uikit',
 		},
-		transitionConfig: () => ({
-			transitionSpec,
-			screenInterpolator: (sceneProps) => {
-				const {scene: {index, route}} = sceneProps;
-				const params = route.params || {};
-				const transition = params.transition || 'default';
-
-				return {
-					cardFromRight: cardFromRight(sceneProps),
-					cardFromTop: cardFromTop(sceneProps),
-					default: defaultTransition(sceneProps)
-				}[transition]
-			}
-		}),
+		//transitionConfig: () => ({
+		//	transitionSpec,
+		//	screenInterpolator: (sceneProps) => {
+		//		const {scene: {index, route}} = sceneProps;
+		//		const params = route.params || {};
+		//		const transition = params.transition || 'default';
+		//
+		//		return {
+		//			cardFromRight: cardFromRight(sceneProps),
+		//			cardFromTop: cardFromTop(sceneProps),
+		//			cardFromBottom: cardFromBottom(sceneProps),
+		//			default: defaultTransition(sceneProps)
+		//		}[transition]
+		//	}
+		//}),
 		cardStyle: {
-			backgroundColor: 'transparent',
 			opacity: 1,
+			shadowOpacity: 0
 		},
 		gestures: {},
 	}

@@ -21,7 +21,7 @@ beforeEach(() => {
 	currentState = initialState;
 });
 
-it('should return initial state for unknown actions', () => {
+it.only('should return initial state for unknown actions', () => {
 	expect(registerReducer(undefined, {})).toEqual(initialState);
 });
 

@@ -37,7 +37,7 @@ const mockResponse = (status, statusText, response) => {
 	});
 };
 
-it.only('should create a login action', () => {
+it('should create a login action', () => {
 	const expectedAction = {
 		type: LOGIN,
 		netid,

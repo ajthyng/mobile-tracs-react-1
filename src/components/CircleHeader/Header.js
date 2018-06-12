@@ -187,7 +187,7 @@ class Header extends Component {
 	};
 
 	goToCalendar = () => {
-		this.props.navigation.navigate('Calendar', {transition: 'cardFromTop'});
+		this.props.navigation.navigate('Calendar', {transition: 'cardFromBottom'});
 		this.props.setHeaderState(Header.COLLAPSED);
 	};
 
