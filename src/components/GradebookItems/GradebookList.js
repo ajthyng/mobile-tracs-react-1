@@ -36,7 +36,7 @@ const data = [{
 	total: 150,
 	name: 'Gradebook Item 4',
 	posted: dayjs().format('MMM DD HH:mm a'),
-	due: dayjs().format('MMM DD\nh:mm a')
+	due: dayjs().format('MMM DD')
 }, {
 	key: '4',
 	earned: 155,
@@ -67,7 +67,7 @@ const data = [{
 	total: 150,
 	name: 'Gradebook Item 9',
 	posted: dayjs().format('MMM DD HH:mm a'),
-	due: dayjs().format('MMM DD\nh:mm a')
+	due: dayjs().format('MMM DD')
 }]
 
 const TopSpacing = styled.View`

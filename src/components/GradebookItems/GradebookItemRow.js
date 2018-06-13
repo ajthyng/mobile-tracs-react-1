@@ -16,9 +16,25 @@ const GradeItemAverageContainer = styled.View`
 	justify-content: flex-start;
 `
 
-const GradeItemAverage = styled.Text`
-	font-size: 32px;
+const GradeItemPointsContainer = styled.View`
+	align-items: center;
+	justify-content: flex-start;
+`
+
+const GradeItemEarned = styled.Text`
+	font-size: 24px;
 	color: #363534;
+`
+
+const GradeItemTotal = styled.Text`
+	font-size: 14px;
+	color: #363534;
+`
+
+const QuotientLine = styled.View`
+	width: 40px;
+	height: 2px;
+	background-color: lightgray;
 `
 
 const GradeItemInfoContainer = styled.View`
@@ -51,9 +67,19 @@ const GradeItemDueDate = styled.Text`
 const renderAvgOrDueDate = (data) => {
 	let {earned, total, due} = data;
 	if (earned === null) {
-		return <GradeItemDueDate>{`Due\n`}{due}</GradeItemDueDate>
+		return (
+			<GradeItemDueDate>
+				{`Due\n`}{due}
+			</GradeItemDueDate>
+		)
 	} else {
-		return <GradeItemAverage>{Math.floor(earned * 100 / total).toString(10)}</GradeItemAverage>
+		return (
+			<GradeItemPointsContainer>
+				<GradeItemEarned>{earned.toString(10)}</GradeItemEarned>
+				<QuotientLine />
+				<GradeItemTotal>{total.toString(10)}</GradeItemTotal>
+			</GradeItemPointsContainer>
+		)
 	}
 }
 

@@ -8,35 +8,37 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import LoginScreen from '../_components/Login/LoginScreen';
-import HomeScreen from '../components/Home/HomeScreen';
-import Header from '../components/CircleHeader/Header';
+import LoginScreen from '../_components/Login/LoginScreen'
+import HomeScreen from '../components/Home/HomeScreen'
+import Header from '../components/CircleHeader/Header'
 
-import {View, Easing, Platform, Animated, Dimensions, Text} from 'react-native';
-import React from 'react';
+import {View, Easing, Platform, Animated, Dimensions, Text} from 'react-native'
+import React from 'react'
 
-import {createSwitchNavigator, createStackNavigator} from 'react-navigation';
-import CalendarScreen from '../components/CalendarScreen';
-import CourseScreen from '../components/CourseScreen/CourseScreen';
-import {cardFromRight, cardFromBottom, cardFromTop, defaultTransition} from './Transitions';
-import TabIcon from '../components/TabHeader/TabIcon';
-import styled from 'styled-components';
-import HiddenCourses from '../components/HiddenCourses/HiddenCourses';
-import configureStore from '../store/configureStore';
+import {createSwitchNavigator, createStackNavigator} from 'react-navigation'
+import CalendarScreen from '../components/CalendarScreen/CalendarScreen'
+import CourseScreen from '../components/CourseScreen/CourseScreen'
+import {cardFromRight, cardFromBottom, cardFromTop, defaultTransition} from './Transitions'
+import TabIcon from '../components/TabHeader/TabIcon'
+import styled from 'styled-components'
+import HiddenCourses from '../components/HiddenCourses/HiddenCourses'
+import configureStore from '../store/configureStore'
 import GradebookItems from '../components/GradebookItems/GradebookItems'
+import CourseDetailScreen from '../components/CourseDetailScreen/CourseDetailScreen'
 
 Array.prototype.contains = function (value) {
-	return this.indexOf(value) >= 0;
-};
+	return this.indexOf(value) >= 0
+}
 
 const transitionSpec = {
 	duration: Platform.select({android: 500, ios: 500}),
 	easing: Easing.out(Easing.poly(4)),
 	timing: Animated.timing,
 	useNativeDriver: true,
-};
+}
 
-const MainNavigator = createStackNavigator({
+const MainNavigator = createStackNavigator(
+	{
 		Home: {
 			screen: HomeScreen,
 		},
@@ -48,6 +50,9 @@ const MainNavigator = createStackNavigator({
 		},
 		Gradebook: {
 			screen: GradebookItems
+		},
+		CourseDetail: {
+			screen: CourseDetailScreen
 		}
 	}, {
 		initialRouteName: 'Home',
@@ -78,16 +83,15 @@ const MainNavigator = createStackNavigator({
 		},
 		gestures: {},
 	}
-);
+)
 
 const AuthenticationNavigator = createSwitchNavigator({
 	Main: MainNavigator
 }, {
 	initialRouteName: 'Main',
 	navigationOptions: {header: null}
-});
-
+})
 
 module.exports = {
 	Scenes: AuthenticationNavigator
-};
+}

@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import styled from 'styled-components'
-import Header from '../CircleHeader/Header'
 
 const Container = styled.View`
   height: 150px;
@@ -34,7 +33,7 @@ class GradeSummary extends Component {
 
 	render() {
 		return (
-			<Container>
+			<Container style={this.props.style}>
 				<TotalGrade>75</TotalGrade>
 				<TotalPoints>Total: 510/680</TotalPoints>
 				<AverageGrade>AVG-Grade</AverageGrade>

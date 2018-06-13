@@ -3,21 +3,23 @@ import {FlatList, Text} from 'react-native';
 
 import {Calendar} from 'react-native-calendars';
 import styled from 'styled-components';
-import Header from './CircleHeader/Header';
-import ItemSeparator from '../_components/Notifications/ItemSeparator';
+import Header from '../CircleHeader/Header';
+import ItemSeparator from '../../_components/Notifications/ItemSeparator';
 import Ripple from 'react-native-material-ripple';
+import dayjs from 'dayjs';
+import PullHandle from './PullHandle'
 
 const ContainerView = styled.View`
-	alignItems: center;
-	justify-content: flex-start;
-	flex: 1;
+	alignItems: flex-start;
+	justify-content: center;
 	background-color: white;
+	flex: 1;
 `;
 
 const CalendarView = styled(Calendar)`
-	background-color: white;
-	width: 100%;
 	flex: 1;
+	width: 100%;
+	margin-bottom: 20px;
 `;
 
 const HeaderSpacer = styled.View`
@@ -40,12 +42,6 @@ const DueDateItem = styled(Ripple)`
 	flex-direction: row;
 `;
 
-const PullHandle = styled.View`
-	width: 100%;
-	height: 5px;
-	background-color: #363534;
-`;
-
 const SideColor = styled.View`
 	position: absolute;
 	left: 0;
@@ -60,8 +56,8 @@ const ViewAllGrades = styled(Ripple)`
 	align-items: center;
 	justify-content: center;
 	position: absolute;
-	border-top-color: #8b898680;
-	border-top-width: 2px;
+	border-top-color: #36353480;
+	border-top-width: 1px;
 	left: 0;
 	right: 0;
 	bottom: 0;
@@ -120,7 +116,7 @@ class CalendarScreen extends Component {
 					renderItem={({item}) => (
 						<DueDateItem key={item.key}>
 							<SideColor color={getRandomColor()} />
-							<Text>{new Date().toDateString()}</Text>
+							<Text style={{textAlign: 'center'}}>{dayjs().format('DD\nMMM')}</Text>
 							<Text>{item.name}</Text>
 						</DueDateItem>
 					)}

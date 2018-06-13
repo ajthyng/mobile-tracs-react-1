@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import styled from 'styled-components'
-import GradebookHeader from './GradebookHeader'
-import GradeSummary from './GradeSummary'
+import ScreenHeader from '../ScreenHeader'
+import GradeSummary from '../GradeSummary'
 import GradebookList from './GradebookList'
 
 const Container = styled.View`
@@ -21,7 +21,7 @@ class GradebookItems extends Component {
 	render() {
 		return (
 			<Container>
-				<GradebookHeader />
+				<ScreenHeader navigation={this.props.navigation} title='All Gradebook Items' subtitle='HS 1440 v2018.18.30'/>
 				<GradeSummary />
 				<GradebookList />
 			</Container>

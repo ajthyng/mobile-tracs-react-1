@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import styled from 'styled-components'
-import Header from '../CircleHeader/Header'
+import Header from './CircleHeader/Header'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Ripple from 'react-native-material-ripple'
 
@@ -11,7 +11,7 @@ const Container = styled.View`
   width: 100%;
 `
 
-const GradebookHeaderContainer = styled.View`
+const HeaderContainer = styled.View`
 	height: 60px;
 	margin-top: ${Header.HEIGHT};
 	width: 100%;
@@ -37,45 +37,46 @@ const BackArrowContainer = styled(Ripple)`
 	left: 0;
 `
 
-const GradebookTitleContainer = styled.View`
+const TitleContainer = styled.View`
 	align-items: center;
 	justify-content: center;
 `
 
-const GradebookTitle = styled.Text`
+const Title = styled.Text`
 	color: #363534;
 	font-size: 22px;
 `
 
-const GradebookSubtitle = styled.Text`
+const Subtitle = styled.Text`
 	color: #363534;
 	font-size: 16px;
 `
 
-class GradebookHeader extends Component {
+class ScreenHeader extends Component {
 	constructor(props) {
 		super(props)
 	}
 
 	render() {
-		const {courseName} = this.props
+		const { title, subtitle} = this.props
 
 		return (
-			<GradebookHeaderContainer>
-				<BackArrowContainer>
+			<HeaderContainer style={this.props.style}>
+				<BackArrowContainer onPress={() => this.props.navigation.goBack()}>
 					<BackArrow name='chevron-left' />
 				</BackArrowContainer>
-				<GradebookTitleContainer>
-					<GradebookTitle>All Gradebook Items</GradebookTitle>
-					<GradebookSubtitle>{courseName}</GradebookSubtitle>
-				</GradebookTitleContainer>
-			</GradebookHeaderContainer>
+				<TitleContainer>
+					<Title>{title}</Title>
+					<Subtitle>{subtitle}</Subtitle>
+				</TitleContainer>
+			</HeaderContainer>
 		)
 	}
 }
 
-GradebookHeader.defaultProps = {
-	courseName: 'Course Name Not Found'
+ScreenHeader.defaultProps = {
+	title: 'No title set',
+	subtitle: 'No subtitle set'
 }
 
-export default GradebookHeader
+export default ScreenHeader
