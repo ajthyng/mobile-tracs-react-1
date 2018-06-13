@@ -279,7 +279,7 @@ class Header extends Component {
 								transition = 'none';
 								break;
 						}
-						this.props.navigation.navigate('Home', {transition});
+						this.props.navigation.navigate('Courses', {transition});
 					}}
 					animationRange={animationRange}
 					topRowCenter={this.state.topRowHeight / 2}

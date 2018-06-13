@@ -15,6 +15,7 @@ import Header from '../components/CircleHeader/Header'
 import {View, Easing, Platform, Animated, Dimensions, Text} from 'react-native'
 import React from 'react'
 
+import {FluidNavigator} from 'react-navigation-fluid-transitions'
 import {createSwitchNavigator, createStackNavigator} from 'react-navigation'
 import CalendarScreen from '../components/CalendarScreen/CalendarScreen'
 import CourseScreen from '../components/CourseScreen/CourseScreen'
@@ -37,16 +38,24 @@ const transitionSpec = {
 	useNativeDriver: true,
 }
 
+const fluid = FluidNavigator({
+	Courses: {
+		screen: HomeScreen,
+	},
+	Course: {
+		screen: CourseScreen
+	}
+}, {
+	initialRouteName: 'Courses'
+})
+
 const MainNavigator = createStackNavigator(
 	{
 		Home: {
-			screen: HomeScreen,
+			screen: fluid,
 		},
 		Calendar: {
 			screen: CalendarScreen,
-		},
-		Course: {
-			screen: CourseScreen
 		},
 		Gradebook: {
 			screen: GradebookItems

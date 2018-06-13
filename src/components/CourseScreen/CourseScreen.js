@@ -5,6 +5,7 @@ import Header from '../CircleHeader/Header'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Ripple from 'react-native-material-ripple'
 import RecentGrade from './RecentGrade'
+import {Transition} from 'react-navigation-fluid-transitions'
 
 const ScreenContainer = styled.View`
 	flex-direction: row;
@@ -28,6 +29,13 @@ const CourseContainer = styled.View`
 `
 
 const TitleContainer = styled.View`
+	flex: 1;
+	background-color: transparent;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+`
+const StyledTransition = styled.View`
 	height: 65px;
 	background-color: transparent;
 	flex-direction: row;
@@ -136,21 +144,24 @@ const AnnouncementsIconContainer = styled.View`
 class CourseScreen extends Component {
 	constructor(props) {
 		super(props)
+		console.log(props);
 	}
 
 	goToCourseDetail = () => {
-		console.log("course detail")
 		this.props.navigation.navigate('CourseDetail')
 	}
 
 	render() {
+		const name = this.props.navigation.getParam('name', this.props.name);
 		return (
 			<ScreenContainer>
 				<CourseContainer>
-					<TitleContainer>
-						<CourseName>{this.props.name}</CourseName>
-						<CloseIcon name="close" size={36}/>
-					</TitleContainer>
+					<StyledTransition shared={name}>
+						<TitleContainer>
+							<CourseName>{name}</CourseName>
+							<CloseIcon name="close" size={36}/>
+						</TitleContainer>
+					</StyledTransition>
 					<TitleSeparator/>
 					<RecentText>Recently Posted Grades</RecentText>
 					<RecentGradesContainer>

@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Platform, View, StyleSheet, Text} from 'react-native';
 import Ripple from 'react-native-material-ripple';
 import styled from 'styled-components';
+import { Transition } from 'react-navigation-fluid-transitions'
 
 const HEIGHT = 100;
 
@@ -165,7 +166,9 @@ class CourseCard extends Component {
 					</GradeContainer>
 					<GradeRightBorder dashStyle={hasGrade ? '' : 'dash'} color='#36353440'/>
 					<CourseInfoContainer borderRad={borderRadius}>
-						<CourseName numberOfLines={1} ellipsizeMode="tail">{name}</CourseName>
+						<Transition shared={name}>
+							<CourseName numberOfLines={1} ellipsizeMode="tail">{name}</CourseName>
+						</Transition>
 						<CourseInstructor numberOfLines={1} ellipsizeMode="tail">{instructor}</CourseInstructor>
 					</CourseInfoContainer>
 				</CardBoundary>
