@@ -103,8 +103,8 @@ android {
         applicationId "edu.txstate.mobile.tracs"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 8
-        versionName "1.2.0"
+        versionCode 10
+        versionName "1.2.2"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
