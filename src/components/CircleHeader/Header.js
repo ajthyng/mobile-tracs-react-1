@@ -262,6 +262,7 @@ class Header extends Component {
 					active={this.state.activeIcon === Header.ICON.HOME}
 					style={circleAnimation}
 					radius={DIAMETER}
+					scale={this.state.activeIcon === Header.ICON.HOME ? 1 : 0.8}
 				/>
 				<HomeIcon
 					onPress={() => {
