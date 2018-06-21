@@ -18,20 +18,32 @@ export const cardFromRight = (sceneProps) => {
 	const {index} = scene;
 
 	const width = layout.initWidth;
-
 	const translateX = position.interpolate({
 		inputRange: [index - 1, index, index + 1],
-		outputRange: [width, 0, 0]
+		outputRange: [width / 4, 0, 0]
 	});
 
 	const opacity = position.interpolate({
 		inputRange: [index - 1, index, index + 1],
-		outputRange: [1, 1, 0]
-	});
+		outputRange: [0, 1, 0.5]
+	})
 
 	return {opacity, transform: [{translateX}]};
 };
 
+export const cardFromLeft = (sceneProps) => {
+	const {layout, position, scene} = sceneProps;
+	const {index} = scene;
+
+	const width = layout.initWidth;
+
+	const translateX = position.interpolate({
+		inputRange: [index - 1, index, index + 1],
+		outputRange: [-width, 0, 0]
+	});
+
+	return {transform: [{translateX}]};
+};
 export const cardFromTop = (sceneProps) => {
 	const {layout, position, scene} = sceneProps;
 	const {index} = scene;

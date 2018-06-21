@@ -1,11 +1,11 @@
 import React, {Component} from 'react'
-import styled from 'styled-components'
+import styled, {withTheme} from 'styled-components'
 
 const Container = styled.View`
   flex-direction: row;
   height: 100px;
   align-items: flex-start;
-  background-color: transparent;
+  background-color: ${props => props.theme.transparent};
   width: 100%;
 `
 
@@ -23,18 +23,18 @@ const GradeItemPointsContainer = styled.View`
 
 const GradeItemEarned = styled.Text`
 	font-size: 24px;
-	color: #363534;
+	color: ${props => props.theme.darkText};
 `
 
 const GradeItemTotal = styled.Text`
 	font-size: 14px;
-	color: #363534;
+	color: ${props => props.theme.darkText};
 `
 
 const QuotientLine = styled.View`
 	width: 40px;
 	height: 2px;
-	background-color: lightgray;
+	background-color: ${props => props.theme.gradeItemQuotient};
 `
 
 const GradeItemInfoContainer = styled.View`
@@ -45,22 +45,22 @@ const GradeItemInfoContainer = styled.View`
 
 const GradeItemName = styled.Text`
 	font-size: 24px;
-	color: #363534;
+	color: ${props => props.theme.darkText};
 `
 
 const GradeItemPostDate = styled.Text`
 	font-size: 20px;
-	color: #363534;
+	color: ${props => props.theme.darkText};
 `
 
 const GradeItemComments = styled.Text`
 	font-size: 20px;
-	color: #363534;
+	color: ${props => props.theme.darkText};
 `
 
 const GradeItemDueDate = styled.Text`
 	font-size: 16px;
-	color: #363534;
+	color: ${props => props.theme.darkText};
 	text-align: center;
 `
 
@@ -115,4 +115,4 @@ GradebookItemRow.defaultProps = {
 	}
 }
 
-export default GradebookItemRow
+export default withTheme(GradebookItemRow)

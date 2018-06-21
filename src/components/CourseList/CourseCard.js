@@ -1,18 +1,18 @@
 import React, {Component} from 'react';
 import {Platform, View, StyleSheet, Text} from 'react-native';
 import Ripple from 'react-native-material-ripple';
-import styled from 'styled-components';
+import styled, { withTheme } from 'styled-components';
 import { Transition } from 'react-navigation-fluid-transitions'
 
 const HEIGHT = 100;
 
 const CardBoundary = styled(Ripple)`
 	height: ${100}px;
-	background-color: #fff;
+	background-color: ${props => props.theme.courseCardBackground};
 	margin: 10px;
 	border-radius: ${props => props.borderRad || 0};
 	flex-direction: row;
-	shadow-color: #142945;
+	shadow-color: ${props => props.theme.courseCardShadow};
 	shadow-offset: 1px 2px;
 	shadow-opacity: 0.4;
 	shadow-radius: 1px;
@@ -49,12 +49,12 @@ const GradeValueContainer = styled.View`
 	flex: 1;
 	height: ${HEIGHT};
 	justify-content: center;
-	background-color: transparent;
+	background-color: ${props => props.theme.transparent};
 `;
 
 const Grade = styled.Text`
 	text-align: center;
-	color: ${props => props.hasGrade ? 'white' : '#363534'};
+	color: ${props => props.hasGrade ? props.theme.lightText : props.theme.darkText};
 	font-size: 16px;
 `;
 
@@ -71,7 +71,7 @@ const CourseInfoContainer = styled.View`
 const CourseName = styled.Text`
 	font-size: 18px;
 	margin-left: 8px;
-	color: #363534;
+	color: ${props => props.theme.darkText};
 	text-align: left;
 	background-color: transparent;
 `;
@@ -79,7 +79,7 @@ const CourseName = styled.Text`
 const CourseInstructor = styled.Text`
 	font-size: 14px;
 	margin-left: 8px;
-	color: #363534;
+	color: ${props => props.theme.darkText};
 	text-align: left;
 `;
 
@@ -164,7 +164,7 @@ class CourseCard extends Component {
 							<Grade hasGrade={hasGrade}>{!hasGrade ? "--" : formatGrade(points)}</Grade>
 						</GradeValueContainer>
 					</GradeContainer>
-					<GradeRightBorder dashStyle={hasGrade ? '' : 'dash'} color='#36353440'/>
+					<GradeRightBorder dashStyle={hasGrade ? '' : 'dash'} color={this.props.theme.dashColor}/>
 					<CourseInfoContainer borderRad={borderRadius}>
 						<Transition shared={name}>
 							<CourseName numberOfLines={1} ellipsizeMode="tail">{name}</CourseName>
@@ -184,4 +184,4 @@ CourseCard.defaultProps = {
 	grades: []
 };
 
-export default CourseCard;
+export default withTheme(CourseCard);

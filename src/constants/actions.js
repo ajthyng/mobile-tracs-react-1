@@ -73,5 +73,8 @@ module.exports = {
 	headerActions: {
 		SET_SCROLL_Y: 'SET_SCROLL_Y',
 		SET_HEADER_STATE: 'SET_HEADER_STATE'
+	},
+	themeActions: {
+		SET_THEME: 'SET_THEME'
 	}
 };

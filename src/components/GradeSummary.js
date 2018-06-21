@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import styled from 'styled-components'
+import styled, {withTheme} from 'styled-components'
 
 const Container = styled.View`
   height: 150px;
@@ -7,23 +7,23 @@ const Container = styled.View`
   align-items: center;
   justify-content: center;
   width: 100%;
-	border-bottom-color: #36353480;
+	border-bottom-color: ${props => props.theme.gradeSummaryContainerBorder};
 	border-bottom-width: 1px;
 `
 
 const TotalGrade = styled.Text`
 	font-size: 36px;
-	color: #363534;
+	color: ${props => props.theme.darkText};
 `
 
 const TotalPoints = styled.Text`
 	font-size: 20px;
-	color: #363534;
+	color: ${props => props.theme.darkText};
 `
 
 const AverageGrade = styled.Text`
 	font-size: 24px;
-	color: #363534;
+	color: ${props => props.theme.darkText};
 `
 
 class GradeSummary extends Component {
@@ -42,4 +42,4 @@ class GradeSummary extends Component {
 	}
 }
 
-export default GradeSummary
+export default withTheme(GradeSummary)

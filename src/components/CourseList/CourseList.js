@@ -1,22 +1,32 @@
-import React, {Component} from 'react';
-import {View, FlatList, Animated, StyleSheet, Text} from 'react-native';
+import React, {Component} from 'react'
+import {View, FlatList, Animated, StyleSheet, Text} from 'react-native'
 
-import {connect} from 'react-redux';
-import {setScrollY, setHeaderState} from '../../actions/header';
+import {connect} from 'react-redux'
+import {setScrollY, setHeaderState} from '../../actions/header'
+import styled from 'styled-components'
 
-import Header from '../CircleHeader/Header';
-import CourseCard from './CourseCard';
+import Header from '../CircleHeader/Header'
+import CourseCard from './CourseCard'
 
-const renderHeader = () => (<View style={{flex: 0, height: Header.MAX_HEIGHT + 40, width: '100%'}}/>);
+const HeaderSpacer = styled.View`
+	flex: 0;
+	height: ${Header.MAX_HEIGHT + 40};
+	width: 100%;
+`
+
+const CourseListContainer = styled.View`
+	flex: 1;
+	width: 100%;
+`
 
 class CourseList extends Component {
 	constructor(props) {
-		super(props);
+		super(props)
 		this.state = {
 			y: 0,
 			shouldCollapse: false,
 			shouldExpand: false
-		};
+		}
 		this.data = [
 			{
 				key: '0',
@@ -87,34 +97,33 @@ class CourseList extends Component {
 					{name: "Gradebook Item 4", grade: 89.95, points: 100}
 				]
 			},
-		];
-		this._scrollY = new Animated.Value(0);
-		props.setScrollY(this._scrollY);
+		]
+		this._scrollY = new Animated.Value(0)
+		props.setScrollY(this._scrollY)
 	}
 
 	onScrollEndSnapToEdge = (event) => {
-		if (!this.scrollView) return;
-
-		const y = event.nativeEvent.contentOffset.y;
-		const minHeight = Header.MIN_HEIGHT + 40;
-		const shouldSnapToOpen = 0 < y && y < minHeight / 2;
-		const shouldSnapToShut = minHeight / 2 <= y && y < minHeight;
+		if (!this.scrollView) return
+		const y = event.nativeEvent.contentOffset.y
+		const minHeight = Header.MIN_HEIGHT + 40
+		const shouldSnapToOpen = 0 < y && y < minHeight / 2
+		const shouldSnapToShut = minHeight / 2 <= y && y < minHeight
 		if (shouldSnapToOpen) {
-			this.scrollView.scrollTo({y: 0});
+			this.scrollView.scrollTo({y: 0})
 		} else if (shouldSnapToShut) {
-			this.scrollView.scrollTo({y: minHeight});
+			this.scrollView.scrollTo({y: minHeight})
 		}
-	};
+	}
 
 	moveHeaderBy = (units) => {
 		if (this.scrollView) {
-			this.scrollView.scrollTo({y: units});
+			this.scrollView.scrollTo({y: units})
 		}
-	};
+	}
 
 	componentDidUpdate(prevProps) {
 		if (prevProps.isCollapsed !== this.props.isCollapsed) {
-			this.moveHeaderBy(prevProps.isCollapsed ? 0 : Header.MIN_HEIGHT + 40);
+			this.moveHeaderBy(prevProps.isCollapsed ? 0 : Header.MIN_HEIGHT + 40)
 		}
 	}
 
@@ -123,51 +132,37 @@ class CourseList extends Component {
 			this.props.navigation.navigate('Course', {transition: 'cardFromRight', name: item.name});
 			this.props.setHeaderState(Header.COLLAPSED);
 		}
-	};
+	}
 
 	render() {
 		return (
-			<View style={styles.container}>
+			<CourseListContainer>
 				<Animated.ScrollView
-					styles={styles.scrollView}
-					ref={ref => this.scrollView = ref ? ref._component : {scrollTo: () => {}}}
+					ref={ref => this.scrollView = ref ? ref._component : { scrollTo: () => {} }}
 					onScroll={Animated.event(
-						[
-							{
-								nativeEvent: {contentOffset: {y: this._scrollY}}
-							}
-						],
+						[{ nativeEvent: {contentOffset: {y: this._scrollY}} }],
 						{
 							useNativeDriver: true,
 							listener: (event) => {
-								let y = event.nativeEvent.contentOffset.y;
-								this.setState({y});
+								let y = event.nativeEvent.contentOffset.y
+								this.setState({y})
 							}
 						}
 					)}
 					onScrollEndDrag={this.onScrollEndSnapToEdge}
 					scrollEventThrottle={16}
 				>
-					{renderHeader()}
-					{this.data.map(item => {
-						return <CourseCard {...item} goToCourse={this.goToCourse(item)}/>
-					})}
+					<HeaderSpacer/>
+					{
+						this.data.map(item => (
+							<CourseCard {...item} goToCourse={this.goToCourse(item)}/>
+						))
+					}
 				</Animated.ScrollView>
-			</View>
-		);
+			</CourseListContainer>
+		)
 	}
 }
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		width: '100%'
-	},
-	scrollView: {
-		flex: 1,
-		zIndex: 1
-	}
-});
 
 const mapStateToProps = (state) => {
 	return {
@@ -186,4 +181,4 @@ const mapDispatchToProps = (dispatch) => {
 	}
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(CourseList);
+export default connect(mapStateToProps, mapDispatchToProps)(CourseList)

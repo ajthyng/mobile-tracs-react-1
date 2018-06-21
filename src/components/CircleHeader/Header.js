@@ -26,7 +26,7 @@ const Circle = styled(Animated.View)`
 	shadow-color: #363534;
 	shadow-opacity: 0.5;
 	shadow-offset: 0px 2px;
-	shadow-radius: 1;
+	shadow-radius: 2;
 `;
 
 Circle.defaultProps = {
@@ -280,7 +280,7 @@ class Header extends Component {
 								transition = 'none';
 								break;
 						}
-						this.props.navigation.navigate('Courses', {transition});
+						this.props.navigation.navigate('Home', {transition});
 					}}
 					animationRange={animationRange}
 					topRowCenter={this.state.topRowHeight / 2}

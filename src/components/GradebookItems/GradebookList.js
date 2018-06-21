@@ -1,12 +1,12 @@
 import React, {Component} from 'react'
 import {FlatList, Text} from 'react-native'
-import styled from 'styled-components'
+import styled, {withTheme} from 'styled-components'
 import dayjs from 'dayjs';
 import GradebookItemRow from './GradebookItemRow'
 
 const Container = styled.View`
   flex: 1;
-  background-color: transparent;
+  background-color: ${props => props.theme.transparent};
   align-items: center;
   justify-content: center;
   width: 100%;
@@ -71,7 +71,7 @@ const data = [{
 }]
 
 const TopSpacing = styled.View`
-	background-color: transparent;
+	background-color: ${props => props.theme.transparent};
 	height: 16px;
 	width: 100%;
 `
@@ -93,10 +93,10 @@ class GradebookList extends Component {
 					data={data}
 					renderItem={renderGradebookItem}
 					ListHeaderComponent={TopSpacing}
-					/>
+				/>
 			</Container>
 		)
 	}
 }
 
-export default GradebookList
+export default withTheme(GradebookList)

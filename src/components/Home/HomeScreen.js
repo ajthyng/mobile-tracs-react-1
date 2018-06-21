@@ -10,15 +10,11 @@ import Header from '../CircleHeader/Header';
 import {setHeaderState} from '../../actions/header';
 import styled from 'styled-components';
 
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		alignItems: 'center',
-		justifyContent: 'space-around',
-		backgroundColor: 'white',
-		width: '100%'
-	}
-});
+const Home = styled.View`
+		flex: 1;
+		background-color: ${props => props.theme.viewBackground};
+		width: 100%;
+`
 
 const LogoutButtonHOC = Comp => ({newRef, children, ...props}) => (
 	<Comp
@@ -75,9 +71,9 @@ class HomeScreen extends Component {
 
 	render() {
 		return (
-			<View style={styles.container}>
+			<Home>
 				<CourseList navigation={this.props.navigation} />
-			</View>
+			</Home>
 		);
 	}
 }

@@ -9,11 +9,10 @@ import {login} from './src/actions/login'
 import {Analytics} from './src/utils/analytics'
 import {getNotifications} from './src/actions/notifications'
 import {setToken} from './src/actions/registrar'
+import ThemedApp from './src/ThemedApp'
+import {YellowBox} from 'react-native'
 
 const store = configureStore()
-
-import {YellowBox} from 'react-native'
-import {Scenes} from './src/scenes/Scenes'
 
 YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', "Warning: Can't call setState (or forceUpdate)", 'You are setting the style', 'Module RCTImageLoader', 'Class RCTCxxModule'])
 
@@ -87,11 +86,9 @@ class App extends Component {
 
 	render() {
 		return (
-			<SafeAreaView style={{flex: 1, backgroundColor: '#224575', shadowOpacity: 0}}>
-				<Provider store={store}>
-					<Scenes/>
-				</Provider>
-			</SafeAreaView>
+			<Provider store={store}>
+				<ThemedApp/>
+			</Provider>
 		)
 	}
 }

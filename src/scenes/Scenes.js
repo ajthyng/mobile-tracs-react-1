@@ -12,18 +12,13 @@ import LoginScreen from '../_components/Login/LoginScreen'
 import HomeScreen from '../components/Home/HomeScreen'
 import Header from '../components/CircleHeader/Header'
 
-import {View, Easing, Platform, Animated, Dimensions, Text} from 'react-native'
 import React from 'react'
+import {View, Easing, Platform, Animated, Dimensions, Text} from 'react-native'
 
-import {FluidNavigator} from 'react-navigation-fluid-transitions'
 import {createSwitchNavigator, createStackNavigator} from 'react-navigation'
 import CalendarScreen from '../components/CalendarScreen/CalendarScreen'
 import CourseScreen from '../components/CourseScreen/CourseScreen'
-import {cardFromRight, cardFromBottom, cardFromTop, defaultTransition} from './Transitions'
-import TabIcon from '../components/TabHeader/TabIcon'
-import styled from 'styled-components'
-import HiddenCourses from '../components/HiddenCourses/HiddenCourses'
-import configureStore from '../store/configureStore'
+import {cardFromRight, cardFromBottom, cardFromLeft, cardFromTop, defaultTransition} from './Transitions'
 import GradebookItems from '../components/GradebookItems/GradebookItems'
 import CourseDetailScreen from '../components/CourseDetailScreen/CourseDetailScreen'
 
@@ -33,26 +28,18 @@ Array.prototype.contains = function (value) {
 
 const transitionSpec = {
 	duration: Platform.select({android: 500, ios: 500}),
-	easing: Easing.out(Easing.poly(4)),
 	timing: Animated.timing,
+	easing: Easing.out(Easing.poly(4)),
 	useNativeDriver: true,
 }
-
-const fluid = FluidNavigator({
-	Courses: {
-		screen: HomeScreen,
-	},
-	Course: {
-		screen: CourseScreen
-	}
-}, {
-	initialRouteName: 'Courses'
-})
 
 const MainNavigator = createStackNavigator(
 	{
 		Home: {
-			screen: fluid,
+			screen: HomeScreen,
+		},
+		Course: {
+			screen: CourseScreen,
 		},
 		Calendar: {
 			screen: CalendarScreen,
@@ -71,25 +58,22 @@ const MainNavigator = createStackNavigator(
 			headerMode: 'float',
 			headerTransitionPreset: 'uikit',
 		},
-		//transitionConfig: () => ({
-		//	transitionSpec,
-		//	screenInterpolator: (sceneProps) => {
-		//		const {scene: {index, route}} = sceneProps;
-		//		const params = route.params || {};
-		//		const transition = params.transition || 'default';
-		//
-		//		return {
-		//			cardFromRight: cardFromRight(sceneProps),
-		//			cardFromTop: cardFromTop(sceneProps),
-		//			cardFromBottom: cardFromBottom(sceneProps),
-		//			default: defaultTransition(sceneProps)
-		//		}[transition]
-		//	}
-		//}),
-		cardStyle: {
-			opacity: 1,
-			shadowOpacity: 0
-		},
+		transitionConfig: () => ({
+			transitionSpec,
+			screenInterpolator: (sceneProps) => {
+				const { scene } = sceneProps
+				const params = scene.route.params || {};
+				const transition = params.transition || 'default';
+				return {
+					cardFromRight: cardFromRight(sceneProps),
+					cardFromLeft: cardFromLeft(sceneProps),
+					cardFromTop: cardFromTop(sceneProps),
+					cardFromBottom: cardFromBottom(sceneProps),
+					default: defaultTransition(sceneProps)
+				}[transition]
+			}
+		}),
+		cardStyle: {shadowColor: 'transparent'},
 		gestures: {},
 	}
 )

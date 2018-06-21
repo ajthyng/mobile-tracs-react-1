@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import styled from 'styled-components'
+import styled, {withTheme} from 'styled-components'
 import ScreenHeader from '../ScreenHeader'
 import GradeSummary from '../GradeSummary'
 import GradebookList from './GradebookList'
@@ -9,7 +9,7 @@ const Container = styled.View`
   align-items: center;
   justify-content: center;
   width: 100%;
-  background-color: white;
+  background-color: ${props => props.theme.gradebookBackground};
 `
 
 
@@ -30,4 +30,4 @@ class GradebookItems extends Component {
 }
 
 
-export default GradebookItems
+export default withTheme(GradebookItems)

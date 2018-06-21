@@ -1,15 +1,8 @@
 import React, {Component} from 'react'
-import styled from 'styled-components'
+import styled, {withTheme} from 'styled-components'
 import Header from './CircleHeader/Header'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Ripple from 'react-native-material-ripple'
-
-const Container = styled.View`
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-`
 
 const HeaderContainer = styled.View`
 	height: 60px;
@@ -17,13 +10,13 @@ const HeaderContainer = styled.View`
 	width: 100%;
 	align-items: center;
 	justify-content: center;
-	border-bottom-color: #36353480;
+	border-bottom-color: ${props => props.theme.screenHeaderBorder};
 	border-bottom-width: 1px;
 `
 
 const BackArrow = styled(Icon)`
 	font-size: 28px;
-	color: #363534;
+	color: ${props => props.theme.darkText};
 `
 
 const BackArrowContainer = styled(Ripple)`
@@ -43,22 +36,18 @@ const TitleContainer = styled.View`
 `
 
 const Title = styled.Text`
-	color: #363534;
+	color: ${props => props.theme.darkText};
 	font-size: 22px;
 `
 
 const Subtitle = styled.Text`
-	color: #363534;
+	color: ${props => props.theme.darkText};
 	font-size: 16px;
 `
 
 class ScreenHeader extends Component {
-	constructor(props) {
-		super(props)
-	}
-
 	render() {
-		const { title, subtitle} = this.props
+		const { title, subtitle } = this.props
 
 		return (
 			<HeaderContainer style={this.props.style}>
@@ -79,4 +68,4 @@ ScreenHeader.defaultProps = {
 	subtitle: 'No subtitle set'
 }
 
-export default ScreenHeader
+export default withTheme(ScreenHeader)

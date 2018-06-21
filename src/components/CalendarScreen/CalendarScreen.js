@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {FlatList, Text} from 'react-native';
 
 import {Calendar} from 'react-native-calendars';
-import styled from 'styled-components';
+import styled, {withTheme} from 'styled-components';
 import Header from '../CircleHeader/Header';
 import ItemSeparator from '../../_components/Notifications/ItemSeparator';
 import Ripple from 'react-native-material-ripple';
@@ -12,7 +12,7 @@ import PullHandle from './PullHandle'
 const ContainerView = styled.View`
 	alignItems: flex-start;
 	justify-content: center;
-	background-color: white;
+	background-color: ${props => props.theme.viewBackground};
 	flex: 1;
 `;
 
@@ -34,7 +34,7 @@ const DueDatesList = styled(FlatList)`
 const DueDateItem = styled(Ripple)`
 	width: 100%;
 	height: 50px;
-	background-color: transparent;
+	background-color: ${props => props.theme.transparent};
 	align-items: center;
 	justify-content: space-between;
 	padding-left: 16px;
@@ -64,19 +64,11 @@ const ViewAllGrades = styled(Ripple)`
 `
 
 const ViewAllGradesText = styled.Text`
-	color: #363534;
+	color: ${props => props.theme.darkText};
 	font-size: 20px;
 `
 
-const colors = [
-	'#fe4880',
-	'#c6427b',
-	'#8e3c77',
-	'#563672',
-	'#1e306e',
-];
-
-const getRandomColor = () => {
+const getRandomColor = (colors) => {
 	return colors[Math.floor(Math.random() * 100) % colors.length];
 };
 
@@ -94,6 +86,7 @@ class CalendarScreen extends Component {
 			{key: '7', name: 'Assignment 8'},
 			{key: '8', name: 'Assignment 9'},
 		];
+		this.colors = props.theme.assignments
 	}
 
 	goToGradebook = () => {
@@ -115,7 +108,7 @@ class CalendarScreen extends Component {
 					ItemSeparatorComponent={() => (<ItemSeparator/>)}
 					renderItem={({item}) => (
 						<DueDateItem key={item.key}>
-							<SideColor color={getRandomColor()} />
+							<SideColor color={getRandomColor(this.colors)} />
 							<Text style={{textAlign: 'center'}}>{dayjs().format('DD\nMMM')}</Text>
 							<Text>{item.name}</Text>
 						</DueDateItem>
@@ -129,4 +122,4 @@ class CalendarScreen extends Component {
 	}
 }
 
-export default CalendarScreen;
+export default withTheme(CalendarScreen);
