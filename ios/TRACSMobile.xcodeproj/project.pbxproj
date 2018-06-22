@@ -26,6 +26,7 @@
 		6447E0CAB667459487AAE15A /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2669C4506D7B4D67BEC787A8 /* MaterialIcons.ttf */; };
 		790F81B19B21445DA952AF01 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4399A0C002F14BB19E4D04E3 /* MaterialCommunityIcons.ttf */; };
 		8219AAB91F61B7DD00FC489C /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8219AAB61F61B7BC00FC489C /* libRCTPushNotification.a */; };
+		823CC8AE20DDB0CD00112872 /* libBVLinearGradient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 823CC87C20DDB07F00112872 /* libBVLinearGradient.a */; };
 		8276A0D6203F31D9009B216C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8276A0D5203F31D9009B216C /* GoogleService-Info.plist */; };
 		82AA3132204D981300296DD0 /* libRCTToast.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 82AA3115204D980300296DD0 /* libRCTToast.a */; };
 		82AA90E0207ED08400CD5ECC /* libRNCookieManagerIOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8219AA6C1F5F56D100FC489C /* libRNCookieManagerIOS.a */; };
@@ -314,6 +315,20 @@
 			remoteGlobalIDString = 5D82366F1B0CE05B005A9EF3;
 			remoteInfo = RNKeychain;
 		};
+		823CC87B20DDB07F00112872 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 823CC87620DDB07F00112872 /* BVLinearGradient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = BVLinearGradient;
+		};
+		823CC87D20DDB07F00112872 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 823CC87620DDB07F00112872 /* BVLinearGradient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 64AA15081EF7F30100718508;
+			remoteInfo = "BVLinearGradient-tvOS";
+		};
 		8276A0A5203F2EC4009B216C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */;
@@ -422,6 +437,7 @@
 		7F912C66F31EC8C68A37591C /* Pods-TRACSMobile.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TRACSMobile.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TRACSMobile/Pods-TRACSMobile.debug.xcconfig"; sourceTree = "<group>"; };
 		8219AAAF1F6051C200FC489C /* TRACSMobile.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = TRACSMobile.entitlements; path = TRACSMobile/TRACSMobile.entitlements; sourceTree = "<group>"; };
 		8219AAB01F61B7BC00FC489C /* RCTPushNotification.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTPushNotification.xcodeproj; path = "../node_modules/react-native/Libraries/PushNotificationIOS/RCTPushNotification.xcodeproj"; sourceTree = "<group>"; };
+		823CC87620DDB07F00112872 /* BVLinearGradient.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BVLinearGradient.xcodeproj; path = "../node_modules/react-native-linear-gradient/BVLinearGradient.xcodeproj"; sourceTree = "<group>"; };
 		8276A0CD203F2F50009B216C /* RNFirebase.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNFirebase.xcodeproj; path = "../node_modules/react-native-firebase/ios/RNFirebase.xcodeproj"; sourceTree = "<group>"; };
 		8276A0D5203F31D9009B216C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "TRACSMobile/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		82AA30FD204D980300296DD0 /* RCTToast.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTToast.xcodeproj; path = "../node_modules/@remobile/react-native-toast/ios/RCTToast.xcodeproj"; sourceTree = "<group>"; };
@@ -456,6 +472,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				823CC8AE20DDB0CD00112872 /* libBVLinearGradient.a in Frameworks */,
 				82B4C56220B6034600029A88 /* libRNKeychain.a in Frameworks */,
 				82B4C55B20B5FAB900029A88 /* libRNFirebase.a in Frameworks */,
 				82AA3132204D981300296DD0 /* libRCTToast.a in Frameworks */,
@@ -662,6 +679,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		823CC87720DDB07F00112872 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				823CC87C20DDB07F00112872 /* libBVLinearGradient.a */,
+				823CC87E20DDB07F00112872 /* libBVLinearGradient.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		8276A0C8203F2EC4009B216C /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -730,6 +756,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				823CC87620DDB07F00112872 /* BVLinearGradient.xcodeproj */,
 				82B4C55C20B6034000029A88 /* RNKeychain.xcodeproj */,
 				82B4C52620B5FAB300029A88 /* RNFirebase.xcodeproj */,
 				8219AAB01F61B7BC00FC489C /* RCTPushNotification.xcodeproj */,
@@ -900,6 +927,10 @@
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
 			projectReferences = (
+				{
+					ProductGroup = 823CC87720DDB07F00112872 /* Products */;
+					ProjectRef = 823CC87620DDB07F00112872 /* BVLinearGradient.xcodeproj */;
+				},
 				{
 					ProductGroup = 00C302A81ABCB8CE00DB3ED1 /* Products */;
 					ProjectRef = 00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */;
@@ -1251,6 +1282,20 @@
 			fileType = archive.ar;
 			path = libRNKeychain.a;
 			remoteRef = 8219AB2F1F686D4C00FC489C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		823CC87C20DDB07F00112872 /* libBVLinearGradient.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libBVLinearGradient.a;
+			remoteRef = 823CC87B20DDB07F00112872 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		823CC87E20DDB07F00112872 /* libBVLinearGradient.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libBVLinearGradient.a;
+			remoteRef = 823CC87D20DDB07F00112872 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		8276A0A6203F2EC4009B216C /* libfishhook.a */ = {

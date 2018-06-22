@@ -10,6 +10,8 @@ target 'TRACSMobile' do
 
   pod 'RNSVG', :path => '../node_modules/react-native-svg'
 
+  pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
+
   target 'TRACSMobileTests' do
     inherit! :search_paths
     # Pods for testing

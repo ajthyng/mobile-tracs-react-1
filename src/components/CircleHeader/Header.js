@@ -8,6 +8,7 @@ import styled, {withTheme} from 'styled-components';
 import ProjectIcon from './ProjectIcon';
 import CalendarIcon from './CalendarIcon';
 import {setHeaderState} from '../../actions/header';
+import VisibleHeader from './VisibleHeader'
 
 const DIAMETER = 80;
 const MAX_HEIGHT = 120;
@@ -33,20 +34,6 @@ Circle.defaultProps = {
 	scale: 0.8,
 	radius: DIAMETER
 };
-
-const VisibleHeader = styled(Animated.View)`
-		position: absolute;
-		top: 0;
-		height: ${props => props.visibleHeaderHeight};
-		width: 100%;
-		background-color: ${props => props.theme.header};
-		zIndex: 2;
-		justify-content: flex-end;
-		shadow-color: ${props => props.theme.darkText};
-		shadow-opacity: 0.5;
-		shadow-offset: 0px 2px;
-		shadow-radius: 2;
-`;
 
 const HeaderContainer = styled(Animated.View)`
 		position: absolute;
@@ -208,7 +195,11 @@ class Header extends Component {
 			})
 		};
 
-		let scrollAnimation = {
+		let headerAnimation = {
+			opacity: animationRange.interpolate({
+				inputRange: [0, 1],
+				outputRange: [0.6, 1]
+			}),
 			transform: normalTransform
 		};
 
@@ -233,8 +224,8 @@ class Header extends Component {
 				pointerEvents='box-none'
 			>
 				<VisibleHeader
-					visibleHeaderHeight={Header.MAX_HEIGHT}
-					style={scrollAnimation}
+					visibleHeight={Header.MAX_HEIGHT}
+					scrollAnimation={headerAnimation}
 				/>
 				<TopIconRow
 					ref={c => this.topIconRow = c}
