@@ -4,13 +4,13 @@ import {connect} from 'react-redux';
 import HomeIcon from './HomeIcon';
 import ArchivedSitesIcon from './ArchivedSitesIcon';
 import Profile from './Profile';
-import styled from 'styled-components';
+import styled, {withTheme} from 'styled-components';
 import ProjectIcon from './ProjectIcon';
 import CalendarIcon from './CalendarIcon';
 import {setHeaderState} from '../../actions/header';
 
 const DIAMETER = 80;
-const MAX_HEIGHT = 150;
+const MAX_HEIGHT = 120;
 const HEIGHT = 65;
 const HOME_ICON_SIZE = DIAMETER * 0.6;
 
@@ -21,9 +21,9 @@ const Circle = styled(Animated.View)`
 	position: absolute;
 	bottom: ${props => DIAMETER - (props.radius * (1 + props.scale) / 2)};
 	left: ${props => (Dimensions.get('window').width - props.radius * props.scale) / 2};
-	background-color: ${props => props.active ? '#4a89f4' : '#224575'};
+	background-color: ${props => props.active ? props.theme.selectedHeader : props.theme.header};
 	z-index: 4;
-	shadow-color: #363534;
+	shadow-color: ${props => props.theme.darkText};
 	shadow-opacity: 0.5;
 	shadow-offset: 0px 2px;
 	shadow-radius: 2;
@@ -39,10 +39,10 @@ const VisibleHeader = styled(Animated.View)`
 		top: 0;
 		height: ${props => props.visibleHeaderHeight};
 		width: 100%;
-		background-color: #224575;
+		background-color: ${props => props.theme.header};
 		zIndex: 2;
 		justify-content: flex-end;
-		shadow-color: #363534;
+		shadow-color: ${props => props.theme.darkText};
 		shadow-opacity: 0.5;
 		shadow-offset: 0px 2px;
 		shadow-radius: 2;
@@ -83,7 +83,7 @@ const BottomIconRow = styled(Animated.View)`
 	right: 0;
 	bottom: ${props => props.diameter / 2}px;
 	height: ${props => props.bottomRowHeight};
-	background-color: transparent;
+	background-color: ${props => props.theme.transparent};
 	z-index: 3;
 `;
 
@@ -305,4 +305,4 @@ const mapDispatchToProps = (dispatch) => {
 	}
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+export default connect(mapStateToProps, mapDispatchToProps)(withTheme(Header));

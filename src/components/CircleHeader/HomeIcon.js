@@ -48,7 +48,7 @@ class HomeIcon extends Component {
 			transform: [{
 				translateY: this.props.animationRange.interpolate({
 					inputRange: [0, 1],
-					outputRange: [0, -Header.MAX_HEIGHT + this.state.icon.height * 0.51]
+					outputRange: [0, -Header.MAX_HEIGHT + Header.CIRCLE_DIAMETER / 2]
 				})
 			}]
 		};

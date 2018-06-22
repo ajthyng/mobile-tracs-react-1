@@ -23,7 +23,7 @@ const CalendarView = styled(Calendar)`
 `;
 
 const HeaderSpacer = styled.View`
-	height: ${Header.MIN_HEIGHT - 20}px;
+	height: ${Header.MIN_HEIGHT + 10}px;
 `;
 
 const DueDatesList = styled(FlatList)`

@@ -10,7 +10,7 @@ import CourseCard from './CourseCard'
 
 const HeaderSpacer = styled.View`
 	flex: 0;
-	height: ${Header.MAX_HEIGHT + 40};
+	height: ${Header.MAX_HEIGHT + Header.CIRCLE_DIAMETER / 2};
 	width: 100%;
 `
 
@@ -105,7 +105,7 @@ class CourseList extends Component {
 	onScrollEndSnapToEdge = (event) => {
 		if (!this.scrollView) return
 		const y = event.nativeEvent.contentOffset.y
-		const minHeight = Header.MIN_HEIGHT + 40
+		const minHeight = Header.MIN_HEIGHT + Header.CIRCLE_DIAMETER / 2
 		const shouldSnapToOpen = 0 < y && y < minHeight / 2
 		const shouldSnapToShut = minHeight / 2 <= y && y < minHeight
 		if (shouldSnapToOpen) {
@@ -123,7 +123,7 @@ class CourseList extends Component {
 
 	componentDidUpdate(prevProps) {
 		if (prevProps.isCollapsed !== this.props.isCollapsed) {
-			this.moveHeaderBy(prevProps.isCollapsed ? 0 : Header.MIN_HEIGHT + 40)
+			this.moveHeaderBy(prevProps.isCollapsed ? 0 : Header.MIN_HEIGHT + Header.CIRCLE_DIAMETER / 2)
 		}
 	}
 
