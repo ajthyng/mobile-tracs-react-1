@@ -4,6 +4,7 @@ import {SafeAreaView} from 'react-navigation'
 import {Scenes} from './scenes/Scenes'
 import {connect} from 'react-redux'
 import {DeviceInfo, Dimensions, NativeModules, Platform} from 'react-native'
+import {MenuProvider} from 'react-native-popup-menu'
 
 const SafeStyled = styled(SafeAreaView)`
 	flex: 1;
@@ -37,13 +38,17 @@ class ThemedApp extends Component {
 
 		return (
 			<ThemeProvider theme={theme}>
-				{
-					(() => isIPhoneX ?
-						<SafeStyled forceInset={{bottom: 'never'}}>
-							<Scenes/>
-						</SafeStyled> : <Scenes/>
-					)()
-				}
+				<MenuProvider customStyles={{
+					backdrop: {backgroundColor: 'black', opacity: 0.5}
+				}}>
+					{
+						(() => isIPhoneX ?
+								<SafeStyled forceInset={{bottom: 'never'}}>
+									<Scenes/>
+								</SafeStyled> : <Scenes/>
+						)()
+					}
+				</MenuProvider>
 			</ThemeProvider>
 		)
 	}

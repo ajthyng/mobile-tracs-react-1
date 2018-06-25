@@ -9,6 +9,7 @@ import ProjectIcon from './ProjectIcon';
 import CalendarIcon from './CalendarIcon';
 import {setHeaderState} from '../../actions/header';
 import VisibleHeader from './VisibleHeader'
+import ProfileMenu from '../ProfileMenu/ProfileMenu'
 
 const DIAMETER = 80;
 const MAX_HEIGHT = 120;
@@ -242,11 +243,7 @@ class Header extends Component {
 						diameter={DIAMETER}
 						animationRange={animationRange}
 					/>
-					<Profile
-						size={28}
-						diameter={DIAMETER}
-						animationRange={animationRange}
-					/>
+					<ProfileMenu offset={Header.CIRCLE_DIAMETER / 2} />
 				</TopIconRow>
 				{this.renderBottomRow(bottomIconsTranslate, iconOpacityRange)}
 				<Circle
