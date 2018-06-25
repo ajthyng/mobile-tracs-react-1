@@ -198,7 +198,7 @@ class Header extends Component {
 		let headerAnimation = {
 			opacity: animationRange.interpolate({
 				inputRange: [0, 1],
-				outputRange: [0.6, 1]
+				outputRange: [0.3, 1]
 			}),
 			transform: normalTransform
 		};
