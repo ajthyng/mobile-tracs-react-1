@@ -73,6 +73,7 @@ class HomeScreen extends Component {
 		return (
 			<Home>
 				<CourseList navigation={this.props.navigation} />
+				<LogoutButton onPress={this.props.logout}/>
 			</Home>
 		);
 	}

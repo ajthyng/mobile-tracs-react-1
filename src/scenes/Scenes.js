@@ -61,9 +61,9 @@ const MainNavigator = createStackNavigator(
 		transitionConfig: () => ({
 			transitionSpec,
 			screenInterpolator: (sceneProps) => {
-				const { scene } = sceneProps
-				const params = scene.route.params || {};
-				const transition = params.transition || 'default';
+				const {scene} = sceneProps
+				const params = scene.route.params || {}
+				const transition = params.transition || 'default'
 				return {
 					cardFromRight: cardFromRight(sceneProps),
 					cardFromLeft: cardFromLeft(sceneProps),
@@ -79,11 +79,10 @@ const MainNavigator = createStackNavigator(
 )
 
 const AuthenticationNavigator = createSwitchNavigator({
+	Login: LoginScreen,
 	Main: MainNavigator
-}, {
-	initialRouteName: 'Main',
-	navigationOptions: {header: null}
-})
+}, {initialRouteName: 'Login', navigationOptions: {header: null}}
+)
 
 module.exports = {
 	Scenes: AuthenticationNavigator

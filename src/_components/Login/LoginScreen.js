@@ -216,7 +216,7 @@ class LoginScreen extends Component {
 
 	componentWillUpdate(nextProps) {
 		if (nextProps.isAuthenticated) {
-			this.props.navigation.navigate('Home');
+			this.props.navigation.navigate('Main');
 		}
 	}
 

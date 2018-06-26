@@ -16,6 +16,7 @@ import initialState from '../../src/reducers/login';
 import {authActions} from '../../src/constants/actions';
 import {credentials} from '../../src/utils/storage';
 import * as urls from '../../config/urls';
+import CookieManager from 'react-native-cookies'
 
 let {LOGIN, LOGOUT, LOGIN_HAS_FAILED, LOGIN_IS_GUEST, LOGGING_IN, IS_LOGGED_IN} = authActions;
 
