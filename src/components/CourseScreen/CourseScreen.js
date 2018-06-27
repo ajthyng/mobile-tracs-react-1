@@ -5,6 +5,8 @@ import Header from '../CircleHeader/Header'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Ripple from 'react-native-material-ripple'
 import RecentGrade from './RecentGrade'
+import {setHeaderState} from '../../actions/header'
+import {connect} from 'react-redux'
 
 const ScreenContainer = styled.View`
 	flex-direction: row;
@@ -141,8 +143,12 @@ const AnnouncementsIconContainer = styled.View`
 `
 
 class CourseScreen extends Component {
+	static navigationOptions = {
+		title: 'Course'
+	}
 	constructor(props) {
 		super(props)
+		props.setHeaderState(true)
 	}
 
 	goToCourseDetail = () => {
@@ -191,4 +197,16 @@ CourseScreen.defaultProps = {
 	name: "Course Name Not Found"
 }
 
-export default withTheme(CourseScreen)
+const mapStateToProps = state => ({
+	isCollapsed: state.header.isCollapsed
+})
+
+const mapDispatchToProps = (dispatch, props) => ({
+	setHeaderState: isCollapsed => {
+		if (props.isCollapsed !== isCollapsed) {
+			dispatch(setHeaderState(isCollapsed))
+		}
+	}
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(withTheme(CourseScreen))

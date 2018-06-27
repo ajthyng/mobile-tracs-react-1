@@ -15,16 +15,21 @@ import Header from '../components/CircleHeader/Header'
 import React from 'react'
 import {View, Easing, Platform, Animated, Dimensions, Text} from 'react-native'
 
-import {createSwitchNavigator, createStackNavigator} from 'react-navigation'
+import {createSwitchNavigator, createStackNavigator, Header as RNHeader, HeaderBackButton} from 'react-navigation'
 import CalendarScreen from '../components/CalendarScreen/CalendarScreen'
 import CourseScreen from '../components/CourseScreen/CourseScreen'
 import {cardFromRight, cardFromBottom, cardFromLeft, cardFromTop, defaultTransition} from './Transitions'
 import GradebookItems from '../components/GradebookItems/GradebookItems'
 import CourseDetailScreen from '../components/CourseDetailScreen/CourseDetailScreen'
+import SettingsScreen from '../components/SettingsScreen'
+import configureStore from '../store/configureStore'
+import { setHeaderState } from '../actions/header'
 
 Array.prototype.contains = function (value) {
 	return this.indexOf(value) >= 0
 }
+
+const store = configureStore()
 
 const transitionSpec = {
 	duration: Platform.select({android: 500, ios: 500}),
@@ -36,7 +41,7 @@ const transitionSpec = {
 const MainNavigator = createStackNavigator(
 	{
 		Home: {
-			screen: HomeScreen,
+			screen: HomeScreen
 		},
 		Course: {
 			screen: CourseScreen,
@@ -49,6 +54,17 @@ const MainNavigator = createStackNavigator(
 		},
 		CourseDetail: {
 			screen: CourseDetailScreen
+		},
+		Settings: {
+			screen: SettingsScreen,
+			navigationOptions: {
+				header: (props) => <RNHeader {...props} />,
+				headerLeft: (props) => <HeaderBackButton {...props} onPress={() => {
+					props.onPress()
+				}} />,
+				headerTintColor: store.getState().theme.lightText,
+				headerStyle: {backgroundColor: store.getState().theme.header}
+			}
 		}
 	}, {
 		initialRouteName: 'Home',

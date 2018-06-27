@@ -7,10 +7,11 @@ import styled from 'styled-components'
 
 import Header from '../CircleHeader/Header'
 import CourseCard from './CourseCard'
+import CourseSkeletonCard from './CourseSkeletonCard'
 
 const HeaderSpacer = styled.View`
 	flex: 0;
-	height: ${Header.MAX_HEIGHT + Header.CIRCLE_DIAMETER / 2};
+	height: ${Header.MIN_HEIGHT + 10};
 	width: 100%;
 `
 
@@ -23,9 +24,7 @@ class CourseList extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			y: 0,
-			shouldCollapse: false,
-			shouldExpand: false
+			y: 0
 		}
 		this.data = [
 			{
@@ -129,8 +128,19 @@ class CourseList extends Component {
 
 	goToCourse = (item) => {
 		return () => {
-			this.props.navigation.navigate('Course', {transition: 'cardFromRight', name: item.name});
-			this.props.setHeaderState(Header.COLLAPSED);
+			this.props.navigation.navigate('Course', {transition: 'cardFromRight', name: item.name})
+		}
+	}
+
+	renderCourses = (loading) => {
+		if (loading) {
+			return this.data.map(({key}) => (
+				<CourseSkeletonCard key={key} />
+			))
+		} else {
+			return this.data.map(item => (
+				<CourseCard {...item} goToCourse={this.goToCourse(item)}/>
+			))
 		}
 	}
 
@@ -138,13 +148,15 @@ class CourseList extends Component {
 		return (
 			<CourseListContainer>
 				<Animated.ScrollView
-					ref={ref => this.scrollView = ref ? ref._component : { scrollTo: () => {} }}
+					ref={ref => this.scrollView = ref ? ref._component : {
+						scrollTo: () => {
+						}
+					}}
 					onScroll={Animated.event(
-						[{ nativeEvent: {contentOffset: {y: this._scrollY}} }],
+						[{nativeEvent: {contentOffset: {y: this._scrollY}}}],
 						{
 							useNativeDriver: true,
-							listener: (event) => {
-								let y = event.nativeEvent.contentOffset.y
+							listener: ({nativeEvent: {contentOffset: {y}}}) => {
 								this.setState({y})
 							}
 						}
@@ -154,9 +166,7 @@ class CourseList extends Component {
 				>
 					<HeaderSpacer/>
 					{
-						this.data.map(item => (
-							<CourseCard {...item} goToCourse={this.goToCourse(item)}/>
-						))
+						this.renderCourses(this.props.loading)
 					}
 				</Animated.ScrollView>
 			</CourseListContainer>
@@ -168,7 +178,7 @@ const mapStateToProps = (state) => {
 	return {
 		isCollapsed: state.header.isCollapsed
 	}
-};
+}
 
 const mapDispatchToProps = (dispatch) => {
 	return {
@@ -179,6 +189,6 @@ const mapDispatchToProps = (dispatch) => {
 		}))),
 		setHeaderState: (isCollapsed) => dispatch(setHeaderState(isCollapsed))
 	}
-};
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(CourseList)

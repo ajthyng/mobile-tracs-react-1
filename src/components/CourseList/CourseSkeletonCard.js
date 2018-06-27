@@ -1,13 +1,22 @@
+/**
+ * Copyright 2018 Andrew Thyng
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import React, {Component} from 'react';
-import {Platform, View, StyleSheet, Animated, Text} from 'react-native';
-import Ripple from 'react-native-material-ripple';
+import {Platform, View, StyleSheet, Text, Animated} from 'react-native';
 import styled, { withTheme } from 'styled-components';
 import { Transition } from 'react-navigation-fluid-transitions'
 
 const HEIGHT = 100;
 
-const CardBoundary = styled(Ripple)`
-	height: ${100}px;
+const CardBoundary = styled.View`
+	height: ${HEIGHT}px;
 	background-color: ${props => props.theme.courseCardBackground};
 	margin: 10px;
 	border-radius: ${props => props.borderRad || 0};
@@ -42,20 +51,25 @@ const SideBar = styled.View`
 	border-top-left-radius: ${props => props.borderRad};
 	border-top-right-radius: 0;
 	border-bottom-right-radius: 0;
-	background-color: dodgerblue;
+	background-color: lightgray;
 `;
 
 const GradeValueContainer = styled.View`
 	flex: 1;
 	height: ${HEIGHT};
 	justify-content: center;
+	align-items: center;
 	background-color: ${props => props.theme.transparent};
 `;
 
-const Grade = styled.Text`
-	text-align: center;
-	color: ${props => props.hasGrade ? props.theme.lightText : props.theme.darkText};
-	font-size: 16px;
+const IncomingGrade = styled(Animated.View)`
+	width: ${HEIGHT * 0.7}px;
+	height: ${HEIGHT * 0.7}px;
+	position: absolute;
+	top: ${(HEIGHT - HEIGHT * 0.7) / 2}px;
+	left: ${(HEIGHT - HEIGHT * 0.6) / 2}px;
+	border-radius: 5px;
+	background-color: #E0E0E0;
 `;
 
 const CourseInfoContainer = styled.View`
@@ -68,19 +82,21 @@ const CourseInfoContainer = styled.View`
 	flex: 1;
 `;
 
-const CourseName = styled.Text`
-	font-size: 18px;
+const IncomingCourseName = styled(Animated.View)`
+	width: 80%;
+	height: 20px;
+	border-radius: 10px;
+	background-color: #E0E0E0;
 	margin-left: 8px;
-	color: ${props => props.theme.darkText};
-	text-align: left;
-	background-color: transparent;
 `;
 
-const CourseInstructor = styled.Text`
-	font-size: 14px;
+const IncomingCourseInstructor = styled(Animated.View)`
+	height: 20px;
+	width: 60%;
+	border-radius: 10px;
+	background-color: #E0E0E0;
 	margin-left: 8px;
-	color: ${props => props.theme.darkText};
-	text-align: left;
+	margin-top: 8px;
 `;
 
 const Dash = styled.View`
@@ -137,65 +153,56 @@ const formatGrade = ({earned, total}) => {
 	return `${gradeAsLetter(percentage)}\n(${percentage}%)`
 };
 
-class CourseCard extends Component {
+class CourseSkeletonCard extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			extraContent: null,
-			animation: new Animated.Value(0)
-		};
+		this.animation = new Animated.Value(0)
 	}
 
 	componentDidMount () {
-		Animated.timing(this.state.animation, {
+		Animated.loop(Animated.timing(this.animation, {
 			toValue: 1,
-			duration: 200,
+			duration: 2000,
 			useNativeDriver: true
-		}).start()
+		})).start()
 	}
 
 	render() {
-		let {name, instructor, grades, borderRadius} = this.props;
-		let points = grades.reduce((accum, {grade, points}) => {
-			accum.earned += grade;
-			accum.total += points;
-			return accum;
-		}, {earned: null, total: null});
-
-		let hasGrade = points.earned !== null;
-
-		const fadeIn = this.state.animation.interpolate({
-			inputRange: [0, 1],
-			outputRange: [0, 1]
+		const {borderRadius, name, instructor} = this.props
+		const hasGrade = false
+		const scale = this.animation.interpolate({
+			inputRange: [0, 0.5, 1],
+			outputRange: [1, 1.05, 1]
 		})
 
+		const scaleXY = [{scale}]
+		const scaleX = [{scaleX: scale}]
+
 		return (
-			<Animated.View style={{flex: 1, opacity: fadeIn}}>
-				<CardBoundary borderRad={borderRadius} onPress={this.props.goToCourse}>
+			<View style={{flex: 1}}>
+				<CardBoundary borderRad={borderRadius}>
 					<GradeContainer borderRad={borderRadius}>
 						<SideBar hasGrade={hasGrade} borderRad={borderRadius}/>
 						<GradeValueContainer>
-							<Grade hasGrade={hasGrade}>{!hasGrade ? "--" : formatGrade(points)}</Grade>
+							<IncomingGrade style={{transform: scaleXY}}/>
 						</GradeValueContainer>
 					</GradeContainer>
 					<GradeRightBorder dashStyle={hasGrade ? '' : 'dash'} color={this.props.theme.dashColor}/>
 					<CourseInfoContainer borderRad={borderRadius}>
-						<Transition shared={name}>
-							<CourseName numberOfLines={1} ellipsizeMode="tail">{name}</CourseName>
-						</Transition>
-						<CourseInstructor numberOfLines={1} ellipsizeMode="tail">{instructor}</CourseInstructor>
+						<IncomingCourseName style={{transform: scaleX}} />
+						<IncomingCourseInstructor style={{transform: scaleX}} />
 					</CourseInfoContainer>
 				</CardBoundary>
-			</Animated.View>
+			</View>
 		)
 	}
 }
 
-CourseCard.defaultProps = {
+CourseSkeletonCard.defaultProps = {
 	borderRadius: 3,
 	name: "Course Name Not Found",
 	instructor: "Instructor TBA",
 	grades: []
 };
 
-export default withTheme(CourseCard);
+export default withTheme(CourseSkeletonCard);

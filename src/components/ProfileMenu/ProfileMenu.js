@@ -10,12 +10,15 @@
 
 import React, {Component} from 'react'
 import {StyleSheet, View, Dimensions, Animated, Easing} from 'react-native'
-import styled from 'styled-components'
+import {connect} from 'react-redux'
+import styled, {withTheme} from 'styled-components'
 import {Menu, MenuTrigger, MenuOptions, MenuOption, renderers} from 'react-native-popup-menu'
 import Header from '../CircleHeader/Header'
 import Profile from '../CircleHeader/Profile'
 import ProfileMenuProfile from './ProfileMenuProfile'
 import ProfileMenuOption from './ProfileMenuOption'
+import {logout} from '../../actions/login'
+import * as Storage from '../../utils/storage'
 
 class CustomMenuRenderer extends Component {
 	constructor(props) {
@@ -70,7 +73,7 @@ class ProfileMenu extends Component {
 	render() {
 		return (
 			<Menu renderer={CustomMenuRenderer} rendererProps={{top: (this.props.offset || 0) * 0.8}}
-						onSelect={val => alert(`Selected Value: ${val}`)}>
+						onSelect={val => this.props.navigation.navigate(val, {transition: 'cardFromRight'})}>
 				<MenuTrigger>
 					<Profile
 						size={28}
@@ -78,8 +81,8 @@ class ProfileMenu extends Component {
 					/>
 				</MenuTrigger>
 				<MenuOptions customStyles={optionStyles(this.props)}>
-					<ProfileMenuProfile size={28} diameter={Header.CIRCLE_DIAMETER} />
-					<MenuOption value="Settings">
+					<ProfileMenuProfile size={22} diameter={50} />
+					<MenuOption value="Settings" customStyles={{optionWrapper: optionStyles(this.props).topOption}}>
 						<ProfileMenuOption label="Settings" icon="cog" size={22}/>
 					</MenuOption>
 					<MenuOption value="Feedback">
@@ -88,7 +91,7 @@ class ProfileMenu extends Component {
 					<MenuOption value="Support">
 						<ProfileMenuOption label="Support" icon="question-circle-o" size={22}/>
 					</MenuOption>
-					<MenuOption value="Logout">
+					<MenuOption value="Logout" onSelect={this.props.logout}>
 						<ProfileMenuOption label="Logout" icon="logout" size={22} iconFamily='SimpleLineIcons'/>
 					</MenuOption>
 				</MenuOptions>
@@ -103,16 +106,22 @@ const optionStyles = (props) => ({
 		paddingTop: 40,
 		paddingLeft: 0,
 		paddingRight: 0,
-		paddingBottom: 8,
+		paddingBottom: 0,
 		backgroundColor: 'white'
 	},
-	optionWrapper: {
-		borderTopWidth: 1,
-		borderTopColor: 'white'
+	topOption: {
+		marginTop: 30
 	},
 	optionText: {
 		color: '#363534'
 	}
 })
 
-export default ProfileMenu
+const mapDispatchToProps = dispatch => ({
+	logout: () => {
+		Storage.credentials.reset();
+		dispatch(logout())
+	}
+})
+
+export default connect(null, mapDispatchToProps)(withTheme(ProfileMenu))

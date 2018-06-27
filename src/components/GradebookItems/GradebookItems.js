@@ -14,6 +14,10 @@ const Container = styled.View`
 
 
 class GradebookItems extends Component {
+	static navigationOptions = {
+		title: 'Gradebook'
+	}
+
 	constructor(props) {
 		super(props)
 	}

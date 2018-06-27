@@ -27,14 +27,14 @@ const StyledProfile = styled.View`
 `
 
 const ProfileImage = styled.Image`
-	height: ${props => props.diameter * 0.8};
-	width: ${props => props.diameter * 0.8};
-	border-radius: ${props => props.diameter * 0.5 * 0.8}px;
+	height: ${props => props.diameter};
+	width: ${props => props.diameter};
+	border-radius: ${props => props.diameter * 0.5}px;
 `
 
 const ProfileText = styled.Text`
 	color: #363534;
-	font-size: 16px;
+	font-size: ${props => props.size};
 	font-weight: bold;
 `
 
@@ -42,13 +42,14 @@ class ProfileMenuProfile extends Component {
 	kitten = Math.floor(Math.random() * 200)
 
 	render() {
+		const {size, diameter} = this.props
 		return (
 			<StyledProfile>
 				<ProfileImage
-					diameter={this.props.diameter * 0.4}
+					diameter={diameter}
 					source={{uri: `https://placekitten.com/200/${this.kitten}`}}
 				/>
-				<ProfileText>
+				<ProfileText size={size}>
 					Maria
 				</ProfileText>
 			</StyledProfile>

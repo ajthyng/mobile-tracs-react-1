@@ -65,6 +65,7 @@ const sitesSuccess = (state, action) => {
 	return {
 		...state,
 		userSites: action.userSites,
+		isFetchingSites: false,
 		hasSites: Object.keys(action.userSites).length > 0
 	}
 };

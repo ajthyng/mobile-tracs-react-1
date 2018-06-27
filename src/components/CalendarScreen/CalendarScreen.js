@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import {FlatList, Text} from 'react-native';
 
 import {Calendar} from 'react-native-calendars';
+import { connect } from 'react-redux'
+import { setHeaderState } from '../../actions/header'
 import styled, {withTheme} from 'styled-components';
 import Header from '../CircleHeader/Header';
 import ItemSeparator from '../../_components/Notifications/ItemSeparator';
@@ -73,6 +75,10 @@ const getRandomColor = (colors) => {
 };
 
 class CalendarScreen extends Component {
+	static navigationOptions = {
+		title: 'Calendar'
+	}
+
 	constructor(props) {
 		super(props);
 		this.data = [
@@ -87,6 +93,7 @@ class CalendarScreen extends Component {
 			{key: '8', name: 'Assignment 9'},
 		];
 		this.colors = props.theme.assignments
+		props.setHeaderState(true)
 	}
 
 	goToGradebook = () => {
@@ -122,4 +129,12 @@ class CalendarScreen extends Component {
 	}
 }
 
-export default withTheme(CalendarScreen);
+const mapDispatchToProps = (dispatch, props) => ({
+	setHeaderState: isCollapsed => {
+		if (props.isCollapsed !== isCollapsed) {
+			dispatch(setHeaderState(isCollapsed))
+		}
+	}
+})
+
+export default connect(null, mapDispatchToProps)(withTheme(CalendarScreen))

@@ -14,7 +14,7 @@ const AnimatedRipple = styled(Animated.createAnimatedComponent(Ripple))`
 `;
 
 const StyledCalendarIcon = styled(Icon)`
-
+	font-size: ${props => props.size}px;
 `;
 
 class CalendarIcon extends Component {

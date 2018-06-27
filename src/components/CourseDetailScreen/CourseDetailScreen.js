@@ -26,6 +26,9 @@ const CourseDetailOptions = styled(CourseOptionsList)`
 `
 
 class CourseDetailScreen extends Component {
+	static navigationOptions = {
+		title: 'Course Info'
+	}
 	constructor(props) {
 		super(props)
 	}

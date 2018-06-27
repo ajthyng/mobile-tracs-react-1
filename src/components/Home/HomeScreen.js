@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import CourseList from '../CourseList/CourseList';
 import Header from '../CircleHeader/Header';
 import {setHeaderState} from '../../actions/header';
+import {getSiteInfo} from '../../actions/sites'
 import styled from 'styled-components';
 
 const Home = styled.View`
@@ -58,22 +59,30 @@ const LogoutButtonHOC = Comp => ({newRef, children, ...props}) => (
 const LogoutButton = LogoutButtonHOC(Ripple);
 
 class HomeScreen extends Component {
-	constructor(props) {
+	static navigationOptions = {
+		title: 'Home'
+	}
+
+	constructor (props) {
 		super(props);
 		this.props.setHeaderState(Header.EXPANDED);
 	}
 
-	componentDidUpdate() {
+	componentDidUpdate () {
 		if (!this.props.authenticated) {
 			this.props.navigation.navigate('Login');
 		}
 	}
 
-	render() {
+	componentDidMount () {
+		this.props.getSites()
+	}
+
+	render () {
+		const { loadingSites } = this.props
 		return (
 			<Home>
-				<CourseList navigation={this.props.navigation} />
-				<LogoutButton onPress={this.props.logout}/>
+				<CourseList loading={loadingSites} navigation={this.props.navigation} />
 			</Home>
 		);
 	}
@@ -81,17 +90,24 @@ class HomeScreen extends Component {
 
 const mapStateToProps = (state) => {
 	return {
-		authenticated: state.login.isAuthenticated
+		authenticated: state.login.isAuthenticated,
+		netid: state.login.netid,
+		loadingSites: state.tracsSites.isFetchingSites
 	}
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch, props) => {
 	return {
 		logout: () => {
 			Storage.credentials.reset();
 			dispatch(logout())
 		},
-		setHeaderState: (isCollapsed) => dispatch(setHeaderState(isCollapsed))
+		setHeaderState: (isCollapsed) => {
+			if (props.isCollapsed !== isCollapsed) {
+				dispatch(setHeaderState(isCollapsed))
+			}
+		},
+		getSites: () => dispatch(getSiteInfo(props.netid))
 	}
 };
 
