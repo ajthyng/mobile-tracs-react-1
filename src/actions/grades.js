@@ -8,56 +8,33 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React, {Component} from 'react';
-import {Animated} from 'react-native';
-import styled from 'styled-components';
-import {connect} from 'react-redux';
-import CalendarIcon from '../CircleHeader/CalendarIcon';
-import Profile from '../CircleHeader/Profile';
+import {gradesActions} from '../constants/actions'
 
-const Container = styled(Animated.View)`
-	height: ${65}px;
-	background-color: #224575;
-	flex-direction: row;
-	align-items: center;
-	justify-content: space-between;
-	padding-left: 16px;
-	padding-right: 16px;
-	padding-top: 24px;
-	${props => props.home ? '' : ''}
-`;
+const {
+	REQUEST_GRADES,
+	GRADES_SUCCESS,
+	GRADES_FAILURE
+} = gradesActions
 
-class Header extends Component {
-	constructor(props) {
-		super(props);
+const requestGrades = () => ({
+	type: REQUEST_GRADES
+})
+
+const gradesSuccess = (grades) => ({
+	type: GRADES_SUCCESS,
+	grades
+})
+
+const gradesFailure = (error) => ({
+	type: GRADES_FAILURE,
+	error
+})
+
+export const getGrades = (dispatch) => (
+	async (dispatch) => {
+		const start = new Date()
+		dispatch(requestGrades())
+
+
 	}
-
-	goToCalendar = () => {
-		this.props.navigation.navigate('Calendar', {
-			transition: 'cardFromTop'
-		})
-	};
-
-	render() {
-		return (
-			<Container home>
-				<CalendarIcon
-					diameter={60}
-					size={22}
-					onPress={this.goToCalendar}
-				/>
-				<Profile
-					diameter={100}
-				/>
-			</Container>
-		)
-	}
-}
-
-const mapStateToProps = (state) => {
-	return {
-		animationRange: state.header.scrollY
-	}
-};
-
-export default connect(mapStateToProps, null)(Header);
+)

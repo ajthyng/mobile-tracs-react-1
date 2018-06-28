@@ -76,5 +76,10 @@ module.exports = {
 	},
 	themeActions: {
 		SET_THEME: 'SET_THEME'
+	},
+	gradesActions: {
+		REQUEST_GRADES: 'REQUEST_GRADES',
+		GRADES_SUCCESS: 'GRADES_SUCCESS',
+		GRADES_FAILURE: 'GRADES_FAILURE'
 	}
 };
