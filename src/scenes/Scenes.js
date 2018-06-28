@@ -89,7 +89,6 @@ const MainNavigator = createStackNavigator(
 				}[transition]
 			}
 		}),
-		cardStyle: {shadowColor: 'transparent'},
 		gestures: {},
 	}
 )

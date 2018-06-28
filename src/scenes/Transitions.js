@@ -20,12 +20,12 @@ export const cardFromRight = (sceneProps) => {
 	const width = layout.initWidth;
 	const translateX = position.interpolate({
 		inputRange: [index - 1, index, index + 1],
-		outputRange: [width / 4, 0, 0]
+		outputRange: [width, 0, 0]
 	});
 
 	const opacity = position.interpolate({
 		inputRange: [index - 1, index, index + 1],
-		outputRange: [0, 1, 0.5]
+		outputRange: [0.5, 1, 0.5]
 	})
 
 	return {opacity, transform: [{translateX}]};
@@ -99,10 +99,5 @@ export const defaultTransition = (sceneProps) => {
 		outputRange,
 	});
 
-	return {
-		opacity,
-		transform: [
-			{scaleY}
-		]
-	};
+	return {}
 };

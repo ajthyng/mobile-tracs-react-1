@@ -83,7 +83,7 @@ export function getSiteInfo(netid) {
 		}, {});
 
 		let siteLoadTime = new Date() - startTime;
-		//setTimeout(() => dispatch(sitesSuccess(userSites, siteLoadTime)), 3000);
-		dispatch(sitesSuccess(userSites, siteLoadTime))
+		setTimeout(() => dispatch(sitesSuccess(userSites, siteLoadTime)), 3000);
+		//dispatch(sitesSuccess(userSites, siteLoadTime))
 	}
 }

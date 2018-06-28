@@ -20,83 +20,22 @@ const CourseListContainer = styled.View`
 	width: 100%;
 `
 
+const loadingSites = [
+	{ key: '0'},
+	{ key: '1'},
+	{ key: '2'},
+	{ key: '3'},
+	{ key: '4'},
+	{ key: '5'},
+	{ key: '6'}
+]
+
 class CourseList extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
 			y: 0
 		}
-		this.data = [
-			{
-				key: '0',
-				name: "Class Name 103.456",
-				instructor: "Professor Xavier",
-				grades: [
-					{name: "Gradebook Item 1", grade: 90, points: 100},
-					{name: "Gradebook Item 2", grade: 90, points: 100},
-					{name: "Gradebook Item 3", grade: null, points: 100},
-					{name: "Gradebook Item 4", grade: 89.95, points: 100}
-				]
-			},
-			{
-				key: '1',
-				name: "US 1100 random digits and stuff",
-				instructor: "Professor Wolverine",
-				grades: [
-					{name: "Gradebook Item 0", grade: 45, points: 50}
-				]
-			},
-			{
-				key: '2',
-				name: "CS 1301 2018.2.1080",
-				instructor: "Professor Phillip",
-				grades: []
-			},
-			{
-				key: '3',
-				name: "Class Name 103.456",
-				instructor: "Professor Xavier",
-				grades: [
-					{name: "Gradebook Item 1", grade: 90, points: 100},
-					{name: "Gradebook Item 2", grade: 90, points: 100},
-					{name: "Gradebook Item 3", grade: 90, points: 100},
-					{name: "Gradebook Item 4", grade: 89.95, points: 100}
-				]
-			},
-			{
-				key: '4',
-				name: "Class Name 103.456",
-				instructor: "Professor Xavier",
-				grades: [
-					{name: "Gradebook Item 1", grade: 90, points: 100},
-					{name: "Gradebook Item 2", grade: 90, points: 100},
-					{name: "Gradebook Item 3", grade: 90, points: 100},
-					{name: "Gradebook Item 4", grade: 89.95, points: 100}
-				]
-			},
-			{
-				key: '5',
-				name: "HST 103.456 v2018.1030",
-				instructor: "Professor Cyclops",
-				grades: [
-					{name: "Gradebook Item 1", grade: 90, points: 100},
-					{name: "Gradebook Item 2", grade: 90, points: 100},
-					{name: "Gradebook Item 3", grade: 90, points: 100},
-					{name: "Gradebook Item 4", grade: 89.95, points: 100}
-				]
-			},
-			{
-				key: '6',
-				name: "Worst Class Ever 👌👌",
-				instructor: "Professor Metal Guy",
-				grades: [
-					{name: "Gradebook Item 1", grade: 90, points: 100},
-					{name: "Gradebook Item 2", grade: 90, points: 100},
-					{name: "Gradebook Item 3", grade: 90, points: 100},
-					{name: "Gradebook Item 4", grade: 89.95, points: 100}
-				]
-			},
-		]
 		this._scrollY = new Animated.Value(0)
 		props.setScrollY(this._scrollY)
 	}
@@ -133,18 +72,33 @@ class CourseList extends Component {
 	}
 
 	renderCourses = (loading) => {
+		const {sites} = this.props
 		if (loading) {
-			return this.data.map(({key}) => (
+			return loadingSites.map(({key}) => (
 				<CourseSkeletonCard key={key} />
 			))
 		} else {
-			return this.data.map(item => (
-				<CourseCard {...item} goToCourse={this.goToCourse(item)}/>
+			return sites.map((item, index) => (
+				<CourseCard
+					{...item}
+					key={index.toString(10)}
+					goToCourse={this.goToCourse(item)}
+				/>
 			))
 		}
 	}
 
 	render() {
+		const eventAnimation = null
+		//const eventAnimation = Animated.event(
+		//	[{nativeEvent: {contentOffset: {y: this._scrollY}}}],
+		//	{
+		//		useNativeDriver: true,
+		//		listener: ({nativeEvent: {contentOffset: {y}}}) => {
+		//			this.setState({y})
+		//		}
+		//	}
+		//)
 		return (
 			<CourseListContainer>
 				<Animated.ScrollView
@@ -152,15 +106,7 @@ class CourseList extends Component {
 						scrollTo: () => {
 						}
 					}}
-					onScroll={Animated.event(
-						[{nativeEvent: {contentOffset: {y: this._scrollY}}}],
-						{
-							useNativeDriver: true,
-							listener: ({nativeEvent: {contentOffset: {y}}}) => {
-								this.setState({y})
-							}
-						}
-					)}
+					onScroll={eventAnimation}
 					onScrollEndDrag={this.onScrollEndSnapToEdge}
 					scrollEventThrottle={16}
 				>
@@ -175,8 +121,13 @@ class CourseList extends Component {
 }
 
 const mapStateToProps = (state) => {
+	const sites = Object.keys(state.tracsSites.userSites).reduce((accum, siteId) => {
+		accum.push(state.tracsSites.userSites[siteId])
+		return accum
+	}, [])
 	return {
-		isCollapsed: state.header.isCollapsed
+		isCollapsed: state.header.isCollapsed,
+		sites
 	}
 }
 

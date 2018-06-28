@@ -21,7 +21,7 @@ const CardBoundary = styled.View`
 	margin: 10px;
 	border-radius: ${props => props.borderRad || 0};
 	flex-direction: row;
-	shadow-color: ${props => props.theme.courseCardShadow};
+	shadow-color: #A0A0A0;
 	shadow-offset: 1px 2px;
 	shadow-opacity: 0.4;
 	shadow-radius: 1px;

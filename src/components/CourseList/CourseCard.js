@@ -155,7 +155,8 @@ class CourseCard extends Component {
 	}
 
 	render() {
-		let {name, instructor, grades, borderRadius} = this.props;
+		let instructor = this.props.contactInfo.name
+		let {name, borderRadius, grades} = this.props
 		let points = grades.reduce((accum, {grade, points}) => {
 			accum.earned += grade;
 			accum.total += points;
