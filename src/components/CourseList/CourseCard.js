@@ -3,6 +3,7 @@ import {Platform, View, StyleSheet, Animated, Text} from 'react-native';
 import Ripple from 'react-native-material-ripple';
 import styled, { withTheme } from 'styled-components';
 import { Transition } from 'react-navigation-fluid-transitions'
+import { connect } from 'react-redux'
 
 const HEIGHT = 100;
 
@@ -157,9 +158,11 @@ class CourseCard extends Component {
 	render() {
 		let instructor = this.props.contactInfo.name
 		let {name, borderRadius, grades} = this.props
-		let points = grades.reduce((accum, {grade, points}) => {
-			accum.earned += grade;
-			accum.total += points;
+		let points = grades.reduce((accum, gradeItem) => {
+			if (gradeItem.grade !== null) {
+				accum.earned += parseInt(gradeItem.grade, 10);
+			}
+			accum.total += gradeItem.points;
 			return accum;
 		}, {earned: null, total: null});
 
@@ -199,4 +202,11 @@ CourseCard.defaultProps = {
 	grades: []
 };
 
-export default withTheme(CourseCard);
+const mapStateToProps = (state, props) => {
+	let siteGrades = state.grades[props.id]
+	return {
+		grades: siteGrades.grades
+	}
+}
+
+export default connect(mapStateToProps, null)(withTheme(CourseCard))

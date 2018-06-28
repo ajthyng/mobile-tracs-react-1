@@ -17,7 +17,6 @@ const {
 } = gradesActions
 
 export const initialState = {
-	grades: [],
 	isLoading: false,
 	errorMessage: ''
 }
@@ -28,15 +27,28 @@ const requestGrades = (state, action) => ({
 	errorMessage: ''
 })
 
-const gradesSuccess = (state, action) => ({
-	isLoading: false,
-	grades: action.grades || [],
-	errorMessage: ''
-})
+const gradesSuccess = (state, action) => {
+	const { grades } = action
+	let gradesBySiteId = grades.reduce((accum, site) => {
+		accum[site.siteId] = {
+			name: site.siteName || null,
+			id: site.siteId || null,
+			grades: site.assignments || []
+		}
+		return accum
+	}, {})
+
+	return {
+		...state,
+		...gradesBySiteId,
+		isLoading: false,
+		errorMessage: ''
+	}
+}
 
 const gradesFailure = (state, action) => ({
-	...state,
-	error: (action.error || {}).errorMessage || 'No Error Message Provided'
+	...initialState,
+	errorMessage: (action.error || {}).errorMessage || 'No Error Message Provided'
 })
 
 export function gradesReducer (state = initialState, action) {

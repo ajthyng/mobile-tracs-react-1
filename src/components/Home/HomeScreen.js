@@ -76,7 +76,7 @@ class HomeScreen extends Component {
 	}
 
 	componentDidMount () {
-		this.props.getSites()
+		this.props.getSites(this.props.netid)
 		this.props.getGrades()
 	}
 
@@ -109,7 +109,7 @@ const mapDispatchToProps = (dispatch, props) => {
 				dispatch(setHeaderState(isCollapsed))
 			}
 		},
-		getSites: () => dispatch(getSiteInfo(props.netid)),
+		getSites: (netid) => dispatch(getSiteInfo(netid)),
 		getGrades: () => dispatch(getGrades())
 	}
 };
