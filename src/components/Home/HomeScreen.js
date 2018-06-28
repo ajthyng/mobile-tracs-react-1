@@ -9,6 +9,7 @@ import CourseList from '../CourseList/CourseList';
 import Header from '../CircleHeader/Header';
 import {setHeaderState} from '../../actions/header';
 import {getSiteInfo} from '../../actions/sites'
+import {getGrades} from '../../actions/grades'
 import styled from 'styled-components';
 
 const Home = styled.View`
@@ -76,6 +77,7 @@ class HomeScreen extends Component {
 
 	componentDidMount () {
 		this.props.getSites()
+		this.props.getGrades()
 	}
 
 	render () {
@@ -107,7 +109,8 @@ const mapDispatchToProps = (dispatch, props) => {
 				dispatch(setHeaderState(isCollapsed))
 			}
 		},
-		getSites: () => dispatch(getSiteInfo(props.netid))
+		getSites: () => dispatch(getSiteInfo(props.netid)),
+		getGrades: () => dispatch(getGrades())
 	}
 };
 

@@ -8,6 +8,7 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import {haxios as axios} from '../utils/networking'
 import {gradesActions} from '../constants/actions'
 
 const {
@@ -35,6 +36,13 @@ export const getGrades = (dispatch) => (
 		const start = new Date()
 		dispatch(requestGrades())
 
+		const url = `${global.urls.baseUrl}${global.urls.grades}`
 
+		axios(url, {method: 'get'}).then(res => {
+			const {gradebook_collection} = res.data
+			dispatch(gradesSuccess(gradebook_collection))
+		}).catch(err => {
+			dispatch(gradesFailure(err))
+		})
 	}
 )

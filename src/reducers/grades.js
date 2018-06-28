@@ -30,7 +30,7 @@ const requestGrades = (state, action) => ({
 
 const gradesSuccess = (state, action) => ({
 	isLoading: false,
-	grades: action.grades,
+	grades: action.grades || [],
 	errorMessage: ''
 })
 
