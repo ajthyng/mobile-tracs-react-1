@@ -116,29 +116,42 @@ const GradeRightBorder = (props) => {
 	);
 };
 
-const gradeAsLetter = (grade) => {
-	switch (true) {
-		case 90 <= grade && grade <= 100:
-			return 'A';
-		case 80 <= grade && grade < 90:
-			return 'B';
-		case 70 <= grade && grade < 80:
-			return 'C';
-		case 60 <= grade && grade < 70:
-			return 'D';
-		case 50 <= grade && grade < 60:
-			return 'F';
-		default:
-			return 'F'
-	}
-};
-
-const formatGrade = ({earned, total}) => {
-	const percentage = +((earned / total) * 100).toFixed(2);
-	return `${gradeAsLetter(percentage)}\n(${percentage}%)`
-};
-
 class CourseCard extends Component {
+	static calculateGrade = (grades) => {
+		return grades.reduce((accum, gradeItem) => {
+			if (gradeItem.grade !== null) {
+				accum.earned += parseFloat(gradeItem.grade, 10)
+				accum.total += gradeItem.points
+			}
+
+			return accum;
+		}, {earned: null, total: null});
+	}
+
+	static gradeAsLetter = (grade) => {
+		switch (true) {
+			case 90 <= grade && grade <= 100:
+				return 'A';
+			case 80 <= grade && grade < 90:
+				return 'B';
+			case 70 <= grade && grade < 80:
+				return 'C';
+			case 60 <= grade && grade < 70:
+				return 'D';
+			case 50 <= grade && grade < 60:
+				return 'F';
+			default:
+				return 'F'
+		}
+	}
+
+	static formatGrade = ({earned, total}) => {
+		if (earned === null || total === null) return '--'
+		const percentage = +((earned / total) * 100).toFixed(2);
+		const letterGrade = CourseCard.gradeAsLetter(percentage)
+		return `${letterGrade}\n(${percentage}%)`
+	};
+
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -158,13 +171,7 @@ class CourseCard extends Component {
 	render() {
 		let instructor = this.props.contactInfo.name
 		let {name, borderRadius, grades} = this.props
-		let points = grades.reduce((accum, gradeItem) => {
-			if (gradeItem.grade !== null) {
-				accum.earned += parseInt(gradeItem.grade, 10);
-			}
-			accum.total += gradeItem.points;
-			return accum;
-		}, {earned: null, total: null});
+		let points = CourseCard.calculateGrade(grades)
 
 		let hasGrade = points.earned !== null;
 
@@ -179,7 +186,7 @@ class CourseCard extends Component {
 					<GradeContainer borderRad={borderRadius}>
 						<SideBar hasGrade={hasGrade} borderRad={borderRadius}/>
 						<GradeValueContainer>
-							<Grade hasGrade={hasGrade}>{!hasGrade ? "--" : formatGrade(points)}</Grade>
+							<Grade hasGrade={hasGrade}>{CourseCard.formatGrade(points)}</Grade>
 						</GradeValueContainer>
 					</GradeContainer>
 					<GradeRightBorder dashStyle={hasGrade ? '' : 'dash'} color={this.props.theme.dashColor}/>

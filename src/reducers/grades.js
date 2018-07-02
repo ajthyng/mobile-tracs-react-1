@@ -28,12 +28,14 @@ const requestGrades = (state, action) => ({
 })
 
 const gradesSuccess = (state, action) => {
-	const { grades } = action
-	let gradesBySiteId = grades.reduce((accum, site) => {
-		accum[site.siteId] = {
-			name: site.siteName || null,
-			id: site.siteId || null,
-			grades: site.assignments || []
+	const {grades} = action
+	let gradesBySiteId = (grades || []).reduce((accum, site) => {
+		if (site.hasOwnProperty('siteId')) {
+			accum[site.siteId] = {
+				name: site.siteName || null,
+				id: site.siteId || null,
+				grades: site.assignments || []
+			}
 		}
 		return accum
 	}, {})
@@ -51,11 +53,15 @@ const gradesFailure = (state, action) => ({
 	errorMessage: (action.error || {}).errorMessage || 'No Error Message Provided'
 })
 
-export function gradesReducer (state = initialState, action) {
+export function gradesReducer(state = initialState, action) {
 	switch (action.type) {
-		case REQUEST_GRADES: return requestGrades(state, action)
-		case GRADES_SUCCESS: return gradesSuccess(state, action)
-		case GRADES_FAILURE: return gradesFailure(state, action)
-		default: return state
+		case REQUEST_GRADES:
+			return requestGrades(state, action)
+		case GRADES_SUCCESS:
+			return gradesSuccess(state, action)
+		case GRADES_FAILURE:
+			return gradesFailure(state, action)
+		default:
+			return state
 	}
 }
