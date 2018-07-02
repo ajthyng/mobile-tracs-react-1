@@ -35,14 +35,15 @@ class Profile extends Component {
 	kitten = Math.floor(Math.random() * 200)
 
 	render() {
+		const {name, diameter} = this.props
 		return (
 			<StyledProfile>
 				<ProfileImage
-					diameter={this.props.diameter * 0.4}
+					diameter={diameter * 0.4}
 					source={{uri: `https://placekitten.com/200/${this.kitten}`}}
 				/>
 				<ProfileText>
-					Maria
+					{name}
 				</ProfileText>
 			</StyledProfile>
 		)
@@ -50,7 +51,8 @@ class Profile extends Component {
 }
 
 Profile.defaultProps = {
-	diameter: 60
+	diameter: 60,
+	name: 'Maria'
 }
 
 export default Profile

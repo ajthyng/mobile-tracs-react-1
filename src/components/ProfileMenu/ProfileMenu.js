@@ -71,9 +71,11 @@ class CustomMenuRenderer extends Component {
 
 class ProfileMenu extends Component {
 	render() {
+		const {navigation: {navigate}} = this.props
+
 		return (
 			<Menu renderer={CustomMenuRenderer} rendererProps={{top: (this.props.offset || 0) * 0.8}}
-						onSelect={val => this.props.navigation.navigate(val, {transition: 'cardFromRight'})}>
+						onSelect={val => navigate(val, {transition: 'cardFromRight'})}>
 				<MenuTrigger>
 					<Profile
 						size={28}

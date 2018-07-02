@@ -204,8 +204,9 @@ CourseCard.defaultProps = {
 
 const mapStateToProps = (state, props) => {
 	let siteGrades = state.grades[props.id]
+	let grades = (siteGrades || {}).grades || []
 	return {
-		grades: siteGrades.grades
+		grades
 	}
 }
 
