@@ -33,3 +33,5 @@ config.tar
 
 # Bundle artifact
 *.jsbundle
+
+/tests/utils/gradebook_collection.csv
