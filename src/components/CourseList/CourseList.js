@@ -11,7 +11,7 @@ import CourseSkeletonCard from './CourseSkeletonCard'
 
 const HeaderSpacer = styled.View`
 	flex: 0;
-	height: ${Header.MIN_HEIGHT + 10};
+	height: ${Header.MAX_HEIGHT + Header.CIRCLE_DIAMETER / 2};
 	width: 100%;
 `
 
@@ -19,6 +19,8 @@ const CourseListContainer = styled.View`
 	flex: 1;
 	width: 100%;
 `
+
+const CourseFlatList = Animated.createAnimatedComponent(FlatList)
 
 const loadingSites = [
 	{ key: '0'},
@@ -89,16 +91,15 @@ class CourseList extends Component {
 	}
 
 	render() {
-		const eventAnimation = null
-		//const eventAnimation = Animated.event(
-		//	[{nativeEvent: {contentOffset: {y: this._scrollY}}}],
-		//	{
-		//		useNativeDriver: true,
-		//		listener: ({nativeEvent: {contentOffset: {y}}}) => {
-		//			this.setState({y})
-		//		}
-		//	}
-		//)
+		const eventAnimation = Animated.event(
+			[{nativeEvent: {contentOffset: {y: this._scrollY}}}],
+			{
+				useNativeDriver: true,
+				listener: ({nativeEvent: {contentOffset: {y}}}) => {
+					this.setState({y})
+				}
+			}
+		)
 		return (
 			<CourseListContainer>
 				<Animated.ScrollView

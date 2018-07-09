@@ -145,11 +145,9 @@ class CourseCard extends Component {
 		}
 	}
 
-	static formatGrade = ({earned, total}) => {
-		if (earned === null || total === null) return '--'
-		const percentage = +((earned / total) * 100).toFixed(2);
-		const letterGrade = CourseCard.gradeAsLetter(percentage)
-		return `${letterGrade}\n(${percentage}%)`
+	static formatGrade = ({calculatedGrade, mappedGrade}) => {
+		if (!calculatedGrade || !mappedGrade) return '--'
+		return `${mappedGrade}\n(${Number(calculatedGrade).toFixed(2)}%)`
 	};
 
 	constructor(props) {
@@ -170,14 +168,14 @@ class CourseCard extends Component {
 
 	render() {
 		let instructor = this.props.contactInfo.name
-		let {name, borderRadius, grades} = this.props
+		let {name, borderRadius, siteGrades, grades} = this.props
 		let points = CourseCard.calculateGrade(grades)
 
 		let hasGrade = points.earned !== null;
 
 		const fadeIn = this.state.animation.interpolate({
 			inputRange: [0, 1],
-			outputRange: [0, 1]
+			outputRange: [0.4, 1]
 		})
 
 		return (
@@ -186,7 +184,7 @@ class CourseCard extends Component {
 					<GradeContainer borderRad={borderRadius}>
 						<SideBar hasGrade={hasGrade} borderRad={borderRadius}/>
 						<GradeValueContainer>
-							<Grade hasGrade={hasGrade}>{CourseCard.formatGrade(points)}</Grade>
+							<Grade hasGrade={hasGrade}>{CourseCard.formatGrade(siteGrades)}</Grade>
 						</GradeValueContainer>
 					</GradeContainer>
 					<GradeRightBorder dashStyle={hasGrade ? '' : 'dash'} color={this.props.theme.dashColor}/>
@@ -213,7 +211,8 @@ const mapStateToProps = (state, props) => {
 	let siteGrades = state.grades[props.id]
 	let grades = (siteGrades || {}).grades || []
 	return {
-		grades
+		grades,
+		siteGrades: siteGrades || {}
 	}
 }
 

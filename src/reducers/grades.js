@@ -34,6 +34,8 @@ const gradesSuccess = (state, action) => {
 			accum[site.siteId] = {
 				name: site.siteName || null,
 				id: site.siteId || null,
+				calculatedGrade: site.calculatedGrade || null,
+				mappedGrade: site.mappedGrade || null,
 				grades: site.assignments || []
 			}
 		}

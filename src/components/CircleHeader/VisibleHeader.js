@@ -15,7 +15,7 @@ const Container = styled(Animated.View)`
 		shadow-opacity: 0.5;
 		shadow-offset: 0px 2px;
 		shadow-radius: 2;
-`;
+`
 
 const StyledImage = styled.Image`
 	height: 100%;
@@ -32,13 +32,20 @@ const Overlay = styled(Animated.createAnimatedComponent(LinearGradient))`
 
 class VisibleHeader extends Component {
 	render() {
-		const { scrollAnimation, theme } = this.props
+		const {scrollAnimation, theme} = this.props
+		let image = null
+		if (this.props.withImage) {
+			image = (
+				<StyledImage
+					{...this.props}
+					source={require('../../../img/old_main.jpg')}
+					blurRadius={6}
+				/>
+			)
+		}
 		return (
 			<Container {...this.props} style={{transform: scrollAnimation.transform}}>
-				<StyledImage {...this.props}
-										 source={require('../../../img/old_main.jpg')}
-										 blurRadius={6}
-				/>
+				{image}
 				<Overlay
 					style={{opacity: scrollAnimation.opacity}}
 					colors={[theme.header, theme.header]}

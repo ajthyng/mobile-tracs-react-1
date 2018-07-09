@@ -104,7 +104,7 @@ class Header extends Component {
 			activeIcon: Header.ICON.HOME,
 			topRowHeight: 0
 		};
-		this.animationRange = new Animated.Value(1)
+		this.animationRange = props.animationRange
 	}
 
 	componentDidMount() {

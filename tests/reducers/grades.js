@@ -76,8 +76,8 @@ it('should add ridiculous grades up', () => {
 	expect(formattedGrade).toEqual(`A\n(93.26%)`)
 })
 
-it('should handle empty grades array', () => {
-	const grades = []
+it('should handle empty missing grades', () => {
+	const grades = {}
 
 	const calculatedGrade = CourseCard.calculateGrade(grades)
 	const formattedGrade = CourseCard.formatGrade(calculatedGrade)
@@ -152,43 +152,4 @@ it('should handle missing site name from gradebook collection', () => {
 	}
 	console.log(JSON.stringify(state))
 	expect(gradesReducer(state, gradeSuccess(gradebook_collection))).toMatchObject(state)
-})
-
-it('should handle a random length array of random grade', () => {
-	let total = null
-	let earned = null
-	let grades = []
-	for (let i = 0; i < Math.floor(Math.random() * 100); i++) {
-		let points = 50
-		let grade = null
-		if (Math.random() > 0.5) {
-			points = getRandom(2, 10000)
-			grade = getRandom(1, points)
-			earned += grade
-		}
-		if (grade !== null) total += points
-		grades.push(makeGrade(points, grade))
-	}
-
-	const calculatedGrade = CourseCard.calculateGrade(grades)
-	const percentage = +((earned / total) * 100).toFixed(2)
-	const formattedGrade = CourseCard.formatGrade(calculatedGrade)
-
-	expect(calculatedGrade).toMatchObject({earned, total})
-	expect(formattedGrade).toEqual(`${CourseCard.gradeAsLetter(percentage)}\n(${percentage}%)`)
-})
-
-it('should handle full class of grades', async () => {
-	const gradeData = await readGrades().then(data => data)
-
-	gradeData.forEach(gradeRow => {
-		let total = gradeRow.total
-		let earned = gradeRow.earned
-		const calculatedGrade = CourseCard.calculateGrade(gradeRow.student)
-		const percentage = +(gradeRow.calculated * 100).toFixed(2)
-		const formattedGrade = CourseCard.formatGrade(calculatedGrade)
-
-		expect(calculatedGrade).toMatchObject({earned, total})
-		expect(formattedGrade).toEqual(`${CourseCard.gradeAsLetter(percentage)}\n(${percentage}%)`)
-	})
 })

@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import {Image, Platform, View, StyleSheet, Text, Animated} from 'react-native';
-import styled from 'styled-components';
+import styled, {withTheme} from 'styled-components';
 import Ripple from 'react-native-material-ripple';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Toggle from '../Toggle'
 
 const AnimatedRipple = styled(Animated.createAnimatedComponent(Ripple))`
 	height: ${props => props.diameter};
@@ -37,4 +38,4 @@ class ProjectIcon extends Component {
 	}
 }
 
-export default ProjectIcon;
+export default withTheme(ProjectIcon)

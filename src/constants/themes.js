@@ -31,6 +31,8 @@ const defaultTheme = {
 	screenHeaderBorder: '#36353480',
 	gradeSummaryContainerBorder: '#36353480',
 	gradeItemQuotient: '#D3D3D3',
+	toggleOn: '#4a89f4',
+	toggleTint: '#b0b0b0',
 	assignments: [
 		'#fe4880',
 		'#6953c6',
