@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {View, FlatList, Animated, StyleSheet, Text} from 'react-native'
+import {View, FlatList, Animated, StyleSheet, Text, LayoutAnimation, UIManager} from 'react-native'
 
 import {connect} from 'react-redux'
 import {setScrollY, setHeaderState} from '../../actions/header'
@@ -8,6 +8,9 @@ import styled from 'styled-components'
 import Header from '../CircleHeader/Header'
 import CourseCard from './CourseCard'
 import CourseSkeletonCard from './CourseSkeletonCard'
+
+UIManager.setLayoutAnimationEnabledExperimental &&
+UIManager.setLayoutAnimationEnabledExperimental(true);
 
 const HeaderSpacer = styled.View`
 	flex: 0;
@@ -122,6 +125,9 @@ const mapStateToProps = (state) => {
 		accum.push(state.tracsSites.userSites[siteId])
 		return accum
 	}, []).filter(state.tracsSites.filter(state.tracsSites.favorites))
+	if (!state.tracsSites.isFetchingSites && !state.tracsSites.isFetchingFavorites) {
+		LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+	}
 	return {
 		isCollapsed: state.header.isCollapsed,
 		sites
