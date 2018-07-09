@@ -57,14 +57,6 @@ const MainNavigator = createStackNavigator(
 		},
 		Settings: {
 			screen: SettingsScreen,
-			navigationOptions: {
-				header: (props) => <RNHeader {...props} />,
-				headerLeft: (props) => {
-					return <HeaderBackButton {...props} />
-				},
-				headerTintColor: store.getState().theme.lightText,
-				headerStyle: {backgroundColor: store.getState().theme.header}
-			}
 		}
 	}, {
 		initialRouteName: 'Home',

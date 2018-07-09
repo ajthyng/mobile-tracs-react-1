@@ -25,23 +25,21 @@ const RightLabel = styled.Text`
 	text-align: center;
 `
 
-const setSiteFilter = (on) => {
-	const favoritesFilter = (favorites) => (site) => favorites.contains(site.id)
-	const noFilter = (favorites) => (site) => true
-
-	return on ? noFilter : favoritesFilter
-}
-
 class AdditionalContent extends Component {
 	render() {
-		const {visible, setFilter} = this.props
+		const {visible, setFilter, allSitesFilter, onValueChange} = this.props
+
 		return visible ? (
 			<Container>
 				<LeftLabel>Favorites</LeftLabel>
-				<Toggle width={36} height={16} disabledColor='lightgray' activeColor='dodgerblue' onValueChange={(on) => {
-					const siteFilter = setSiteFilter(on)
-					setFilter(siteFilter)
-				}} />
+				<Toggle
+					width={36}
+					height={16}
+					disabledColor='lightgray'
+					activeColor='dodgerblue'
+					onValueChange={onValueChange}
+					on={allSitesFilter}
+				/>
 				<RightLabel>All{'\n'}Sites</RightLabel>
 			</Container>
 		) : null

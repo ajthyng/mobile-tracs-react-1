@@ -32,15 +32,13 @@ const ProfileText = styled.Text`
 `
 
 class ProfileMenuProfile extends Component {
-	kitten = Math.floor(Math.random() * 200)
-
 	render() {
 		const {size, diameter} = this.props
 		return (
 			<StyledProfile>
 				<ProfileImage
 					diameter={diameter}
-					source={{uri: `https://placekitten.com/200/${this.kitten}`}}
+					source={{uri: `https://placekitten.com/200/201`}}
 				/>
 				<ProfileText size={size}>
 					Maria

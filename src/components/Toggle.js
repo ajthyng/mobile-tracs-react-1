@@ -35,8 +35,8 @@ const ToggleThumb = styled(Animated.View)`
 
 class Toggle extends Component {
 	state = {
-		on: false,
-		animationRange: new Animated.Value(0)
+		on: this.props.on,
+		animationRange: new Animated.Value(this.props.on ? 1 : 0)
 	}
 
 	toggle = () => {
@@ -56,6 +56,7 @@ class Toggle extends Component {
 
 	render() {
 		const {disabledColor, activeColor, width, height, ios} = this.props
+		const {on} = this.state
 
 		const diameter = height * 1.25
 		const thumbEndPosition = ios ? diameter + 4 : height * 0.9
@@ -71,9 +72,9 @@ class Toggle extends Component {
 					toggleWidth={ios ? width : width + diameter}
 					toggleHeight={height}
 				>
-					<ToggleTrack on={this.state.on} {...this.props} />
+					<ToggleTrack {...this.props} on={on} />
 					<ToggleThumb
-						on={this.state.on}
+						on={on}
 						style={{transform: [{translateX}]}}
 						trackHeight={height}
 						diameter={diameter}
@@ -92,6 +93,7 @@ Toggle.defaultProps = {
 	onValueChange: () => {},
 	width: 16,
 	height: 36,
+	on: false,
 	activeColor: '#501214',
 	disabledColor: 'gray'
 }

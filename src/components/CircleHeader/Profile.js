@@ -24,15 +24,13 @@ const ProfileText = styled.Text`
 `
 
 class Profile extends Component {
-	kitten = Math.floor(Math.random() * 200)
-
 	render() {
 		const {name, diameter} = this.props
 		return (
 			<StyledProfile>
 				<ProfileImage
 					diameter={diameter * 0.4}
-					source={{uri: `https://placekitten.com/200/${this.kitten}`}}
+					source={{uri: `https://placekitten.com/200/201`}}
 				/>
 				<ProfileText>
 					{name}

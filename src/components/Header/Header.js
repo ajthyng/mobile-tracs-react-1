@@ -1,6 +1,8 @@
 import React, {Component} from 'react'
 import {StatusBar, Platform} from 'react-native'
 import styled, {withTheme} from 'styled-components'
+import {connect} from 'react-redux'
+import {setFilter} from '../../actions/sites'
 
 import StatusBarSpace from './StatusBarSpace'
 import Content from './Content'
@@ -13,6 +15,13 @@ const HeaderContainer = styled.View`
   width: 100%;
 `
 
+const setSiteFilter = (on) => {
+	const favoritesFilter = (favorites) => (site) => favorites.contains(site.id)
+	const noFilter = (favorites) => (site) => true
+
+	return on ? noFilter : favoritesFilter
+}
+
 class Header extends Component {
 	constructor(props) {
 		super(props)
@@ -21,6 +30,10 @@ class Header extends Component {
 			ios: 20,
 			android: StatusBar.currentHeight
 		})
+
+		this.state = {
+			allSitesFilter: false
+		}
 	}
 
 	getActiveRouteName = (navigationState) => {
@@ -35,17 +48,30 @@ class Header extends Component {
 		return route.routeName;
 	}
 
+	onValueChange = (on) => {
+		this.setState({allSitesFilter: on})
+		this.props.setFilter(setSiteFilter(on))
+	}
+
 	render() {
 		const currentRoute = this.getActiveRouteName(this.props.navigation.state)
-
+		const {allSitesFilter} = this.state
 		return (
 			<HeaderContainer>
 				<StatusBarSpace statusBarHeight={this.statusBarHeight} />
 				<Content {...this.props}/>
-				<AdditionalContent visible={currentRoute === 'Home'}/>
+				<AdditionalContent
+					allSitesFilter={allSitesFilter}
+					visible={currentRoute === 'Home'}
+					onValueChange={this.onValueChange}
+				/>
 			</HeaderContainer>
 		)
 	}
 }
 
-export default withTheme(Header)
+const mapDispatchToProps = dispatch => ({
+	setFilter: filter => dispatch(setFilter(filter))
+})
+
+export default connect(null, mapDispatchToProps)(withTheme(Header))
