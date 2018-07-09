@@ -107,11 +107,7 @@ class CourseList extends Component {
 						scrollTo: () => {
 						}
 					}}
-					onScroll={eventAnimation}
-					onScrollEndDrag={this.onScrollEndSnapToEdge}
-					scrollEventThrottle={16}
 				>
-					<HeaderSpacer/>
 					{
 						this.renderCourses(this.props.loading)
 					}

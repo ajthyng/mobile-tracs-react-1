@@ -19,13 +19,7 @@ const ContainerView = styled.View`
 `;
 
 const CalendarView = styled(Calendar)`
-	flex: 1;
 	width: 100%;
-	margin-bottom: 20px;
-`;
-
-const HeaderSpacer = styled.View`
-	height: ${Header.MIN_HEIGHT + 10}px;
 `;
 
 const DueDatesList = styled(FlatList)`
@@ -103,7 +97,6 @@ class CalendarScreen extends Component {
 	render() {
 		return (
 			<ContainerView>
-				<HeaderSpacer />
 				<CalendarView
 					current={new Date()}
 					minDate={'2018-05-01'}

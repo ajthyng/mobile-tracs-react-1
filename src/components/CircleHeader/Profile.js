@@ -3,19 +3,11 @@ import {Image, Platform, View, StyleSheet, Text, Animated} from 'react-native'
 import styled from 'styled-components'
 import Ripple from 'react-native-material-ripple'
 
-const AnimatedRipple = styled(Animated.createAnimatedComponent(Ripple))`
-	flex-direction: row;
-	align-items: center;
-	justify-content: center;
-	z-index: 4;
-`
-
 const StyledProfile = styled.View`
 	background-color: transparent;
 	flex-direction: row;
 	align-items: center;
 	justify-content: center;
-	margin-right: 6px;
 `
 
 const ProfileImage = styled.Image`

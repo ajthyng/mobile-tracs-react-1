@@ -50,7 +50,7 @@ class CustomMenuRenderer extends Component {
 
 	render() {
 		const {style, children, layouts, top, ...other} = this.props
-		const width = layouts.windowLayout.width * 0.5
+		const width = layouts.windowLayout.width * 0.65
 		const layout = {top: -top, right: 0, height: '100%', position: 'absolute', width}
 		const animation = {
 			transform: [{
@@ -74,7 +74,7 @@ class ProfileMenu extends Component {
 		const {navigation: {navigate}} = this.props
 
 		return (
-			<Menu renderer={CustomMenuRenderer} rendererProps={{top: (this.props.offset || 0) * 0.8}}
+			<Menu renderer={CustomMenuRenderer} rendererProps={{top: 0}}
 						onSelect={val => navigate(val, {transition: 'cardFromRight'})}>
 				<MenuTrigger>
 					<Profile
@@ -84,17 +84,17 @@ class ProfileMenu extends Component {
 				</MenuTrigger>
 				<MenuOptions customStyles={optionStyles(this.props)}>
 					<ProfileMenuProfile size={22} diameter={50} />
-					<MenuOption value="Settings" customStyles={{optionWrapper: optionStyles(this.props).topOption}}>
-						<ProfileMenuOption label="Settings" icon="cog" size={22}/>
+					<MenuOption value='Settings' customStyles={{optionWrapper: optionStyles(this.props).topOption}}>
+						<ProfileMenuOption label='Settings' icon='cog' size={22} />
 					</MenuOption>
-					<MenuOption value="Feedback">
-						<ProfileMenuOption label="Feedback" icon="comments-o" size={22}/>
+					<MenuOption value='Feedback'>
+						<ProfileMenuOption label='Feedback' icon='comments-o' size={22} />
 					</MenuOption>
-					<MenuOption value="Support">
-						<ProfileMenuOption label="Support" icon="question-circle-o" size={22}/>
+					<MenuOption value='Support'>
+						<ProfileMenuOption label='Support' icon='question-circle-o' size={22} />
 					</MenuOption>
-					<MenuOption value="Logout" onSelect={this.props.logout}>
-						<ProfileMenuOption label="Logout" icon="logout" size={22} iconFamily='SimpleLineIcons'/>
+					<MenuOption value='Logout' onSelect={this.props.logout}>
+						<ProfileMenuOption label='Logout' icon='logout' size={22} iconFamily='SimpleLineIcons' />
 					</MenuOption>
 				</MenuOptions>
 			</Menu>
@@ -104,7 +104,7 @@ class ProfileMenu extends Component {
 
 const optionStyles = (props) => ({
 	optionsContainer: {
-		marginTop: (props.offset || 0) * 0.8,
+		marginTop: 0,
 		paddingTop: 40,
 		paddingLeft: 0,
 		paddingRight: 0,
@@ -121,7 +121,7 @@ const optionStyles = (props) => ({
 
 const mapDispatchToProps = dispatch => ({
 	logout: () => {
-		Storage.credentials.reset();
+		Storage.credentials.reset()
 		dispatch(logout())
 	}
 })

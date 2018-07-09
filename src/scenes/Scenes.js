@@ -10,7 +10,7 @@
 
 import LoginScreen from '../_components/Login/LoginScreen'
 import HomeScreen from '../components/Home/HomeScreen'
-import Header from '../components/CircleHeader/Header'
+import Header from '../components/Header/Header'
 
 import React from 'react'
 import {View, Easing, Platform, Animated, Dimensions, Text} from 'react-native'
@@ -59,9 +59,9 @@ const MainNavigator = createStackNavigator(
 			screen: SettingsScreen,
 			navigationOptions: {
 				header: (props) => <RNHeader {...props} />,
-				headerLeft: (props) => <HeaderBackButton {...props} onPress={() => {
-					props.onPress()
-				}} />,
+				headerLeft: (props) => {
+					return <HeaderBackButton {...props} />
+				},
 				headerTintColor: store.getState().theme.lightText,
 				headerStyle: {backgroundColor: store.getState().theme.header}
 			}
