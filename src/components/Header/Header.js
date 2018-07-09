@@ -21,7 +21,6 @@ class Header extends Component {
 			ios: 20,
 			android: StatusBar.currentHeight
 		})
-		console.log(props)
 	}
 
 	getActiveRouteName = (navigationState) => {

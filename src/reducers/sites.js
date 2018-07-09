@@ -9,18 +9,21 @@
  */
 import * as sites from '../constants/actions';
 const {
-	GET_MEMBERSHIPS,
-	IS_FETCHING_SITES,
 	CLEAR_SITES,
-	GET_SITES_FAILED,
 	REQUEST_SITES,
 	SITES_SUCCESS,
-	SITES_FAILURE
+	SITES_FAILURE,
+	REQUEST_FAVORITES,
+	FAVORITES_SUCCESS,
+	FAVORITES_FAILURE,
+	SET_FILTER
 } = sites.sitesActions;
+
 export const initialState = {
 	userSites: {},
 	isFetchingSites: false,
-	hasFailed: false
+	hasFailed: false,
+	filter: (favorites) => (site) => favorites.contains((site || {}).id)
 };
 
 let getMemberships = (state, action) => {
@@ -78,12 +81,49 @@ const sitesFailure = (state, action) => {
 	}
 };
 
+const requestFavorites = (state, action) => {
+	return {
+		...state,
+		isFetchingFavorites: true,
+		errorMessage: ''
+	}
+}
+
+const favoritesSuccess = (state, action) => {
+	const favorites = (action.favorites || '').split(';').filter(site => (site || '').length > 0)
+
+	return {
+		...state,
+		isFetchingFavorites: false,
+		favorites
+	}
+}
+
+const favoritesFailure = (state, action) => {
+	return {
+		...state,
+		isFetchFavorites: false,
+		errorMessage: action.error.message
+	}
+}
+
+const setFilter = (state, action) => {
+	return {
+		...state,
+		filter: action.filter
+	}
+}
+
 export function sitesReducer(state = initialState, action) {
 	switch (action.type) {
-		case CLEAR_SITES: return clearSites(state, action);
-		case REQUEST_SITES: return requestSites(state, action);
-		case SITES_SUCCESS: return sitesSuccess(state, action);
-		case SITES_FAILURE: return sitesFailure(state, action);
-		default: return state;
+		case CLEAR_SITES: return clearSites(state, action)
+		case REQUEST_SITES: return requestSites(state, action)
+		case SITES_SUCCESS: return sitesSuccess(state, action)
+		case SITES_FAILURE: return sitesFailure(state, action)
+		case REQUEST_FAVORITES: return requestFavorites(state, action)
+		case FAVORITES_SUCCESS: return favoritesSuccess(state, action)
+		case FAVORITES_FAILURE: return favoritesFailure(state, action)
+		case SET_FILTER: return setFilter(state, action)
+		default: return state
 	}
 }

@@ -1,6 +1,8 @@
 import React, {Component} from 'react'
 import styled from 'styled-components'
 import Toggle from '../Toggle'
+import {connect} from 'react-redux'
+import {setFilter} from '../../actions/sites'
 
 const Container = styled.View`
 	height: 40px;
@@ -23,17 +25,31 @@ const RightLabel = styled.Text`
 	text-align: center;
 `
 
+const setSiteFilter = (on) => {
+	const favoritesFilter = (favorites) => (site) => favorites.contains(site.id)
+	const noFilter = (favorites) => (site) => true
+
+	return on ? noFilter : favoritesFilter
+}
+
 class AdditionalContent extends Component {
 	render() {
-		const {visible} = this.props
+		const {visible, setFilter} = this.props
 		return visible ? (
 			<Container>
 				<LeftLabel>Favorites</LeftLabel>
-				<Toggle width={36} height={16} disabledColor='lightgray' activeColor='dodgerblue'/>
+				<Toggle width={36} height={16} disabledColor='lightgray' activeColor='dodgerblue' onValueChange={(on) => {
+					const siteFilter = setSiteFilter(on)
+					setFilter(siteFilter)
+				}} />
 				<RightLabel>All{'\n'}Sites</RightLabel>
 			</Container>
 		) : null
 	}
 }
 
-export default AdditionalContent
+const mapDispatchToProps = dispatch => ({
+	setFilter: (filter) => dispatch(setFilter(filter))
+})
+
+export default connect(null, mapDispatchToProps)(AdditionalContent)

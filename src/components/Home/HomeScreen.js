@@ -8,7 +8,7 @@ import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import CourseList from '../CourseList/CourseList';
 import Header from '../CircleHeader/Header';
 import {setHeaderState} from '../../actions/header';
-import {getSiteInfo} from '../../actions/sites'
+import {getSiteInfo, getFavorites} from '../../actions/sites'
 import {getGrades} from '../../actions/grades'
 import styled from 'styled-components';
 
@@ -78,13 +78,14 @@ class HomeScreen extends Component {
 	componentDidMount () {
 		this.props.getSites(this.props.netid)
 		this.props.getGrades()
+		this.props.getFavorites()
 	}
 
 	render () {
-		const { loadingSites } = this.props
+		const { loadingSites, loadingFavorites } = this.props
 		return (
 			<Home>
-				<CourseList loading={loadingSites} navigation={this.props.navigation} />
+				<CourseList loading={loadingSites || loadingFavorites} navigation={this.props.navigation} />
 			</Home>
 		);
 	}
@@ -94,7 +95,8 @@ const mapStateToProps = (state) => {
 	return {
 		authenticated: state.login.isAuthenticated,
 		netid: state.login.netid,
-		loadingSites: state.tracsSites.isFetchingSites
+		loadingSites: state.tracsSites.isFetchingSites,
+		loadingFavorites: state.tracsSites.isFetchingFavorites
 	}
 };
 
@@ -110,7 +112,8 @@ const mapDispatchToProps = (dispatch, props) => {
 			}
 		},
 		getSites: (netid) => dispatch(getSiteInfo(netid)),
-		getGrades: () => dispatch(getGrades())
+		getGrades: () => dispatch(getGrades()),
+		getFavorites: () => dispatch(getFavorites())
 	}
 };
 

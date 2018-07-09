@@ -121,7 +121,7 @@ const mapStateToProps = (state) => {
 	const sites = Object.keys(state.tracsSites.userSites).reduce((accum, siteId) => {
 		accum.push(state.tracsSites.userSites[siteId])
 		return accum
-	}, [])
+	}, []).filter(state.tracsSites.filter(state.tracsSites.favorites))
 	return {
 		isCollapsed: state.header.isCollapsed,
 		sites

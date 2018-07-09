@@ -12,7 +12,16 @@ import {sitesActions} from '../constants/actions';
 import {Analytics} from '../utils/analytics';
 import {haxios as axios} from '../utils/networking';
 
-let {CLEAR_SITES, REQUEST_SITES, SITES_SUCCESS, SITES_FAILURE} = sitesActions;
+const {
+	CLEAR_SITES,
+	REQUEST_SITES,
+	SITES_SUCCESS,
+	SITES_FAILURE,
+	REQUEST_FAVORITES,
+	FAVORITES_SUCCESS,
+	FAVORITES_FAILURE,
+	SET_FILTER
+} = sitesActions;
 
 export const clearSites = () => {
 	return {
@@ -83,7 +92,40 @@ export function getSiteInfo(netid) {
 		}, {});
 
 		let siteLoadTime = new Date() - startTime;
-		setTimeout(() => dispatch(sitesSuccess(userSites, siteLoadTime)), 3000);
-		//dispatch(sitesSuccess(userSites, siteLoadTime))
+		//setTimeout(() => dispatch(sitesSuccess(userSites, siteLoadTime)), 3000);
+		dispatch(sitesSuccess(userSites, siteLoadTime))
+	}
+}
+
+const requestFavorites = () => ({
+	type: REQUEST_FAVORITES
+})
+
+const favoritesSuccess = (favorites) => ({
+	type: FAVORITES_SUCCESS,
+	favorites
+})
+
+const favoritesFailure = (error) => ({
+	type: FAVORITES_FAILURE,
+	error
+})
+
+export function getFavorites() {
+	return async (dispatch) => {
+		dispatch(requestFavorites())
+		const favoritesUrl = `${global.urls.baseUrl}${global.urls.favorites}`
+		axios(favoritesUrl, {method: 'get'}).then(({data: favorites}) => {
+			dispatch(favoritesSuccess(favorites))
+		}).catch(err => {
+			dispatch(favoritesFailure(err))
+		})
+	}
+}
+
+export function setFilter(filter) {
+	return {
+		type: SET_FILTER,
+		filter
 	}
 }
