@@ -23,6 +23,7 @@ export const initialState = {
 	userSites: {},
 	isFetchingSites: false,
 	hasFailed: false,
+	favorites: [],
 	filter: (favorites) => (site) => favorites.contains((site || {}).id)
 };
 
@@ -95,7 +96,7 @@ const favoritesSuccess = (state, action) => {
 	return {
 		...state,
 		isFetchingFavorites: false,
-		favorites
+		favorites: Array.from(new Set([...state.favorites, ...favorites]))
 	}
 }
 

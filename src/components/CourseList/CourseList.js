@@ -83,10 +83,10 @@ class CourseList extends Component {
 				<CourseSkeletonCard key={key} />
 			))
 		} else {
-			return sites.map((item, index) => (
+			return sites.map(item => (
 				<CourseCard
 					{...item}
-					key={index.toString(10)}
+					key={item.id}
 					goToCourse={this.goToCourse(item)}
 				/>
 			))
@@ -125,9 +125,7 @@ const mapStateToProps = (state) => {
 		accum.push(state.tracsSites.userSites[siteId])
 		return accum
 	}, []).filter(state.tracsSites.filter(state.tracsSites.favorites))
-	if (!state.tracsSites.isFetchingSites && !state.tracsSites.isFetchingFavorites) {
-		LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-	}
+
 	return {
 		isCollapsed: state.header.isCollapsed,
 		sites

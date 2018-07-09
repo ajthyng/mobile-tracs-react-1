@@ -179,7 +179,7 @@ class CourseCard extends Component {
 		})
 
 		return (
-			<Animated.View style={{flex: 1}}>
+			<Animated.View style={{flex: 1, opacity: fadeIn}}>
 				<CardBoundary borderRad={borderRadius} onPress={this.props.goToCourse}>
 					<GradeContainer borderRad={borderRadius}>
 						<SideBar hasGrade={hasGrade} borderRad={borderRadius}/>
