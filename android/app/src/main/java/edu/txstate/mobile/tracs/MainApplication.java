@@ -4,8 +4,6 @@ import android.app.Application;
 
 import com.facebook.react.ReactApplication;
 import com.BV.LinearGradient.LinearGradientPackage;
-import com.horcrux.svg.SvgPackage;
-import com.aakashns.reactnativedialogs.ReactNativeDialogsPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.oblador.keychain.KeychainPackage;
 import com.evollu.react.fcm.FIRMessagingPackage;
@@ -36,9 +34,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new LinearGradientPackage(),
-            new SvgPackage(),
-          new ReactNativeDialogsPackage(),
+          new LinearGradientPackage(),
           new VectorIconsPackage(),
           new KeychainPackage(),
           new FIRMessagingPackage(),

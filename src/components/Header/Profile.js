@@ -37,7 +37,7 @@ class Profile extends Component {
 		axios(profileURL)
 			.then(res => {
 				this.setState({
-					profileURL: res.request.responseURL || ''
+					profileURL: (res.request || {}).responseURL || ''
 				})
 			})
 			.catch(err => console.log(err))
@@ -50,7 +50,7 @@ class Profile extends Component {
 				style={{height: diameter, width: diameter, borderRadius: diameter / 2}}
 				diameter={diameter}
 				source={{
-					uri: this.state.profileURL ? `${this.state.profileURL}?${new Date().valueOf()}` : this.state.profileURL,
+					uri: this.state.profileURL ? `${this.state.profileURL}?${new Date().valueOf()}` : '',
 					cache: 'reload'
 				}}
 			/>
