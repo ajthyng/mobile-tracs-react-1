@@ -41,17 +41,17 @@ class Toggle extends Component {
 
 	toggle = () => {
 		this.animateState()
-		this.setState(prevState => ({on: !prevState.on}), () => {
-			this.props.onValueChange(this.state.on)
-		})
 	}
 
 	animateState = () => {
+		this.setState(prevState => ({on: !prevState.on}))
 		Animated.timing(this.state.animationRange, {
 			toValue: this.state.on ? 0 : 1,
 			duration: 200,
 			useNativeDriver: true
-		}).start()
+		}).start(() => {
+			this.props.onValueChange(this.state.on)
+		})
 	}
 
 	render() {
@@ -89,8 +89,10 @@ class Toggle extends Component {
 }
 
 Toggle.defaultProps = {
-	onPress: () => {},
-	onValueChange: () => {},
+	onPress: () => {
+	},
+	onValueChange: () => {
+	},
 	width: 16,
 	height: 36,
 	on: false,
