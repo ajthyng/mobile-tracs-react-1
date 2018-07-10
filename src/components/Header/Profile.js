@@ -46,8 +46,7 @@ class Profile extends Component {
 	renderProfileImage = () => {
 		const {diameter} = this.props
 		return this.state.profileURL === null ? null : (
-			<Image
-				style={{height: diameter, width: diameter, borderRadius: diameter / 2}}
+			<ProfileImage
 				diameter={diameter}
 				source={{
 					uri: this.state.profileURL ? `${this.state.profileURL}?${new Date().valueOf()}` : '',
@@ -60,7 +59,6 @@ class Profile extends Component {
 	render() {
 		const {name} = this.props
 
-		console.log(this.state.profileURL)
 		return (
 			<StyledProfile>
 				{this.renderProfileImage()}

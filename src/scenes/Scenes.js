@@ -62,10 +62,10 @@ const MainNavigator = createStackNavigator(
 		initialRouteName: 'Home',
 		navigationOptions: {
 			header: ({navigation}) => (<Header navigation={navigation}/>),
-			gesturesEnabled: false,
-			headerMode: 'float',
-			headerTransitionPreset: 'uikit',
+			gesturesEnabled: false
 		},
+		headerMode: 'float',
+		headerTransitionPreset: 'uikit',
 		transitionConfig: () => ({
 			transitionSpec,
 			screenInterpolator: (sceneProps) => {
