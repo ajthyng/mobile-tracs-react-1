@@ -4,6 +4,8 @@ import styled from 'styled-components'
 import {connect} from 'react-redux'
 import {haxios as axios} from '../../utils/networking'
 
+const CancelToken = require('axios').CancelToken
+
 const StyledProfile = styled.View`
 	background-color: transparent;
 	align-items: center;
@@ -20,21 +22,27 @@ const ProfileText = styled.Text``
 
 class Profile extends Component {
 	state = {
-		profileURL: null
+		profileURL: null,
+		source: CancelToken.source()
 	}
 
 	componentDidMount() {
 		const {netid} = this.props
 
 		const profileURL = `${global.urls.baseUrl}${global.urls.profile(netid)}`
+		const {source: {token}} = this.state
 
-		axios(profileURL)
+		axios(profileURL, {cancelToken: token})
 			.then(res => {
 				this.setState({
 					profileURL: (res.request || {}).responseURL || ''
 				})
 			})
 			.catch(err => console.log(err))
+	}
+
+	componentWillUnmount () {
+		this.state.source.cancel()
 	}
 
 	renderProfileImage = () => {
