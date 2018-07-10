@@ -7,11 +7,12 @@ const Container = styled.View`
 	background-color: ${props => props.theme.header};
 `
 
+
 class StatusBarSpace extends Component {
 	render() {
-		return (
+		return global.ios ? (
 			<Container {...this.props} />
-		)
+		) : null
 	}
 }
 

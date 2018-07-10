@@ -26,6 +26,11 @@ class Header extends Component {
 	constructor(props) {
 		super(props)
 		StatusBar.setBarStyle('light-content')
+
+		if (global.android) {
+			StatusBar.setBackgroundColor(props.theme.header)
+		}
+
 		this.statusBarHeight = Platform.select({
 			ios: 20,
 			android: StatusBar.currentHeight
