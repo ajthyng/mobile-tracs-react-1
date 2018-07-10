@@ -27,17 +27,23 @@ const requestGrades = (state, action) => ({
 	errorMessage: ''
 })
 
+const siteWithGrades = (site) => ({
+	name: site.siteName || null,
+	id: site.siteId || null,
+	calculatedGrade: site.calculatedGrade || null,
+	mappedGrade: site.mappedGrade || null,
+	grades: site.assignments || []
+})
+
 const gradesSuccess = (state, action) => {
 	const {grades} = action
+	let gradesArray = (grades || []).reduce((accum, site) => {
+		accum.push(siteWithGrades(site))
+		return accum
+	}, [])
 	let gradesBySiteId = (grades || []).reduce((accum, site) => {
 		if (site.hasOwnProperty('siteId')) {
-			accum[site.siteId] = {
-				name: site.siteName || null,
-				id: site.siteId || null,
-				calculatedGrade: site.calculatedGrade || null,
-				mappedGrade: site.mappedGrade || null,
-				grades: site.assignments || []
-			}
+			accum[site.siteId] = siteWithGrades(site)
 		}
 		return accum
 	}, {})
@@ -45,6 +51,7 @@ const gradesSuccess = (state, action) => {
 	return {
 		...state,
 		...gradesBySiteId,
+		grades: gradesArray,
 		isLoading: false,
 		errorMessage: ''
 	}

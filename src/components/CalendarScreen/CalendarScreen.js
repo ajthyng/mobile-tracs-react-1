@@ -130,4 +130,11 @@ const mapDispatchToProps = (dispatch, props) => ({
 	}
 })
 
-export default connect(null, mapDispatchToProps)(withTheme(CalendarScreen))
+const mapStateToProps = state => {
+	console.log(state.grades)
+	return {
+		grades: []
+	}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withTheme(CalendarScreen))

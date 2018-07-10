@@ -5,7 +5,7 @@ const Container = styled.View`
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 20px;
+  height: 2px;
   background-color: white;
   border-top-color: #36353480;
   border-bottom-color: #36353480;
@@ -15,7 +15,7 @@ const Container = styled.View`
 
 const Handle = styled.View`
 	width: 80px;
-	height: 10px;
+	height: 0;
 	border-radius: 8px;
 	background-color: lightgray;
 `

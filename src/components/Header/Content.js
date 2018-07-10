@@ -44,7 +44,6 @@ class Content extends Component {
 				title={previousRoute}
 				onPress={() => {
 					this.props.navigation.navigate(previousRoute)
-					console.log(this.props)
 				}}
 			/> :
 			<CalendarButton goToCalendar={this.goToCalendar} />
