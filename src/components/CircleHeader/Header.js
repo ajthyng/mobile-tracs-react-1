@@ -3,7 +3,7 @@ import {View, StatusBar, Dimensions, Animated, StyleSheet} from 'react-native';
 import {connect} from 'react-redux';
 import HomeIcon from './HomeIcon';
 import ArchivedSitesIcon from './ArchivedSitesIcon';
-import Profile from './Profile';
+import Profile from '../Header/Profile';
 import styled, {withTheme} from 'styled-components';
 import ProjectIcon from './ProjectIcon';
 import CalendarIcon from './CalendarIcon';

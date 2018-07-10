@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import styled, {withTheme} from 'styled-components'
 import {Animated} from "react-native"
-import LinearGradient from 'react-native-linear-gradient'
 
 const Container = styled(Animated.View)`
 		position: absolute;
@@ -22,7 +21,7 @@ const StyledImage = styled.Image`
 	width: 100%;
 `
 
-const Overlay = styled(Animated.createAnimatedComponent(LinearGradient))`
+const Overlay = styled(Animated.View)`
 	position: absolute;
 	width: 100%;
 	height: 100%;
@@ -32,7 +31,7 @@ const Overlay = styled(Animated.createAnimatedComponent(LinearGradient))`
 
 class VisibleHeader extends Component {
 	render() {
-		const {scrollAnimation, theme} = this.props
+		const {scrollAnimation} = this.props
 		let image = null
 		if (this.props.withImage) {
 			image = (
@@ -48,7 +47,6 @@ class VisibleHeader extends Component {
 				{image}
 				<Overlay
 					style={{opacity: scrollAnimation.opacity}}
-					colors={[theme.header, theme.header]}
 				/>
 			</Container>
 		)
