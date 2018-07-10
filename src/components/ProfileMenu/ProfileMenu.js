@@ -11,11 +11,9 @@
 import React, {Component} from 'react'
 import {StyleSheet, View, Dimensions, Animated, Easing} from 'react-native'
 import {connect} from 'react-redux'
-import styled, {withTheme} from 'styled-components'
-import {Menu, MenuTrigger, MenuOptions, MenuOption, renderers} from 'react-native-popup-menu'
-import Header from '../CircleHeader/Header'
+import {withTheme} from 'styled-components'
+import {Menu, MenuTrigger, MenuOptions, MenuOption} from 'react-native-popup-menu'
 import Profile from '../Header/Profile'
-import ProfileMenuProfile from './ProfileMenuProfile'
 import ProfileMenuOption from './ProfileMenuOption'
 import {logout} from '../../actions/login'
 import * as Storage from '../../utils/storage'
@@ -77,12 +75,13 @@ class ProfileMenu extends Component {
 			<Menu renderer={CustomMenuRenderer} rendererProps={{top: 0}}
 						onSelect={val => navigate(val, {transition: 'cardFromRight'})}>
 				<MenuTrigger>
-					<Profile
-						size={28}
-					/>
+					<Profile />
 				</MenuTrigger>
 				<MenuOptions customStyles={optionStyles(this.props)}>
-					<ProfileMenuProfile size={22} diameter={50} />
+					<Profile diameter={50} style={{
+						container: {flexDirection: 'column'},
+						text: {color: '#363534', fontSize: 22, fontWeight: 'bold'}
+					}}/>
 					<MenuOption value='Settings' customStyles={{optionWrapper: optionStyles(this.props).topOption}}>
 						<ProfileMenuOption label='Settings' icon='cog' size={22} />
 					</MenuOption>

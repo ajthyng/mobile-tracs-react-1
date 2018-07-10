@@ -6,7 +6,6 @@ import {haxios as axios} from '../../utils/networking'
 
 const StyledProfile = styled.View`
 	background-color: transparent;
-	flex-direction: row;
 	align-items: center;
 	justify-content: center;
 `
@@ -17,12 +16,7 @@ const ProfileImage = styled.Image`
 	width: ${props => props.diameter};
 `
 
-const ProfileText = styled.Text`
-	color: white;
-	margin-left: 8px;
-	font-size: 16px;
-	font-weight: bold;
-`
+const ProfileText = styled.Text``
 
 class Profile extends Component {
 	state = {
@@ -57,12 +51,12 @@ class Profile extends Component {
 	}
 
 	render() {
-		const {name} = this.props
+		const {name, style} = this.props
 
 		return (
-			<StyledProfile>
+			<StyledProfile style={style.container}>
 				{this.renderProfileImage()}
-				<ProfileText>
+				<ProfileText style={style.text}>
 					{name}
 				</ProfileText>
 			</StyledProfile>
@@ -72,7 +66,16 @@ class Profile extends Component {
 
 Profile.defaultProps = {
 	diameter: 30,
-	name: 'Maria'
+	name: 'Maria',
+	style: {
+		container: {flexDirection: 'row'},
+		text: {
+			color: 'white',
+			fontSize: 16,
+			fontWeight: 'bold',
+			marginLeft: 8
+		}
+	}
 }
 
 const mapStateToProps = state => ({
