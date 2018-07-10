@@ -19,7 +19,7 @@ import {Analytics} from './src/utils/analytics';
 import {login} from './src/actions/login';
 
 import {YellowBox} from 'react-native';
-import {Scenes} from './src/scenes/Scenes';
+import ThemedApp from './src/ThemedApp'
 
 YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'You are setting the style', 'Module RCTImageLoader']);
 const store = configureStore();
@@ -125,7 +125,7 @@ class App extends Component {
 	render() {
 		return (
 			<Provider store={store}>
-				<Scenes/>
+				<ThemedApp />
 			</Provider>
 		);
 	}
