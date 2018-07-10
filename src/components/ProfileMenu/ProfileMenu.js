@@ -14,7 +14,7 @@ import {connect} from 'react-redux'
 import styled, {withTheme} from 'styled-components'
 import {Menu, MenuTrigger, MenuOptions, MenuOption, renderers} from 'react-native-popup-menu'
 import Header from '../CircleHeader/Header'
-import Profile from '../CircleHeader/Profile'
+import Profile from '../Header/Profile'
 import ProfileMenuProfile from './ProfileMenuProfile'
 import ProfileMenuOption from './ProfileMenuOption'
 import {logout} from '../../actions/login'
@@ -79,7 +79,6 @@ class ProfileMenu extends Component {
 				<MenuTrigger>
 					<Profile
 						size={28}
-						diameter={Header.CIRCLE_DIAMETER}
 					/>
 				</MenuTrigger>
 				<MenuOptions customStyles={optionStyles(this.props)}>
