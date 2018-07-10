@@ -14,7 +14,7 @@ import {YellowBox} from 'react-native'
 
 const store = configureStore()
 
-YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', "Warning: Can't call setState (or forceUpdate)", 'You are setting the style', 'Module RCTImageLoader', 'Class RCTCxxModule'])
+YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', "Received data was not a string", "Warning: Can't call setState (or forceUpdate)", 'You are setting the style', 'Module RCTImageLoader', 'Class RCTCxxModule'])
 
 global.urls = urls
 global['ios'] = Platform.OS === 'ios'
@@ -87,7 +87,7 @@ class App extends Component {
 	render() {
 		return (
 			<Provider store={store}>
-				<ThemedApp/>
+				<ThemedApp />
 			</Provider>
 		)
 	}
