@@ -106,7 +106,7 @@ class CalendarScreen extends Component {
 
 		const assignmentsDue = assignments.reduce((accum, assign) => {
 			const dueDate = dayjs(assign.dueDate).startOf('day').format('YYYY-MM-DD')
-			console.log(dueDate)
+
 			if (!accum[dueDate]) accum[dueDate] = []
 			accum[dueDate].push(assign)
 
@@ -131,55 +131,59 @@ class CalendarScreen extends Component {
 	}
 
 	render() {
-		console.log(this.state.items)
 		return (
 			<ContainerView>
 				<CalendarView
 					items={this.state.items}
 					selected={dayjs().add(6, 'days').format('YYYY-MM-DD')}
 					loadItemsForMonth={(day) => {
-						for (let i = -15; i < 85; i++) {
-							const currentDay = dayjs(day.dateString).add(i, 'days').format('YYYY-MM-DD')
-							if (!this.state.items[currentDay]) {
-								this.state.items[currentDay] = []
+						let items = {...this.state.items}
+						const date = dayjs(day.dateString)
+						for (let i = 0; i < 90; i++) {
+							const visibleDay = i < 0 ? date.subtract(-i, 'days') : date.add(i, 'days')
+							const currentDay = visibleDay.format('YYYY-MM-DD')
+							if (!items[currentDay]) {
+								items[currentDay] = []
 							}
 						}
 
-						const newItems = {...this.state.items}
-						this.setState({
-							items: newItems
-						})
+						this.setState({items})
 					}}
-					renderEmptyDate={(date) => (
+					renderEmptyDate={() => (
 						<View style={{height: 80, backgroundColor: 'transparent', margin: 5}}>
 							<View style={{height: 1, width: '100%', marginTop: 15, backgroundColor: '#36353420'}} />
 						</View>
 					)}
-					renderItem={(item, firstItemInDay) => (
+					renderItem={item => (
 						<View style={{margin: 5, backgroundColor: 'transparent'}}>
 							<DueDateItem item={item} color={this.colorMapping[item.siteId]} />
 						</View>
 					)}
-					renderDay={(day, item) => {
+					renderDay={day => {
 						if (day === undefined) {
-							return <View style={{backgroundColor: 'transparent', height: 80, width: 50, margin: 5, alignItems: 'center'}}/>
+							return <View
+								style={{backgroundColor: 'transparent', height: 80, width: 50, margin: 5, alignItems: 'center'}} />
 						}
 
 						const date = dayjs(day.dateString)
 
 						return (
-							<View style={{backgroundColor: 'transparent', height: 80, width: 50, margin: 5, alignItems: 'center'}}>
+							<View style={{height: 80, width: 50, margin: 5, alignItems: 'center'}}>
 								<Text style={{
 									color: '#363534A0',
 									textAlign: 'center',
 									fontWeight: '300',
 									fontSize: 28
 								}}>{date.format('DD')}</Text>
-								<Text style={{color: '#363534A0', textAlign: 'center', fontSize: 18}}>{date.format('MMM')}</Text>
+								<Text style={{
+									color: '#363534A0',
+									textAlign: 'center',
+									fontSize: 18
+								}}>{date.format('MMM')}</Text>
 							</View>
 						)
 					}}
-					rowHasChanged={(r1, r2) => r1.text !== r2.text}
+					rowHasChanged={(r1, r2) => r1.itemName !== r2.itemName}
 				/>
 			</ContainerView>
 		)

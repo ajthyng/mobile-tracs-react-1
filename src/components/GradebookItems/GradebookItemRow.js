@@ -90,7 +90,6 @@ class GradebookItemRow extends Component {
 
 	render() {
 		const {earned, total, name, posted} = this.props.data
-		console.log(this.props)
 		return (
 			<Container>
 				<GradeItemAverageContainer>

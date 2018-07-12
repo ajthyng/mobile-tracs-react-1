@@ -34,9 +34,7 @@ export default class TRACSWebView extends Component {
 					try {
 						this.webview.goBack();
 						return;
-					} catch (error) {
-						console.log(error);
-					}
+					} catch (error) {}
 				}
 
 				Actions.pop();

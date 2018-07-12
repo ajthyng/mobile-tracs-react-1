@@ -97,7 +97,6 @@ export function saveSettings(settings, token, local) {
 			return true;
 		}
 		return axios(settingsURL, options).then(res => {
-			console.log(options);
 			dispatch(saveSettingsSuccess(settings));
 			return true;
 		}).catch(err => {

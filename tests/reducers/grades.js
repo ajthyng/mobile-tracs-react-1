@@ -150,6 +150,6 @@ it('should handle missing site name from gradebook collection', () => {
 		id: siteId,
 		grades: [badGrade]
 	}
-	console.log(JSON.stringify(state))
+
 	expect(gradesReducer(state, gradeSuccess(gradebook_collection))).toMatchObject(state)
 })

@@ -18,7 +18,6 @@ if (global.android) {
 				.then(res => {
 				})
 				.catch(err => {
-					console.log(err.message);
 					Linking.openURL('itms://itunes.apple.com/us/app/apple-store/id373345139?mt=8')
 				});
 		}

@@ -265,7 +265,6 @@ export const updateNotification = (newNotif, oldNotif) => {
 			dispatch(updateNotificationSuccess(newNotif));
 			dispatch(getNotifications(token));
 		}).catch(err => {
-			console.log(err);
 			dispatch(updateNotificationFailure(err.message));
 		});
 	}

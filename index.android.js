@@ -63,11 +63,9 @@ class App extends Component {
 		console.log(notification);
 		if (notification.local_notification) {
 			//Not used but I don't want to forget the option
-			console.log("From App: ", notification);
 		} else if (notification.opened_from_tray) {
 
 		} else {
-			console.log(notification);
 			FCM.presentLocalNotification({
 				title: `${notification.fcm.title}`,
 				body: `${notification.fcm.body}`,

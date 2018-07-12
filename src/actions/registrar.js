@@ -160,7 +160,6 @@ const unregisterSuccess = () => {
 };
 
 const unregisterFailure = (errorMessage) => {
-	console.log(errorMessage);
 	return {
 		type: UNREGISTER_FAILURE,
 		errorMessage
