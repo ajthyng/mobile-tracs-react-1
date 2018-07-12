@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {FlatList, View, Text} from 'react-native'
 
-import {Calendar} from 'react-native-calendars'
+import {Agenda} from 'react-native-calendars'
 import {connect} from 'react-redux'
 import {setHeaderState} from '../../actions/header'
 import styled, {withTheme} from 'styled-components'
@@ -9,7 +9,6 @@ import Header from '../CircleHeader/Header'
 import ItemSeparator from '../../_components/Notifications/ItemSeparator'
 import Ripple from 'react-native-material-ripple'
 import dayjs from 'dayjs'
-import PullHandle from './PullHandle'
 
 const ContainerView = styled.View`
 	alignItems: flex-start;
@@ -18,7 +17,7 @@ const ContainerView = styled.View`
 	flex: 1;
 `
 
-const CalendarView = styled(Calendar)`
+const CalendarView = styled(Agenda)`
 	width: 100%;
 `
 
@@ -28,10 +27,10 @@ const DueDatesList = styled(FlatList)`
 
 const DueDateContainer = styled(Ripple)`
 	width: 100%;
-	height: 50px;
-	background-color: ${props => props.theme.transparent};
+	height: 80px;
+	background-color: white;
 	align-items: center;
-	justify-content: space-between;
+	justify-content: flex-end;
 	padding-left: 16px;
 	padding-right: 16px;
 	flex-direction: row;
@@ -41,7 +40,7 @@ const SideColor = styled.View`
 	position: absolute;
 	left: 0;
 	width: 8px;
-	height: 50px;
+	height: 100%;
 	background-color: ${props => props.color};
 `
 
@@ -75,12 +74,14 @@ class DueDateItem extends Component {
 		return (
 			<DueDateContainer>
 				<SideColor color={color} />
-				<View style={{flexDirection: 'column', width: 40, alignItems: 'center', justifyContent: 'center'}}>
-					<Text>{dayjs(item.dueDate).format('DD')}</Text>
-					<Text>{dayjs(item.dueDate).format('MMM')}</Text>
-				</View>
-				<View style={{flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'center'}}>
-					<Text style={{color: '#363534', fontSize: 14}}>{item.itemName}</Text>
+				<View style={{
+					flexDirection: 'column',
+					alignItems: 'flex-end',
+					justifyContent: 'space-between',
+					height: 80,
+					padding: 10
+				}}>
+					<Text style={{color: '#363534', fontSize: 16, textAlign: 'left'}}>{item.itemName}</Text>
 					<Text style={{color: '#36353480', fontSize: 12}}>{item.siteName}</Text>
 				</View>
 			</DueDateContainer>
@@ -95,13 +96,26 @@ class CalendarScreen extends Component {
 
 	constructor(props) {
 		super(props)
-		this.data = props.assignments
+
 		this.colorMapping = Object.keys(props.sites).reduce((accum, siteId) => {
 			accum[siteId] = getRandomColor(props.theme.assignments)
 			return accum
 		}, {})
-		console.log(this.colorMapping)
-		props.setHeaderState(true)
+
+		const {assignments} = this.props
+
+		const assignmentsDue = assignments.reduce((accum, assign) => {
+			const dueDate = dayjs(assign.dueDate).startOf('day').format('YYYY-MM-DD')
+			console.log(dueDate)
+			if (!accum[dueDate]) accum[dueDate] = []
+			accum[dueDate].push(assign)
+
+			return accum
+		}, {})
+
+		this.state = {
+			items: {...assignmentsDue}
+		}
 	}
 
 	goToGradebook = () => {
@@ -112,35 +126,61 @@ class CalendarScreen extends Component {
 		return <DueDateItem item={item} color={this.colorMapping[item.siteId]} />
 	}
 
+	componentDidMount() {
+
+	}
+
 	render() {
-		const {assignments} = this.props
-
-		const markedDates = assignments.reduce((accum, assign) => {
-			const dueDate = dayjs(assign.dueDate)
-
-			accum[dueDate.format('YYYY-MM-DD')] = {selected: true, marked: false, selectedColor: this.colorMapping[assign.siteId]}
-			return accum
-		}, {})
-
+		console.log(this.state.items)
 		return (
 			<ContainerView>
 				<CalendarView
-					current={new Date()}
-					minDate={'2018-05-01'}
-					monthFormat={'MMMM yyyy'}
-					markedDates={markedDates}
+					items={this.state.items}
+					selected={dayjs().add(6, 'days').format('YYYY-MM-DD')}
+					loadItemsForMonth={(day) => {
+						for (let i = -15; i < 85; i++) {
+							const currentDay = dayjs(day.dateString).add(i, 'days').format('YYYY-MM-DD')
+							if (!this.state.items[currentDay]) {
+								this.state.items[currentDay] = []
+							}
+						}
+
+						const newItems = {...this.state.items}
+						this.setState({
+							items: newItems
+						})
+					}}
+					renderEmptyDate={(date) => (
+						<View style={{height: 80, backgroundColor: 'transparent', margin: 5}}>
+							<View style={{height: 1, width: '100%', marginTop: 15, backgroundColor: '#36353420'}} />
+						</View>
+					)}
+					renderItem={(item, firstItemInDay) => (
+						<View style={{margin: 5, backgroundColor: 'transparent'}}>
+							<DueDateItem item={item} color={this.colorMapping[item.siteId]} />
+						</View>
+					)}
+					renderDay={(day, item) => {
+						if (day === undefined) {
+							return <View style={{backgroundColor: 'transparent', height: 80, width: 50, margin: 5, alignItems: 'center'}}/>
+						}
+
+						const date = dayjs(day.dateString)
+
+						return (
+							<View style={{backgroundColor: 'transparent', height: 80, width: 50, margin: 5, alignItems: 'center'}}>
+								<Text style={{
+									color: '#363534A0',
+									textAlign: 'center',
+									fontWeight: '300',
+									fontSize: 28
+								}}>{date.format('DD')}</Text>
+								<Text style={{color: '#363534A0', textAlign: 'center', fontSize: 18}}>{date.format('MMM')}</Text>
+							</View>
+						)
+					}}
+					rowHasChanged={(r1, r2) => r1.text !== r2.text}
 				/>
-				<PullHandle />
-				<DueDatesList
-					data={this.data}
-					ItemSeparatorComponent={() => (<ItemSeparator />)}
-					keyExtractor={(item, index) => index.toString(10)}
-					renderItem={this.renderItem}
-					bounces={false}
-				/>
-				<ViewAllGrades onPress={this.goToGradebook}>
-					<ViewAllGradesText>View All Grades</ViewAllGradesText>
-				</ViewAllGrades>
 			</ContainerView>
 		)
 	}

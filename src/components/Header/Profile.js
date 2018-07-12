@@ -26,6 +26,12 @@ class Profile extends Component {
 		source: CancelToken.source()
 	}
 
+	getProfileImage = (netid) => {
+		const profileURL = `${global.urls.baseUrl}${global.urls.profile(netid)}`
+
+		return axios(profileURL, {cancelToken: token})
+	}
+
 	componentDidMount() {
 		const {netid} = this.props
 
@@ -74,7 +80,7 @@ class Profile extends Component {
 
 Profile.defaultProps = {
 	diameter: 30,
-	name: 'Maria',
+	name: '',
 	style: {
 		container: {flexDirection: 'row'},
 		text: {
