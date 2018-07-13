@@ -8,6 +8,7 @@ import Header from '../CircleHeader/Header';
 import {setHeaderState} from '../../actions/header';
 import {getSiteInfo, getFavorites} from '../../actions/sites'
 import {getGrades} from '../../actions/grades'
+import {getNotifications} from '../../actions/notifications'
 import styled from 'styled-components';
 
 const Home = styled.View`
@@ -36,6 +37,7 @@ class HomeScreen extends Component {
 		this.props.getSites(this.props.netid)
 		this.props.getGrades()
 		this.props.getFavorites()
+		this.props.getNotifications()
 	}
 
 	render () {
@@ -70,7 +72,8 @@ const mapDispatchToProps = (dispatch, props) => {
 		},
 		getSites: (netid) => dispatch(getSiteInfo(netid)),
 		getGrades: () => dispatch(getGrades()),
-		getFavorites: () => dispatch(getFavorites())
+		getFavorites: () => dispatch(getFavorites()),
+		getNotifications: () => dispatch(getNotifications())
 	}
 };
 

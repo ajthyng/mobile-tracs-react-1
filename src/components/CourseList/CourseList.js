@@ -141,7 +141,7 @@ class CourseList extends Component {
 					style={{marginTop: 55, marginBottom: 55, marginLeft: 20, marginRight: 20}}
 				>
 					<CourseScreen
-						name={this.state.course.name}
+						course={this.state.course}
 						navigation={this.props.navigation}
 						dismiss={() => this.setState({isVisible: false})}
 					/>

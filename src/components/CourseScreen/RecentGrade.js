@@ -1,12 +1,11 @@
 import React, {Component} from 'react';
+import {TouchableOpacity} from 'react-native'
 import styled from 'styled-components';
-import moment from 'moment';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Ripple from 'react-native-material-ripple';
+import dayjs from 'dayjs'
 
-const Container = styled(Ripple)`
-  flex: 1;
-  margin: 8px 4px 4px 4px;
+const Container = styled(TouchableOpacity)`
+  margin: 8px 4px 16px 4px;
   align-items: flex-start;
   justify-content: center;
   flex-direction: row;
@@ -68,34 +67,48 @@ const CommentText = styled.Text`
 	color: #363534;
 `;
 
-function getHue(grade) {
-	const normalizedGrade = 1 -(100 - (grade < 60 ? 60 : grade)) / 40;
-	return normalizedGrade * 120;
+function getHue(grade, points) {
+	const failingThreshold = 0.6
+	const failingPoints = failingThreshold * points
+	const remainder = (1 - failingThreshold) * points
+
+	const gradePercent = (points - (grade < failingPoints ? failingPoints : grade)) / remainder
+
+	const normalizedGrade = 1 - gradePercent
+	return normalizedGrade * 120
 }
+
+const commentsContainer = () => (
+	<CommentContainer>
+		<CommentText>Comments</CommentText>
+		<CommentButton name="comment"/>
+	</CommentContainer>
+)
 
 class RecentGrade extends Component {
 	constructor(props) {
 		super(props);
-		this.hue = getHue(props.grade);
+		const {grade, points} = props
+
+		this.hue = getHue(parseInt(grade, 10), points);
 	}
 
 	render() {
+		const {grade, name, comment, dateGraded} = this.props
+
 		return (
 			<Container>
 				<GradeCircle gradeColor={`hsl(${this.hue}, 70%, 50%)`}>
-					<GradeValue>{this.props.grade}</GradeValue>
+					<GradeValue>{grade}</GradeValue>
 				</GradeCircle>
 				<GradeInfo>
 					<GradeName>
-						{this.props.name}
+						{name}
 					</GradeName>
 					<GradeEntryDate>
-						{`Posted: ${this.props.dateGraded}`}
+						{`Posted: ${dayjs(dateGraded).format('MMM DD HH:mm a')}`}
 					</GradeEntryDate>
-					<CommentContainer>
-						<CommentText>Comments</CommentText>
-						<CommentButton name="comment"/>
-					</CommentContainer>
+					{comment ? commentsContainer() : null}
 				</GradeInfo>
 			</Container>
 		);
@@ -105,7 +118,7 @@ class RecentGrade extends Component {
 RecentGrade.defaultProps = {
 	name: "Gradebook Name Not Found",
 	grade: Math.ceil(Math.random() * 100),
-	dateGraded: moment().format('MMM D h:mm a')
+	dateGraded: dayjs().format('MMM DD HH:mm a')
 };
 
 export default RecentGrade;

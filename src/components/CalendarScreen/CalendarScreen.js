@@ -56,12 +56,12 @@ const renderDay = (day) => <CalendarDay day={day} />
 class CalendarScreen extends Component {
 	constructor(props) {
 		super(props)
-		const {sites, theme: {assignments: colors}, assignments} = this.props
+		const {sites, theme: {assignments: colors}} = this.props
 
 		this.colorMapping = mapColorsToSites(sites, colors)
 
 		this.state = {
-			items: {...createAssignmentCalendarItems(assignments)}
+			items: {}
 		}
 
 		this.createEmptyItems = this.createEmptyItems.bind(this)
@@ -73,7 +73,8 @@ class CalendarScreen extends Component {
 	}
 
 	createEmptyItems(day) {
-		let items = {...this.state.items}
+		const {assignments} = this.props
+		let items = {...createAssignmentCalendarItems(assignments), ...this.state.items}
 		const date = dayjs(day.dateString)
 		for (let i = 0; i < 60; i++) {
 			const visibleDay = date.add(i, 'days')
