@@ -1,12 +1,10 @@
 import React, {Component} from 'react'
 import styled, {withTheme} from 'styled-components'
-import Header from './CircleHeader/Header'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Ripple from 'react-native-material-ripple'
 
 const HeaderContainer = styled.View`
 	height: 60px;
-	margin-top: ${Header.HEIGHT};
 	width: 100%;
 	align-items: center;
 	justify-content: center;
