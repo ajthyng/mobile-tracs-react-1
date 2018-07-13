@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Dimensions} from 'react-native'
+import {Dimensions, TouchableOpacity} from 'react-native'
 import styled, {withTheme} from 'styled-components'
 import Header from '../CircleHeader/Header'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -18,7 +18,7 @@ const ScreenContainer = styled.View`
 `
 
 const CourseContainer = styled.View`
-	margin: 32px;
+	padding: 16px;
 	background-color: white;
 	border: 1px;
 	border-color: ${props => props.theme.courseScreenBorder};
@@ -30,13 +30,6 @@ const CourseContainer = styled.View`
 `
 
 const TitleContainer = styled.View`
-	flex: 1;
-	background-color: ${props => props.theme.transparent};
-	flex-direction: row;
-	align-items: center;
-	justify-content: center;
-`
-const StyledTransition = styled.View`
 	height: 65px;
 	background-color: ${props => props.theme.transparent};
 	flex-direction: row;
@@ -146,49 +139,49 @@ class CourseScreen extends Component {
 	static navigationOptions = {
 		title: 'Course'
 	}
+
 	constructor(props) {
 		super(props)
 		props.setHeaderState(true)
 	}
 
 	goToCourseDetail = () => {
+		this.props.dismiss()
 		this.props.navigation.navigate('CourseDetail')
 	}
 
 	render() {
-		const name = this.props.navigation.getParam('name', this.props.name);
+		const {name} = this.props
 		return (
-			<ScreenContainer>
-				<CourseContainer>
-					<StyledTransition shared={name}>
-						<TitleContainer>
-							<CourseName>{name}</CourseName>
-							<CloseIcon name="close" size={36}/>
-						</TitleContainer>
-					</StyledTransition>
-					<TitleSeparator/>
-					<RecentText>Recently Posted Grades</RecentText>
-					<RecentGradesContainer>
-						<RecentGrade/>
-						<RecentGrade/>
-						<RecentGrade/>
-					</RecentGradesContainer>
-					<AnnouncementContainer>
-						<AnnouncementsButton>
-							<AnnouncementsIconContainer>
-								<AnnouncementsIcon name="bell"/>
-								<NewBadge/>
-							</AnnouncementsIconContainer>
-							<AnnouncementsText>New Announcements</AnnouncementsText>
-						</AnnouncementsButton>
-					</AnnouncementContainer>
-					<ViewCourseContainer>
-						<ViewCourseButton onPress={this.goToCourseDetail}>
-							<ViewCourseText>View Course</ViewCourseText>
-						</ViewCourseButton>
-					</ViewCourseContainer>
-				</CourseContainer>
-			</ScreenContainer>
+			<CourseContainer>
+				<TitleContainer>
+					<CourseName>{name}</CourseName>
+					<TouchableOpacity onPress={this.props.dismiss}>
+						<CloseIcon name='close' size={36} />
+					</TouchableOpacity>
+				</TitleContainer>
+				<TitleSeparator />
+				<RecentText>Recently Posted Grades</RecentText>
+				<RecentGradesContainer>
+					<RecentGrade />
+					<RecentGrade />
+					<RecentGrade />
+				</RecentGradesContainer>
+				<AnnouncementContainer>
+					<AnnouncementsButton>
+						<AnnouncementsIconContainer>
+							<AnnouncementsIcon name='bell' />
+							<NewBadge />
+						</AnnouncementsIconContainer>
+						<AnnouncementsText>New Announcements</AnnouncementsText>
+					</AnnouncementsButton>
+				</AnnouncementContainer>
+				<ViewCourseContainer>
+					<ViewCourseButton onPress={this.goToCourseDetail}>
+						<ViewCourseText>View Course</ViewCourseText>
+					</ViewCourseButton>
+				</ViewCourseContainer>
+			</CourseContainer>
 		)
 	}
 }

@@ -1,16 +1,18 @@
 import React, {Component} from 'react'
-import {View, FlatList, Animated, StyleSheet, Text, LayoutAnimation, UIManager} from 'react-native'
+import {View, FlatList, Animated, TouchableOpacity, StyleSheet, Text, LayoutAnimation, UIManager} from 'react-native'
 
 import {connect} from 'react-redux'
 import {setScrollY, setHeaderState} from '../../actions/header'
 import styled from 'styled-components'
+import Modal from 'react-native-modal'
 
 import Header from '../CircleHeader/Header'
-import CourseCard from './CourseCard'
+import CourseCard from './CourseCard/CourseCard'
 import CourseSkeletonCard from './CourseSkeletonCard'
+import CourseScreen from '../CourseScreen/CourseScreen'
 
 UIManager.setLayoutAnimationEnabledExperimental &&
-UIManager.setLayoutAnimationEnabledExperimental(true);
+UIManager.setLayoutAnimationEnabledExperimental(true)
 
 const HeaderSpacer = styled.View`
 	flex: 0;
@@ -26,20 +28,22 @@ const CourseListContainer = styled.View`
 const CourseFlatList = Animated.createAnimatedComponent(FlatList)
 
 const loadingSites = [
-	{ key: '0'},
-	{ key: '1'},
-	{ key: '2'},
-	{ key: '3'},
-	{ key: '4'},
-	{ key: '5'},
-	{ key: '6'}
+	{key: '0'},
+	{key: '1'},
+	{key: '2'},
+	{key: '3'},
+	{key: '4'},
+	{key: '5'},
+	{key: '6'}
 ]
 
 class CourseList extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			y: 0
+			y: 0,
+			isVisible: false,
+			course: {}
 		}
 		this._scrollY = new Animated.Value(0)
 		props.setScrollY(this._scrollY)
@@ -71,9 +75,10 @@ class CourseList extends Component {
 	}
 
 	goToCourse = (item) => {
-		return () => {
-			this.props.navigation.navigate('Course', {transition: 'cardFromRight', name: item.name})
-		}
+		//return () => {
+		//	this.props.navigation.navigate('Course', {transition: 'cardFromRight', name: item.name})
+		//}
+		this.setState({isVisible: !this.state.isVisible, course: item})
 	}
 
 	renderCourses = (loading) => {
@@ -87,7 +92,7 @@ class CourseList extends Component {
 				<CourseCard
 					{...item}
 					key={item.id}
-					goToCourse={this.goToCourse(item)}
+					goToCourse={() => this.setState({isVisible: true, course: item})}
 				/>
 			))
 		}
@@ -103,6 +108,9 @@ class CourseList extends Component {
 				}
 			}
 		)
+
+		const {isVisible} = this.state
+
 		return (
 			<CourseListContainer>
 				<Animated.ScrollView
@@ -115,6 +123,29 @@ class CourseList extends Component {
 						this.renderCourses(this.props.loading)
 					}
 				</Animated.ScrollView>
+				<Modal
+					isVisible={this.state.isVisible}
+					onBackButtonPress={() => this.setState({isVisible: false})}
+					onBackdropPress={() => this.setState({isVisible: false})}
+					useNativeDriver
+					animationIn={{
+						from: {
+							scale: 0.1,
+							opacity: 0
+						},
+						to: {
+							scale: 1,
+							opacity: 1
+						}
+					}}
+					style={{marginTop: 55, marginBottom: 55, marginLeft: 20, marginRight: 20}}
+				>
+					<CourseScreen
+						name={this.state.course.name}
+						navigation={this.props.navigation}
+						dismiss={() => this.setState({isVisible: false})}
+					/>
+				</Modal>
 			</CourseListContainer>
 		)
 	}

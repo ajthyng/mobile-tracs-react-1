@@ -11,7 +11,7 @@
 import {initialState, gradesReducer} from '../../src/reducers/grades'
 import {gradesActions} from '../../src/constants/actions'
 import {makeGrade} from '../responses/grades/gradeFactory'
-import CourseCard from '../../src/components/CourseList/CourseCard'
+import CourseCard from '../../src/components/CourseList/CourseCard/CourseCard'
 import readGrades from '../utils/importExcelGrades'
 
 const _ = require('lodash/core')
