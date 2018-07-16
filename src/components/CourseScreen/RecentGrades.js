@@ -31,7 +31,7 @@ class RecentGrades extends Component {
 		const {grades} = this.props
 
 		return (
-			<RecentGradesContainer>
+			<RecentGradesContainer bounces={false}>
 				{grades.map(this.renderGrades)}
 			</RecentGradesContainer>
 		)

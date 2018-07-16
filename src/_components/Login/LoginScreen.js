@@ -232,6 +232,7 @@ class LoginScreen extends Component {
 		const actionInProgress = loggingIn || registering || checkingCredentials || isAuthenticated
 
 		if (actionInProgress) {
+			console.log(this.props.navigation.state)
 			return (
 				<ActivityIndicator />
 			);

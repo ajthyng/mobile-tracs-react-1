@@ -71,10 +71,11 @@ class ProfileMenu extends Component {
 	render() {
 		const {navigation: {navigate}} = this.props
 		return (
-			<Menu renderer={CustomMenuRenderer} rendererProps={{top: 0}}
+			<Menu renderer={CustomMenuRenderer}
 						onSelect={val => {
 							if (val === 'Logout') {
 								this.props.logout()
+								return
 							}
 							navigate(val, {transition: 'cardFromRight'})
 						}}>

@@ -118,19 +118,19 @@ class CourseList extends Component {
 						scrollTo: () => {
 						}
 					}}
+					alwaysBounceVertical={false}
 				>
-					{
-						this.renderCourses(this.props.loading)
-					}
+					{this.renderCourses(this.props.loading)}
 				</Animated.ScrollView>
 				<Modal
 					isVisible={this.state.isVisible}
 					onBackButtonPress={() => this.setState({isVisible: false})}
 					onBackdropPress={() => this.setState({isVisible: false})}
-					useNativeDriver
+					swipeDirection='down'
+					onSwipe={() => this.setState({isVisible: false})}
 					animationIn={{
 						from: {
-							scale: 0.1,
+							scale: 0,
 							opacity: 0
 						},
 						to: {

@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import dayjs from 'dayjs'
 
-const Container = styled(TouchableOpacity)`
+const Container = styled.View`
   margin: 8px 4px 16px 4px;
   align-items: flex-start;
   justify-content: center;
@@ -47,7 +47,7 @@ const GradeEntryDate = styled.Text`
 	color: #363534;
 `;
 
-const CommentContainer = styled.View`
+const CommentContainer = styled(TouchableOpacity)`
 	padding: 0 0 8px 8px;
 	background-color: transparent;
 	flex-direction: row;
