@@ -49,7 +49,7 @@ class CustomMenuRenderer extends Component {
 	render() {
 		const {style, children, layouts, top, ...other} = this.props
 		const width = layouts.windowLayout.width * 0.65
-		const layout = {top: -top, right: 0, height: '100%', position: 'absolute', width}
+		const layout = {top: 0, right: 0, height: '100%', position: 'absolute', width}
 		const animation = {
 			transform: [{
 				translateX: this.state.slide.interpolate({
@@ -70,10 +70,14 @@ class CustomMenuRenderer extends Component {
 class ProfileMenu extends Component {
 	render() {
 		const {navigation: {navigate}} = this.props
-
 		return (
 			<Menu renderer={CustomMenuRenderer} rendererProps={{top: 0}}
-						onSelect={val => navigate(val, {transition: 'cardFromRight'})}>
+						onSelect={val => {
+							if (val === 'Logout') {
+								this.props.logout()
+							}
+							navigate(val, {transition: 'cardFromRight'})
+						}}>
 				<MenuTrigger>
 					<Profile />
 				</MenuTrigger>
@@ -91,7 +95,7 @@ class ProfileMenu extends Component {
 					<MenuOption value='Support'>
 						<ProfileMenuOption label='Support' icon='question-circle-o' size={22} />
 					</MenuOption>
-					<MenuOption value='Logout' onSelect={this.props.logout}>
+					<MenuOption value='Logout'>
 						<ProfileMenuOption label='Logout' icon='logout' size={22} iconFamily='SimpleLineIcons' />
 					</MenuOption>
 				</MenuOptions>

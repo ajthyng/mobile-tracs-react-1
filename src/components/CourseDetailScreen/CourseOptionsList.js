@@ -54,12 +54,7 @@ const options = [
 		onPress: (navigation, url) => {
 			const {navigate} = navigation
 			if (typeof navigate === 'function') {
-				navigate({
-					routeName: 'TRACSWeb',
-					params: {
-						baseUrl: url
-					}
-				})
+				navigate('TRACSWeb', {transition: 'cardFromRight', params: {baseUrl: url}})
 			}
 		}
 	},
@@ -76,12 +71,11 @@ const options = [
 class CourseOptionsList extends Component {
 	constructor(props) {
 		super(props)
-		this.course = this.props.navigation.getParam('course', null)
 		this.optionOnPress = this.optionOnPress.bind(this)
 	}
 
 	optionOnPress(onPress) {
-		const {id: siteId} = this.course
+		const {id: siteId} = this.props.course
 		const {navigation} = this.props
 
 		const url = `${global.urls.baseUrl}${global.urls.webUrl}/${siteId}`

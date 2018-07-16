@@ -38,10 +38,12 @@ class Content extends Component {
 
 		const previousRoute = (navigation.state.routes[navigation.state.index - 1] || {}).routeName
 
+		const title = (previousRoute || '').replace(/([a-z])([A-Z])/g, '$1 $2')
+
 		const leftButton = canGoBack ?
 			<BackButton
 				tintColor='white'
-				title={previousRoute}
+				title={title}
 				onPress={() => {
 					this.props.navigation.navigate(previousRoute)
 				}}

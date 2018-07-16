@@ -53,11 +53,11 @@ class Profile extends Component {
 
 	renderProfileImage = () => {
 		const {diameter} = this.props
-		return this.state.profileURL === null ? null : (
+		return (
 			<ProfileImage
 				diameter={diameter}
 				source={{
-					uri: this.state.profileURL ? `${this.state.profileURL}?${new Date().valueOf()}` : '',
+					uri: this.state.profileURL ? `${this.state.profileURL}?${new Date().valueOf()}` : `${global.urls.baseUrl}/profile2-tool/images/no_image.gif`,
 					cache: 'reload'
 				}}
 			/>
@@ -80,7 +80,7 @@ class Profile extends Component {
 
 Profile.defaultProps = {
 	diameter: 30,
-	name: '',
+	name: 'Andrew',
 	style: {
 		container: {flexDirection: 'row'},
 		text: {

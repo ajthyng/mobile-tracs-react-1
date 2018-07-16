@@ -57,7 +57,7 @@ const loginFailureAction = (error) => {
 					errorMessage = 'Network Error. Please check your internet connection and try again.';
 					break;
 				default:
-					errorMessage = 'There was a problem logging you in. Please try again later.';
+					break;
 			}
 	}
 	return {

@@ -227,7 +227,11 @@ class LoginScreen extends Component {
 	}
 
 	render() {
-		if (this.props.loggingIn || this.props.registering || this.state.checkingCredentials || this.props.isAuthenticated) {
+		const {loggingIn, registering, isAuthenticated} = this.props
+		const {checkingCredentials} = this.state
+		const actionInProgress = loggingIn || registering || checkingCredentials || isAuthenticated
+
+		if (actionInProgress) {
 			return (
 				<ActivityIndicator />
 			);

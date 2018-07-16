@@ -21,6 +21,7 @@ const DueDateContainer = styled.View`
 	padding-left: 16px;
 	padding-right: 16px;
 	flex-direction: row;
+	margin-top: 5px;
 `
 
 const SideColor = styled.View`

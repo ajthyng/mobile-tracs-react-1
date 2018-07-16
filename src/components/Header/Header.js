@@ -48,8 +48,9 @@ class Header extends Component {
 		const route = navigationState.routes[navigationState.index];
 
 		if (route.routes) {
-			return getActiveRouteName(route);
+			return this.getActiveRouteName(route);
 		}
+		console.log(route)
 		return route.routeName;
 	}
 

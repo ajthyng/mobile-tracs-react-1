@@ -29,6 +29,8 @@ class TRACSWebView extends Component {
 		};
 	}
 
+	handleBack = () => {}
+
 	componentDidMount() {
 		BackHandler.addEventListener(BackHandler.DEVICE_BACK_EVENT, this.handleBack);
 		Analytics().logTracsWebOpen();

@@ -24,6 +24,7 @@ import CourseDetailScreen from '../components/CourseDetailScreen/CourseDetailScr
 import SettingsScreen from '../components/SettingsScreen'
 import configureStore from '../store/configureStore'
 import TRACSWebView from '../_components/TRACSWebView/TRACSWebNative'
+import SimpleWebView from '../_components/SimpleWebView/SimpleWebView'
 
 Array.prototype.contains = function (value) {
 	return this.indexOf(value) >= 0
@@ -58,13 +59,19 @@ const MainNavigator = createStackNavigator(
 		Settings: {
 			screen: SettingsScreen,
 		},
+		Feedback: {
+			screen: () => <SimpleWebView url={`${global.urls.feedback}`} />
+		},
+		Support: {
+			screen: () => <SimpleWebView url={`${global.urls.support}`} />
+		},
 		TRACSWeb: {
 			screen: TRACSWebView,
 		}
 	}, {
 		initialRouteName: 'Home',
 		navigationOptions: {
-			header: ({navigation}) => (<Header navigation={navigation}/>),
+			header: ({navigation}) => (<Header navigation={navigation} />),
 			gesturesEnabled: false
 		},
 		headerMode: 'float',
@@ -89,9 +96,13 @@ const MainNavigator = createStackNavigator(
 )
 
 const AuthenticationNavigator = createSwitchNavigator({
-	Login: LoginScreen,
-	Main: MainNavigator
-}, {initialRouteName: 'Login', navigationOptions: {header: null}}
+		Login: LoginScreen,
+		Main: MainNavigator
+	}, {
+		initialRouteName: 'Login',
+		navigationOptions: {header: null},
+		resetOnBlur: false
+	}
 )
 
 module.exports = {

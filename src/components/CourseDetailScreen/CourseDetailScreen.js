@@ -26,10 +26,6 @@ const CourseDetailOptions = styled(CourseOptionsList)`
 `
 
 class CourseDetailScreen extends Component {
-	static navigationOptions = {
-		title: 'Course Info'
-	}
-
 	constructor(props) {
 		super(props)
 	}
@@ -46,8 +42,6 @@ class CourseDetailScreen extends Component {
 
 		const {contactInfo: {name: courseContactName}, name: title} = course
 
-		console.log(course)
-
 		return (
 			<Container>
 				<CourseDetailHeader
@@ -56,10 +50,24 @@ class CourseDetailScreen extends Component {
 					subtitle={courseContactName}
 				/>
 				<CourseGradeSummary />
-				<CourseDetailOptions />
+				<CourseDetailOptions course={course} />
 			</Container>
 		)
 	}
+}
+
+CourseDetailScreen.defaultProps = {
+	course: {
+		id: '',
+		name: 'Course title not set',
+		contactInfo: {
+			name: 'Instructor name not found'
+		}
+	}
+}
+
+CourseDetailScreen.navigationProps = {
+	title: 'Course Info'
 }
 
 export default withTheme(CourseDetailScreen)

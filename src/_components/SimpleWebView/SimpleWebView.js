@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {WebView, BackHandler} from 'react-native';
-import {Actions} from 'react-native-router-flux';
 
 const WEBVIEW_REF = "WEBVIEW_REF";
 
@@ -10,7 +9,6 @@ class SimpleWebView extends Component {
 		this.state = {
 			canGoBack: false
 		};
-
 	}
 
 	componentWillMount() {
@@ -25,7 +23,7 @@ class SimpleWebView extends Component {
 		if (this.state.canGoBack) {
 			this.refs[WEBVIEW_REF].goBack();
 		} else {
-			Actions.pop();
+			this.props.navigation.pop()
 		}
 		return true;
 	};

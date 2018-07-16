@@ -97,7 +97,6 @@ class App extends Component {
 	}
 
 	componentWillUnmount() {
-
 		AppState.removeEventListener('change', this.handleAppStateChange);
 	}
 
