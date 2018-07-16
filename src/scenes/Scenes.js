@@ -15,7 +15,7 @@ import Header from '../components/Header/Header'
 import React from 'react'
 import {View, Easing, Platform, Animated, Dimensions, Text} from 'react-native'
 
-import {createSwitchNavigator, createStackNavigator, Header as RNHeader, HeaderBackButton} from 'react-navigation'
+import {createSwitchNavigator, createStackNavigator} from 'react-navigation'
 import CalendarScreen from '../components/CalendarScreen/CalendarScreen'
 import CourseScreen from '../components/CourseScreen/CourseScreen'
 import {cardFromRight, cardFromBottom, cardFromLeft, cardFromTop, defaultTransition} from './Transitions'
@@ -23,7 +23,7 @@ import GradebookItems from '../components/GradebookItems/GradebookItems'
 import CourseDetailScreen from '../components/CourseDetailScreen/CourseDetailScreen'
 import SettingsScreen from '../components/SettingsScreen'
 import configureStore from '../store/configureStore'
-import { setHeaderState } from '../actions/header'
+import TRACSWebView from '../_components/TRACSWebView/TRACSWebNative'
 
 Array.prototype.contains = function (value) {
 	return this.indexOf(value) >= 0
@@ -57,6 +57,9 @@ const MainNavigator = createStackNavigator(
 		},
 		Settings: {
 			screen: SettingsScreen,
+		},
+		TRACSWeb: {
+			screen: TRACSWebView
 		}
 	}, {
 		initialRouteName: 'Home',

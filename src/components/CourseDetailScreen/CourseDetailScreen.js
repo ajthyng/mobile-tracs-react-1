@@ -29,25 +29,37 @@ class CourseDetailScreen extends Component {
 	static navigationOptions = {
 		title: 'Course Info'
 	}
+
 	constructor(props) {
 		super(props)
 	}
 
 	render() {
-		const {title, subtitle} = this.props
+		const {navigation} = this.props
+
+		const course = navigation.getParam('course', {
+			contactInfo: {
+				name: 'Instructor name not found'
+			},
+			name: 'Course title not set'
+		})
+
+		const {contactInfo: {name: courseContactName}, name: title} = course
+
+		console.log(course)
+
 		return (
 			<Container>
-				<CourseDetailHeader navigation={this.props.navigation} title={title} subtitle={subtitle}/>
+				<CourseDetailHeader
+					navigation={this.props.navigation}
+					title={title}
+					subtitle={courseContactName}
+				/>
 				<CourseGradeSummary />
 				<CourseDetailOptions />
 			</Container>
 		)
 	}
-}
-
-CourseDetailScreen.defaultProps = {
-	title: 'HS 1403 v2018.10.30',
-	subtitle: 'Dr. Carlos Solis'
 }
 
 export default withTheme(CourseDetailScreen)

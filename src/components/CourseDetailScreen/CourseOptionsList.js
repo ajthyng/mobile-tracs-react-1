@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import styled from 'styled-components'
 import {FlatList, TouchableWithoutFeedback, StyleSheet} from 'react-native'
 import Ripple from 'react-native-material-ripple'
+import {withNavigation} from 'react-navigation'
 
 const Container = styled.View`
   flex: 1;
@@ -49,7 +50,18 @@ const options = [
 	},
 	{
 		key: '1',
-		title: 'View Course Website'
+		title: 'View Course Website',
+		onPress: (navigation, url) => {
+			const {navigate} = navigation
+			if (typeof navigate === 'function') {
+				navigate({
+					routeName: 'TRACSWeb',
+					params: {
+						baseUrl: url
+					}
+				})
+			}
+		}
 	},
 	{
 		key: '2',
@@ -64,10 +76,21 @@ const options = [
 class CourseOptionsList extends Component {
 	constructor(props) {
 		super(props)
+		this.course = this.props.navigation.getParam('course', null)
+		this.optionOnPress = this.optionOnPress.bind(this)
+	}
+
+	optionOnPress(onPress) {
+		const {id: siteId} = this.course
+		const {navigation} = this.props
+
+		const url = `${global.urls.baseUrl}${global.urls.webUrl}/${siteId}`
+
+		if (typeof onPress === 'function') onPress(navigation, url)
 	}
 
 	renderOptionRow = ({item}) => (
-		<OptionTouchable>
+		<OptionTouchable onPress={() => this.optionOnPress(item.onPress)}>
 			<OptionContainer>
 				<OptionTitle>{item.title}</OptionTitle>
 			</OptionContainer>
@@ -87,4 +110,4 @@ class CourseOptionsList extends Component {
 	}
 }
 
-export default CourseOptionsList
+export default withNavigation(CourseOptionsList)
