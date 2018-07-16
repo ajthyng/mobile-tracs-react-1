@@ -44,7 +44,13 @@ class CourseScreen extends Component {
 
 	goToCourseDetail = () => {
 		this.props.dismiss()
-		this.props.navigation.navigate('CourseDetail')
+		const {course} = this.props
+		this.props.navigation.navigate('CourseDetail',
+			{
+				transition: 'cardFromRight',
+				course
+			}
+		)
 	}
 
 	render() {
