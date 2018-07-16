@@ -61,6 +61,9 @@ class Header extends Component {
 	render() {
 		const currentRoute = this.getActiveRouteName(this.props.navigation.state)
 		const {allSitesFilter} = this.state
+
+		if (global.android && currentRoute === 'TRACSWeb') return null
+
 		return (
 			<HeaderContainer>
 				<StatusBarSpace statusBarHeight={this.statusBarHeight} />

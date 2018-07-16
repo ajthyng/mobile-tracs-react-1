@@ -59,7 +59,7 @@ const MainNavigator = createStackNavigator(
 			screen: SettingsScreen,
 		},
 		TRACSWeb: {
-			screen: TRACSWebView
+			screen: TRACSWebView,
 		}
 	}, {
 		initialRouteName: 'Home',

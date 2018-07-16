@@ -11,6 +11,7 @@ import React, {Component} from 'react';
 import {BackHandler, WebView, Platform, StyleSheet, requireNativeComponent, View, Text} from 'react-native';
 import WebError from './WebError';
 import {Analytics} from '../../utils/analytics';
+import {withNavigation} from 'react-navigation'
 
 const TRACSWeb = requireNativeComponent('TRACSWeb', TRACSWebView);
 const styles = StyleSheet.create({
@@ -20,17 +21,13 @@ const styles = StyleSheet.create({
 	}
 });
 
-export default class TRACSWebView extends Component {
+class TRACSWebView extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			canGoBack: false
 		};
 	}
-
-	handleBack = () => {
-		return true;
-	};
 
 	componentDidMount() {
 		BackHandler.addEventListener(BackHandler.DEVICE_BACK_EVENT, this.handleBack);
@@ -63,7 +60,9 @@ export default class TRACSWebView extends Component {
 					});
 				}}
 			/>,
-			android: <TRACSWeb style={styles.webView} baseUrl={url} {...this.props}/>,
+			android: <TRACSWeb ref={c => this.webview = c} style={styles.webView} baseUrl={url} {...this.props}/>,
 		})
 	}
 }
+
+export default withNavigation(TRACSWebView)
