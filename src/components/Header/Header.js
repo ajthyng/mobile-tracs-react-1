@@ -50,7 +50,6 @@ class Header extends Component {
 		if (route.routes) {
 			return this.getActiveRouteName(route);
 		}
-		console.log(route)
 		return route.routeName;
 	}
 
