@@ -91,7 +91,7 @@ class CalendarScreen extends Component {
 			<ContainerView>
 				<CalendarView
 					items={this.state.items}
-					selected={dayjs().add(6, 'days').format('YYYY-MM-DD')}
+					selected={dayjs().format('YYYY-MM-DD')}
 					loadItemsForMonth={this.createEmptyItems}
 					renderItem={(item) => renderItem(item, this.colorMapping)}
 					renderDay={renderDay}
