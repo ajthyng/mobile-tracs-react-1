@@ -1,0 +1,338 @@
+{
+  "isLoading": false,
+  "errorMessage": "",
+  "f1003153-75b9-4abc-bc09-7a0e83d21293": {
+    "name": "CS 1301",
+    "id": "f1003153-75b9-4abc-bc09-7a0e83d21293",
+    "calculatedGrade": "65.88194444",
+    "mappedGrade": "D",
+    "grades": [
+      {
+        "comment": "This is a comment for a gradebook item.\r\n\r\nUpdate: More commentry",
+        "dueDate": 1528779600000,
+        "grade": "10",
+        "itemName": "Graded item with comment that has been updated",
+        "points": 150,
+        "postedDate": 1530649450000,
+        "userId": "851252b0-553a-44c7-9483-01bcc24d78da",
+        "userName": "Andrew Thyng"
+      },
+      {
+        "comment": null,
+        "dueDate": null,
+        "grade": null,
+        "itemName": "Ungraded with no due date",
+        "points": 66.5,
+        "postedDate": 1530551242000,
+        "userId": "851252b0-553a-44c7-9483-01bcc24d78da",
+        "userName": "Andrew Thyng"
+      },
+      {
+        "comment": null,
+        "dueDate": 1533704400000,
+        "grade": null,
+        "itemName": "Ungraded with due date",
+        "points": 400,
+        "postedDate": 1530555421000,
+        "userId": "851252b0-553a-44c7-9483-01bcc24d78da",
+        "userName": "Andrew Thyng"
+      },
+      {
+        "comment": "This is a comment, but why?",
+        "dueDate": 1534395600000,
+        "grade": null,
+        "itemName": "Ungraded with comment and due date",
+        "points": 430,
+        "postedDate": 1530551257000,
+        "userId": "851252b0-553a-44c7-9483-01bcc24d78da",
+        "userName": "Andrew Thyng"
+      },
+      {
+        "comment": "This also has a comment, but the item isn't graded or due at all",
+        "dueDate": null,
+        "grade": null,
+        "itemName": "Ungraded item with comment (no due date)",
+        "points": 100,
+        "postedDate": 1530551259000,
+        "userId": "851252b0-553a-44c7-9483-01bcc24d78da",
+        "userName": "Andrew Thyng"
+      },
+      {
+        "comment": null,
+        "dueDate": 1530248400000,
+        "grade": "45.7",
+        "itemName": "Graded item with due date",
+        "points": 50,
+        "postedDate": 1530625657000,
+        "userId": "851252b0-553a-44c7-9483-01bcc24d78da",
+        "userName": "Andrew Thyng"
+      },
+      {
+        "comment": null,
+        "dueDate": null,
+        "grade": "25",
+        "itemName": "Graded item without due date",
+        "points": 25,
+        "postedDate": 1530625679000,
+        "userId": "851252b0-553a-44c7-9483-01bcc24d78da",
+        "userName": "Andrew Thyng"
+      },
+      {
+        "comment": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse pulvinar bibendum nisi ac tristique. Morbi imperdiet cursus auctor. Nunc semper ex nec est semper, et convallis velit facilisis. Donec sollicitudin tempor diam, vitae pretium orci varius vehicula. Proin molestie nunc quis libero ultrices vehicula. Vivamus tincidunt bibendum sapien. Morbi non lectus in risus semper malesuada. Nunc interdum id enim nec volutpat. Donec volutpat quam turpis, ac placerat massa feugiat molestie.",
+        "dueDate": null,
+        "grade": "36",
+        "itemName": "Graded item with comment no due date",
+        "points": 40,
+        "postedDate": 1531930115000,
+        "userId": "851252b0-553a-44c7-9483-01bcc24d78da",
+        "userName": "Andrew Thyng"
+      },
+      {
+        "comment": null,
+        "dueDate": 1532926800000,
+        "grade": "43",
+        "itemName": "Graded item with comment and due date",
+        "points": 45,
+        "postedDate": 1530625819000,
+        "userId": "851252b0-553a-44c7-9483-01bcc24d78da",
+        "userName": "Andrew Thyng"
+      },
+      {
+        "comment": null,
+        "dueDate": null,
+        "grade": "10",
+        "itemName": "Graded item with no due date that is regraded",
+        "points": 40,
+        "postedDate": 1530625825000,
+        "userId": "851252b0-553a-44c7-9483-01bcc24d78da",
+        "userName": "Andrew Thyng"
+      },
+      {
+        "comment": null,
+        "dueDate": 1532667600000,
+        "grade": null,
+        "itemName": "Excused Gradebook Item",
+        "points": 50,
+        "postedDate": 1530555498000,
+        "userId": "851252b0-553a-44c7-9483-01bcc24d78da",
+        "userName": "Andrew Thyng"
+      }
+    ]
+  },
+  "788f0cbb-5ecc-475f-95be-35016305a163": {
+    "name": "PG 5665",
+    "id": "788f0cbb-5ecc-475f-95be-35016305a163",
+    "calculatedGrade": null,
+    "mappedGrade": null,
+    "grades": [
+      {
+        "comment": null,
+        "dueDate": 1531976400000,
+        "grade": null,
+        "itemName": "If I lost it all today, would you stay?",
+        "points": 1,
+        "postedDate": null,
+        "userId": "851252b0-553a-44c7-9483-01bcc24d78da",
+        "userName": "Andrew Thyng"
+      },
+      {
+        "comment": null,
+        "dueDate": 1531976400000,
+        "grade": null,
+        "itemName": "Could my love be enough to stimulate?",
+        "points": 5,
+        "postedDate": null,
+        "userId": "851252b0-553a-44c7-9483-01bcc24d78da",
+        "userName": "Andrew Thyng"
+      },
+      {
+        "comment": null,
+        "dueDate": 1532408400000,
+        "grade": null,
+        "itemName": "If shit hit the fan, grenades got thrown",
+        "points": 5,
+        "postedDate": null,
+        "userId": "851252b0-553a-44c7-9483-01bcc24d78da",
+        "userName": "Andrew Thyng"
+      },
+      {
+        "comment": null,
+        "dueDate": 1532494800000,
+        "grade": null,
+        "itemName": "Could you go down with me to the mat?",
+        "points": 5,
+        "postedDate": null,
+        "userId": "851252b0-553a-44c7-9483-01bcc24d78da",
+        "userName": "Andrew Thyng"
+      }
+    ]
+  },
+  "grades": [
+    {
+      "name": "CS 1301",
+      "id": "f1003153-75b9-4abc-bc09-7a0e83d21293",
+      "calculatedGrade": "65.88194444",
+      "mappedGrade": "D",
+      "grades": [
+        {
+          "comment": "This is a comment for a gradebook item.\r\n\r\nUpdate: More commentry",
+          "dueDate": 1528779600000,
+          "grade": "10",
+          "itemName": "Graded item with comment that has been updated",
+          "points": 150,
+          "postedDate": 1530649450000,
+          "userId": "851252b0-553a-44c7-9483-01bcc24d78da",
+          "userName": "Andrew Thyng"
+        },
+        {
+          "comment": null,
+          "dueDate": null,
+          "grade": null,
+          "itemName": "Ungraded with no due date",
+          "points": 66.5,
+          "postedDate": 1530551242000,
+          "userId": "851252b0-553a-44c7-9483-01bcc24d78da",
+          "userName": "Andrew Thyng"
+        },
+        {
+          "comment": null,
+          "dueDate": 1533704400000,
+          "grade": null,
+          "itemName": "Ungraded with due date",
+          "points": 400,
+          "postedDate": 1530555421000,
+          "userId": "851252b0-553a-44c7-9483-01bcc24d78da",
+          "userName": "Andrew Thyng"
+        },
+        {
+          "comment": "This is a comment, but why?",
+          "dueDate": 1534395600000,
+          "grade": null,
+          "itemName": "Ungraded with comment and due date",
+          "points": 430,
+          "postedDate": 1530551257000,
+          "userId": "851252b0-553a-44c7-9483-01bcc24d78da",
+          "userName": "Andrew Thyng"
+        },
+        {
+          "comment": "This also has a comment, but the item isn't graded or due at all",
+          "dueDate": null,
+          "grade": null,
+          "itemName": "Ungraded item with comment (no due date)",
+          "points": 100,
+          "postedDate": 1530551259000,
+          "userId": "851252b0-553a-44c7-9483-01bcc24d78da",
+          "userName": "Andrew Thyng"
+        },
+        {
+          "comment": null,
+          "dueDate": 1530248400000,
+          "grade": "45.7",
+          "itemName": "Graded item with due date",
+          "points": 50,
+          "postedDate": 1530625657000,
+          "userId": "851252b0-553a-44c7-9483-01bcc24d78da",
+          "userName": "Andrew Thyng"
+        },
+        {
+          "comment": null,
+          "dueDate": null,
+          "grade": "25",
+          "itemName": "Graded item without due date",
+          "points": 25,
+          "postedDate": 1530625679000,
+          "userId": "851252b0-553a-44c7-9483-01bcc24d78da",
+          "userName": "Andrew Thyng"
+        },
+        {
+          "comment": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse pulvinar bibendum nisi ac tristique. Morbi imperdiet cursus auctor. Nunc semper ex nec est semper, et convallis velit facilisis. Donec sollicitudin tempor diam, vitae pretium orci varius vehicula. Proin molestie nunc quis libero ultrices vehicula. Vivamus tincidunt bibendum sapien. Morbi non lectus in risus semper malesuada. Nunc interdum id enim nec volutpat. Donec volutpat quam turpis, ac placerat massa feugiat molestie.",
+          "dueDate": null,
+          "grade": "36",
+          "itemName": "Graded item with comment no due date",
+          "points": 40,
+          "postedDate": 1531930115000,
+          "userId": "851252b0-553a-44c7-9483-01bcc24d78da",
+          "userName": "Andrew Thyng"
+        },
+        {
+          "comment": null,
+          "dueDate": 1532926800000,
+          "grade": "43",
+          "itemName": "Graded item with comment and due date",
+          "points": 45,
+          "postedDate": 1530625819000,
+          "userId": "851252b0-553a-44c7-9483-01bcc24d78da",
+          "userName": "Andrew Thyng"
+        },
+        {
+          "comment": null,
+          "dueDate": null,
+          "grade": "10",
+          "itemName": "Graded item with no due date that is regraded",
+          "points": 40,
+          "postedDate": 1530625825000,
+          "userId": "851252b0-553a-44c7-9483-01bcc24d78da",
+          "userName": "Andrew Thyng"
+        },
+        {
+          "comment": null,
+          "dueDate": 1532667600000,
+          "grade": null,
+          "itemName": "Excused Gradebook Item",
+          "points": 50,
+          "postedDate": 1530555498000,
+          "userId": "851252b0-553a-44c7-9483-01bcc24d78da",
+          "userName": "Andrew Thyng"
+        }
+      ]
+    },
+    {
+      "name": "PG 5665",
+      "id": "788f0cbb-5ecc-475f-95be-35016305a163",
+      "calculatedGrade": null,
+      "mappedGrade": null,
+      "grades": [
+        {
+          "comment": null,
+          "dueDate": 1531976400000,
+          "grade": null,
+          "itemName": "If I lost it all today, would you stay?",
+          "points": 1,
+          "postedDate": null,
+          "userId": "851252b0-553a-44c7-9483-01bcc24d78da",
+          "userName": "Andrew Thyng"
+        },
+        {
+          "comment": null,
+          "dueDate": 1531976400000,
+          "grade": null,
+          "itemName": "Could my love be enough to stimulate?",
+          "points": 5,
+          "postedDate": null,
+          "userId": "851252b0-553a-44c7-9483-01bcc24d78da",
+          "userName": "Andrew Thyng"
+        },
+        {
+          "comment": null,
+          "dueDate": 1532408400000,
+          "grade": null,
+          "itemName": "If shit hit the fan, grenades got thrown",
+          "points": 5,
+          "postedDate": null,
+          "userId": "851252b0-553a-44c7-9483-01bcc24d78da",
+          "userName": "Andrew Thyng"
+        },
+        {
+          "comment": null,
+          "dueDate": 1532494800000,
+          "grade": null,
+          "itemName": "Could you go down with me to the mat?",
+          "points": 5,
+          "postedDate": null,
+          "userId": "851252b0-553a-44c7-9483-01bcc24d78da",
+          "userName": "Andrew Thyng"
+        }
+      ]
+    }
+  ]
+}

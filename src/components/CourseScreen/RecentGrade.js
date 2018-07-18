@@ -1,15 +1,16 @@
-import React, {Component} from 'react';
-import {TouchableOpacity} from 'react-native'
-import styled from 'styled-components';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import React, {Component} from 'react'
+import {TouchableOpacity, Animated, View, Dimensions} from 'react-native'
+import styled from 'styled-components'
+import Comments from './Comments'
 import dayjs from 'dayjs'
+import GradeComment from './GradeComment'
 
-const Container = styled.View`
+const Container = styled(Animated.View)`
   margin: 8px 4px 16px 4px;
   align-items: flex-start;
   justify-content: center;
   flex-direction: row;
-`;
+`
 
 const GradeCircle = styled.View`
 	height: 60px;
@@ -18,14 +19,14 @@ const GradeCircle = styled.View`
 	background-color: ${props => props.gradeColor};
 	align-items: center;
 	justify-content: center;
-`;
+`
 
 const GradeValue = styled.Text`
 	color: white;
 	font-size: 22px;
 	text-align: center;
 	font-weight: bold;
-`;
+`
 
 const GradeInfo = styled.View`
 	flex: 1;
@@ -33,39 +34,19 @@ const GradeInfo = styled.View`
 	background-color: transparent;
 	align-content: center;
 	justify-content: flex-start;
-`;
+`
 
 const GradeName = styled.Text`
 	padding-left: 8px;
 	font-size: 16px;
 	color: #363534;
-`;
+`
 
 const GradeEntryDate = styled.Text`
 	padding-left: 8px;
 	font-size: 14px;
 	color: #363534;
-`;
-
-const CommentContainer = styled(TouchableOpacity)`
-	padding: 0 0 8px 8px;
-	background-color: transparent;
-	flex-direction: row;
-	align-items: flex-end;
-	justify-content: flex-end;
-	flex: 1;
-`;
-
-const CommentButton = styled(Icon)`
-	font-size: 18px;
-	color: #363534;
-	padding-left: 8px;
-`;
-
-const CommentText = styled.Text`
-	font-size: 14px;
-	color: #363534;
-`;
+`
 
 function getHue(grade, points) {
 	const failingThreshold = 0.6
@@ -78,40 +59,84 @@ function getHue(grade, points) {
 	return normalizedGrade * 120
 }
 
-const commentsContainer = () => (
-	<CommentContainer>
-		<CommentText>Comments</CommentText>
-		<CommentButton name="comment"/>
-	</CommentContainer>
-)
-
 class RecentGrade extends Component {
 	constructor(props) {
-		super(props);
+		super(props)
 		const {grade, points} = props
 
-		this.hue = getHue(parseInt(grade, 10), points);
+		this.state = {
+			showComment: false
+		}
+
+		this.driver = new Animated.Value(0)
+		this.hue = getHue(parseInt(grade, 10), points)
+	}
+
+	showComment = () => {
+		this.animateComment(true)
+	}
+
+	hideComment = () => {
+		this.animateComment(false)
+	}
+
+	animateComment = (showComment = true) => {
+		Animated.timing(this.driver, {
+			toValue: showComment ? 1 : 0,
+			duration: 200,
+			useNativeDriver: true
+		}).start()
 	}
 
 	render() {
 		const {grade, name, comment, dateGraded} = this.props
+		const translateY = this.driver.interpolate({
+			inputRange: [0, 1],
+			outputRange: [0, -80]
+		})
+
+		const opacity = this.driver.interpolate({
+			inputRange: [0, 1],
+			outputRange: [1, 0]
+		})
+
+		const translateCommentY = this.driver.interpolate({
+			inputRange: [0, 1],
+			outputRange: [80, 0]
+		})
+
+		const commentOpacity = this.driver.interpolate({
+			inputRange: [0, 1],
+			outputRange: [0, 1]
+		})
 
 		return (
-			<Container>
-				<GradeCircle gradeColor={`hsl(${this.hue}, 70%, 50%)`}>
-					<GradeValue>{grade}</GradeValue>
-				</GradeCircle>
-				<GradeInfo>
-					<GradeName>
-						{name}
-					</GradeName>
-					<GradeEntryDate>
-						{`Posted: ${dayjs(dateGraded).format('MMM DD HH:mm a')}`}
-					</GradeEntryDate>
-					{comment ? commentsContainer() : null}
-				</GradeInfo>
-			</Container>
-		);
+			<View>
+				<Comments
+					onPress={this.hideComment}
+					comment={comment}
+					style={{
+						position: 'absolute',
+						transform: [{translateY: translateCommentY}],
+						opacity: commentOpacity
+					}}
+				/>
+				<Container style={{transform: [{translateY: translateY}], opacity}}>
+					<GradeCircle gradeColor={`hsl(${this.hue}, 70%, 50%)`}>
+						<GradeValue>{grade}</GradeValue>
+					</GradeCircle>
+					<GradeInfo>
+						<GradeName>
+							{name}
+						</GradeName>
+						<GradeEntryDate>
+							{`Posted: ${dayjs(dateGraded).format('MMM DD h:mm a')}`}
+						</GradeEntryDate>
+						{comment ? <GradeComment onPress={this.showComment} style={{marginTop: 8}} /> : null}
+					</GradeInfo>
+				</Container>
+			</View>
+		)
 	}
 }
 
@@ -119,6 +144,6 @@ RecentGrade.defaultProps = {
 	name: "Gradebook Name Not Found",
 	grade: Math.ceil(Math.random() * 100),
 	dateGraded: dayjs().format('MMM DD HH:mm a')
-};
+}
 
-export default RecentGrade;
+export default RecentGrade

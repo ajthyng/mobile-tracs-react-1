@@ -1,0 +1,47 @@
+import React from 'react'
+import {TouchableOpacity, ScrollView, Animated} from 'react-native'
+import Icon from 'react-native-vector-icons/Ionicons'
+import styled from 'styled-components'
+
+const Container = styled(Animated.View)`
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  height: 80px;
+  width: 100%;
+`
+
+const BackButton = styled(Icon)`
+	margin-left: 8px;
+	font-size: 48px;
+`
+
+const CommentText = styled.Text`
+	color: #363534;
+	align-self: flex-start;
+	font-size: 14px;
+	margin-left: 16px;
+	margin-right: 16px;
+`
+
+const Comments = (props) => {
+	const {comment, onPress, style} = props
+
+	return (
+		<Container style={style}>
+			<TouchableOpacity onPress={onPress}>
+				<BackButton name='ios-arrow-back' />
+			</TouchableOpacity>
+			<ScrollView bounces={false}>
+				<CommentText>{comment}</CommentText>
+			</ScrollView>
+		</Container>
+	)
+}
+
+Comments.defaultProps = {
+	comment: 'No comments posted',
+	onPress: () => null
+}
+
+export default Comments

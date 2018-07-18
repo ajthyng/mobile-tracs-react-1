@@ -2,10 +2,11 @@ import React, {Component} from 'react'
 import RecentGrade from './RecentGrade'
 import styled from 'styled-components'
 
-const RecentGradesContainer = styled.ScrollView`
+const RecentGradesContainer = styled.View`
 	flex: 1;
 	padding: 0 8px 0 8px;
 	background-color: ${props => props.theme.transparent};
+	height: 80px;
 `
 
 class RecentGrades extends Component {
@@ -31,7 +32,7 @@ class RecentGrades extends Component {
 		const {grades} = this.props
 
 		return (
-			<RecentGradesContainer bounces={false}>
+			<RecentGradesContainer>
 				{grades.map(this.renderGrades)}
 			</RecentGradesContainer>
 		)

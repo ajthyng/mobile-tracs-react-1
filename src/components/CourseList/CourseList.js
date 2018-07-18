@@ -126,7 +126,7 @@ class CourseList extends Component {
 					isVisible={this.state.isVisible}
 					onBackButtonPress={() => this.setState({isVisible: false})}
 					onBackdropPress={() => this.setState({isVisible: false})}
-					swipeDirection='down'
+
 					onSwipe={() => this.setState({isVisible: false})}
 					animationIn={{
 						from: {

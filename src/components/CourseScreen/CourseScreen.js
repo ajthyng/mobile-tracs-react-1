@@ -77,9 +77,7 @@ const byPostedDate = (gradeA, gradeB) => {
 	const postedDateA = dayjs(gradeA.postedDate)
 	const postedDateB = dayjs(gradeB.postedDate)
 
-	let order = postedDateA.isBefore(postedDateB) ? -1 : 0
-	order = postedDateA.isAfter(postedDateB) ? 1 : order
-	return order
+	return postedDateB - postedDateA
 }
 
 const onlyPostedGrades = ({grade, postedDate}) => {
@@ -94,11 +92,17 @@ const toGradesForDisplayedCourse = (id) => (accum, course) => {
 	return accum
 }
 
-const mapStateToProps = (state, props) => {
+export const mapStateToProps = (state, props) => {
 	const {id} = props.course
-	const {grades} = state.grades
+	let mostRecentGrades = []
 
-	const mostRecentGrades = grades
+	if (!state.hasOwnProperty('grades')) return {mostRecentGrades}
+
+	const {grades} = (state || {}).grades
+
+	if (!Array.isArray(grades)) return {mostRecentGrades}
+
+	mostRecentGrades = grades
 		.reduce(toGradesForDisplayedCourse(id), [])
 		.filter(onlyPostedGrades)
 		.sort(byPostedDate)
