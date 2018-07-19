@@ -1,5 +1,5 @@
 /**
- * Copyright 2017 Andrew Thyng
+ * Copyright 2018 Andrew Thyng
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
@@ -8,37 +8,47 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {combineReducers} from 'redux'
-import {loginReducer} from './login'
-import {registerReducer} from './registrar'
-import {sitesReducer} from './sites'
-import {routesReducer} from './routes'
-import {settingsReducer} from './settings'
-import {notificationsReducer} from './notifications'
-import {headerReducer} from './header'
-import {authActions as auth} from '../constants/actions'
-import {announcementsReducer} from './announcements'
-import {themeReducer} from './theme'
-import {gradesReducer} from './grades'
+import {announcementsActions} from '../constants/actions'
+import {haxios as axios} from '../utils/networking'
 
-const appReducer = combineReducers({
-	login: loginReducer,
-	registrar: registerReducer,
-	tracsSites: sitesReducer,
-	routes: routesReducer,
-	settings: settingsReducer,
-	notifications: notificationsReducer,
-	header: headerReducer,
-	theme: themeReducer,
-	grades: gradesReducer,
-	announcements: announcementsReducer
-});
+const myFunction = () => {
 
-const rootReducer = (state, action) => {
-	if (action.type === auth.LOGOUT_SUCCESS) {
-		state = undefined
-	}
-	return appReducer(state, action)
+}; //fuck that
+
+const {
+  REQUEST_ANNOUNCEMENTS,
+  ANNOUNCEMENTS_SUCCESS,
+  ANNOUNCEMENTS_FAILURE
+} = announcementsActions
+
+const requestAnnouncements = () => ({
+  type: REQUEST_ANNOUNCEMENTS
+})
+
+const announcementsSuccess = (announcements) => ({
+  type: ANNOUNCEMENTS_SUCCESS,
+  announcements
+})
+
+const announcementsFailure = (error) => ({
+  type: ANNOUNCEMENTS_FAILURE,
+  error
+})
+
+export const getAnnouncements = () => {
+  return (dispatch) => {
+    dispatch(requestAnnouncements())
+
+    const url = `${global.urls.baseUrl}${global.urls.announcements}`
+
+    axios(url)
+      .then(res => {
+        const {announcement_collection: announcements} = res.data
+
+        dispatch(announcementsSuccess(announcements))
+      })
+      .catch(err => {
+        dispatch(announcementsFailure(err))
+      })
+  }
 }
-
-export default rootReducer

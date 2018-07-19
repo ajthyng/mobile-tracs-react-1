@@ -1,5 +1,5 @@
 /**
- * Copyright 2017 Andrew Thyng
+ * Copyright 2018 Andrew Thyng
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
@@ -8,37 +8,54 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {combineReducers} from 'redux'
-import {loginReducer} from './login'
-import {registerReducer} from './registrar'
-import {sitesReducer} from './sites'
-import {routesReducer} from './routes'
-import {settingsReducer} from './settings'
-import {notificationsReducer} from './notifications'
-import {headerReducer} from './header'
-import {authActions as auth} from '../constants/actions'
-import {announcementsReducer} from './announcements'
-import {themeReducer} from './theme'
-import {gradesReducer} from './grades'
+import {announcementsActions} from '../constants/actions'
 
-const appReducer = combineReducers({
-	login: loginReducer,
-	registrar: registerReducer,
-	tracsSites: sitesReducer,
-	routes: routesReducer,
-	settings: settingsReducer,
-	notifications: notificationsReducer,
-	header: headerReducer,
-	theme: themeReducer,
-	grades: gradesReducer,
-	announcements: announcementsReducer
-});
+const {
+	REQUEST_ANNOUNCEMENTS,
+	ANNOUNCEMENTS_SUCCESS,
+	ANNOUNCEMENTS_FAILURE
+} = announcementsActions
 
-const rootReducer = (state, action) => {
-	if (action.type === auth.LOGOUT_SUCCESS) {
-		state = undefined
-	}
-	return appReducer(state, action)
+export const initialState = {
+	isLoading: false,
+	all: [],
+	errorMessage: ''
 }
 
-export default rootReducer
+const requestAnnouncements = (state, action) => {
+	return {
+		...state,
+		isLoading: true,
+		errorMessage: ''
+	}
+}
+
+const announcementsSuccess = (state, action) => {
+	return {
+		...state,
+		isLoading: false,
+		all: action.announcements,
+		errorMessage: ''
+	}
+}
+
+const announcementsFailure = (state, action) => {
+	return {
+		...state,
+		isLoading: false,
+		errorMessage: action.error.message || 'Could not load announcements'
+	}
+}
+
+export function announcementsReducer(state = initialState, action) {
+	switch (action.type) {
+		case REQUEST_ANNOUNCEMENTS:
+			return requestAnnouncements(state, action)
+		case ANNOUNCEMENTS_SUCCESS:
+			return announcementsSuccess(state, action)
+		case ANNOUNCEMENTS_FAILURE:
+			return announcementsFailure(state, action)
+		default:
+			return state
+	}
+}

@@ -31,7 +31,7 @@ const gradesFailure = (error) => ({
 	error
 })
 
-export const getGrades = (dispatch) => (
+export const getGrades = () => (
 	async (dispatch) => {
 		const start = new Date()
 		dispatch(requestGrades())
@@ -46,3 +46,4 @@ export const getGrades = (dispatch) => (
 		})
 	}
 )
+
