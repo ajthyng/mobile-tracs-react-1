@@ -44,13 +44,20 @@ class CourseScreen extends Component {
 
 	goToCourseDetail = () => {
 		this.props.dismiss()
-		const {course} = this.props
-		this.props.navigation.navigate('CourseDetail',
-			{
-				transition: 'cardFromRight',
-				course
-			}
-		)
+		const {course, navigation: {navigate}} = this.props
+		navigate('CourseDetail', {
+			transition: 'cardFromRight',
+			course
+		})
+	}
+
+	goToAnnouncements = () => {
+		this.props.dismiss()
+		const {course, navigation: {navigate}} = this.props
+		navigate('Announcements', {
+			transition: 'cardFromRight',
+			course
+		})
 	}
 
 	render() {
@@ -62,7 +69,7 @@ class CourseScreen extends Component {
 				<TitleSeparator />
 				<RecentText>Latest Grades</RecentText>
 				<RecentGrades grades={mostRecentGrades} />
-				<Announcements id={id} />
+				<Announcements onPress={this.goToAnnouncements} id={id} />
 				<CourseButton title='View Course' onPress={this.goToCourseDetail} />
 			</CourseContainer>
 		)

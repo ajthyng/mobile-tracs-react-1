@@ -25,6 +25,7 @@ import SettingsScreen from '../components/SettingsScreen'
 import configureStore from '../store/configureStore'
 import TRACSWebView from '../_components/TRACSWebView/TRACSWebNative'
 import SimpleWebView from '../_components/SimpleWebView/SimpleWebView'
+import AnnouncementsScreen from '../components/AnnouncementsScreen'
 
 Array.prototype.contains = function (value) {
 	return this.indexOf(value) >= 0
@@ -58,6 +59,9 @@ const MainNavigator = createStackNavigator(
 		},
 		Settings: {
 			screen: SettingsScreen,
+		},
+		Announcements: {
+			screen: AnnouncementsScreen
 		},
 		Feedback: {
 			screen: () => <SimpleWebView url={`${global.urls.feedback}`} />

@@ -38,10 +38,10 @@ const NewBadge = styled.View`
 
 class Announcements extends Component {
 	render() {
-		const {hasNewAnnouncements} = this.props
+		const {hasNewAnnouncements, onPress} = this.props
 		const title = hasNewAnnouncements ? 'New Announcements' : 'Announcements'
 		return (
-			<TouchableOpacity>
+			<TouchableOpacity onPress={onPress}>
 				<AnnouncementsContainer>
 						<View>
 							<AnnouncementsIcon name='bell' />
