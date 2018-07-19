@@ -1,5 +1,5 @@
-import React from 'react'
-import {TouchableOpacity, ScrollView, Animated} from 'react-native'
+import React, {Component} from 'react'
+import {TouchableWithoutFeedback, TouchableOpacity, View, ScrollView, Animated} from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
 import styled from 'styled-components'
 
@@ -13,7 +13,7 @@ const Container = styled(Animated.View)`
 
 const BackButton = styled(Icon)`
 	margin-left: 8px;
-	font-size: 48px;
+	font-size: 32px;
 `
 
 const CommentText = styled.Text`
@@ -24,19 +24,23 @@ const CommentText = styled.Text`
 	margin-right: 16px;
 `
 
-const Comments = (props) => {
-	const {comment, onPress, style} = props
+class Comments extends Component {
+	flashScrollIndicators = () => {
+		this.scrollView.flashScrollIndicators()
+	}
 
-	return (
-		<Container style={style}>
-			<TouchableOpacity onPress={onPress}>
-				<BackButton name='ios-arrow-back' />
-			</TouchableOpacity>
-			<ScrollView bounces={false}>
-				<CommentText>{comment}</CommentText>
-			</ScrollView>
-		</Container>
-	)
+	render() {
+		const {comment, onPress, style} = this.props
+
+		return (
+			<Container style={style}>
+				<TouchableOpacity onPress={onPress}>
+					<BackButton name='ios-arrow-forward' />
+				</TouchableOpacity>
+				<ScrollView ref={c => this.scrollView = c} bounces={false}><CommentText>{comment}</CommentText></ScrollView>
+			</Container>
+		)
+	}
 }
 
 Comments.defaultProps = {

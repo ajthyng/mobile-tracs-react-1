@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {TouchableOpacity, Animated, View, Dimensions} from 'react-native'
+import Swipeout from 'react-native-swipeout'
 import styled from 'styled-components'
 import Comments from './Comments'
 import dayjs from 'dayjs'
@@ -64,10 +65,6 @@ class RecentGrade extends Component {
 		super(props)
 		const {grade, points} = props
 
-		this.state = {
-			showComment: false
-		}
-
 		this.driver = new Animated.Value(0)
 		this.hue = getHue(parseInt(grade, 10), points)
 	}
@@ -85,43 +82,40 @@ class RecentGrade extends Component {
 			toValue: showComment ? 1 : 0,
 			duration: 200,
 			useNativeDriver: true
-		}).start()
+		}).start(() => {
+			if (showComment) {
+				this.comments.flashScrollIndicators()
+			}
+		})
 	}
 
 	render() {
 		const {grade, name, comment, dateGraded} = this.props
-		const translateY = this.driver.interpolate({
+		const {width} = Dimensions.get('window')
+
+		const translateX = this.driver.interpolate({
 			inputRange: [0, 1],
-			outputRange: [0, -80]
+			outputRange: [0, -width]
 		})
 
 		const opacity = this.driver.interpolate({
 			inputRange: [0, 1],
-			outputRange: [1, 0]
+			outputRange: [1, 1]
 		})
 
-		const translateCommentY = this.driver.interpolate({
+		const translateCommentX = this.driver.interpolate({
 			inputRange: [0, 1],
-			outputRange: [80, 0]
+			outputRange: [width, 0]
 		})
 
 		const commentOpacity = this.driver.interpolate({
 			inputRange: [0, 1],
-			outputRange: [0, 1]
+			outputRange: [1, 1]
 		})
 
 		return (
-			<View>
-				<Comments
-					onPress={this.hideComment}
-					comment={comment}
-					style={{
-						position: 'absolute',
-						transform: [{translateY: translateCommentY}],
-						opacity: commentOpacity
-					}}
-				/>
-				<Container style={{transform: [{translateY: translateY}], opacity}}>
+			<View style={{backgroundColor: 'white', overflow: 'hidden'}}>
+				<Container style={{transform: [{translateX: translateX}], opacity}}>
 					<GradeCircle gradeColor={`hsl(${this.hue}, 70%, 50%)`}>
 						<GradeValue>{grade}</GradeValue>
 					</GradeCircle>
@@ -135,6 +129,16 @@ class RecentGrade extends Component {
 						{comment ? <GradeComment onPress={this.showComment} style={{marginTop: 8}} /> : null}
 					</GradeInfo>
 				</Container>
+				<Comments
+					ref={c => this.comments = c}
+					onPress={this.hideComment}
+					comment={comment}
+					style={{
+						transform: [{translateX: translateCommentX}],
+						opacity: commentOpacity,
+						position: 'absolute'
+					}}
+				/>
 			</View>
 		)
 	}
