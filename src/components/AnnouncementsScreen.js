@@ -13,7 +13,6 @@ const Container = styled.View`
 `
 
 const AnnouncementContainer = styled.View`
-  height: 150px;
   width: 100%;
   background-color: papayawhip;
   align-items: flex-start;
@@ -37,11 +36,23 @@ const makeHTML = (body) => (
 )
 
 class Announcement extends Component {
+  state = {
+    height: 40
+  }
+  updateHeight = event => {
+    this.setState({height: parseInt(event.jsEvaluationValue)})
+  }
   render() {
     const {announcement: {body}} = this.props
+    const {height} = this.state
+
     return (
-      <AnnouncementContainer>
-          <AnnouncementBody source={{html: makeHTML(body)}} />
+      <AnnouncementContainer style={{height}}>
+          <AnnouncementBody
+            injectedJavaScript='document.body.scrollHeight;'
+            onNavigationStateChange={this.updateHeight}
+            source={{html: makeHTML(body)}}
+          />
       </AnnouncementContainer>
     )
   }
@@ -61,6 +72,7 @@ class AnnouncementsScreen extends Component {
     return (
       <Container>
         <FlatList
+          bounces={false}
           data={announcements}
           style={{width: '100%'}}
           keyExtractor={item => item.announcementId}
