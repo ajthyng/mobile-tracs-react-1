@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import {TouchableOpacity, Animated, View, Dimensions} from 'react-native'
-import Swipeout from 'react-native-swipeout'
 import styled from 'styled-components'
 import Comments from './Comments'
 import dayjs from 'dayjs'

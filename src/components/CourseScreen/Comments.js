@@ -37,7 +37,16 @@ class Comments extends Component {
 				<TouchableOpacity onPress={onPress}>
 					<BackButton name='ios-arrow-forward' />
 				</TouchableOpacity>
-				<ScrollView ref={c => this.scrollView = c} bounces={false}><CommentText>{comment}</CommentText></ScrollView>
+				<ScrollView ref={c => this.scrollView = c} bounces={false}>
+					<CommentText>{comment}</CommentText>
+					<TouchableOpacity style={{
+						position: 'absolute',
+						top: 0,
+						left: 0,
+						right: 0,
+						bottom: 0
+					}}/>
+				</ScrollView>
 			</Container>
 		)
 	}
