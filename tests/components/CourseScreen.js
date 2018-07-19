@@ -68,3 +68,49 @@ it('should order grades by most recent', () => {
 
 	expect(grades.length).toBe(3)
 })
+
+it('should return an empty array if grades are missing postedDates', () => {
+	const course = {id}
+	let state = {
+		grades: {...gradesResponse}
+	}
+
+	const props = {course}
+
+	state.grades.grades.forEach(course => {
+		course.grades = course.grades.map(grade => {
+			delete grade.postedDate
+			return grade
+		})
+	})
+
+	const {mostRecentGrades: grades} = mapStateToProps(state, props)
+	expect(grades.length).toBe(0)
+})
+
+it('should return an empty array if course has no id', () => {
+	let state = {
+		grades: {...gradesResponse}
+	}
+
+	const props = {course: {}}
+	const {mostRecentGrades: grades} = mapStateToProps(state, props)
+
+	expect(grades.length).toBe(0)
+})
+
+it('should return an empty array if course and grades entry have no course id', () => {
+	let state = {
+		grades: {...gradesResponse}
+	}
+	const props = {course: {}}
+
+	state.grades.grades = state.grades.grades.map(course => {
+		delete course.id
+		return course
+	})
+
+	const {mostRecentGrades: grades} = mapStateToProps(state, props)
+
+	expect(grades.length).toBe(0)
+})

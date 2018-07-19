@@ -88,6 +88,10 @@ const onlyPostedGrades = ({grade, postedDate}) => {
 }
 
 const toGradesForDisplayedCourse = (id) => (accum, course) => {
+	if (course.id === undefined || course.id === null) return accum
+
+	if (id === undefined || id === null) return accum
+
 	if (course.id === id) accum.push(...course.grades)
 	return accum
 }
