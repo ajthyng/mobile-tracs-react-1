@@ -10,6 +10,7 @@ const CommentContainer = styled(TouchableOpacity)`
 	flex-direction: row;
 	align-items: flex-end;
 	justify-content: flex-end;
+	align-self: flex-end;
 `;
 
 const CommentButton = styled(Icon)`
