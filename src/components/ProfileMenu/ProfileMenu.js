@@ -27,7 +27,7 @@ class CustomMenuRenderer extends Component {
 	}
 
 	componentDidMount() {
-		Animated.timing(this.state.slide, {
+		this.openAnimation = Animated.timing(this.state.slide, {
 			duration: 200,
 			toValue: 1,
 			easing: Easing.out(Easing.cubic),
@@ -46,8 +46,12 @@ class CustomMenuRenderer extends Component {
 		})
 	}
 
+	componentWillUnmount () {
+		this.openAnimation && this.openAnimation.cancel()
+	}
+
 	render() {
-		const {style, children, layouts, top, ...other} = this.props
+		const {style, children, layouts, ...other} = this.props
 		const width = layouts.windowLayout.width * 0.65
 		const layout = {top: 0, right: 0, height: '100%', position: 'absolute', width}
 		const animation = {

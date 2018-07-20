@@ -12,38 +12,38 @@ import {haxios as axios} from '../utils/networking'
 import {gradesActions} from '../constants/actions'
 
 const {
-	REQUEST_GRADES,
-	GRADES_SUCCESS,
-	GRADES_FAILURE
+  REQUEST_GRADES,
+  GRADES_SUCCESS,
+  GRADES_FAILURE
 } = gradesActions
 
 const requestGrades = () => ({
-	type: REQUEST_GRADES
+  type: REQUEST_GRADES
 })
 
 const gradesSuccess = (grades) => ({
-	type: GRADES_SUCCESS,
-	grades
+  type: GRADES_SUCCESS,
+  grades
 })
 
 const gradesFailure = (error) => ({
-	type: GRADES_FAILURE,
-	error
+  type: GRADES_FAILURE,
+  error
 })
 
 export const getGrades = () => (
-	async (dispatch) => {
-		const start = new Date()
-		dispatch(requestGrades())
+  async (dispatch) => {
+    const start = new Date()
+    dispatch(requestGrades())
 
-		const url = `${global.urls.baseUrl}${global.urls.grades}`
+    const url = `${global.urls.baseUrl}${global.urls.grades}`
 
-		axios(url, {method: 'get'}).then(res => {
-			const {gradebook_collection} = res.data
-			dispatch(gradesSuccess(gradebook_collection))
-		}).catch(err => {
-			dispatch(gradesFailure(err))
-		})
-	}
+    axios(url, {method: 'get'}).then(res => {
+      const {gradebook_collection} = res.data
+      dispatch(gradesSuccess(gradebook_collection))
+    }).catch(err => {
+      dispatch(gradesFailure(err))
+    })
+  }
 )
 

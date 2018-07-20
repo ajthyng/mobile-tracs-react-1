@@ -11,10 +11,6 @@
 import {announcementsActions} from '../constants/actions'
 import {haxios as axios} from '../utils/networking'
 
-const myFunction = () => {
-
-}; //fuck that
-
 const {
   REQUEST_ANNOUNCEMENTS,
   ANNOUNCEMENTS_SUCCESS,
@@ -36,19 +32,16 @@ const announcementsFailure = (error) => ({
 })
 
 export const getAnnouncements = () => {
-  return (dispatch) => {
+  return async (dispatch) => {
     dispatch(requestAnnouncements())
 
     const url = `${global.urls.baseUrl}${global.urls.announcements}`
 
-    axios(url)
-      .then(res => {
-        const {announcement_collection: announcements} = res.data
+    let {data: {announcement_collection: announcements}}
+      = await axios(url)
+      .catch(err => err)
 
-        dispatch(announcementsSuccess(announcements))
-      })
-      .catch(err => {
-        dispatch(announcementsFailure(err))
-      })
+    if (announcements instanceof Error) dispatch(announcementsFailure(err))
+    setTimeout(() => dispatch(announcementsSuccess(announcements)), 500)
   }
 }

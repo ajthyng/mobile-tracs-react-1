@@ -1,34 +1,65 @@
 import React, {Component} from 'react'
-import {FlatList, Dimensions, ScrollView, WebView} from 'react-native'
+import {
+  FlatList,
+  Dimensions,
+  View,
+  TouchableOpacity,
+  ScrollView,
+  WebView
+} from 'react-native'
 import styled from 'styled-components'
 import {connect} from 'react-redux'
 import {getAnnouncements} from '../actions/announcements'
 import {withNavigation} from 'react-navigation'
+import ActivityIndicator from '../_components/Helper/ActivityIndicator'
 
 const Container = styled.View`
   flex: 1;
   align-items: center;
   justify-content: center;
-  background-color: tomato;
+  background-color: white;
 `
 
 const AnnouncementContainer = styled.View`
-  width: 100%;
-  background-color: papayawhip;
+  background-color: white;
   align-items: flex-start;
   justify-content: center;
+  elevation: 3;
+  shadow-color: #363534;
+  shadow-opacity: 0.5;
+  shadow-radius: 2px;
+  shadow-offset: 0px 2px;
 `
 
 const AnnouncementBody = styled(WebView)`
-  width: ${Dimensions.get('window').width}px;
+  width: ${props => Dimensions.get('window').width - props.margin * 2}px;
+`
+
+const AnnouncementTitleContainer = styled(TouchableOpacity)`
+  height: 40px;
+  align-items: flex-start;
+  justify-content: center;
+  padding-left: 8px;
+  width: 100%;
+  background-color: white;
+`
+
+const AnnouncementTitle = styled.Text`
+  font-weight: bold;
+  font-size: 18px;
 `
 
 const makeHTML = (body) => (
   `<html>
     <head>
-      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name='viewport' content='width=device-width, initial-scale=1'>
+      <script>
+        const getScrollHeight = () => {
+          document.title = document.body.scrollHeight
+        }
+      </script>
     </head>
-    <body>
+    <body onload='getScrollHeight()'>
       ${body}    
     </body>
   </html>
@@ -36,23 +67,40 @@ const makeHTML = (body) => (
 )
 
 class Announcement extends Component {
-  state = {
-    height: 40
+  constructor(props) {
+    super(props)
+    this.state = {
+      height: 100,
+      showBody: false
+    }
+    this.contentMargin = 10
   }
+
   updateHeight = event => {
-    this.setState({height: parseInt(event.jsEvaluationValue)})
+    console.log(event)
+    const {title, jsEvaluationValue} = event
+    this.setState({height: parseInt(jsEvaluationValue || title)})
   }
+
   render() {
-    const {announcement: {body}} = this.props
-    const {height} = this.state
+    const {announcement: {body, title}} = this.props
+    const {height, showBody} = this.state
 
     return (
-      <AnnouncementContainer style={{height}}>
-          <AnnouncementBody
-            injectedJavaScript='document.body.scrollHeight;'
-            onNavigationStateChange={this.updateHeight}
-            source={{html: makeHTML(body)}}
-          />
+      <AnnouncementContainer style={{margin: this.contentMargin}}>
+        <AnnouncementTitleContainer activeOpacity={1} onPress={() => {
+          this.setState({showBody: !showBody})
+        }}>
+          <AnnouncementTitle>{title}</AnnouncementTitle>
+        </AnnouncementTitleContainer>
+        <AnnouncementBody
+          margin={this.contentMargin}
+          style={{height: showBody ? height : 0}}
+          mixedContentMode='compatibility'
+          injectedJavaScript='(() => document.body.scrollHeight)()'
+          onNavigationStateChange={this.updateHeight}
+          source={{html: makeHTML(body)}}
+        />
       </AnnouncementContainer>
     )
   }
@@ -74,7 +122,13 @@ class AnnouncementsScreen extends Component {
         <FlatList
           bounces={false}
           data={announcements}
+          ListEmptyComponent={() => (
+            <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+              <ActivityIndicator />
+            </View>
+          )}
           style={{width: '100%'}}
+          contentContainerStyle={null}
           keyExtractor={item => item.announcementId}
           renderItem={({item}) => <Announcement announcement={item} />}
         />
