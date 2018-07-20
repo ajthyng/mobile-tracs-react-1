@@ -116,17 +116,16 @@ class AnnouncementsScreen extends Component {
   }
 
   render() {
-    const {announcements} = this.props
-    return (
+    const {announcements, loading} = this.props
+    return loading ? (
+      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+        <ActivityIndicator />
+      </View>
+    ) : (
       <Container>
         <FlatList
           bounces={false}
           data={announcements}
-          ListEmptyComponent={() => (
-            <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-              <ActivityIndicator />
-            </View>
-          )}
           style={{width: '100%'}}
           contentContainerStyle={null}
           keyExtractor={item => item.announcementId}
@@ -151,7 +150,8 @@ const mapStateToProps = (state, props) => {
   announcements = state.announcements.all.filter(item => item.siteId === id)
 
   return {
-    announcements
+    announcements,
+    loading: state.announcements.isLoading
   }
 }
 
