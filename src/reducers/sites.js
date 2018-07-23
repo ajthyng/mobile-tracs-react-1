@@ -8,6 +8,13 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import * as sites from '../constants/actions';
+import {toggleStatus} from '../constants/sites'
+
+const {
+	FAVORITES,
+	ALL_SITES
+} = toggleStatus
+
 const {
 	CLEAR_SITES,
 	REQUEST_SITES,
@@ -16,7 +23,8 @@ const {
 	REQUEST_FAVORITES,
 	FAVORITES_SUCCESS,
 	FAVORITES_FAILURE,
-	SET_FILTER
+	SET_FILTER,
+  SET_TOGGLE_STATUS
 } = sites.sitesActions;
 
 export const initialState = {
@@ -24,7 +32,8 @@ export const initialState = {
 	isFetchingSites: false,
 	hasFailed: false,
 	favorites: [],
-	filter: (favorites) => (site) => favorites.contains((site || {}).id)
+	filter: (favorites) => (site) => favorites.contains((site || {}).id),
+	toggleStatus: FAVORITES
 };
 
 let getMemberships = (state, action) => {
@@ -115,6 +124,13 @@ const setFilter = (state, action) => {
 	}
 }
 
+const setToggleStatus = (state, action) => {
+	return {
+		...state,
+		toggleStatus: action.toggleStatus
+	}
+}
+
 export function sitesReducer(state = initialState, action) {
 	switch (action.type) {
 		case CLEAR_SITES: return clearSites(state, action)
@@ -125,6 +141,7 @@ export function sitesReducer(state = initialState, action) {
 		case FAVORITES_SUCCESS: return favoritesSuccess(state, action)
 		case FAVORITES_FAILURE: return favoritesFailure(state, action)
 		case SET_FILTER: return setFilter(state, action)
+		case SET_TOGGLE_STATUS: return setToggleStatus(state, action)
 		default: return state
 	}
 }

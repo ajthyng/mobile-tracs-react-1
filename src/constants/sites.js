@@ -9,7 +9,11 @@
  */
 module.exports = {
 	types: {
-		PROJECT: "project",
-		COURSE: "course"
+		PROJECT: 'project',
+		COURSE: 'course'
+	},
+	toggleStatus: {
+		FAVORITES: 'favorites',
+		ALL_SITES: 'all sites'
 	}
 };

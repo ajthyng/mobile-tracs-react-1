@@ -11,6 +11,12 @@
 import {sitesActions} from '../constants/actions';
 import {Analytics} from '../utils/analytics';
 import {haxios as axios} from '../utils/networking';
+import {toggleStatus} from '../constants/sites'
+
+const {
+	FAVORITES,
+	ALL_SITES
+} = toggleStatus
 
 const {
 	CLEAR_SITES,
@@ -20,7 +26,8 @@ const {
 	REQUEST_FAVORITES,
 	FAVORITES_SUCCESS,
 	FAVORITES_FAILURE,
-	SET_FILTER
+	SET_FILTER,
+  SET_TOGGLE_STATUS
 } = sitesActions;
 
 export const clearSites = () => {
@@ -127,5 +134,19 @@ export function setFilter(filter) {
 	return {
 		type: SET_FILTER,
 		filter
+	}
+}
+
+export function setToggleStatus(toggleStatus) {
+	if (toggleStatus === FAVORITES || toggleStatus === ALL_SITES) {
+    return {
+      type: SET_TOGGLE_STATUS,
+      toggleStatus
+    }
+  } else {
+		return {
+			type: SET_TOGGLE_STATUS,
+			toggleStatus: FAVORITES
+		}
 	}
 }

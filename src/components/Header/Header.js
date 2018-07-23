@@ -2,11 +2,17 @@ import React, {Component} from 'react'
 import {StatusBar, Platform} from 'react-native'
 import styled, {withTheme} from 'styled-components'
 import {connect} from 'react-redux'
-import {setFilter} from '../../actions/sites'
+import {setFilter, setToggleStatus} from '../../actions/sites'
+import {toggleStatus} from '../../constants/sites'
 
 import StatusBarSpace from './StatusBarSpace'
 import Content from './Content'
 import AdditionalContent from './AdditionalContent'
+
+const {
+	FAVORITES,
+	ALL_SITES
+} = toggleStatus
 
 const HeaderContainer = styled.View`
 	background-color: transparent;
@@ -17,7 +23,7 @@ const HeaderContainer = styled.View`
 
 const setSiteFilter = (on) => {
 	const favoritesFilter = (favorites) => (site) => favorites.contains(site.id)
-	const noFilter = (favorites) => (site) => true
+	const noFilter = () => () => true
 
 	return on ? noFilter : favoritesFilter
 }
@@ -56,6 +62,7 @@ class Header extends Component {
 	onValueChange = (on) => {
 		this.setState({allSitesFilter: on})
 		this.props.setFilter(setSiteFilter(on))
+		this.props.setToggleStatus(on ? ALL_SITES : FAVORITES)
 	}
 
 	render() {
@@ -79,7 +86,8 @@ class Header extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-	setFilter: filter => dispatch(setFilter(filter))
+	setFilter: filter => dispatch(setFilter(filter)),
+  setToggleStatus: status => dispatch(setToggleStatus(status))
 })
 
 export default connect(null, mapDispatchToProps)(withTheme(Header))
