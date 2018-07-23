@@ -16,14 +16,16 @@ import PushNotification from 'react-native-push-notification';
 exports.credentials = {
 	get() {
 		return Keychain.getGenericPassword().then(creds => {
-			if (!!creds.username === false) {
-				return Promise.resolve(false);
-			} else {
-				return Promise.resolve({
-					username: creds.username,
-					password: creds.password
-				});
-			}
+			return new Promise(resolve => {
+        if (!!creds.username === false) {
+          return resolve(false);
+        } else {
+          return resolve({
+            username: creds.username,
+            password: creds.password
+          });
+        }
+			})
 		});
 	},
 	store(netid, password) {

@@ -22,93 +22,93 @@ import {cardFromRight, cardFromBottom, cardFromLeft, cardFromTop, defaultTransit
 import GradebookItems from '../components/GradebookItems/GradebookItems'
 import CourseDetailScreen from '../components/CourseDetailScreen/CourseDetailScreen'
 import SettingsScreen from '../components/SettingsScreen'
-import configureStore from '../store/configureStore'
 import TRACSWebView from '../_components/TRACSWebView/TRACSWebNative'
 import SimpleWebView from '../_components/SimpleWebView/SimpleWebView'
 import AnnouncementsScreen from '../components/AnnouncementsScreen'
 
 Array.prototype.contains = function (value) {
-	return this.indexOf(value) >= 0
+  return this.indexOf(value) >= 0
 }
 
-const store = configureStore()
-
 const transitionSpec = {
-	duration: Platform.select({android: 500, ios: 500}),
-	timing: Animated.timing,
-	easing: Easing.out(Easing.poly(4)),
-	useNativeDriver: true,
+  duration: Platform.select({android: 500, ios: 500}),
+  timing: Animated.timing,
+  easing: Easing.out(Easing.poly(4)),
+  useNativeDriver: true,
 }
 
 const MainNavigator = createStackNavigator(
-	{
-		Home: {
-			screen: HomeScreen
-		},
-		Course: {
-			screen: CourseScreen,
-		},
-		Calendar: {
-			screen: CalendarScreen,
-		},
-		Gradebook: {
-			screen: GradebookItems
-		},
-		CourseDetail: {
-			screen: CourseDetailScreen
-		},
-		Settings: {
-			screen: SettingsScreen,
-		},
-		Announcements: {
-			screen: AnnouncementsScreen
-		},
-		Feedback: {
-			screen: () => <SimpleWebView url={`${global.urls.feedback}`} />
-		},
-		Support: {
-			screen: () => <SimpleWebView url={`${global.urls.support}`} />
-		},
-		TRACSWeb: {
-			screen: TRACSWebView,
-		}
-	}, {
-		initialRouteName: 'Home',
-		navigationOptions: {
-			header: ({navigation}) => (<Header navigation={navigation} />),
-			gesturesEnabled: false
-		},
-		headerMode: 'float',
-		headerTransitionPreset: 'uikit',
-		transitionConfig: () => ({
-			transitionSpec,
-			screenInterpolator: (sceneProps) => {
-				const {scene} = sceneProps
-				const params = scene.route.params || {}
-				const transition = params.transition || 'default'
-				return {
-					cardFromRight: cardFromRight(sceneProps),
-					cardFromLeft: cardFromLeft(sceneProps),
-					cardFromTop: cardFromTop(sceneProps),
-					cardFromBottom: cardFromBottom(sceneProps),
-					default: defaultTransition(sceneProps)
-				}[transition]
-			}
-		}),
-		gestures: {},
-	}
+  {
+    Home: {
+      screen: HomeScreen
+    },
+    Course: {
+      screen: CourseScreen,
+    },
+    Calendar: {
+      screen: CalendarScreen,
+    },
+    Gradebook: {
+      screen: GradebookItems
+    },
+    CourseDetail: {
+      screen: CourseDetailScreen
+    },
+    Settings: {
+      screen: SettingsScreen,
+    },
+    Announcements: {
+      screen: AnnouncementsScreen
+    },
+    Feedback: {
+      screen: () => <SimpleWebView url={`${global.urls.feedback}`} />
+    },
+    Support: {
+      screen: () => <SimpleWebView url={`${global.urls.support}`} />
+    },
+    TRACSWeb: {
+      screen: TRACSWebView,
+    }
+  }, {
+    initialRouteName: 'Home',
+    navigationOptions: {
+      header: ({navigation}) => (<Header navigation={navigation} />),
+      gesturesEnabled: false
+    },
+    headerMode: 'float',
+    headerTransitionPreset: 'uikit',
+    transitionConfig: () => ({
+      transitionSpec,
+      screenInterpolator: (sceneProps) => {
+        const {scene} = sceneProps
+        const params = scene.route.params || {}
+        const transition = params.transition || 'default'
+        return {
+          cardFromRight: cardFromRight(sceneProps),
+          cardFromLeft: cardFromLeft(sceneProps),
+          cardFromTop: cardFromTop(sceneProps),
+          cardFromBottom: cardFromBottom(sceneProps),
+          default: defaultTransition(sceneProps)
+        }[transition]
+      }
+    }),
+    gestures: {},
+  }
 )
 
-const AuthenticationNavigator = createSwitchNavigator({
-		Login: LoginScreen,
-		Main: MainNavigator
-	}, {
-		initialRouteName: 'Login',
-		navigationOptions: {header: null},
-		resetOnBlur: false
-	}
-)
+const AuthenticationNavigator = (props) => {
+  const Nav = createSwitchNavigator({
+      Login: LoginScreen,
+      Main: MainNavigator
+    }, {
+      initialRouteName: 'Login',
+      navigationOptions: {header: null},
+      resetOnBlur: false
+    }
+  )
+  return <Nav {...props}/>
+}
 
 module.exports = {
-	Scenes: AuthenticationNavigator
+  Scenes: (props) => <AuthenticationNavigator {...props} />
 }

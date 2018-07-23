@@ -27,12 +27,6 @@ class HomeScreen extends Component {
 		this.props.setHeaderState(Header.EXPANDED);
 	}
 
-	componentDidUpdate () {
-		if (!this.props.authenticated) {
-			this.props.navigation.navigate('Login');
-		}
-	}
-
 	componentDidMount () {
 		this.props.getSites(this.props.netid)
 		this.props.getGrades()

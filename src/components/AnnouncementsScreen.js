@@ -77,7 +77,6 @@ class Announcement extends Component {
   }
 
   updateHeight = event => {
-    console.log(event)
     const {title, jsEvaluationValue} = event
     this.setState({height: parseInt(jsEvaluationValue || title)})
   }

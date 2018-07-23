@@ -8,186 +8,180 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {user} from './registrar';
-import {authActions} from '../constants/actions';
-import CookieManager from 'react-native-cookies';
-import {credentials} from '../utils/storage';
-import {Analytics} from '../utils/analytics';
-import {haxios as axios} from '../utils/networking';
+import {user} from './registrar'
+import {authActions} from '../constants/actions'
+import CookieManager from 'react-native-cookies'
+import {credentials} from '../utils/storage'
+import {Analytics} from '../utils/analytics'
+import {haxios as axios} from '../utils/networking'
 
 const {
-	REQUEST_LOGIN,
-	LOGIN_SUCCESS,
-	LOGIN_FAILURE,
-	REQUEST_LOGOUT,
-	LOGOUT_SUCCESS,
-	LOGOUT_FAILURE,
-	SET_CREDENTIALS,
-	CLEAR_ERROR
-} = authActions;
+  REQUEST_LOGIN,
+  LOGIN_SUCCESS,
+  LOGIN_FAILURE,
+  REQUEST_LOGOUT,
+  LOGOUT_SUCCESS,
+  LOGOUT_FAILURE,
+  SET_CREDENTIALS,
+  CLEAR_ERROR
+} = authActions
 
-const requestLogin = () => {
-	return {
-		type: REQUEST_LOGIN,
-	}
-};
+const requestLogin = (silentLogin) => {
+  return {
+    type: REQUEST_LOGIN,
+    silentLogin
+  }
+}
 
 const loginSuccess = (netid, password, tracsID) => {
-	Analytics().setUserId(tracsID);
-	return {
-		type: LOGIN_SUCCESS,
-		netid,
-		password,
-		tracsID
-	}
-};
+  Analytics().setUserId(tracsID)
+  return {
+    type: LOGIN_SUCCESS,
+    netid,
+    password,
+    tracsID
+  }
+}
 
 const loginFailureAction = (error) => {
-	let errorMessage = '';
-	switch ((error.response || {}).status) {
-		case 404:
-			errorMessage = 'Could not connect to TRACS, please contact support.';
-			break;
-		default:
-			if (error.hasOwnProperty('message')) {
-				errorMessage = error.message;
-			}
-			switch (errorMessage) {
-				case 'Network Error':
-					errorMessage = 'Network Error. Please check your internet connection and try again.';
-					break;
-				default:
-					break;
-			}
-	}
-	return {
-		type: LOGIN_FAILURE,
-		errorMessage: new Error(errorMessage)
-	}
-};
+  let errorMessage = ''
+  switch ((error.response || {}).status) {
+    case 404:
+      errorMessage = 'Could not connect to TRACS, please contact support.'
+      break
+    default:
+      if (error.hasOwnProperty('message')) {
+        errorMessage = error.message
+      }
+      switch (errorMessage) {
+        case 'Network Error':
+          errorMessage = 'Network Error. Please check your internet connection and try again.'
+          break
+        default:
+          break
+      }
+  }
+  return {
+    type: LOGIN_FAILURE,
+    errorMessage: new Error(errorMessage)
+  }
+}
 
 const loginFailure = (errorMessage) => {
-	return async (dispatch) => {
-		await CookieManager.clearAll();
-		dispatch(loginFailureAction(errorMessage));
-	}
-};
+  return async (dispatch) => {
+    await CookieManager.clearAll()
+    dispatch(loginFailureAction(errorMessage))
+  }
+}
 
 const requestLogout = () => {
-	return {
-		type: REQUEST_LOGOUT
-	}
-};
+  return {
+    type: REQUEST_LOGOUT
+  }
+}
 
 const logoutSuccess = () => {
-	return {
-		type: LOGOUT_SUCCESS
-	}
-};
+  return {
+    type: LOGOUT_SUCCESS
+  }
+}
 
 const logoutFailure = (errorMessage) => {
-	return {
-		type: LOGOUT_FAILURE,
-		errorMessage
-	}
-};
-
-export const setCredentials = (creds) => {
-	return {
-		type: SET_CREDENTIALS,
-		creds
-	}
-};
+  return {
+    type: LOGOUT_FAILURE,
+    errorMessage
+  }
+}
 
 export const clearError = () => {
-	return {
-		type: CLEAR_ERROR,
-	}
-};
+  return {
+    type: CLEAR_ERROR,
+  }
+}
 
-export function login(netid = '', password) {
-	return async (dispatch) => {
-		dispatch(requestLogin());
-		if (netid.length === 0) {
-			credentials.get().then(credentials => {
-				if (!credentials) {
-					dispatch(loginFailure(new Error("Net ID must be filled out")));
-				} else {
-					netid = credentials.username;
-					password = credentials.password;
-					dispatch(login(netid, password));
-				}
-			}).catch(err => {
-				console.log("Storage Error: ", err.message);
-				dispatch(loginFailure(new Error("Could not retrieve stored credentials")));
-			});
-			return;
-		}
+export function login(netid = '', password, silentLogin = false) {
+  return async (dispatch) => {
+    dispatch(requestLogin(silentLogin))
+    if (netid.length === 0) {
+      credentials.get().then(credentials => {
+        if (!credentials) {
+          dispatch(loginFailure(new Error("Net ID must be filled out")))
+        } else {
+          netid = credentials.username
+          password = credentials.password
+          dispatch(login(netid, password))
+        }
+      }).catch(err => {
+        console.log("Storage Error: ", err.message)
+        dispatch(loginFailure(new Error("Could not retrieve stored credentials")))
+      })
+      return
+    }
 
-		const loginUrl = `${global.urls.baseUrl}/portal/relogin?eid=${netid}&pw=${encodeURIComponent(password)}`;
-		const sessionUrl = `${global.urls.baseUrl}${global.urls.session}`;
+    const loginUrl = `${global.urls.baseUrl}/portal/relogin?eid=${netid}&pw=${encodeURIComponent(password)}`
+    const sessionUrl = `${global.urls.baseUrl}${global.urls.session}`
 
-		let session = await axios(sessionUrl, {method: 'get'}).catch(err => err);
-		let needsNewSession = true;
+    let session = await axios(sessionUrl, {method: 'get'}).catch(err => err)
+    let needsNewSession = true
 
-		if (!(session instanceof Error)) {
-			needsNewSession = session.data.userEid !== netid;
-		}
+    if (!(session instanceof Error)) {
+      needsNewSession = session.data.userEid !== netid
+    }
 
-		if (!needsNewSession) {
-			dispatch(loginSuccess(netid, password, session.data.userId));
-			return;
-		}
+    if (!needsNewSession) {
+      dispatch(loginSuccess(netid, password, session.data.userId))
+      return
+    }
 
-		axios(loginUrl, {
-			method: 'post',
-		}).then(async res => {
-			let creds = {
-				netid,
-				password
-			};
-			axios(sessionUrl, {method: 'get'}).then(async res => {
-				let session = res.headers['content-type'].indexOf('application/json') > -1 ? res.data : null;
-				if (session === null) {
-					dispatch(loginFailure(new Error("TRACS is down right now. Please try again later.")));
-				} else if (session === undefined) {
-					dispatch(loginFailure(new Error("There was a problem logging you into TRACS. Please try again later.")));
-				} else {
-					if (session.userEid === creds.netid) {
-						credentials.store(creds.netid, creds.password).then(() => {
-							dispatch(loginSuccess(session.userEid, creds.password, session.userId));
-						});
-					} else {
-						if (session.userEid === null) {
-							dispatch(loginFailure(new Error("Net ID or password is incorrect.")));
-						} else {
-							dispatch(loginFailure(new Error("There was a problem logging you into TRACS. Please try again later.")));
-						}
-					}
-				}
-			}).catch(err => {
-				dispatch(loginFailure(err));
-			});
-		}).catch(err => {
-			dispatch(loginFailure(err));
-		});
-	};
+    axios(loginUrl, {
+      method: 'post',
+    }).then(async res => {
+      let creds = {
+        netid,
+        password
+      }
+      axios(sessionUrl, {method: 'get'}).then(async res => {
+        let session = res.headers['content-type'].indexOf('application/json') > -1 ? res.data : null
+        if (session === null) {
+          dispatch(loginFailure(new Error("TRACS is down right now. Please try again later.")))
+        } else if (session === undefined) {
+          dispatch(loginFailure(new Error("There was a problem logging you into TRACS. Please try again later.")))
+        } else {
+          if (session.userEid === creds.netid) {
+            credentials.store(creds.netid, creds.password).then(() => {
+              dispatch(loginSuccess(session.userEid, creds.password, session.userId))
+            })
+          } else {
+            if (session.userEid === null) {
+              dispatch(loginFailure(new Error("Net ID or password is incorrect.")))
+            } else {
+              dispatch(loginFailure(new Error("There was a problem logging you into TRACS. Please try again later.")))
+            }
+          }
+        }
+      }).catch(err => {
+        dispatch(loginFailure(err))
+      })
+    }).catch(err => {
+      dispatch(loginFailure(err))
+    })
+  }
 }
 
 export function logout() {
-	return (dispatch) => {
-		dispatch(requestLogout());
-		const logoutUrl = `${global.urls.baseUrl}${global.urls.logout}`;
-		return axios(logoutUrl, {
-			method: 'get'
-		}).then(res => {
-			CookieManager.clearAll().then(result => {
-				dispatch(logoutSuccess());
-			}).catch(err => {
-				dispatch(logoutFailure(err))
-			});
-		}).catch(err => {
-			dispatch(logoutFailure(new Error("Could not log out of TRACS.")));
-		});
-	};
+  return (dispatch) => {
+    dispatch(requestLogout())
+    const logoutUrl = `${global.urls.baseUrl}${global.urls.logout}`
+    return axios(logoutUrl, {
+      method: 'get'
+    }).then(res => {
+      CookieManager.clearAll().then(result => {
+        dispatch(logoutSuccess())
+      }).catch(err => {
+        dispatch(logoutFailure(err))
+      })
+    }).catch(err => {
+      dispatch(logoutFailure(new Error("Could not log out of TRACS.")))
+    })
+  }
 }

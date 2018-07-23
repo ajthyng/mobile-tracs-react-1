@@ -21,79 +21,78 @@ const ProfileImage = styled.Image`
 const ProfileText = styled.Text``
 
 class Profile extends Component {
-	state = {
-		profileURL: null,
-		source: CancelToken.source()
-	}
+  state = {
+    profileURL: null,
+    source: CancelToken.source()
+  }
 
-	getProfileImage = (netid) => {
-		const profileURL = `${global.urls.baseUrl}${global.urls.profile(netid)}`
+  componentDidMount() {
+    const {netid} = this.props
 
-		return axios(profileURL, {cancelToken: token})
-	}
+    if (!netid) return
 
-	componentDidMount() {
-		const {netid} = this.props
+    const profileImageURL = `${global.urls.baseUrl}${global.urls.profileImage(netid)}`
+    const profileURL = `${global.urls.baseUrl}${global.urls.profile(netid)}`
+    const {source: {token}} = this.state
 
-		const profileURL = `${global.urls.baseUrl}${global.urls.profile(netid)}`
-		const {source: {token}} = this.state
+    axios(profileImageURL, {cancelToken: token})
+      .then(res => {
+        this.setState({
+          profileURL: (res.request || {}).responseURL || ''
+        })
+      })
+      .catch(err => console.log(err.request))
 
-		axios(profileURL, {cancelToken: token})
-			.then(res => {
-				this.setState({
-					profileURL: (res.request || {}).responseURL || ''
-				})
-			})
-			.catch(err => console.log(err))
-	}
 
-	componentWillUnmount () {
-		this.state.source.cancel()
-	}
+  }
 
-	renderProfileImage = () => {
-		const {diameter} = this.props
-		return (
-			<ProfileImage
-				diameter={diameter}
-				source={{
-					uri: this.state.profileURL ? `${this.state.profileURL}?${new Date().valueOf()}` : `${global.urls.baseUrl}/profile2-tool/images/no_image.gif`,
-					cache: 'reload'
-				}}
-			/>
-		)
-	}
+  componentWillUnmount() {
+    this.state.source.cancel()
+  }
 
-	render() {
-		const {name, style} = this.props
+  renderProfileImage = () => {
+    const {diameter} = this.props
+    return (
+      <ProfileImage
+        diameter={diameter}
+        source={{
+          uri: this.state.profileURL ? `${this.state.profileURL}?${new Date().valueOf()}` : `${global.urls.baseUrl}/profile2-tool/images/no_image.gif`,
+          cache: 'reload'
+        }}
+      />
+    )
+  }
 
-		return (
-			<StyledProfile style={style.container}>
-				{this.renderProfileImage()}
-				<ProfileText style={style.text}>
-					{name}
-				</ProfileText>
-			</StyledProfile>
-		)
-	}
+  render() {
+    const {name, style} = this.props
+
+    return (
+      <StyledProfile style={style.container}>
+        {this.renderProfileImage()}
+        <ProfileText style={style.text}>
+          {name}
+        </ProfileText>
+      </StyledProfile>
+    )
+  }
 }
 
 Profile.defaultProps = {
-	diameter: 30,
-	name: 'Andrew',
-	style: {
-		container: {flexDirection: 'row'},
-		text: {
-			color: 'white',
-			fontSize: 16,
-			fontWeight: 'bold',
-			marginLeft: 8
-		}
-	}
+  diameter: 30,
+  name: 'Andrew',
+  style: {
+    container: {flexDirection: 'row'},
+    text: {
+      color: 'white',
+      fontSize: 16,
+      fontWeight: 'bold',
+      marginLeft: 8
+    }
+  }
 }
 
 const mapStateToProps = state => ({
-	netid: state.registrar.netid
+  netid: state.registrar.netid
 })
 
 export default connect(mapStateToProps, null)(Profile)

@@ -19,43 +19,47 @@ const {height: D_HEIGHT, width: D_WIDTH} = Dimensions.get('window')
 const {minor = 0} = PlatformConstants.reactNativeVersion || {}
 
 const isIPhoneX = (() => {
-	if (Platform.OS === 'web') return false
+  if (Platform.OS === 'web') return false
 
-	if (minor >= 50) {
-		return DeviceInfo.isIPhoneX_deprecated
-	}
+  if (minor >= 50) {
+    return DeviceInfo.isIPhoneX_deprecated
+  }
 
-	return (
-		Platform.OS === 'ios' &&
-		((D_HEIGHT === X_HEIGHT && D_WIDTH === X_WIDTH) ||
-			(D_HEIGHT === X_WIDTH && D_WIDTH === X_HEIGHT))
-	)
+  return (
+    Platform.OS === 'ios' &&
+    ((D_HEIGHT === X_HEIGHT && D_WIDTH === X_WIDTH) ||
+      (D_HEIGHT === X_WIDTH && D_WIDTH === X_HEIGHT))
+  )
 })()
 
 class ThemedApp extends Component {
-	render() {
-		const {theme} = this.props
+  render() {
+    const {theme} = this.props
 
-		return (
-			<ThemeProvider theme={theme}>
-				<MenuProvider customStyles={{
-					backdrop: {backgroundColor: 'black', opacity: 0.5}
-				}}>
-					{
-						(() => isIPhoneX ?
-								<SafeStyled forceInset={{bottom: 'never'}}>
-									<Scenes/>
-								</SafeStyled> : <Scenes/>
-						)()
-					}
-				</MenuProvider>
-			</ThemeProvider>
-		)
-	}
+    return (
+      <ThemeProvider theme={theme}>
+        <MenuProvider customStyles={{
+          backdrop: {backgroundColor: '#000000', opacity: 0.5}
+        }}>
+          {
+            (() => isIPhoneX ?
+                <SafeStyled forceInset={{bottom: 'never'}}>
+                  <Scenes />
+                </SafeStyled> : <Scenes />
+            )()
+          }
+        </MenuProvider>
+      </ThemeProvider>
+    )
+  }
 }
 
 const mapStateToProps = state => ({
 	theme: state.theme
 })
 
-export default connect(mapStateToProps, null)(ThemedApp)
+const mapDispatchToProps = dispatch => ({
+  logout: () => dispatch(logout())
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(ThemedApp)
