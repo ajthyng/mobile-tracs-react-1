@@ -8,23 +8,25 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { createStore, applyMiddleware } from 'redux';
-import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
-import thunk from 'redux-thunk';
-import rootReducer from '../reducers/index';
+import {createStore, applyMiddleware} from 'redux'
+import {composeWithDevTools} from 'redux-devtools-extension/developmentOnly'
+import {persistStore, persistReducer} from 'redux-persist'
+
+import thunk from 'redux-thunk'
+import rootReducer from '../reducers/index'
 
 export default function configureStore() {
-	const store = createStore(
-		rootReducer,
-		composeWithDevTools(applyMiddleware(thunk))
-	);
+  const store = createStore(
+    rootReducer,
+    composeWithDevTools(applyMiddleware(thunk))
+  )
 
-	if (module.hot) {
-		module.hot.accept(() => {
-			const nextRootReducer = require('../reducers/index').default;
-			store.replaceReducer(nextRootReducer);
-		});
-	}
+  if (module.hot) {
+    module.hot.accept(() => {
+      const nextRootReducer = require('../reducers/index').default
+      store.replaceReducer(nextRootReducer)
+    })
+  }
 
-	return store;
+  return store
 }
