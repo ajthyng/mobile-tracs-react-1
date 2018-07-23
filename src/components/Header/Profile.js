@@ -23,7 +23,8 @@ const ProfileText = styled.Text``
 class Profile extends Component {
   state = {
     profileURL: null,
-    source: CancelToken.source()
+    source: CancelToken.source(),
+    name: null
   }
 
   componentDidMount() {
@@ -33,6 +34,7 @@ class Profile extends Component {
 
     const profileImageURL = `${global.urls.baseUrl}${global.urls.profileImage(netid)}`
     const profileURL = `${global.urls.baseUrl}${global.urls.profile(netid)}`
+
     const {source: {token}} = this.state
 
     axios(profileImageURL, {cancelToken: token})
@@ -43,7 +45,12 @@ class Profile extends Component {
       })
       .catch(err => console.log(err.request))
 
-
+    axios(profileURL, {cancelToken: token})
+      .then(res => {
+        const {data: {displayName}} = res
+        this.setState({ name: displayName})
+      })
+      .catch(err => console.log(err))
   }
 
   componentWillUnmount() {
@@ -64,13 +71,20 @@ class Profile extends Component {
   }
 
   render() {
-    const {name, style} = this.props
+    const {name: defaultName, style} = this.props
+    const {name: storedName} = this.state
+
+    let displayName = null
+
+    if (typeof storedName === 'string') {
+      displayName = storedName.split(' ')[0]
+    }
 
     return (
       <StyledProfile style={style.container}>
         {this.renderProfileImage()}
         <ProfileText style={style.text}>
-          {name}
+          {displayName}
         </ProfileText>
       </StyledProfile>
     )
@@ -79,7 +93,7 @@ class Profile extends Component {
 
 Profile.defaultProps = {
   diameter: 30,
-  name: 'Andrew',
+  name: '',
   style: {
     container: {flexDirection: 'row'},
     text: {
