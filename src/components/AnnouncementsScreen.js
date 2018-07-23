@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {
   FlatList,
   Dimensions,
+  Linking,
   View,
   TouchableOpacity,
   ScrollView,
@@ -94,10 +95,20 @@ class Announcement extends Component {
         </AnnouncementTitleContainer>
         <AnnouncementBody
           margin={this.contentMargin}
+          innerRef={c => this.webView = c}
           style={{height: showBody ? height : 0}}
           mixedContentMode='compatibility'
           injectedJavaScript='(() => document.body.scrollHeight)()'
-          onNavigationStateChange={this.updateHeight}
+          onNavigationStateChange={(event) => {
+            if (event.url !== 'about:blank') {
+              this.webView.stopLoading()
+              if (Linking.canOpenURL(event.url)) {
+                Linking.openURL(event.url).then(result => console.log(result)).catch(err => console.log(err))
+              }
+              return
+            }
+            this.updateHeight(event)
+          }}
           source={{html: makeHTML(body)}}
         />
       </AnnouncementContainer>
