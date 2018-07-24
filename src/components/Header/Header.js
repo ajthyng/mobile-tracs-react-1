@@ -43,7 +43,7 @@ class Header extends Component {
 		})
 
 		this.state = {
-			allSitesFilter: false
+			allSitesFilter: props.toggleStatus === ALL_SITES
 		}
 	}
 
@@ -63,6 +63,11 @@ class Header extends Component {
 		this.setState({allSitesFilter: on})
 		this.props.setFilter(setSiteFilter(on))
 		this.props.setToggleStatus(on ? ALL_SITES : FAVORITES)
+	}
+
+	componentDidMount () {
+		const {allSitesFilter: on} = this.state
+		this.props.setFilter(setSiteFilter(on))
 	}
 
 	render() {
@@ -85,9 +90,13 @@ class Header extends Component {
 	}
 }
 
+const mapStateToProps = state => ({
+	toggleStatus: state.tracsSites.toggleStatus
+})
+
 const mapDispatchToProps = dispatch => ({
 	setFilter: filter => dispatch(setFilter(filter)),
   setToggleStatus: status => dispatch(setToggleStatus(status))
 })
 
-export default connect(null, mapDispatchToProps)(withTheme(Header))
+export default connect(mapStateToProps, mapDispatchToProps)(withTheme(Header))

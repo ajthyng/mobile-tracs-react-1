@@ -10,23 +10,45 @@
 
 import {createStore, applyMiddleware} from 'redux'
 import {composeWithDevTools} from 'redux-devtools-extension/developmentOnly'
-import {persistStore, persistReducer} from 'redux-persist'
+import {persistStore, persistReducer, createTransform} from 'redux-persist'
+import storage from 'redux-persist/lib/storage'
+import {initialState} from '../reducers/sites'
 
 import thunk from 'redux-thunk'
 import rootReducer from '../reducers/index'
 
-export default function configureStore() {
-  const store = createStore(
-    rootReducer,
-    composeWithDevTools(applyMiddleware(thunk))
-  )
+const statusFilter = createTransform((inboundState, key) => {
+  if (key === 'tracsSites') {
+    return {toggleStatus: inboundState.toggleStatus}
+  }
+  return inboundState
+}, (outboundState, key) => {
+  if (key === 'tracsSites') {
+    return {...initialState, toggleStatus: outboundState.toggleStatus}
+  }
+  return outboundState
+})
+const persistConfig = {
+  key: 'root',
+  storage: storage,
+  whitelist: ['tracsSites'],
+  transforms: [statusFilter]
+}
 
+const persistedReducer = persistReducer(persistConfig, rootReducer)
+const store = createStore(
+  persistedReducer,
+  composeWithDevTools(applyMiddleware(thunk))
+)
+
+const persistor = persistStore(store)
+
+export default function configureStore() {
   if (module.hot) {
     module.hot.accept(() => {
       const nextRootReducer = require('../reducers/index').default
-      store.replaceReducer(nextRootReducer)
+      store.replaceReducer(persistReducer(persistConfig, nextRootReducer))
     })
   }
-
-  return store
+  return {store, persistor}
 }
