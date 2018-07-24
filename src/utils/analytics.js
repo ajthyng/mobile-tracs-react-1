@@ -55,11 +55,8 @@ const methods = (reduxStore) => {
 			if (name === null && className === null) return;
 			analytics.setCurrentScreen(name, className);
 		},
-		setUserId: () => {
-			const id = store.getState().login.tracsID;
-			if (/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/.test(id)) {
-				analytics.setUserId(id);
-			}
+		setUserId: (id) => {
+			analytics.setUserId(id)
 		},
 		logSiteClick: (type, id) => {
 			let params = {
@@ -112,6 +109,6 @@ const methods = (reduxStore) => {
 	}
 };
 
-export const Analytics = (store) => {
+export let Analytics = (store) => {
 	return methods(store);
 };

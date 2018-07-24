@@ -1,209 +1,259 @@
-/**
- * Copyright 2017 Andrew Thyng
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
-import configureMockStore from '../mocks/store';
-import thunk from 'redux-thunk';
-import {Response} from 'whatwg-fetch';
+import configureMockStore from 'redux-mock-store'
+import thunk from 'redux-thunk'
+import {login} from '../../src/actions/login'
+import {credentials} from '../../src/utils/storage'
+import {authActions as actions} from '../../src/constants/actions'
+import * as Networking from '../../src/utils/networking'
+import axios from 'axios'
+import MockAdapter from 'axios-mock-adapter'
 
-import * as LoginActions from '../../src/actions/login';
-import initialState from '../../src/reducers/login';
-import {authActions} from '../../src/constants/actions';
-import {credentials} from '../../src/utils/storage';
-import * as urls from '../../config/urls';
-import CookieManager from 'react-native-cookies'
+const urls = require('../../config/urls')
+const middleware = [thunk]
+const mockStore = configureMockStore(middleware)
+const noSessionResponse = {
+  "attributeNames": {},
+  "attributes": null,
+  "creationTime": 1532445477201,
+  "currentTime": 1532452039266,
+  "id": null,
+  "lastAccessedTime": 1532452039265,
+  "maxInactiveInterval": 1800,
+  "userEid": null,
+  "userId": null,
+  "active": true,
+  "entityReference": "\/session",
+  "entityURL": "http:\/\/localhost:8080\/direct\/session",
+  "entityTitle": "current"
+}
 
-let {LOGIN, LOGOUT, LOGIN_HAS_FAILED, LOGIN_IS_GUEST, LOGGING_IN, IS_LOGGED_IN} = authActions;
+const validSessionResponse = (netid, tracsID) => ({
+  "attributeNames": {},
+  "attributes": null,
+  "creationTime": 1532445477201,
+  "currentTime": 1532452039266,
+  "id": null,
+  "lastAccessedTime": 1532452039265,
+  "maxInactiveInterval": 1800,
+  "userEid": netid,
+  "userId": tracsID,
+  "active": true,
+  "entityReference": "\/session",
+  "entityURL": "http:\/\/localhost:8080\/direct\/session",
+  "entityTitle": "current"
+})
 
-const netid = "fak103";
-const password = "password123";
+let store = null
+let axiosMock = null
 
-const middleware = [thunk];
-const mockStore = configureMockStore(middleware);
+beforeEach(() => {
+  store = mockStore({})
+  Networking.haxios = axios
+  axiosMock = new MockAdapter(axios)
+  global.urls = urls
+})
 
-global.urls = urls.debug;
+it('should fail if netid is not provided', () => {
+  credentials.get = jest.fn().mockImplementation(() => Promise.resolve(false))
 
-const mockResponse = (status, statusText, response) => {
-	return new Response(response, {
-		status,
-		statusText,
-		headers: {
-			'Content-Type': 'application/json'
-		}
-	});
-};
+  const expectedActions = [
+    {type: actions.REQUEST_LOGIN, silentLogin: false},
+    {type: actions.LOGIN_FAILURE, errorMessage: new Error('Net ID must be filled out')}
+  ]
 
-it('should create a login action', () => {
-	const expectedAction = {
-		type: LOGIN,
-		netid,
-		password,
-		isLoggedIn: true
-	};
+  return store.dispatch(login('', 'banana')).then(() => {
+    expect(store.getActions()).toEqual(expectedActions)
+  })
+})
 
-	expect(LoginActions.netidLogin(netid, password)).toEqual(expectedAction);
-});
+it('should fail if credentials throws an error', () => {
+  credentials.get = jest.fn().mockImplementation(() => Promise.reject(new Error('Garbage')))
 
-it('should create a logout action', () => {
-	const expectedAction = {
-		type: LOGOUT,
-		netid: '',
-		password: '',
-		isLoggedIn: false
-	};
+  const expectedActions = [
+    {type: actions.REQUEST_LOGIN, silentLogin: false},
+    {type: actions.LOGIN_FAILURE, errorMessage: new Error('Could not retrieve stored credentials')}
+  ]
 
-	expect(LoginActions.netidLogout()).toEqual(expectedAction);
-});
+  return store.dispatch(login('', '123password!')).then(() => {
+    expect(store.getActions()).toEqual(expectedActions)
+  })
+})
 
-it('should mark guest account', () => {
-	const isGuestAccount = true;
-	const expectedAction = {
-		type: LOGIN_IS_GUEST,
-		isGuestAccount
-	};
+it('should log user in if provided netid matches session', () => {
+  const netid = 'fake_103'
+  const password = '123password!'
+  const tracsID = '45d8e9e7-0b87-4f2d-b5da-b5cfb69ba544'
 
-	expect(LoginActions.loginIsGuestAccount(isGuestAccount)).toEqual(expectedAction);
-});
+  axiosMock.onGet(`${global.urls.baseUrl}${global.urls.session}`).reply(200, {
+    "attributeNames": {},
+    "attributes": null,
+    "creationTime": 1532445477201,
+    "currentTime": 1532452039266,
+    "id": null,
+    "lastAccessedTime": 1532452039265,
+    "maxInactiveInterval": 1800,
+    "userEid": netid,
+    "userId": tracsID,
+    "active": true,
+    "entityReference": "\/session",
+    "entityURL": "http:\/\/localhost:8080\/direct\/session",
+    "entityTitle": "current"
+  })
 
-it('should mark login as failed', () => {
-	const hasFailed = true;
-	const expectedAction = {
-		type: LOGIN_HAS_FAILED,
-		hasFailed
-	};
-	expect(LoginActions.loginHasFailed(hasFailed)).toEqual(expectedAction);
-});
+  const expectedActions = [
+    {type: actions.REQUEST_LOGIN, silentLogin: false},
+    {type: actions.LOGIN_SUCCESS, netid, password, tracsID}
+  ]
 
+  return store.dispatch(login(netid, password)).then(() => {
+    expect(store.getActions()).toEqual(expectedActions)
+  })
+})
 
-it('should fail login without netid', () => {
-	const netid = '';
-	const store = mockStore({
-		login: {
-			loggingIn: false,
-			isLoggedIn: false
-		}
-	});
+it('should fail to log user in if password is empty', () => {
+  const netid = 'f_k10344'
+  const password = ''
 
-	const expectedActions = [
-		{type: LOGGING_IN, loggingIn: true},
-		{type: LOGGING_IN, loggingIn: false},
-		{type: LOGIN_HAS_FAILED, hasFailed: true}
-	];
+  const expectedActions = [
+    {type: actions.REQUEST_LOGIN, silentLogin: false},
+    {type: actions.LOGIN_FAILURE, errorMessage: new Error('Password must be filled out')}
+  ]
 
-	store.dispatch(LoginActions.auth(netid, password));
-	expect(store.getActions()).toEqual(expectedActions);
-});
+  return store.dispatch(login(netid, password)).then(() => {
+    expect(store.getActions()).toEqual(expectedActions)
+  })
+})
 
-it('should fail logging in on unauthorized response', async () => {
-	global.fetch = jest.fn().mockImplementation(() =>
-		Promise.resolve(mockResponse(401, 'Failed login attempt', ''))
-	);
+it('should log user in if netid and password are correct', () => {
+  const netid = 'fak103'
+  const password = '#43jiera094%%'
+  const tracsID = '45d8e9e7-0b87-4f2d-b5da-b5cfb69ba544'
 
-	const store = mockStore({
-		login: initialState
-	});
+  const sessionURL = `${global.urls.baseUrl}${global.urls.session}`
+  const loginURL = `${global.urls.baseUrl}/portal/relogin?eid=${netid}&pw=${encodeURIComponent(password)}`
+  credentials.store = () => Promise.resolve()
 
-	const expectedActions = [
-		{type: LOGGING_IN, loggingIn: true},
-		{type: LOGOUT, netid: '', password: '', isLoggedIn: false},
-		{type: LOGIN_HAS_FAILED, hasFailed: true},
-	];
+  axiosMock.onGet(sessionURL)
+    .replyOnce(200, noSessionResponse)
 
-	await store.dispatch(LoginActions.auth(netid, password));
-	expect(store.getActions()).toEqual(expectedActions);
-});
+  axiosMock.onGet(sessionURL)
+    .replyOnce(
+      200,
+      validSessionResponse(netid, tracsID),
+      {'content-type': 'application/json'}
+    )
 
-it('should fail logging in without password', async () => {
-	let loginResponse = mockResponse(200, 'this would be a webpage', `
-		<html><head></head><body></body></html>	
-	`);
-	let userCompare = mockResponse(200, 'this would be a json object', `{
-		"attributeNames": {},
-		"attributes": null,
-		"creationTime": 1505771455492,
-		"currentTime": 1505825298973,
-		"id": null,
-		"lastAccessedTime": 1505825298972,
-		"maxInactiveInterval": 7200,
-		"userEid": null,
-		"userId": null,
-		"active": true,
-		"entityReference": "/session",
-		"entityURL": "https://staging.tracs.txstate.edu:443/direct/session",
-		"entityTitle": "current"
-	}`);
+  axiosMock.onPost(loginURL)
+    .replyOnce(200, '<html></html>')
 
-	global.fetch = jest.fn().mockImplementation((url) => {
-		if (url.includes('/direct/session/current.json')) {
-			return Promise.resolve(userCompare);
-		} else {
-			return Promise.resolve(loginResponse);
-		}
-	});
+  const expectedActions = [
+    {type: actions.REQUEST_LOGIN, silentLogin: false},
+    {type: actions.LOGIN_SUCCESS, netid, password, tracsID}
+  ]
 
-	const store = mockStore({
-		login: initialState
-	});
+  store.dispatch(login(netid, password)).then(() => {
+    expect((store.getActions())).toEqual(expectedActions)
+  })
+})
 
-	const expectedActions = [
-		{type: LOGGING_IN, loggingIn: true},
-		{type: LOGOUT, netid: '', password: '', isLoggedIn: false},
-		{type: LOGIN_HAS_FAILED, hasFailed: true}
-	];
+it('should not log user in if session is for the wrong user', () => {
+  const netid = 'fak103'
+  const password = '#43jiera094%%'
+  const tracsID = '45d8e9e7-0b87-4f2d-b5da-b5cfb69ba544'
 
-	await store.dispatch(LoginActions.auth(netid, ''));
-	expect(store.getActions()).toEqual(expectedActions);
-});
+  const sessionURL = `${global.urls.baseUrl}${global.urls.session}`
+  const loginURL = `${global.urls.baseUrl}/portal/relogin?eid=${netid}&pw=${encodeURIComponent(password)}`
+  credentials.store = () => Promise.resolve()
 
-it('should login successfully with netid and password', async () => {
-	let loginResponse = mockResponse(200, 'this would be a webpage', `
-		<html><head></head><body></body></html>	
-	`);
+  axiosMock.onGet(sessionURL)
+    .replyOnce(200, noSessionResponse)
 
-	let userCompare = mockResponse(200, 'this would be a json object', `{
-		"attributeNames": {},
-		"attributes": null,
-		"creationTime": 1505771455492,
-		"currentTime": 1505825298973,
-		"id": null,
-		"lastAccessedTime": 1505825298972,
-		"maxInactiveInterval": 7200,
-		"userEid": "${netid}",
-		"userId": null,
-		"active": true,
-		"entityReference": "/session",
-		"entityURL": "https://staging.tracs.txstate.edu:443/direct/session",
-		"entityTitle": "current"
-	}`);
+  axiosMock.onGet(sessionURL)
+    .replyOnce(
+      200,
+      validSessionResponse('wrongNetid2103', tracsID),
+      {'content-type': 'application/json'}
+    )
 
-	global.fetch = jest.fn().mockImplementation(url => {
-		if (url.includes('/direct/session/current.json')) {
-			return Promise.resolve(userCompare);
-		} else {
-			return Promise.resolve(loginResponse);
-		}
-	});
+  axiosMock.onPost(loginURL)
+    .replyOnce(200, '<html></html>')
 
-	credentials.store = jest.fn().mockImplementation((netid, password) => {
-		return Promise.resolve();
-	});
+  const expectedActions = [
+    {type: actions.REQUEST_LOGIN, silentLogin: false},
+    {
+      type: actions.LOGIN_FAILURE,
+      errorMessage: new Error('There was a problem logging you into TRACS. Please try again later.')
+    }
+  ]
 
-	const store = mockStore({
-		login: initialState
-	});
+  return store.dispatch(login(netid, password)).then(() => {
+    expect((store.getActions())).toEqual(expectedActions)
+  })
+})
 
-	const expectedActions = [
-		{type: LOGGING_IN, loggingIn: true},
-		{type: LOGGING_IN, loggingIn: false},
-		{type: LOGIN_HAS_FAILED, hasFailed: false},
-		{type: LOGIN, netid, password, isLoggedIn: true}
-	];
+it('should not log user in if the session is invalid after login', () => {
+  const netid = 'fak103'
+  const password = '#43jiera094%%'
 
-	await store.dispatch(LoginActions.auth(netid, password));
-	expect(store.getActions()).toEqual(expectedActions);
-});
+  const sessionURL = `${global.urls.baseUrl}${global.urls.session}`
+  const loginURL = `${global.urls.baseUrl}/portal/relogin?eid=${netid}&pw=${encodeURIComponent(password)}`
+  credentials.store = () => Promise.resolve()
+
+  axiosMock.onGet(sessionURL)
+    .replyOnce(200, noSessionResponse)
+
+  axiosMock.onGet(sessionURL)
+    .replyOnce(
+      200,
+      noSessionResponse,
+      {'content-type': 'application/json'}
+    )
+
+  axiosMock.onPost(loginURL)
+    .replyOnce(200, '<html></html>')
+
+  const expectedActions = [
+    {type: actions.REQUEST_LOGIN, silentLogin: false},
+    {
+      type: actions.LOGIN_FAILURE,
+      errorMessage: new Error('Net ID or password is incorrect.')
+    }
+  ]
+
+  return store.dispatch(login(netid, password)).then(() => {
+    expect((store.getActions())).toEqual(expectedActions)
+  })
+})
+
+it('should not log user in if the session is undefined after login', () => {
+  const netid = 'fak103'
+  const password = '#43jiera094%%'
+
+  const sessionURL = `${global.urls.baseUrl}${global.urls.session}`
+  const loginURL = `${global.urls.baseUrl}/portal/relogin?eid=${netid}&pw=${encodeURIComponent(password)}`
+  credentials.store = () => Promise.resolve()
+
+  axiosMock.onGet(sessionURL)
+    .replyOnce(200, noSessionResponse)
+
+  axiosMock.onGet(sessionURL)
+    .replyOnce(
+      200,
+      undefined,
+      {'content-type': 'application/json'}
+    )
+
+  axiosMock.onPost(loginURL)
+    .replyOnce(200, '<html></html>')
+
+  const expectedActions = [
+    {type: actions.REQUEST_LOGIN, silentLogin: false},
+    {
+      type: actions.LOGIN_FAILURE,
+      errorMessage: new Error('There was a problem logging you into TRACS. Please try again later.')
+    }
+  ]
+
+  return store.dispatch(login(netid, password)).then(() => {
+    expect((store.getActions())).toEqual(expectedActions)
+  })
+})

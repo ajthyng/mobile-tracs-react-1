@@ -34,7 +34,7 @@ const requestLogin = (silentLogin) => {
 }
 
 const loginSuccess = (netid, password, tracsID) => {
-  Analytics().setUserId(tracsID)
+  Analytics().setUserId(netid)
   return {
     type: LOGIN_SUCCESS,
     netid,
@@ -99,7 +99,7 @@ export const clearError = () => {
   }
 }
 
-export function login(netid = '', password, silentLogin = false) {
+export function login(netid = '', password = '', silentLogin = false) {
   return async (dispatch) => {
     dispatch(requestLogin(silentLogin))
     if (netid.length === 0) {
@@ -118,6 +118,11 @@ export function login(netid = '', password, silentLogin = false) {
       return
     }
 
+    if (password.length === 0) {
+      dispatch(loginFailure(new Error('Password must be filled out')))
+      return
+    }
+
     const loginUrl = `${global.urls.baseUrl}/portal/relogin?eid=${netid}&pw=${encodeURIComponent(password)}`
     const sessionUrl = `${global.urls.baseUrl}${global.urls.session}`
 
@@ -133,7 +138,7 @@ export function login(netid = '', password, silentLogin = false) {
       return
     }
 
-    axios(loginUrl, {
+    await axios(loginUrl, {
       method: 'post',
     }).then(async res => {
       let creds = {
