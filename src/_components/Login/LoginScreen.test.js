@@ -7,19 +7,23 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import { configure } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import React from 'react'
+import {TextInput} from 'react-native'
+import {shallow} from 'enzyme'
+import LoginScreen from './LoginScreen'
+import configureStore from '../../store/configureStore'
+import {credentials} from '../../utils/storage'
+import {Provider} from 'react-redux'
 
-configure({ adapter: new Adapter() });
+const {store} = configureStore()
 
-jest.mock('react-native-cookies', () => ({
-  clearAll: jest.fn().mockImplementation(() => Promise.resolve(true))
-}))
+it('should render the component with no netid or password', () => {
+  credentials.get = jest.fn().mockImplementation(() => Promise.resolve(false))
+  const wrapper = shallow(
+    <Provider store={store}>
+      <LoginScreen />
+    </Provider>
+  )
 
-jest.mock('react-native-firebase', () => ({
-  analytics: () => ({
-    setAnalyticsCollectionEnabled: () => null,
-    setUserId: (id) => null,
-    setCurrentScreen: () => null
-  })
-}))
+  expect(wrapper.containsMatchingElement(<LoginScreen />)).toBeTruthy()
+})

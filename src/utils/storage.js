@@ -9,7 +9,6 @@
  */
 import * as Keychain from 'react-native-keychain';
 import {AsyncStorage} from 'react-native';
-import LockStatus from './lockstatus';
 import FCM from 'react-native-fcm';
 import PushNotification from 'react-native-push-notification';
 
