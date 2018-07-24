@@ -23,6 +23,93 @@ it('should return initial state for unknown actions', () => {
 	expect(sitesReducer(undefined, {})).toEqual(initialState);
 });
 
+
+it('Should handle Clear_Sites action', () => {
+
+		const action = {
+			type: sites.CLEAR_SITES,
+			userSites: {}
+
+
+		};
+
+		expect(sitesReducer(initialState, action)).toEqual({
+
+			...initialState
+
+
+		});
+
+
+	}
+);
+
+
+it('Should handle Request_Sites action', () => {
+
+		const action = {
+			type: sites.REQUEST_SITES,
+			isFetchingSites: true
+		};
+
+		expect(sitesReducer(initialState, action)).toEqual({
+
+			...initialState,
+			isFetchingSites: true
+
+		});
+
+	}
+);
+
+
+it('Should handle Sites_Success action', () => {
+		const action = {
+			type: sites.SITES_SUCCESS,
+			userSites: {'342908ufa0wefh': 'CS 1301'},
+		};
+
+		const state = {
+			...initialState,
+			userSites: {},
+			hasSites: false,
+			isFetchingSites: true
+		}
+
+		expect(sitesReducer(state, action)).toEqual({
+			userSites: action.userSites,
+			hasSites: true,
+			isFetchingSites: false
+		});
+
+	}
+);
+
+
+it('Should handle Sites_Failure action', () => {
+
+		const action = {
+			type: sites.SITES_FAILURE,
+			hasFailed: true,
+			hasSites: undefined
+
+
+		};
+
+		expect(sitesReducer(initialState, action)).toEqual({
+
+			...initialState,
+			hasSites: undefined,
+			hasFailed: true
+
+
+		});
+
+
+	}
+);
+
+
 it('should handle GET_MEMBERSHIPS action', () => {
 	const userSites = {
 		"518g910h19": {

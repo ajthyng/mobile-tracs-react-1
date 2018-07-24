@@ -8,6 +8,7 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+
 import {initialState, loginReducer} from '../../src/reducers/login';
 import {authActions} from '../../src/constants/actions';
 
@@ -25,27 +26,30 @@ it('should return initial state for undefined state', () => {
 	expect(loginReducer(undefined, {})).toEqual(currentState);
 });
 
-it('should handle LOGIN action', () => {
+it('should handle REQUEST_LOGIN action', () => {
 	const action = {
-		type: auth.LOGIN,
-		netid: netid,
-		password: password,
-		isLoggedIn: true
+		type: auth.REQUEST_LOGIN,
+		...initialState,
+		isAuthenticated: false,
+		isLoggingIn: true,
+		errorMessage: ""
+
 	};
 	expect(loginReducer(initialState, action)).toEqual({
 		...initialState,
-		netid,
-		password,
-		isLoggedIn: true
+		isAuthenticated: false,
+		isLoggingIn: true,
+		errorMessage: ""
+
 	});
 });
 
-it('should handle LOGOUT action', () => {
+it('should handle REQUEST_LOGOUT action', () => {
 	const action = {
-		type: auth.LOGOUT,
-		netid: '',
-		password: '',
-		isLoggedIn: false
+		type: auth.REQUEST_LOGOUT,
+		...currentState,
+		isLoggingOut: true,
+		errorMessage: ""
 	};
 
 	currentState.netid = netid;
@@ -54,44 +58,95 @@ it('should handle LOGOUT action', () => {
 
 	expect(loginReducer(currentState, action)).toEqual({
 		...currentState,
-		netid: '',
-		password: '',
-		isLoggedIn: false
+		errorMessage: "",
+		isLoggingOut: true,
 	});
 });
 
-it('should handle LOGIN_HAS_FAILED action', () => {
+
+
+it('should handle LOGIN_FAILURE action', () => {
 	const action = {
-		type: auth.LOGIN_HAS_FAILED,
-		hasFailed: true
+		type: auth.LOGIN_FAILURE,
+
+		errorMessage : " LOGIN HAS FAILED"
+
 	};
 
-	expect(loginReducer(currentState, action)).toEqual({
-		...currentState,
-		hasFailed: true
+	expect(loginReducer(initialState, action)).toEqual({
+		...initialState,
+
+		errorMessage : " LOGIN HAS FAILED"
 	});
 });
 
-it('should handle LOGGING_IN action', () => {
+
+it('Should handle LOGIN_SUCCESS action', () => {
+
 	const action = {
-		type: auth.LOGGING_IN,
-		loggingIn: true
+
+		type: auth.LOGIN_SUCCESS,
+		isAuthenticated: true,
+		isLoggingIn: false,
+		errorMessage: "",
+		tracsID: "D_a204",
+		netid: "D_a204",
+		password: "12345"
+
 	};
 
-	expect(loginReducer(currentState, action)).toEqual({
-		...currentState,
-		loggingIn: true
+	expect(loginReducer(initialState, action)).toEqual({
+
+		...initialState,
+		isAuthenticated: true,
+		isLoggingIn: false,
+		errorMessage: "",
+		tracsID: action.tracsID,
+		netid: "D_a204",
+		password: "12345"
+
+
 	});
+
+
 });
 
-it('should handle LOGIN_IS_GUEST action', () => {
+
+it( 'Should handle LOGOUT_FAILURE action', () => {
+
 	const action = {
-		type: auth.LOGIN_IS_GUEST,
-		loginIsGuestAccount: true
+
+		type :auth.LOGOUT_FAILURE,
+		...initialState,
+		errorMessage : "Logout Failure"
+
 	};
 
-	expect(loginReducer(currentState, action)).toEqual({
-		...currentState,
-		loginIsGuestAccount: true
+	expect (loginReducer(initialState,action)).toEqual({
+
+
+		...initialState,
+		errorMessage : "Logout Failure"
+
 	});
+
+});
+
+it ('Should handle CLEAR_ERROR action', ()=>
+{
+	const action = {
+
+		type: auth.CLEAR_ERROR,
+		...initialState,
+		errorMessage : ""
+
+	};
+
+	expect (loginReducer(initialState,action)).toEqual({
+
+		...initialState,
+		errorMessage : ""
+
+	});
+
 });

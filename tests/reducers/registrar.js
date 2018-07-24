@@ -29,6 +29,223 @@ it('should not modify state for undefined actions', () => {
 	expect(registerReducer(currentState, {})).toEqual(initialState);
 });
 
+
+it("Should handle Request_Registration action", () => {
+
+	const  action = {
+
+		type: registrar.REQUEST_REGISTRATION,
+
+			isRegistering : true,
+			isRegistered : false,
+			errorMessage:""
+
+	};
+
+	expect(registerReducer(initialState,action)).toEqual({
+
+		...initialState,
+		isRegistering : true,
+		isRegistered : false,
+		errorMessage:""
+
+
+
+	});
+
+
+
+});
+
+
+
+it("Should handle Registration_Success action", () => {
+
+	const  action = {
+		type: registrar.REGISTRATION_SUCCESS,
+
+		isRegistering: false,
+		isRegistered: true,
+		netid: "",
+		deviceToken: "",
+		errorMessage: ''
+
+	};
+
+	expect(registerReducer(currentState,action)).toEqual({
+	...currentState,
+
+		netid: action.netid,
+		deviceToken: "",
+		errorMessage: ''
+
+	});
+
+
+
+});
+
+it("Should handle Registration_Failure action",() => {
+	const action = {
+
+		type: registrar.REGISTRATION_FAILURE,
+		isGuestAccount: true,
+		errorMessage: ""
+	};
+	expect(registerReducer(initialState,action)).toEqual({
+
+			...initialState,
+
+		isGuestAccount: true
+
+
+	});
+
+});
+
+it("Should handle Request_Unregister", () =>
+
+	{
+		const  action = {
+			type: registrar.REQUEST_UNREGISTER,
+
+			isDeleting: true,
+			isDeleted: false,
+			errorMessage:""
+
+	};
+
+		expect(registerReducer(initialState,action)).toEqual({
+
+			...initialState,
+			isDeleting: true,
+			isDeleted: false
+
+		});
+
+
+
+	});
+
+
+
+
+
+it("Should handle UNREGISTER_SUCCESS action",()=> {
+
+		const action = {
+
+			type: registrar.UNREGISTER_SUCCESS,
+
+		};
+		expect(registerReducer(initialState, action)).toEqual({
+			...initialState
+		});
+
+	});
+
+
+it("Should handle Unregister_Failure action",()=>
+
+	{
+		const action ={
+
+			type: registrar.UNREGISTER_FAILURE,
+			isDeleting: false,
+			isRegistered: true,
+			errorMessage:""
+
+
+		};
+
+		expect(registerReducer(initialState,action)).toEqual(
+
+			{
+				...initialState,
+				isDeleting: false,
+				isRegistered: true
+
+
+			});
+
+	});
+
+
+it("Should handle SET_Token Action", ()=>
+	{
+		const action =
+			{
+				type:registrar.SET_TOKEN,
+				deviceToken:""
+
+			};
+
+		expect(registerReducer(currentState,action)).toEqual({
+
+			...currentState,
+			deviceToken:""
+
+		});
+	});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/// old test cases start here
+
+
+
 it('should handle IS_REGISTERED action', () => {
 	const action = {
 		type: registrar.IS_REGISTERED,
