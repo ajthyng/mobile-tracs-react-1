@@ -18,6 +18,7 @@ const {
 
 export const initialState = {
 	isLoading: false,
+	grades: [],
 	errorMessage: ''
 }
 
