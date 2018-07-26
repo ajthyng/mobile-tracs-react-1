@@ -39,7 +39,7 @@ const Login = (props) => {
 
     return (
       <KeyboardScroll
-        innerRef={c => getRef(c)}
+        innerRef={getRef}
         contentViewStyle={{height: '100%'}}
         scrollEnabled
         keyboardDismissMode='none'

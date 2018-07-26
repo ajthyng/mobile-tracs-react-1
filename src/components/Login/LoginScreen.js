@@ -16,8 +16,8 @@ const KEYBOARD_EVENT = {
 }
 
 const displayAlert = (regErr, loginErr) => {
-  let regErrorMessage = regErr.message || ''
-  let loginErrorMessage = loginErr.message || ''
+  let regErrorMessage = regErr && regErr.message || ''
+  let loginErrorMessage = loginErr && loginErr.message || ''
   if (regErrorMessage.length > 0) {
     Alert.alert('Login Error', `${regErrorMessage}`)
   } else {
@@ -52,7 +52,8 @@ class LoginScreen extends Component {
   }
 
   checkForStoredCredentials = () => {
-    if (this.props.loggingIn === false && this.props.registering === false) {
+    const {loggingIn, registering} = this.props
+    if (!loggingIn && !registering) {
       this.setState({
         checkingCredentials: true
       })
@@ -72,21 +73,14 @@ class LoginScreen extends Component {
   }
 
   userLogin = (netid, password) => {
-    if (!this.props.loggingIn) {
-      this.props.login(netid, password)
+    const {loggingIn, login} = this.props
+    if (!loggingIn) {
+      login(netid, password)
     }
   }
 
-  scrollToTop = () => {
-    if (this.scrollView) {
-      this.scrollView.scrollTo({y: 0, animated: true})
-    }
-  }
-
-  scrollToForm = () => {
-    if (this.scrollView) {
-      this.scrollView.scrollTo({y: this.state.loginPosition.y, animated: true})
-    }
+  scrollTo = (y) => {
+    this.scrollView && this.scrollView.scrollTo({y, animated: true})
   }
 
   onChangeText = (value) => {
@@ -107,7 +101,8 @@ class LoginScreen extends Component {
   }
 
   onPress = () => {
-    this.userLogin(this.state.netid, this.state.password)
+    const {netid, password} = this.state
+    this.userLogin(netid, password)
   }
 
   hasErrors = () => {
@@ -119,8 +114,8 @@ class LoginScreen extends Component {
   }
 
   componentDidMount() {
-    this.keyboardShowListener = Keyboard.addListener(KEYBOARD_EVENT.HIDE, this.scrollToTop)
-    this.keyboardHideListener = Keyboard.addListener(KEYBOARD_EVENT.SHOW, this.scrollToForm)
+    this.keyboardShowListener = Keyboard.addListener(KEYBOARD_EVENT.HIDE, () => this.scrollTo(0))
+    this.keyboardHideListener = Keyboard.addListener(KEYBOARD_EVENT.SHOW, () => this.scrollTo(this.state.loginPosition.y))
     this.checkForStoredCredentials()
   }
 
@@ -130,13 +125,13 @@ class LoginScreen extends Component {
   }
 
   componentDidUpdate() {
+    const {clearErrors, isAuthenticated, navigation: {navigate}} = this.props
+
     if (this.hasErrors()) {
-      this.props.clearErrors()
+      clearErrors()
     }
 
-    if (this.props.isAuthenticated) {
-      this.props.navigation.navigate('Main')
-    }
+    isAuthenticated && navigate('Main')
   }
 
   render() {
@@ -145,9 +140,7 @@ class LoginScreen extends Component {
     const actionInProgress = loggingIn || registering || checkingCredentials || isAuthenticated
 
     if (actionInProgress) {
-      return (
-        <ActivityIndicator />
-      )
+      return <ActivityIndicator />
     } else {
       if (this.hasErrors()) {
         const {registerError, loginError} = this.props
