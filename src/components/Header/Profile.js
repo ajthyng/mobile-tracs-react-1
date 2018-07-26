@@ -22,7 +22,7 @@ const ProfileText = styled.Text``
 
 class Profile extends Component {
   state = {
-    profileURL: null,
+    profileURL: `${global.urls.baseUrl}/profile2-tool/images/no_image.gif`,
     source: CancelToken.source(),
     name: null
   }
@@ -40,7 +40,7 @@ class Profile extends Component {
     axios(profileImageURL, {cancelToken: token})
       .then(res => {
         this.setState({
-          profileURL: (res.request || {}).responseURL || ''
+          profileURL: `${res.request.responseURL}?${new Date().valueOf()}`
         })
       })
       .catch(err => console.log(err.request))
@@ -48,7 +48,7 @@ class Profile extends Component {
     axios(profileURL, {cancelToken: token})
       .then(res => {
         const {data: {displayName}} = res
-        this.setState({ name: displayName})
+        this.setState({name: displayName})
       })
       .catch(err => console.log(err))
   }
@@ -63,7 +63,7 @@ class Profile extends Component {
       <ProfileImage
         diameter={diameter}
         source={{
-          uri: this.state.profileURL ? `${this.state.profileURL}?${new Date().valueOf()}` : `${global.urls.baseUrl}/profile2-tool/images/no_image.gif`,
+          uri: this.state.profileURL,
           cache: 'reload'
         }}
       />
