@@ -3,13 +3,13 @@ import {View, StatusBar, Dimensions, Animated, StyleSheet} from 'react-native';
 import {connect} from 'react-redux';
 import HomeIcon from './HomeIcon';
 import ArchivedSitesIcon from './ArchivedSitesIcon';
-import Profile from '../Header/Profile';
+import Profile from '../../components/Header/Profile';
 import styled, {withTheme} from 'styled-components';
 import ProjectIcon from './ProjectIcon';
 import CalendarIcon from './CalendarIcon';
 import {setHeaderState, setScrollY} from '../../actions/header'
 import VisibleHeader from './VisibleHeader'
-import ProfileMenu from '../ProfileMenu/ProfileMenu'
+import ProfileMenu from '../../components/ProfileMenu/ProfileMenu'
 
 const DIAMETER = 80;
 const MAX_HEIGHT = 120;

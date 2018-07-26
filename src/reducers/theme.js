@@ -9,7 +9,7 @@
  */
 
 import {themeActions} from '../constants/actions'
-import {defaultTheme} from '../constants/themes'
+import {defaultTheme, darkTheme} from '../constants/themes'
 
 const {SET_THEME} = themeActions
 const initialState = defaultTheme

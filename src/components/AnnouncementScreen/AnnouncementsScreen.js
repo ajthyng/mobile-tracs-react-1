@@ -10,9 +10,9 @@ import {
 } from 'react-native'
 import styled from 'styled-components'
 import {connect} from 'react-redux'
-import {getAnnouncements} from '../actions/announcements'
+import {getAnnouncements} from '../../actions/announcements'
 import {withNavigation} from 'react-navigation'
-import ActivityIndicator from '../_components/Helper/ActivityIndicator'
+import ActivityIndicator from '../../_components/Helper/ActivityIndicator'
 
 const Container = styled.View`
   flex: 1;

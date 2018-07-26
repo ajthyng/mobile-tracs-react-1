@@ -4,7 +4,7 @@ import {View, StyleSheet, Animated} from 'react-native';
 import {logout} from '../../actions/login';
 import * as Storage from '../../utils/storage';
 import CourseList from '../CourseList/CourseList';
-import Header from '../CircleHeader/Header';
+import Header from '../../_components/CircleHeader/Header';
 import {setHeaderState} from '../../actions/header';
 import {getSiteInfo, getFavorites} from '../../actions/sites'
 import {getGrades} from '../../actions/grades'

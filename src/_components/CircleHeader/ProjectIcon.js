@@ -3,7 +3,7 @@ import {Image, Platform, View, StyleSheet, Text, Animated} from 'react-native';
 import styled, {withTheme} from 'styled-components';
 import Ripple from 'react-native-material-ripple';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Toggle from '../Toggle'
+import Toggle from '../../components/Toggle'
 
 const AnimatedRipple = styled(Animated.createAnimatedComponent(Ripple))`
 	height: ${props => props.diameter};

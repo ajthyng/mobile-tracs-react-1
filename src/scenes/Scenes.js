@@ -21,10 +21,10 @@ import CourseScreen from '../components/CourseScreen/CourseScreen'
 import {cardFromRight, cardFromBottom, cardFromLeft, cardFromTop, defaultTransition} from './Transitions'
 import GradebookItems from '../components/GradebookItems/GradebookItems'
 import CourseDetailScreen from '../components/CourseDetailScreen/CourseDetailScreen'
-import SettingsScreen from '../components/SettingsScreen'
+import SettingsScreen from '../components/Settings/SettingsScreen'
 import TRACSWebView from '../_components/TRACSWebView/TRACSWebNative'
 import SimpleWebView from '../_components/SimpleWebView/SimpleWebView'
-import AnnouncementsScreen from '../components/AnnouncementsScreen'
+import AnnouncementsScreen from '../components/AnnouncementScreen/AnnouncementsScreen'
 
 Array.prototype.contains = function (value) {
   return this.indexOf(value) >= 0

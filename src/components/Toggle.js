@@ -11,7 +11,7 @@ const ToggleContainer = styled.View`
 `
 
 const ToggleTrack = styled.View`
-  background-color: ${props => props.on ? props.activeColor : props.disabledColor};
+  background-color: ${props => props.on && props.enabled ? props.activeColor : props.disabledColor};
   opacity: ${props => props.ios ? 0.6 : 0.4};
   width: ${props => props.width}px;
   height: ${props => props.ios ? props.height * 1.4 : props.height}px;
@@ -19,7 +19,7 @@ const ToggleTrack = styled.View`
 `
 
 const ToggleThumb = styled(Animated.View)`
-  background-color: ${props => props.on ? props.activeColor : props.disabledColor};
+  background-color: ${props => props.on && props.enabled ? props.activeColor : props.disabledColor};
   width: ${props => props.diameter}px;
   height: ${props => props.diameter}px;
   border-radius: ${props => props.diameter * 0.5}px;
@@ -40,7 +40,7 @@ class Toggle extends Component {
 	}
 
 	toggle = () => {
-		this.animateState()
+		this.props.enabled && this.animateState()
 	}
 
 	animateState = () => {
@@ -55,7 +55,7 @@ class Toggle extends Component {
 	}
 
 	render() {
-		const {disabledColor, activeColor, width, height, ios} = this.props
+		const {disabledColor, activeColor, width, height, ios, enabled} = this.props
 		const {on} = this.state
 
 		const diameter = height * 1.25
@@ -75,6 +75,7 @@ class Toggle extends Component {
 					<ToggleTrack {...this.props} on={on} />
 					<ToggleThumb
 						on={on}
+						enabled={enabled}
 						style={{transform: [{translateX}]}}
 						trackHeight={height}
 						diameter={diameter}
@@ -93,6 +94,7 @@ Toggle.defaultProps = {
 	},
 	onValueChange: () => {
 	},
+	enabled: true,
 	width: 16,
 	height: 36,
 	on: false,

@@ -42,6 +42,40 @@ const defaultTheme = {
 	]
 }
 
+const darkTheme = {
+  header: '#501214',
+  selectedHeader: '#4a89f4',
+  androidStatusBar: '#501214',
+  courseWithGrade: '#4a89f4',
+  courseWithoutGrade: '#4a89f4',
+  courseCardBackground: '#ffffff',
+  courseCardShadow: '#142945',
+  darkText: '#fff',
+  lightText: '#363534',
+  dashColor: '#36353440',
+  notificationBadge: '#ff3b30',
+  viewBackground: '#232323',
+  transparent: 'transparent',
+  viewCourseButton: '#1E90FF',
+  courseScreenBorder: '#b0b0b080',
+  courseScreenShadow: '#b0b0b0',
+  courseScreenTitleSeparator: '#808080',
+  gradeSummaryBackground: '#ffffff',
+  gradebookBackground: '#ffffff',
+  screenHeaderBorder: '#36353480',
+  gradeSummaryContainerBorder: '#36353480',
+  gradeItemQuotient: '#D3D3D3',
+  toggleOn: '#4a89f4',
+  toggleTint: '#b0b0b0',
+  assignments: [
+    '#fe4880',
+    '#6953c6',
+    '#3aba3b',
+    '#bdae2d',
+    '#e17409',
+  ]
+}
+
 const blackAndWhite = {
 	header: '#737373',
 	selectedHeader: '#a3a3a3',
@@ -61,4 +95,4 @@ const blackAndWhite = {
 	]
 }
 
-module.exports = { defaultTheme }
+module.exports = { defaultTheme, darkTheme }

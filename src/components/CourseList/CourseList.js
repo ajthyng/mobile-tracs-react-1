@@ -6,7 +6,7 @@ import {setScrollY, setHeaderState} from '../../actions/header'
 import styled from 'styled-components'
 import Modal from 'react-native-modal'
 
-import Header from '../CircleHeader/Header'
+import Header from '../../_components/CircleHeader/Header'
 import CourseCard from './CourseCard/CourseCard'
 import CourseSkeletonCard from './CourseSkeletonCard'
 import CourseScreen from '../CourseScreen/CourseScreen'

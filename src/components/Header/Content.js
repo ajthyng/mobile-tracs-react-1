@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import styled from 'styled-components'
-import CalendarIcon from '../CircleHeader/CalendarIcon'
+import CalendarIcon from '../../_components/CircleHeader/CalendarIcon'
 import ProfileMenu from '../ProfileMenu/ProfileMenu'
 import {HeaderBackButton} from 'react-navigation'
 
