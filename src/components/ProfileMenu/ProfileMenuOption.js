@@ -29,9 +29,19 @@ class ProfileMenuOption extends Component {
 	getIcon (iconFamily) {
 		switch (iconFamily) {
 			case 'FontAwesome':
-				return <FAIcon style={{textAlign: 'center'}} name={this.props.icon} size={this.props.size}/>
+				return <FAIcon
+          color={this.props.theme.darkText}
+					style={{textAlign: 'center'}}
+					name={this.props.icon}
+					size={this.props.size}
+				/>
 			case 'SimpleLineIcons':
-				return <SLIcon style={{textAlign: 'center'}} name={this.props.icon} size={this.props.size}/>
+				return <SLIcon
+					color={this.props.theme.darkText}
+					style={{textAlign: 'center'}}
+					name={this.props.icon}
+					size={this.props.size}
+				/>
 			default:
 				return null
 		}

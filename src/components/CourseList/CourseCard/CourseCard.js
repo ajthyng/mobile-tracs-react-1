@@ -44,7 +44,7 @@ const SideBar = styled.View`
 	border-top-left-radius: ${props => props.borderRad};
 	border-top-right-radius: 0;
 	border-bottom-right-radius: 0;
-	background-color: dodgerblue;
+	background-color: ${props => props.theme.courseWithGrade};
 `
 
 const GradeValueContainer = styled.View`
@@ -56,7 +56,7 @@ const GradeValueContainer = styled.View`
 
 const Grade = styled.Text`
 	text-align: center;
-	color: ${props => props.hasGrade ? props.theme.lightText : props.theme.darkText};
+	color: ${props => props.theme.darkText};
 	font-size: 16px;
 `
 
@@ -112,7 +112,7 @@ const GradeRightBorder = (props) => {
 
 	return (
 		<View style={{justifyContent: 'space-between', alignItems: 'center'}}>
-			{solid ? line : dashes}
+			{solid ? null : dashes}
 		</View>
 	)
 }

@@ -8,25 +8,25 @@ import {
   ScrollView,
   WebView
 } from 'react-native'
-import styled from 'styled-components'
+import styled, {withTheme} from 'styled-components'
 import {connect} from 'react-redux'
 import {getAnnouncements} from '../../actions/announcements'
 import {withNavigation} from 'react-navigation'
-import ActivityIndicator from '../../_components/Helper/ActivityIndicator'
+import ActivityIndicator from '../ActivityIndicator'
 
 const Container = styled.View`
   flex: 1;
   align-items: center;
   justify-content: center;
-  background-color: white;
+  background-color: ${props => props.theme.viewBackground};
 `
 
 const AnnouncementContainer = styled.View`
-  background-color: white;
+  background-color: ${props => props.theme.announcementBackground};
   align-items: flex-start;
   justify-content: center;
   elevation: 3;
-  shadow-color: #363534;
+  shadow-color: ${props => props.theme.announcementShadow};
   shadow-opacity: 0.5;
   shadow-radius: 2px;
   shadow-offset: 0px 2px;
@@ -34,6 +34,7 @@ const AnnouncementContainer = styled.View`
 
 const AnnouncementBody = styled(WebView)`
   width: ${props => Dimensions.get('window').width - props.margin * 2}px;
+  background-color: ${props => props.theme.announcementBackground};
 `
 
 const AnnouncementTitleContainer = styled(TouchableOpacity)`
@@ -42,15 +43,16 @@ const AnnouncementTitleContainer = styled(TouchableOpacity)`
   justify-content: center;
   padding-left: 8px;
   width: 100%;
-  background-color: white;
+  background-color: ${props => props.theme.announcementBackground};
 `
 
 const AnnouncementTitle = styled.Text`
   font-weight: bold;
   font-size: 18px;
+  color: ${props => props.theme.darkText};
 `
 
-const makeHTML = (body) => (
+const makeHTML = (body, theme) => (
   `<html>
     <head>
       <meta name='viewport' content='width=device-width, initial-scale=1'>
@@ -59,8 +61,25 @@ const makeHTML = (body) => (
           document.title = document.body.scrollHeight
         }
       </script>
+      <style>
+        body {
+            background-color: ${theme.announcementBackground}      
+        }
+        a:link {
+            color: #30B1FF;
+        }
+        a:visited {
+            color: mediumpurple;        
+        }
+        a:hover {
+        
+        }
+        a:active {
+        
+        }
+      </style>
     </head>
-    <body onload='getScrollHeight()'>
+    <body text=${theme.darkText} onload='getScrollHeight()'>
       ${body}    
     </body>
   </html>
@@ -83,7 +102,7 @@ class Announcement extends Component {
   }
 
   render() {
-    const {announcement: {body, title}} = this.props
+    const {announcement: {body, title}, theme} = this.props
     const {height, showBody} = this.state
 
     return (
@@ -109,7 +128,7 @@ class Announcement extends Component {
             }
             this.updateHeight(event)
           }}
-          source={{html: makeHTML(body)}}
+          source={{html: makeHTML(body, theme)}}
         />
       </AnnouncementContainer>
     )
@@ -126,7 +145,7 @@ class AnnouncementsScreen extends Component {
   }
 
   render() {
-    const {announcements, loading} = this.props
+    const {announcements, loading, theme} = this.props
     return loading ? (
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
         <ActivityIndicator />
@@ -139,7 +158,7 @@ class AnnouncementsScreen extends Component {
           style={{width: '100%'}}
           contentContainerStyle={null}
           keyExtractor={item => item.announcementId}
-          renderItem={({item}) => <Announcement announcement={item} />}
+          renderItem={({item}) => <Announcement theme={theme} announcement={item} />}
         />
       </Container>
     )
@@ -169,4 +188,4 @@ const mapDispatchToProps = dispatch => ({
   getAnnouncements: () => dispatch(getAnnouncements())
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(withNavigation(AnnouncementsScreen))
+export default connect(mapStateToProps, mapDispatchToProps)(withNavigation(withTheme(AnnouncementsScreen)))

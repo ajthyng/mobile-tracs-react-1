@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import styled from 'styled-components'
+import styled, {withTheme} from 'styled-components'
 import Toggle from '../Toggle'
 import {connect} from 'react-redux'
 import {setFilter} from '../../actions/sites'
@@ -27,7 +27,7 @@ const RightLabel = styled.Text`
 
 class AdditionalContent extends Component {
 	render() {
-		const {visible, setFilter, allSitesFilter, onValueChange} = this.props
+		const {visible, setFilter, theme, allSitesFilter, onValueChange} = this.props
 
 		return visible ? (
 			<Container>
@@ -35,8 +35,8 @@ class AdditionalContent extends Component {
 				<Toggle
 					width={36}
 					height={16}
-					disabledColor='lightgray'
-					activeColor='dodgerblue'
+					disabledColor={theme.favoritesToggle}
+					activeColor={theme.favoritesToggle}
 					onValueChange={onValueChange}
 					on={allSitesFilter}
 				/>
@@ -50,4 +50,4 @@ const mapDispatchToProps = dispatch => ({
 	setFilter: (filter) => dispatch(setFilter(filter))
 })
 
-export default connect(null, mapDispatchToProps)(AdditionalContent)
+export default connect(null, mapDispatchToProps)(withTheme(AdditionalContent))

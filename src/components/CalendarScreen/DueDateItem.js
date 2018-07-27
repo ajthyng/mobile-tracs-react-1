@@ -15,7 +15,7 @@ import styled, {withTheme} from 'styled-components'
 const DueDateContainer = styled.View`
 	width: 100%;
 	height: 80px;
-	background-color: white;
+	background-color: ${props => props.theme.agendaItemBackground};
 	align-items: center;
 	justify-content: flex-end;
 	padding-left: 16px;

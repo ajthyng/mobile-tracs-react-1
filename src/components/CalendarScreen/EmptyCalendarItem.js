@@ -8,24 +8,26 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import React from 'react'
-import styled from 'styled-components'
+import styled, {withTheme} from 'styled-components'
 
 const EmptyItemContainer = styled.View`
 	height: 80px;
-	background-color: transparent;
+	background-color: ${props => props.theme.transparent};
 	margin: 5px;
 `
 
 const EmptyItemLine = styled.View`
 	margin-top: 25px;
 	height: 1px;
-	background-color: #363534;
+	background-color: ${props => props.theme.darkText};
 	opacity: 0.125;
 	width: 100%
 `
 
-export default EmptyCalendarItem = (props) => (
+const EmptyCalendarItem = (props) => (
 	<EmptyItemContainer>
 		<EmptyItemLine />
 	</EmptyItemContainer>
 )
+
+export default withTheme(EmptyCalendarItem)

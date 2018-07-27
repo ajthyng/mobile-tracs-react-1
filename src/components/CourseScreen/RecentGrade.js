@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {TouchableOpacity, Animated, View, Dimensions} from 'react-native'
-import styled from 'styled-components'
+import styled, {withTheme} from 'styled-components'
 import Comments from './Comments'
 import dayjs from 'dayjs'
 import GradeComment from './GradeComment'
@@ -39,13 +39,13 @@ const GradeInfo = styled.View`
 const GradeName = styled.Text`
 	padding-left: 8px;
 	font-size: 16px;
-	color: #363534;
+	color: ${props => props.theme.darkText};
 `
 
 const GradeEntryDate = styled.Text`
 	padding-left: 8px;
 	font-size: 14px;
-	color: #363534;
+	color: ${props => props.theme.darkText};
 `
 
 function getHue(grade, points) {
@@ -89,7 +89,7 @@ class RecentGrade extends Component {
 	}
 
 	render() {
-		const {grade, name, comment, dateGraded} = this.props
+		const {grade, name, theme, comment, dateGraded} = this.props
 		const {width} = Dimensions.get('window')
 
 		const translateX = this.driver.interpolate({
@@ -113,7 +113,7 @@ class RecentGrade extends Component {
 		})
 
 		return (
-			<View style={{backgroundColor: 'white', overflow: 'hidden'}}>
+			<View style={{overflow: 'hidden'}}>
 				<Container style={{transform: [{translateX: translateX}], opacity}}>
 					<GradeCircle gradeColor={`hsl(${this.hue}, 70%, 50%)`}>
 						<GradeValue>{grade}</GradeValue>
@@ -129,6 +129,7 @@ class RecentGrade extends Component {
 					</GradeInfo>
 				</Container>
 				<Comments
+					theme={theme}
 					ref={c => this.comments = c}
 					onPress={this.hideComment}
 					comment={comment}
@@ -149,4 +150,4 @@ RecentGrade.defaultProps = {
 	dateGraded: dayjs().format('MMM DD HH:mm a')
 }
 
-export default RecentGrade
+export default withTheme(RecentGrade)

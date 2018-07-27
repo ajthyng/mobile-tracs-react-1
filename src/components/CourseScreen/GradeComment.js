@@ -1,7 +1,7 @@
 import React from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import {TouchableOpacity} from "react-native"
-import styled from 'styled-components'
+import styled, {withTheme} from 'styled-components'
 
 
 const CommentContainer = styled(TouchableOpacity)`
@@ -15,13 +15,13 @@ const CommentContainer = styled(TouchableOpacity)`
 
 const CommentButton = styled(Icon)`
 	font-size: 18px;
-	color: #363534;
+	color: ${props => props.theme.darkText};
 	padding-left: 8px;
 `;
 
 const CommentText = styled.Text`
 	font-size: 14px;
-	color: #363534;
+	color: ${props => props.theme.darkText};
 `;
 
 const GradeComment = (props) => (

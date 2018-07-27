@@ -14,10 +14,11 @@ const Container = styled(Animated.View)`
 const BackButton = styled(Icon)`
 	margin-left: 8px;
 	font-size: 32px;
+	color: ${props => props.theme.darkText};
 `
 
 const CommentText = styled.Text`
-	color: #363534;
+	color: ${props => props.theme.darkText};
 	align-self: flex-start;
 	font-size: 14px;
 	margin-left: 16px;
@@ -26,18 +27,22 @@ const CommentText = styled.Text`
 
 class Comments extends Component {
 	flashScrollIndicators = () => {
-		this.scrollView.flashScrollIndicators()
+		this.scrollView && this.scrollView.flashScrollIndicators()
 	}
 
 	render() {
-		const {comment, onPress, style} = this.props
+		const {comment, onPress, style, theme} = this.props
 
 		return (
 			<Container style={style}>
 				<TouchableOpacity onPress={onPress}>
 					<BackButton name='ios-arrow-forward' />
 				</TouchableOpacity>
-				<ScrollView ref={c => this.scrollView = c} bounces={false}>
+				<ScrollView
+					ref={c => this.scrollView = c}
+					bounces={false}
+					indicatorStyle={theme.scrollIndicator}
+				>
 					<CommentText>{comment}</CommentText>
 					<TouchableOpacity style={{
 						position: 'absolute',

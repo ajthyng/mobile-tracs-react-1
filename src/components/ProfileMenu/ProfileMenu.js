@@ -73,7 +73,7 @@ class CustomMenuRenderer extends Component {
 
 class ProfileMenu extends Component {
   render() {
-    const {navigation: {navigate}} = this.props
+    const {navigation: {navigate}, theme} = this.props
     return (
       <Menu renderer={CustomMenuRenderer}
             onSelect={val => {
@@ -89,7 +89,7 @@ class ProfileMenu extends Component {
         <MenuOptions customStyles={optionStyles(this.props)}>
           <Profile diameter={50} style={{
             container: {flexDirection: 'column'},
-            text: {color: '#363534', fontSize: 22, fontWeight: 'bold'}
+            text: {color: theme.darkText, fontSize: 22, fontWeight: 'bold'}
           }} />
           <MenuOption value='Settings' customStyles={{optionWrapper: optionStyles(this.props).topOption}}>
             <ProfileMenuOption label='Settings' icon='cog' size={22} />
@@ -116,13 +116,13 @@ const optionStyles = (props) => ({
     paddingLeft: 0,
     paddingRight: 0,
     paddingBottom: 0,
-    backgroundColor: 'white'
+    backgroundColor: props.theme.viewBackground
   },
   topOption: {
     marginTop: 30
   },
   optionText: {
-    color: '#363534'
+    color: props.theme.viewBackground
   }
 })
 

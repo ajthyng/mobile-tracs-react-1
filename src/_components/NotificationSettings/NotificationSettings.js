@@ -3,7 +3,7 @@ import {BackHandler, ScrollView} from 'react-native';
 import {connect} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
 
-import ActivityIndicator from '../Helper/ActivityIndicator';
+import ActivityIndicator from '../../components/ActivityIndicator';
 import SettingSwitchControl from './SettingSwitchControl';
 import Spacer from '../Helper/Spacer';
 import {getSettings, saveSettings} from '../../actions/settings';

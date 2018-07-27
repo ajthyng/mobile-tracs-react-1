@@ -6,7 +6,7 @@ import {connect} from 'react-redux'
 import {getSettings} from '../../actions/settings'
 import {getSiteInfo} from '../../actions/sites'
 import SiteSetting from './SiteSetting'
-import ActivityIndicator from '../../_components/Helper/ActivityIndicator'
+import ActivityIndicator from '../ActivityIndicator'
 
 const Container = styled.View`
   flex: 1;

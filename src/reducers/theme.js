@@ -12,7 +12,7 @@ import {themeActions} from '../constants/actions'
 import {defaultTheme, darkTheme} from '../constants/themes'
 
 const {SET_THEME} = themeActions
-const initialState = defaultTheme
+const initialState = darkTheme
 
 export function themeReducer (state = initialState, action) {
 	switch (action.type) {

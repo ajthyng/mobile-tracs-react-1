@@ -12,7 +12,7 @@ import dayjs from 'dayjs'
 import styled from 'styled-components'
 
 const DayContainer = styled.View`
-	background-color: transparent;
+	background-color: ${props => props.theme.transparent};
 	height: 80px;
 	width: 50px;
 	margin: 5px;
@@ -21,7 +21,7 @@ const DayContainer = styled.View`
 `
 
 const DayNumber = styled.Text`
-	color: #363534;
+	color: ${props => props.theme.darkText};
 	opacity: 0.63;
 	text-align: center;
 	width: 100%;
@@ -30,7 +30,7 @@ const DayNumber = styled.Text`
 `
 
 const ShortMonthName = styled.Text`
-	color: #363534;
+	color: ${props => props.theme.darkText};
 	opacity: 0.63;
 	text-align: center;
 	font-size: 18px;

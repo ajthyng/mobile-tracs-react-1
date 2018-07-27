@@ -10,7 +10,7 @@ import CourseButton from './CourseButton'
 import Announcements from './Announcements'
 
 const CourseContainer = styled.View`
-	background-color: white;
+	background-color: ${props => props.theme.courseScreenBackground};
 	border: 1px;
 	border-color: ${props => props.theme.courseScreenBorder};
 	flex: 1;

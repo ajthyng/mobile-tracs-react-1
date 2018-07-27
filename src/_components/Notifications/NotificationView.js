@@ -7,7 +7,7 @@ import Notification from './Notification';
 import SectionHeader from './SectionHeader';
 import SectionSeparator from './SectionSeparator';
 import ItemSeparator from './ItemSeparator';
-import ActivityIndicator from '../Helper/ActivityIndicator';
+import ActivityIndicator from '../../components/ActivityIndicator';
 import {getSettings, saveSettings} from '../../actions/settings';
 import Settings from '../../utils/settings';
 import {types} from '../../constants/notifications';
