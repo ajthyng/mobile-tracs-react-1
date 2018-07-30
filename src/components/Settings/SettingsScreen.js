@@ -1,10 +1,11 @@
 import React, {Component} from 'react'
 import {StatusBar, Dimensions, SectionList} from 'react-native'
 import styled, {withTheme} from 'styled-components'
-import {setHeaderState} from '../../actions/header'
 import {connect} from 'react-redux'
 import {getSettings} from '../../actions/settings'
 import {getSiteInfo} from '../../actions/sites'
+import {setTheme} from '../../actions/theme'
+import {defaultTheme, darkTheme} from '../../constants/themes'
 import SiteSetting from './SiteSetting'
 import ActivityIndicator from '../ActivityIndicator'
 
@@ -78,21 +79,35 @@ class SettingsScreen extends Component {
 
   renderItem = ({item}) => {
     const {enabled} = this.state
-    return <SiteSetting enabled={enabled} name={item.name} />
+    return (
+      <SiteSetting
+        onValueChange={item.onToggle}
+        enabled={enabled}
+        name={item.name}
+        on={item.on}
+      />
+    )
   }
 
   render() {
-    const {loading, sites} = this.props
+    const {loading, sites, setTheme, themeName} = this.props
     const siteList = Object.keys(sites).reduce((accum, siteId) => {
       accum.push(sites[siteId])
       return accum
     }, [])
 
+    console.log(themeName)
     const sections = [
       {
         title: '', data: [
           {
             name: 'Dark Mode',
+            onToggle: (on) => {
+              const theme = on ? darkTheme : defaultTheme
+              const name = on ? darkTheme.NAME : defaultTheme.NAME
+              setTheme(theme, name)
+            },
+            on: themeName === darkTheme.NAME,
             id: '2'
           },
           {
@@ -128,7 +143,8 @@ class SettingsScreen extends Component {
 
 const mapDispatchToProps = (dispatch, props) => ({
   getSettings: () => dispatch(getSettings(props.token)),
-  getSites: () => dispatch(getSiteInfo(props.netid))
+  getSites: () => dispatch(getSiteInfo(props.netid)),
+  setTheme: (theme, name) => dispatch(setTheme(theme, name))
 })
 
 const mapStateToProps = state => ({
@@ -140,7 +156,8 @@ const mapStateToProps = state => ({
   errorMessage: state.settings.errorMessage,
   pending: state.settings.isSaving,
   success: state.settings.isSaved,
-  netid: state.registrar.netid
+  netid: state.registrar.netid,
+  themeName: state.theme.name
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTheme(SettingsScreen))

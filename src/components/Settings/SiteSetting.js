@@ -23,12 +23,13 @@ class SiteSetting extends Component {
   }
 
   render() {
-    const {name, enabled, on} = this.props
+    const {name, enabled, on, onValueChange} = this.props
     return (
       <Container>
         <Label>{name}</Label>
         <Toggle
           enabled={enabled}
+          onValueChange={onValueChange}
           on={on}
           width={42}
           height={20}

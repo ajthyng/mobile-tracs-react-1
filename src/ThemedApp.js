@@ -55,7 +55,7 @@ class ThemedApp extends Component {
 }
 
 const mapStateToProps = state => ({
-	theme: state.theme
+	theme: state.theme.colors
 })
 
 const mapDispatchToProps = dispatch => ({

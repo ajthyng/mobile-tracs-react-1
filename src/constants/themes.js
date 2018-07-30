@@ -9,6 +9,7 @@
  */
 
 const defaultTheme = {
+  NAME: 'DEFAULT',
 	header: '#224575',
 	selectedHeader: '#4a89f4',
 	androidStatusBar: '#224575',
@@ -52,6 +53,7 @@ const defaultTheme = {
 }
 
 const darkTheme = {
+	NAME: 'DARK',
   header: '#501214',
   selectedHeader: '#4a89f4',
   androidStatusBar: '#501214',

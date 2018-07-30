@@ -34,10 +34,13 @@ const ToggleThumb = styled(Animated.View)`
 `
 
 class Toggle extends Component {
-	state = {
-		on: this.props.on,
-		animationRange: new Animated.Value(this.props.on ? 1 : 0)
-	}
+	constructor(props) {
+		super(props)
+		this.state = {
+      on: this.props.on,
+      animationRange: new Animated.Value(this.props.on ? 1 : 0)
+    }
+  }
 
 	toggle = () => {
 		this.props.enabled && this.animateState()

@@ -106,7 +106,7 @@ const AuthenticationNavigator = (props) => {
       resetOnBlur: false
     }
   )
-  return <Nav {...props}/>
+  return <Nav {...props} />
 }
 
 module.exports = {

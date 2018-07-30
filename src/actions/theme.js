@@ -12,7 +12,8 @@ import {themeActions} from '../constants/actions'
 
 const {SET_THEME} = themeActions
 
-export const setTheme = (theme) => ({
+export const setTheme = (theme, themeName) => ({
 	type: SET_THEME,
-	theme
+	theme,
+	themeName
 })

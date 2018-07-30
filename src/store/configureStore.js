@@ -31,7 +31,7 @@ const statusFilter = createTransform((inboundState, key) => {
 const persistConfig = {
   key: 'root',
   storage: storage,
-  whitelist: ['tracsSites'],
+  whitelist: ['tracsSites', 'theme'],
   transforms: [statusFilter]
 }
 
