@@ -43,12 +43,13 @@ const validSessionResponse = (netid, tracsID) => ({
 })
 
 let store = null
-let axiosMock = null
+let axiosMock = new MockAdapter(axios)
 
 beforeEach(() => {
   store = mockStore({})
   Networking.haxios = axios
-  axiosMock = new MockAdapter(axios)
+  axiosMock.reset()
+  axiosMock.resetHandlers()
   global.urls = urls
 })
 
@@ -167,15 +168,15 @@ it('should not log user in if session is for the wrong user', () => {
   axiosMock.onGet(sessionURL)
     .replyOnce(200, noSessionResponse)
 
+  axiosMock.onPost(loginURL).reply(200, '<html></html>')
+
   axiosMock.onGet(sessionURL)
-    .replyOnce(
+    .reply(
       200,
       validSessionResponse('wrongNetid2103', tracsID),
       {'content-type': 'application/json'}
     )
 
-  axiosMock.onPost(loginURL)
-    .replyOnce(200, '<html></html>')
 
   const expectedActions = [
     {type: actions.REQUEST_LOGIN, silentLogin: false},

@@ -52,7 +52,8 @@ class SettingsScreen extends Component {
     const {width, height} = Dimensions.get('window')
     this.state = {
       width,
-      height
+      height,
+      enabled: true
     }
   }
 
@@ -73,6 +74,11 @@ class SettingsScreen extends Component {
       width,
       height
     })
+  }
+
+  renderItem = ({item}) => {
+    const {enabled} = this.state
+    return <SiteSetting enabled={enabled} name={item.name} />
   }
 
   render() {
@@ -99,7 +105,7 @@ class SettingsScreen extends Component {
       {title: 'Course Notifications', data: siteList}
     ]
     const {width} = this.state
-    console.log(siteList)
+
     return (
       <Container>
         <SectionList
@@ -107,7 +113,7 @@ class SettingsScreen extends Component {
           ListEmptyComponent={loading ? Activity : null}
           sections={sections}
           keyExtractor={item => item.id}
-          renderItem={({item}) => <SiteSetting enabled={false} name={item.name} />}
+          renderItem={this.renderItem}
           renderSectionHeader={({section}) => {
             if (section.title.length > 0) {
               return <SectionHeader>{section.title}</SectionHeader>
