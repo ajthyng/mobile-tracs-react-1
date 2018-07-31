@@ -28,6 +28,7 @@
 		8219AAB91F61B7DD00FC489C /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8219AAB61F61B7BC00FC489C /* libRCTPushNotification.a */; };
 		823CC8AE20DDB0CD00112872 /* libBVLinearGradient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 823CC87C20DDB07F00112872 /* libBVLinearGradient.a */; };
 		8276A0D6203F31D9009B216C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8276A0D5203F31D9009B216C /* GoogleService-Info.plist */; };
+		8299F00B2110F1500080D4FE /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8299EFD92110F1500080D4FE /* libReact.a */; };
 		82AA3132204D981300296DD0 /* libRCTToast.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 82AA3115204D980300296DD0 /* libRCTToast.a */; };
 		82AA90E0207ED08400CD5ECC /* libRNCookieManagerIOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8219AA6C1F5F56D100FC489C /* libRNCookieManagerIOS.a */; };
 		82B4C55B20B5FAB900029A88 /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 82B4C55620B5FAB300029A88 /* libRNFirebase.a */; };
@@ -440,6 +441,7 @@
 		823CC87620DDB07F00112872 /* BVLinearGradient.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BVLinearGradient.xcodeproj; path = "../node_modules/react-native-linear-gradient/BVLinearGradient.xcodeproj"; sourceTree = "<group>"; };
 		8276A0CD203F2F50009B216C /* RNFirebase.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNFirebase.xcodeproj; path = "../node_modules/react-native-firebase/ios/RNFirebase.xcodeproj"; sourceTree = "<group>"; };
 		8276A0D5203F31D9009B216C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "TRACSMobile/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		8299EFD92110F1500080D4FE /* libReact.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libReact.a; path = "../../../Library/Developer/Xcode/DerivedData/TRACSMobile-bediinothhfhmpfrthihdgiqwqgk/Build/Products/Debug-iphoneos/libReact.a"; sourceTree = "<group>"; };
 		82AA30FD204D980300296DD0 /* RCTToast.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTToast.xcodeproj; path = "../node_modules/@remobile/react-native-toast/ios/RCTToast.xcodeproj"; sourceTree = "<group>"; };
 		82B4C52620B5FAB300029A88 /* RNFirebase.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNFirebase.xcodeproj; path = "../node_modules/react-native-firebase/ios/RNFirebase.xcodeproj"; sourceTree = "<group>"; };
 		82B4C55C20B6034000029A88 /* RNKeychain.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNKeychain.xcodeproj; path = "../node_modules/react-native-keychain/RNKeychain.xcodeproj"; sourceTree = "<group>"; };
@@ -492,6 +494,7 @@
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				B74DE19F150BCCE4849DDC62 /* libPods-TRACSMobile.a in Frameworks */,
+				8299F00B2110F1500080D4FE /* libReact.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -707,6 +710,7 @@
 		8276A0D3203F2F73009B216C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8299EFD92110F1500080D4FE /* libReact.a */,
 				BEE938184A75940669B4FA80 /* libPods-TRACSMobile.a */,
 				63744711003D7C4DFF096B4A /* libPods-TRACSMobileTests.a */,
 			);

@@ -79,8 +79,8 @@ export function getSiteInfo(netid) {
 				id: site.id,
 				name: site.title,
 				contactInfo: {
-					name: site.props['contact-name'],
-					email: site.props['contact-email']
+					name: site.props && site.props['contact-name'],
+					email: site.props && site.props['contact-email']
 				},
 				tools: Object.keys(site.props || {}).reduce((accum, key) => {
 					if (key.indexOf("sakai") >= 0) {
