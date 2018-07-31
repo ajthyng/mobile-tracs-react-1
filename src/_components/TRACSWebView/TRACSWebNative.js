@@ -7,64 +7,69 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import React, {Component} from 'react';
-import {BackHandler, WebView, Platform, StyleSheet, requireNativeComponent, View, Text} from 'react-native';
-import WebError from './WebError';
-import {Analytics} from '../../utils/analytics';
+import React, {Component} from 'react'
+import {BackHandler, WebView, Platform, StyleSheet, requireNativeComponent, View, Text} from 'react-native'
+import WebError from './WebError'
+import {Analytics} from '../../utils/analytics'
 import {withNavigation} from 'react-navigation'
 
-const TRACSWeb = requireNativeComponent('TRACSWeb', TRACSWebView);
+const TRACSWeb = requireNativeComponent('TRACSWeb', TRACSWebView)
 const styles = StyleSheet.create({
-	webView: {
-		height: '100%',
-		width: '100%'
-	}
-});
+  webView: {
+    height: '100%',
+    width: '100%'
+  }
+})
 
 class TRACSWebView extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			canGoBack: false
-		};
-	}
+  constructor(props) {
+    super(props)
+    this.state = {
+      canGoBack: false
+    }
+  }
 
-	handleBack = () => {}
+  handleBack = () => {
+  }
 
-	componentDidMount() {
-		BackHandler.addEventListener(BackHandler.DEVICE_BACK_EVENT, this.handleBack);
-		Analytics().logTracsWebOpen();
-		Analytics().setScreen('TRACSWeb', 'TRACSWebView');
-	}
+  componentDidMount() {
+    BackHandler.addEventListener(BackHandler.DEVICE_BACK_EVENT, this.handleBack)
+    Analytics().logTracsWebOpen()
+    Analytics().setScreen('TRACSWeb', 'TRACSWebView')
+  }
 
-	componentWillUnmount() {
-		BackHandler.removeEventListener(BackHandler.DEVICE_BACK_EVENT, this.handleBack);
-	}
+  componentWillUnmount() {
+    BackHandler.removeEventListener(BackHandler.DEVICE_BACK_EVENT, this.handleBack)
+  }
 
-	render() {
-		const {baseUrl, portal} = global.urls
-		const url = this.props.navigation.getParam('baseUrl', `${baseUrl}${portal}`)
-		return Platform.select({
-			ios: <WebView
-				ref={c => this.webview = c}
-				style={styles.webView}
-				sendCookies={true}
-				source={{ url }}
-				{...this.props}
-				renderError={() => {
-					return (
-						<WebError refresh={this.webview.reload}/>
-					)
-				}}
-				onNavigationStateChange={({canGoBack}) => {
-					this.setState(() => {
-						return {canGoBack};
-					});
-				}}
-			/>,
-			android: <TRACSWeb ref={c => this.webview = c} style={styles.webView} baseUrl={url} {...this.props}/>,
-		})
-	}
+  render() {
+    const {baseUrl, portal} = global.urls
+    const {getParam} = this.props.navigation
+
+    const url = getParam('baseUrl', `${baseUrl}${portal}`)
+
+    console.log('WEB URL: ', url)
+    return Platform.select({
+      ios: <WebView
+        ref={c => this.webview = c}
+        style={styles.webView}
+        sendCookies={true}
+        source={{url}}
+        {...this.props}
+        renderError={() => {
+          return (
+            <WebError refresh={this.webview.reload} />
+          )
+        }}
+        onNavigationStateChange={({canGoBack}) => {
+          this.setState(() => {
+            return {canGoBack}
+          })
+        }}
+      />,
+      android: <TRACSWeb ref={c => this.webview = c} style={styles.webView} baseUrl={url} {...this.props} />,
+    })
+  }
 }
 
 export default withNavigation(TRACSWebView)

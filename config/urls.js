@@ -18,7 +18,7 @@ const endpoints = {
   registrationBase: "/registrations",
   webUrl: '/portal/site',
   favorites: '/portal/favorites/list',
-  announcements: '/direct/announcement/all.json',
+  allAnnouncements: '/direct/announcement/all.json',
   grades: '/direct/gradebook/my.json',
   profile (netid) {
     return `/direct/profile/${netid}.json`

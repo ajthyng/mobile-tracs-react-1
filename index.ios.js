@@ -25,6 +25,7 @@ class App extends Component {
   constructor(props) {
     super(props)
     global.simulator = this.props.isSimulator
+    console.log('First Run: ', this.props.isFirstRun)
     if (this.props.isFirstRun) {
       credentials.reset()
     }
