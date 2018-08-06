@@ -8,7 +8,7 @@ const HeaderContainer = styled.View`
 	margin: 10px;
 	align-items: center;
 	justify-content: center;
-	background-color: white;
+	background-color: ${props => props.theme.courseDetailHeaderBackground};
 	shadow-color: #363534;
 	shadow-opacity: 0.5;
 	shadow-offset: 0 2px;

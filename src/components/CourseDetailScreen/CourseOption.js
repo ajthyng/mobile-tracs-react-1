@@ -1,25 +1,15 @@
-import React, {Component} from 'react'
+import React from 'react'
 import styled, {withTheme} from 'styled-components'
 import {Dimensions, Text} from 'react-native'
 import {FlatList, TouchableWithoutFeedback, StyleSheet} from 'react-native'
 import Ripple from 'react-native-material-ripple'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import {withNavigation, NavigationActions} from 'react-navigation'
-
-const optionOnPress = (onPress, props) => {
-  const {id: siteId} = props.course
-  const {navigation} = props
-
-  const url = `${global.urls.baseUrl}${global.urls.webUrl}/${siteId}`
-
-  if (typeof onPress === 'function') onPress(navigation, url)
-}
 
 const Container = styled(Ripple)`
   width: ${props => props.square - 10}px;
   height: ${props => props.square - 10}px;
   margin: 3px;
-  background-color: white;
+  background-color: ${props => props.theme.optionItemBackground};
   align-items: center;
   justify-content: center;
   
