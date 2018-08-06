@@ -11,7 +11,6 @@
 import React, {Component} from 'react'
 import styled, {withTheme} from 'styled-components'
 
-
 const DueDateContainer = styled.View`
 	width: 100%;
 	height: 80px;
@@ -51,32 +50,24 @@ const DueDateCourse = styled.Text`
 	font-size: 12px;
 `
 
-
-class DueDateItem extends Component {
-	constructor(props) {
-		super(props)
-	}
-
-	render() {
-		const {item, color} = this.props
-		return (
-			<DueDateContainer>
-				<SideColor color={color} />
-				<ContentContainer>
-					<DueDateTitle>{item.itemName}</DueDateTitle>
-					<DueDateCourse>{item.siteName}</DueDateCourse>
-				</ContentContainer>
-			</DueDateContainer>
-		)
-	}
+const DueDateItem = ({item, color}) => {
+  return (
+    <DueDateContainer>
+      <SideColor color={color} />
+      <ContentContainer>
+        <DueDateTitle>{item.itemName}</DueDateTitle>
+        <DueDateCourse>{item.siteName}</DueDateCourse>
+      </ContentContainer>
+    </DueDateContainer>
+  )
 }
 
 DueDateItem.defaultProps = {
-	item: {
-		itemName: 'No assignment name set',
-		siteName: 'Could not find course name'
-	},
-	color: '#501214'
+  item: {
+    itemName: 'No assignment name set',
+    siteName: 'Could not find course name'
+  },
+  color: '#501214'
 }
 
 export default withTheme(DueDateItem)

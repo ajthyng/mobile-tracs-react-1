@@ -77,11 +77,10 @@ class CalendarScreen extends Component {
     const {assignments} = this.props
     let items = {...createAssignmentCalendarItems(assignments), ...this.state.items}
     const date = dayjs(day.dateString)
-    for (let i = 0; i < 60; i++) {
-      const visibleDay = date.add(i, 'days')
-      const currentDay = visibleDay.format('YYYY-MM-DD')
-      if (!items[currentDay]) {
-        items[currentDay] = []
+    for (let i = 0; i < 35; i++) {
+      const visibleDay = date.add(i, 'days').format('YYYY-MM-DD')
+      if (!items[visibleDay]) {
+        items[visibleDay] = []
       }
     }
     this.setState({items})
@@ -89,9 +88,6 @@ class CalendarScreen extends Component {
 
   render() {
     const {theme} = this.props
-    const style = agendaStyle()
-
-    style.weekday.color = 'red'
 
     return (
       <ContainerView>

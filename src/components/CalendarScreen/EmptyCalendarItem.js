@@ -24,7 +24,7 @@ const EmptyItemLine = styled.View`
 	width: 100%
 `
 
-const EmptyCalendarItem = (props) => (
+const EmptyCalendarItem = () => (
 	<EmptyItemContainer>
 		<EmptyItemLine />
 	</EmptyItemContainer>

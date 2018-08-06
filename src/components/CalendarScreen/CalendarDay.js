@@ -37,8 +37,8 @@ const ShortMonthName = styled.Text`
 	width: 100%;
 `
 
-export default CalendarDay = ({day}) => {
-	if (day === undefined) {
+const CalendarDay = ({day}) => {
+	if (!day) {
 		return <DayContainer />
 	}
 
@@ -51,3 +51,9 @@ export default CalendarDay = ({day}) => {
 		</DayContainer>
 	)
 }
+
+CalendarDay.defaultProps = {
+	day: null
+}
+
+export default CalendarDay
