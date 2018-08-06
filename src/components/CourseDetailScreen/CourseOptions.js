@@ -40,7 +40,11 @@ class CourseOptions extends Component {
   }
 
   goToAnnouncements = () => {
-    //TODO: Send them to announcements screen
+    const {course, navigation: {navigate}} = this.props
+    navigate('Announcements', {
+      transition: 'cardFromRight',
+      course
+    })
   }
 
   render() {
@@ -52,7 +56,7 @@ class CourseOptions extends Component {
         </Row>
         <Row>
           <CourseOption label='Forum Posts' name='comments-o' />
-          <CourseOption label='Announcements' name='bullhorn' />
+          <CourseOption label='Announcements' name='bullhorn' onClick={this.goToAnnouncements} />
         </Row>
       </Container>
     )

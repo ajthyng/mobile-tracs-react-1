@@ -28,7 +28,7 @@ export const cardFromRight = (sceneProps) => {
 		outputRange: [0.5, 1, 0.5]
 	})
 
-	return {opacity, transform: [{translateX}]};
+	return {transform: [{translateX}]};
 };
 
 export const cardFromLeft = (sceneProps) => {
