@@ -35,13 +35,15 @@ export const getAnnouncements = () => {
   return async (dispatch) => {
     dispatch(requestAnnouncements())
 
-    const url = `${global.urls.baseUrl}${global.urls.announcements}`
+    const url = `${global.urls.baseUrl}${global.urls.allAnnouncements}`
 
-    let {data: {announcement_collection: announcements}}
-      = await axios(url)
-      .catch(err => err)
+    axios(url).then(res => {
+      const data = res.data || {}
+      const announcements = data.announcement_collection || []
 
-    if (announcements instanceof Error) dispatch(announcementsFailure(err))
-    setTimeout(() => dispatch(announcementsSuccess(announcements)), 500)
+      dispatch(announcementsSuccess(announcements))
+    }).catch(err => {
+      dispatch(announcementsFailure(err))
+    })
   }
 }

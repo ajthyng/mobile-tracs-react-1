@@ -1,6 +1,6 @@
 {
-  "name": "TRACSMobile",
-  "version": "1.2.1",
+  "name": "tracsmobile",
+  "version": "1.2.3",
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
