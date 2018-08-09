@@ -12,7 +12,13 @@ import {forumActions} from '../constants/actions'
 const {
   REQUEST_FORUMS,
   FORUMS_SUCCESS,
-  FORUMS_FAILURE
+  FORUMS_FAILURE,
+  REQUEST_TOPICS,
+  TOPICS_SUCCESS,
+  TOPICS_FAILURE,
+  REQUEST_MESSAGES,
+  MESSAGES_SUCCESS,
+  MESSAGES_FAILURE
 } = forumActions
 
 const initialState = {
@@ -50,9 +56,76 @@ const forumsFailure = (state, action) => {
   }
 }
 
+const requestTopics = (state, action) => {
+  return {
+    ...state,
+    loadingTopics: true,
+    errorMessage: ''
+  }
+}
+
+const topicsSuccess = (state, action) => {
+  return {
+    ...state,
+    topics: {
+      ...state.topics,
+      [action.siteId]: {
+        ...state.topics[action.siteId],
+        [action.forum]: action.topics
+      }
+    },
+    loadingTopics: false,
+    errorMessage: ''
+  }
+}
+
+const topicsFailure = (state, action) => {
+  return {
+    ...state,
+    loadingTopics: false,
+    errorMessage: action.errorMessage
+  }
+}
+
+const requestMessages = (state, action) => {
+  return {
+    ...state,
+    loadingMessages: true,
+    errorMessage: ''
+  }
+}
+
+const messagesSuccess = (state, action) => {
+  return {
+    ...state,
+    messages: [
+      ...state.messages,
+      ...action.messages
+    ],
+    loadingMessages: false,
+    errorMessage: ''
+  }
+}
+
+const messagesFailure = (state, action) => {
+  return {
+    ...state,
+    loadingMessages: false,
+    errorMessage: action.errorMessage
+  }
+}
+
 export function forumReducer (state = initialState, action) {
   switch(action.type) {
-    default:
-      return state
+    case REQUEST_FORUMS: return requestForums(state, action)
+    case FORUMS_SUCCESS: return forumsSuccess(state, action)
+    case FORUMS_FAILURE: return forumsFailure(state, action)
+    case REQUEST_TOPICS: return requestTopics(state, action)
+    case TOPICS_SUCCESS: return topicsSuccess(state, action)
+    case TOPICS_FAILURE: return topicsFailure(state, action)
+    case REQUEST_MESSAGES: return requestMessages(state, action)
+    case MESSAGES_SUCCESS: return messagesSuccess(state, action)
+    case MESSAGES_FAILURE: return messagesFailure(state, action)
+    default: return state
   }
 }

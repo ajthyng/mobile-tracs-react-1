@@ -20,6 +20,7 @@ import {authActions as auth} from '../constants/actions'
 import {announcementsReducer} from './announcements'
 import {themeReducer} from './theme'
 import {gradesReducer} from './grades'
+import {forumReducer} from './forums'
 
 const appReducer = combineReducers({
 	login: loginReducer,
@@ -31,7 +32,8 @@ const appReducer = combineReducers({
 	header: headerReducer,
 	theme: themeReducer,
 	grades: gradesReducer,
-	announcements: announcementsReducer
+	announcements: announcementsReducer,
+	forums: forumReducer
 });
 
 const rootReducer = (state, action) => {
