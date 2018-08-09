@@ -128,7 +128,7 @@ const postRegistration = async (payload, dispatch) => {
 
 	return axios(getRegistrationUrl, getOptions).then(res => {
 		if (res.data && res.data.hasOwnProperty("token") && res.data.token === deviceToken) { //We found a token
-			if (res.data.token === deviceToken) { //The server token matches, already registered
+			if (res.data.token === deviceToken && res.data.user_id === netid) { //The server token and netid matches, already registered
 				dispatch(registrationSuccess(res.data.token, netid));
 				dispatch(login(netid, password));
 			} else { //The stored token is stale, delete and reregister
