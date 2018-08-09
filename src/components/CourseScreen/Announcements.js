@@ -26,6 +26,8 @@ const AnnouncementsText = styled.Text`
 	text-align: center;
 `
 
+const IconContainer = styled.View``
+
 const NewBadge = styled.View`
 	position: absolute;
 	background-color: ${props => props.theme.notificationBadge};
@@ -36,36 +38,44 @@ const NewBadge = styled.View`
 	border-radius: 5px;
 `
 
-class Announcements extends Component {
-	render() {
-		const {hasNewAnnouncements, onPress} = this.props
-		const title = hasNewAnnouncements ? 'New Announcements' : 'Announcements'
-		return (
-			<TouchableOpacity onPress={onPress}>
-				<AnnouncementsContainer>
-						<View>
-							<AnnouncementsIcon name='bell' />
-							{hasNewAnnouncements ? <NewBadge /> : null}
-						</View>
-						<AnnouncementsText>{title}</AnnouncementsText>
-				</AnnouncementsContainer>
-			</TouchableOpacity>
-		)
-	}
+const renderAnnouncements = unseen => {
+  const title = unseen ? 'New Announcements' : 'Announcements'
+  return (
+    <AnnouncementsContainer>
+      <IconContainer>
+        <AnnouncementsIcon name='bell' />
+        {unseen ? <NewBadge /> : null}
+      </IconContainer>
+      <AnnouncementsText>{title}</AnnouncementsText>
+    </AnnouncementsContainer>
+  )
+}
+
+const Announcements = ({hasNewAnnouncements, onPress}) => {
+  return (
+    <TouchableOpacity onPress={onPress}>
+      {renderAnnouncements(hasNewAnnouncements)}
+    </TouchableOpacity>
+  )
+}
+
+Announcements.defaultProps = {
+  hasNewAnnouncements: false,
+  onPress: () => null
 }
 
 const mapStateToProps = (state, props) => {
-	const { announcements }= state.notifications
+  const {announcements} = state.notifications
 
-	const hasNewAnnouncements = announcements.some(({seen, other_keys}) => {
-		const unseen = !seen
-		const forThisSite = (other_keys || {}).site_id === props.id
+  const hasNewAnnouncements = (announcements || []).some(({seen, other_keys}) => {
+    const unseen = !seen
+    const forThisSite = (other_keys || {}).site_id === props.id
 
-		return unseen && forThisSite
+    return unseen && forThisSite
   })
-	return {
-		hasNewAnnouncements
-	}
+  return {
+    hasNewAnnouncements
+  }
 }
 
 export default connect(mapStateToProps, null)(Announcements)
