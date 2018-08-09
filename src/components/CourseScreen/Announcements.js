@@ -55,9 +55,16 @@ class Announcements extends Component {
 }
 
 const mapStateToProps = (state, props) => {
+	const { announcements }= state.notifications
 
+	const hasNewAnnouncements = announcements.some(({seen, other_keys}) => {
+		const unseen = !seen
+		const forThisSite = (other_keys || {}).site_id === props.id
+
+		return unseen && forThisSite
+  })
 	return {
-		hasNewAnnouncements: false
+		hasNewAnnouncements
 	}
 }
 
