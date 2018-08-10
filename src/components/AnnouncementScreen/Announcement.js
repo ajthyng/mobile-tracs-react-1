@@ -1,5 +1,7 @@
 import React, {Component} from 'react'
 import styled from 'styled-components'
+import {connect} from 'react-redux'
+import {batchUpdateNotification} from '../../actions/notifications'
 import {Dimensions, Linking, TouchableOpacity, WebView} from 'react-native'
 
 const AnnouncementContainer = styled.View`
@@ -18,10 +20,17 @@ const AnnouncementBody = styled(WebView)`
   background-color: ${props => props.theme.announcementBackground};
 `
 
+const UnreadIndicator = styled.View`
+  height: 10px;
+  width: 10px;
+  background-color: #501214;
+`
+
 const AnnouncementTitleContainer = styled(TouchableOpacity)`
   height: 40px;
-  align-items: flex-start;
-  justify-content: center;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
   padding-left: 8px;
   width: 100%;
   background-color: ${props => props.theme.announcementBackground};
@@ -30,6 +39,7 @@ const AnnouncementTitleContainer = styled(TouchableOpacity)`
 const AnnouncementTitle = styled.Text`
   font-weight: bold;
   font-size: 18px;
+  margin-left: 8px;
   color: ${props => props.theme.darkText};
 `
 
@@ -82,15 +92,24 @@ class Announcement extends Component {
     this.setState({height: parseInt(jsEvaluationValue || title)})
   }
 
+  onPress = () => {
+    const {notification, announcement: {title}} = this.props
+
+    this.setState(prev => ({showBody: !prev.showBody}), () => {
+      if (notification && !notification.read && this.state.showBody) {
+        this.props.markAsRead(notification.id, {read: true})
+      }
+    })
+  }
+
   render() {
-    const {announcement: {body, title}, theme} = this.props
+    const {announcement: {body, title}, theme, unread} = this.props
     const {height, showBody} = this.state
 
     return (
       <AnnouncementContainer style={{margin: this.contentMargin}}>
-        <AnnouncementTitleContainer activeOpacity={1} onPress={() => {
-          this.setState({showBody: !showBody})
-        }}>
+        <AnnouncementTitleContainer activeOpacity={1} onPress={this.onPress}>
+          {unread ? <UnreadIndicator/> : null}
           <AnnouncementTitle>{title}</AnnouncementTitle>
         </AnnouncementTitleContainer>
         <AnnouncementBody
@@ -116,4 +135,12 @@ class Announcement extends Component {
   }
 }
 
-export default Announcement
+Announcement.defaultProps = {
+  unread: false
+}
+
+const mapDispatchToProps = dispatch => ({
+  markAsRead: (id) => dispatch(batchUpdateNotification([id], {read: true}))
+})
+
+export default connect(null, mapDispatchToProps)(Announcement)

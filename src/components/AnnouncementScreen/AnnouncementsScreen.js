@@ -10,6 +10,7 @@ import {batchUpdateNotification} from '../../actions/notifications'
 import {withNavigation} from 'react-navigation'
 import ActivityIndicator from '../ActivityIndicator'
 import Announcement from './Announcement'
+import Subject from '../../utils/subject'
 
 const Container = styled.View`
   flex: 1;
@@ -24,12 +25,13 @@ const filterSeen = announcements => announcements
   .filter(id => id !== null)
 
 class AnnouncementsScreen extends Component {
-  constructor(props) {
-    super(props)
-  }
-
   componentDidMount() {
     this.props.getAnnouncements()
+    Subject.subscribe('notification', this.props.getAnnouncements)
+  }
+
+  componentWillUnmount () {
+    Subject.unsubscribe('notification', this.props.getAnnouncements)
   }
 
   componentDidUpdate () {
@@ -46,8 +48,26 @@ class AnnouncementsScreen extends Component {
     }
   }
 
+  renderAnnouncement = ({item}) => {
+    const {announcementNotifications, theme} = this.props
+    const unreadAnnouncements = announcementNotifications
+      .filter(({read}) => !read).map(({keys: {object_id}}) => object_id).filter(id => id !== null)
+
+    const unread = unreadAnnouncements.contains(item.announcementId)
+    const notification = announcementNotifications.find(({keys: {object_id}}) => object_id === item.announcementId)
+
+    return (
+      <Announcement
+        theme={theme}
+        announcement={item}
+        unread={unread}
+        notification={notification}
+      />
+    )
+  }
+
   render() {
-    const {announcements, loading, theme} = this.props
+    const {announcements, loading} = this.props
     return loading ? (
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
         <ActivityIndicator />
@@ -56,11 +76,11 @@ class AnnouncementsScreen extends Component {
       <Container>
         <FlatList
           bounces={false}
-          data={announcements}
+          data={announcements.reverse()}
           style={{width: '100%'}}
           contentContainerStyle={null}
           keyExtractor={item => item.announcementId}
-          renderItem={({item}) => <Announcement theme={theme} announcement={item} />}
+          renderItem={this.renderAnnouncement}
         />
       </Container>
     )

@@ -12,6 +12,7 @@ import {getNotifications} from './src/actions/notifications'
 import {setToken} from './src/actions/registrar'
 import ThemedApp from './src/ThemedApp'
 import {YellowBox} from 'react-native'
+import Subject from './src/utils/subject'
 
 const {store, persistor} = configureStore()
 
@@ -83,6 +84,7 @@ class App extends Component {
         applicationIconBadgeNumber: notification.badge
       })
     }
+    Subject.fire('notification')
     store.dispatch(getNotifications())
   }
 
