@@ -17,28 +17,6 @@ const Container = styled.View`
   background-color: ${props => props.theme.viewBackground};
 `
 
-const Loading = styled.View`
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-`
-
-const globalSettings = [
-  {name: 'Dark Theme', initial: 'off'},
-  {name: 'Holiday Theme', initial: 'off'}
-]
-
-const notificationSettings = [
-  {name: 'All Announcements', initial: 'on'},
-  {name: 'All Forum Posts', initial: 'on'}
-]
-
-const Activity = (
-  <Loading>
-    <ActivityIndicator />
-  </Loading>
-)
-
 const SectionHeader = styled.Text`
   font-size: 18px;
   color: ${props => props.theme.darkText};
@@ -46,6 +24,36 @@ const SectionHeader = styled.Text`
   width: 100%;
   background-color: ${props => props.theme.viewBackground};
 `
+
+const SettingsList = styled(SectionList)`
+  flex: 1;
+  width: ${props => props.width}px;
+`
+
+const onThemeToggle = (setTheme) => (on) => {
+  const theme = on ? darkTheme : defaultTheme
+  const name = on ? darkTheme.NAME : defaultTheme.NAME
+  setTheme(theme, name)
+}
+
+const sections = (setTheme, themeName, siteList) => ([
+  {
+    title: '', data: [
+      {
+        name: 'Dark Mode',
+        onToggle: onThemeToggle(setTheme),
+        on: themeName === darkTheme.NAME,
+        id: '2'
+      },
+      {
+        name: 'Holiday Theme',
+        id: '3'
+      }
+    ]
+  },
+  {title: 'App Notifications', data: [{name: 'Announcements', id: '0'}, {name: 'Forums', id: '1'}]},
+  {title: 'Course Notifications', data: siteList}
+])
 
 class SettingsScreen extends Component {
   constructor(props) {
@@ -69,8 +77,7 @@ class SettingsScreen extends Component {
   }
 
   updateWidth = (event) => {
-    console.log(event)
-    const {width, height} = event
+    const {window: {width, height}} = event
     this.setState({
       width,
       height
@@ -96,37 +103,14 @@ class SettingsScreen extends Component {
       return accum
     }, [])
 
-    console.log(themeName)
-    const sections = [
-      {
-        title: '', data: [
-          {
-            name: 'Dark Mode',
-            onToggle: (on) => {
-              const theme = on ? darkTheme : defaultTheme
-              const name = on ? darkTheme.NAME : defaultTheme.NAME
-              setTheme(theme, name)
-            },
-            on: themeName === darkTheme.NAME,
-            id: '2'
-          },
-          {
-            name: 'Holiday Theme',
-            id: '3'
-          }
-        ]
-      },
-      {title: 'App Notifications', data: [{name: 'Announcements', id: '0'}, {name: 'Forums', id: '1'}]},
-      {title: 'Course Notifications', data: siteList}
-    ]
+    const settings = sections(setTheme, themeName, siteList)
     const {width} = this.state
 
-    return (
+    return loading ? (<ActivityIndicator />) : (
       <Container>
-        <SectionList
-          contentContainerStyle={{width}}
-          ListEmptyComponent={loading ? Activity : null}
-          sections={sections}
+        <SettingsList
+          width={width}
+          sections={settings}
           keyExtractor={item => item.id}
           renderItem={this.renderItem}
           renderSectionHeader={({section}) => {
@@ -152,7 +136,7 @@ const mapStateToProps = state => ({
   sites: state.tracsSites.userSites,
   blacklist: state.settings.userSettings.blacklist,
   global_disable: state.settings.userSettings.global_disable,
-  loading: state.settings.isFetching,
+  loading: state.settings.isFetching || state.tracsSites.isFetchingSites,
   errorMessage: state.settings.errorMessage,
   pending: state.settings.isSaving,
   success: state.settings.isSaved,

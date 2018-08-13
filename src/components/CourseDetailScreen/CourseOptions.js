@@ -23,7 +23,7 @@ class CourseOptions extends Component {
     const {course, navigation} = this.props
     const openGradebook = NavigationActions.navigate({
       routeName: 'Gradebook',
-      params: {course}
+      params: {course, transition: 'cardFromRight'}
     })
     navigation.dispatch(openGradebook)
   }
