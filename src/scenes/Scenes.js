@@ -19,13 +19,13 @@ import {createSwitchNavigator, createStackNavigator} from 'react-navigation'
 import CalendarScreen from '../components/CalendarScreen/CalendarScreen'
 import CourseScreen from '../components/CourseScreen/CourseScreen'
 import {cardFromRight, cardFromBottom, cardFromLeft, cardFromTop, defaultTransition} from './Transitions'
-import GradebookItems from '../components/GradebookItems/GradebookItems'
 import CourseDetailScreen from '../components/CourseDetailScreen/CourseDetailScreen'
 import SettingsScreen from '../components/Settings/SettingsScreen'
 import TRACSWebView from '../_components/TRACSWebView/TRACSWebNative'
 import SimpleWebView from '../_components/SimpleWebView/SimpleWebView'
 import AnnouncementsScreen from '../components/AnnouncementScreen/AnnouncementsScreen'
 import ForumScreen from '../components/ForumScreen/ForumScreen'
+import GradebookScreen from '../components/GradebookScreen/GradebookScreen'
 
 Array.prototype.contains = function (value) {
   return this.indexOf(value) >= 0
@@ -50,7 +50,7 @@ const MainNavigator = createStackNavigator(
       screen: CalendarScreen,
     },
     Gradebook: {
-      screen: GradebookItems
+      screen: GradebookScreen
     },
     CourseDetail: {
       screen: CourseDetailScreen

@@ -20,7 +20,12 @@ class CourseOptions extends Component {
   }
 
   goToGradebook = () => {
-    //TODO: send them to gradebook screen
+    const {course, navigation} = this.props
+    const openGradebook = NavigationActions.navigate({
+      routeName: 'Gradebook',
+      params: {course}
+    })
+    navigation.dispatch(openGradebook)
   }
 
   goToWeb = () => {

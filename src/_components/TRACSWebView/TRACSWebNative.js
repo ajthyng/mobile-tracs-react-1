@@ -48,7 +48,6 @@ class TRACSWebView extends Component {
 
     const url = getParam('baseUrl', `${baseUrl}${portal}`)
 
-    console.log('WEB URL: ', url)
     return Platform.select({
       ios: <WebView
         ref={c => this.webview = c}
