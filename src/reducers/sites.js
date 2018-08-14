@@ -105,7 +105,7 @@ const favoritesSuccess = (state, action) => {
 	return {
 		...state,
 		isFetchingFavorites: false,
-		favorites: Array.from(new Set([...state.favorites, ...favorites]))
+		favorites: Array.from(new Set([...favorites]))
 	}
 }
 
