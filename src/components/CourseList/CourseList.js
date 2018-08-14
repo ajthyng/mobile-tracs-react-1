@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {ScrollView} from 'react-native'
+import {ScrollView, RefreshControl} from 'react-native'
 
 import {connect} from 'react-redux'
 import styled from 'styled-components'
@@ -14,15 +14,9 @@ const CourseListContainer = styled.View`
 	width: 100%;
 `
 
-const loadingSites = [
-  <CourseSkeletonCard key='0' />,
-  <CourseSkeletonCard key='1' />,
-  <CourseSkeletonCard key='2' />,
-  <CourseSkeletonCard key='3' />,
-  <CourseSkeletonCard key='4' />,
-  <CourseSkeletonCard key='5' />,
-  <CourseSkeletonCard key='6' />,
-]
+const loadingSites = new Array(10).fill(0).map((item, index) => (
+  <CourseSkeletonCard key={`${index}`} />
+))
 
 class CourseList extends Component {
   constructor(props) {
@@ -44,12 +38,13 @@ class CourseList extends Component {
       marginLeft: 20,
       marginRight: 20
     }
+
   }
 
-  renderCourses = (loading) => {
-    const {sites} = this.props
+  renderCourses = () => {
+    const {sites, loading, refreshing} = this.props
 
-    return loading ?
+    return loading && !refreshing ?
       loadingSites :
       sites.map(item => (
         <CourseCard
@@ -69,13 +64,17 @@ class CourseList extends Component {
   }
 
   render() {
+    const {refreshing, onRefresh, navigation, loading} = this.props
+    const {isVisible, course} = this.state
     return (
       <CourseListContainer>
-        <ScrollView alwaysBounceVertical={false}>
-          {this.renderCourses(this.props.loading)}
+        <ScrollView
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        >
+          {this.renderCourses()}
         </ScrollView>
         <Modal
-          isVisible={this.state.isVisible}
+          isVisible={isVisible}
           onBackButtonPress={this.hideModal}
           onBackdropPress={this.hideModal}
           swipeDirection='down'
@@ -84,8 +83,8 @@ class CourseList extends Component {
           style={this.modalStyle}
         >
           <CourseScreen
-            course={this.state.course}
-            navigation={this.props.navigation}
+            course={course}
+            navigation={navigation}
             dismiss={this.hideModal}
           />
         </Modal>

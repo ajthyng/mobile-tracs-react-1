@@ -26,31 +26,66 @@ class HomeScreen extends Component {
   constructor(props) {
     super(props)
     this.props.setHeaderState(Header.EXPANDED)
+    this.state = {
+      refreshing: false
+    }
   }
 
   componentDidMount() {
-    this.props.getSites(this.props.netid)
+    this.initHomeScreen()
+  }
+
+  initHomeScreen = () => {
+    const {netid} = this.props
+    this.props.getSites(netid)
     this.props.getGrades()
     this.props.getFavorites()
     this.props.getNotifications()
   }
 
+  onRefresh = () => {
+    this.setState({ refreshing: true })
+    this.initHomeScreen()
+  }
+
+  componentDidUpdate () {
+    const {refreshing} = this.state
+    const {loading} = this.props
+    if (!loading && refreshing) this.setState({refreshing: false})
+  }
+
   render() {
     const {loadingSites, loadingFavorites} = this.props
+    const {refreshing} = this.state
     return (
       <Home>
-        <CourseList loading={loadingSites || loadingFavorites} navigation={this.props.navigation} />
+        <CourseList
+          loading={loadingSites || loadingFavorites}
+          navigation={this.props.navigation}
+          onRefresh={this.onRefresh}
+          refreshing={refreshing}
+        />
       </Home>
     )
   }
 }
 
 const mapStateToProps = (state) => {
+  const {isFetchingSites: loadingSites} =  state.tracsSites
+  const {isFetchingFavorites: loadingFavorites} =  state.tracsSites
+  const {isLoading: loadingGrades} =  state.grades
+  const {isLoading: loadingNotifications} =  state.notifications
+
+  const loading = loadingSites || loadingFavorites || loadingGrades || loadingNotifications
+
   return {
     authenticated: state.login.isAuthenticated,
     netid: state.login.netid,
-    loadingSites: state.tracsSites.isFetchingSites,
-    loadingFavorites: state.tracsSites.isFetchingFavorites
+    loadingSites,
+    loadingFavorites,
+    loadingGrades,
+    loadingNotifications,
+    loading
   }
 }
 

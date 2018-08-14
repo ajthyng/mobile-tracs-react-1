@@ -74,7 +74,7 @@ const MainNavigator = createStackNavigator(
       screen: TRACSWebView,
     }
   }, {
-    initialRouteName: 'Settings',
+    initialRouteName: 'Home',
     navigationOptions: {
       header: ({navigation}) => (<Header navigation={navigation} />),
       gesturesEnabled: false
