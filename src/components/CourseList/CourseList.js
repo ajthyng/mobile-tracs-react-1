@@ -64,7 +64,7 @@ class CourseList extends Component {
   }
 
   render() {
-    const {refreshing, onRefresh, navigation, loading} = this.props
+    const {refreshing, onRefresh, navigation} = this.props
     const {isVisible, course} = this.state
     return (
       <CourseListContainer>
