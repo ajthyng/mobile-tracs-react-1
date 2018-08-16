@@ -67,7 +67,7 @@
       "**/tests/**/*.js?(x)",
       "**/?(*.)(spec|test).js?(x)"
     ],
-    "testEnvironment": "jsdom",
+    "testEnvironment": "node",
     "testPathIgnorePatterns": [
       "<rootDir>/node_modules/",
       "<rootDir>/tests/mocks/"

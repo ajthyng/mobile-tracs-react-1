@@ -20,6 +20,9 @@ const endpoints = {
   favorites: '/portal/favorites/list',
   allAnnouncements: '/direct/announcement/all.json',
   grades: '/direct/gradebook/my.json',
+  assessments (siteId) {
+    return `/direct/sam_pub/context/${siteId}.json`
+  },
   profile (netid) {
     return `/direct/profile/${netid}.json`
   },

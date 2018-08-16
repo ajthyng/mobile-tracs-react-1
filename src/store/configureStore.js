@@ -28,6 +28,7 @@ const statusFilter = createTransform((inboundState, key) => {
   }
   return outboundState
 })
+
 const persistConfig = {
   key: 'root',
   storage: storage,
