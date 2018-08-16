@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {Component, PureComponent} from 'react'
 import styled from 'styled-components'
 import Toggle from '../Toggle'
 
@@ -16,27 +16,27 @@ const Label = styled.Text`
   margin-left: 16px;
 `
 
-class SiteSetting extends Component {
-  constructor(props) {
-    super(props)
+const SiteSetting = ({name, enabled, on, siteId, onValueChange, type}) => {
+  const onToggle = on => {
+    if (type === 'site') {
+      return onValueChange({other_keys: {site_id: siteId}}, on)
+    } else {
+      return onValueChange({keys: {object_type: type}}, on)
+    }
   }
-
-  render() {
-    const {name, enabled, on, onValueChange} = this.props
-    return (
-      <Container>
-        <Label>{name}</Label>
-        <Toggle
-          enabled={enabled}
-          onValueChange={onValueChange}
-          on={on}
-          width={42}
-          height={20}
-          activeColor='dodgerblue'
-        />
-      </Container>
-    )
-  }
+  return (
+    <Container>
+      <Label>{name}</Label>
+      <Toggle
+        enabled={enabled}
+        onValueChange={onToggle}
+        on={on}
+        width={42}
+        height={20}
+        activeColor='dodgerblue'
+      />
+    </Container>
+  )
 }
 
 SiteSetting.defaultProps = {

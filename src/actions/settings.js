@@ -78,7 +78,7 @@ export function getSettings(token) {
 	}
 }
 
-export function saveSettings(settings, token, local) {
+export function saveSettings(settings, token) {
 	return async (dispatch) => {
 		dispatch(requestSaveSettings());
 		if (!token) {
@@ -92,10 +92,6 @@ export function saveSettings(settings, token, local) {
 			},
 			data: settings
 		};
-		if (local) {
-			dispatch(saveSettingsSuccess(settings));
-			return true;
-		}
 		return axios(settingsURL, options).then(res => {
 			dispatch(saveSettingsSuccess(settings));
 			return true;
