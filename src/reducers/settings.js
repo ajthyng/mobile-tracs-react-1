@@ -8,92 +8,99 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {settingsActions} from '../../src/constants/actions';
-import Settings from '../utils/settings';
+import {settingsActions} from '../../src/constants/actions'
+
 const {
-	REQUEST_SETTINGS,
-	SETTINGS_SUCCESS,
-	SETTINGS_FAILURE,
-	REQUEST_SAVE_SETTINGS,
-	SAVE_SETTINGS_SUCCESS,
-	SAVE_SETTINGS_FAILURE
-} = settingsActions;
+  REQUEST_SETTINGS,
+  SETTINGS_SUCCESS,
+  SETTINGS_FAILURE,
+  REQUEST_SAVE_SETTINGS,
+  SAVE_SETTINGS_SUCCESS,
+  SAVE_SETTINGS_FAILURE
+} = settingsActions
 
 export const initialState = {
-	userSettings: {
-		blacklist: [],
-		global_disable: false
-	},
-	errorMessage: "",
-	isFetching: false,
-	isLoaded: false,
-	isSaving: false,
-	isSaved: false
-};
+  userSettings: {
+    blacklist: [],
+    global_disable: false
+  },
+  errorMessage: "",
+  isFetching: false,
+  isLoaded: false,
+  isSaving: false,
+  isSaved: false
+}
 
 const requestSettings = (state, action) => {
-	return {
-		...state,
-		isFetching: true,
-		isLoaded: false,
-		errorMessage: "",
-	}
-};
+  return {
+    ...state,
+    isFetching: true,
+    isLoaded: false,
+    errorMessage: "",
+  }
+}
 
 const settingsSuccess = (state, action) => {
-	return {
-		...state,
-		userSettings: action.userSettings,
-		isFetching: false,
-		isLoaded: true
-	}
-};
+  return {
+    ...state,
+    userSettings: action.userSettings,
+    isFetching: false,
+    isLoaded: true
+  }
+}
 
 const settingsFailure = (state, action) => {
-	return {
-		...state,
-		isFetching: false,
-		isLoaded: false,
-		userSettings: initialState.userSettings,
-		errorMessage: action.errorMessage
-	}
-};
+  return {
+    ...state,
+    isFetching: false,
+    isLoaded: false,
+    userSettings: initialState.userSettings,
+    errorMessage: action.errorMessage
+  }
+}
 
 const requestSaveSettings = (state, action) => {
-	return {
-		...state,
-		isSaving: true,
-		isSaved: false,
-		errorMessage: "",
-	}
-};
+  return {
+    ...state,
+    isSaving: true,
+    isSaved: false,
+    errorMessage: "",
+  }
+}
 
 const saveSettingsSuccess = (state, action) => {
-	return {
-		...state,
-		userSettings: action.userSettings,
-		isSaving: false,
-		isSaved: true
-	}
-};
+  return {
+    ...state,
+    userSettings: action.userSettings,
+    isSaving: false,
+    isSaved: true
+  }
+}
 
 const saveSettingsFailure = (state, action) => {
-	return {
-		...state,
-		isSaving: false,
-		isSaved: false,
-		errorMessage: action.errorMessage
-	}
-};
+  return {
+    ...state,
+    isSaving: false,
+    isSaved: false,
+    errorMessage: action.errorMessage
+  }
+}
 
 export function settingsReducer(state = initialState, action) {
-	switch (action.type) {
-		case REQUEST_SETTINGS: return requestSettings(state, action);
-		case SETTINGS_SUCCESS: return settingsSuccess(state, action);
-		case SETTINGS_FAILURE: return settingsFailure(state, action);
-		case REQUEST_SAVE_SETTINGS: return requestSaveSettings(state, action);
-		case SAVE_SETTINGS_SUCCESS: return saveSettingsSuccess(state, action);
-		case SAVE_SETTINGS_FAILURE: return saveSettingsFailure(state, action);
-		default: return state;
-	}
+  switch (action.type) {
+    case REQUEST_SETTINGS:
+      return requestSettings(state, action)
+    case SETTINGS_SUCCESS:
+      return settingsSuccess(state, action)
+    case SETTINGS_FAILURE:
+      return settingsFailure(state, action)
+    case REQUEST_SAVE_SETTINGS:
+      return requestSaveSettings(state, action)
+    case SAVE_SETTINGS_SUCCESS:
+      return saveSettingsSuccess(state, action)
+    case SAVE_SETTINGS_FAILURE:
+      return saveSettingsFailure(state, action)
+    default:
+      return state
+  }
 }

@@ -11,51 +11,51 @@
 import {announcementsActions} from '../constants/actions'
 
 const {
-	REQUEST_ANNOUNCEMENTS,
-	ANNOUNCEMENTS_SUCCESS,
-	ANNOUNCEMENTS_FAILURE
+  REQUEST_ANNOUNCEMENTS,
+  ANNOUNCEMENTS_SUCCESS,
+  ANNOUNCEMENTS_FAILURE
 } = announcementsActions
 
 export const initialState = {
-	isLoading: false,
-	all: [],
-	errorMessage: ''
+  isLoading: false,
+  all: [],
+  errorMessage: ''
 }
 
-const requestAnnouncements = (state, action) => {
-	return {
-		...state,
-		isLoading: true,
-		errorMessage: ''
-	}
+const requestAnnouncements = (state) => {
+  return {
+    ...state,
+    isLoading: true,
+    errorMessage: ''
+  }
 }
 
 const announcementsSuccess = (state, action) => {
-	return {
-		...state,
-		isLoading: false,
-		all: action.announcements,
-		errorMessage: ''
-	}
+  return {
+    ...state,
+    isLoading: false,
+    all: action.announcements,
+    errorMessage: ''
+  }
 }
 
 const announcementsFailure = (state, action) => {
-	return {
-		...state,
-		isLoading: false,
-		errorMessage: action.error.message || 'Could not load announcements'
-	}
+  return {
+    ...state,
+    isLoading: false,
+    errorMessage: action.error.message || 'Could not load announcements'
+  }
 }
 
 export function announcementsReducer(state = initialState, action) {
-	switch (action.type) {
-		case REQUEST_ANNOUNCEMENTS:
-			return requestAnnouncements(state, action)
-		case ANNOUNCEMENTS_SUCCESS:
-			return announcementsSuccess(state, action)
-		case ANNOUNCEMENTS_FAILURE:
-			return announcementsFailure(state, action)
-		default:
-			return state
-	}
+  switch (action.type) {
+    case REQUEST_ANNOUNCEMENTS:
+      return requestAnnouncements(state, action)
+    case ANNOUNCEMENTS_SUCCESS:
+      return announcementsSuccess(state, action)
+    case ANNOUNCEMENTS_FAILURE:
+      return announcementsFailure(state, action)
+    default:
+      return state
+  }
 }

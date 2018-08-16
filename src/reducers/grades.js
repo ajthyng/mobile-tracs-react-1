@@ -22,7 +22,7 @@ export const initialState = {
 	errorMessage: ''
 }
 
-const requestGrades = (state, action) => ({
+const requestGrades = (state) => ({
 	...state,
 	isLoading: true,
 	errorMessage: ''

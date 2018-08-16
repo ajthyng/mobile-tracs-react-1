@@ -54,7 +54,7 @@ const loginFailure = (state, action) => {
   }
 }
 
-const requestLogout = (state, action) => {
+const requestLogout = (state) => {
   return {
     ...state,
     isLoggingOut: true,
@@ -70,7 +70,7 @@ const logoutFailure = (state, action) => {
   }
 }
 
-const clearError = (state, action) => {
+const clearError = (state) => {
   return {
     ...state,
     errorMessage: ''

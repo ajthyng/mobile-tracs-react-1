@@ -1,4 +1,4 @@
-import React, {Component, PureComponent} from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import Toggle from '../Toggle'
 

@@ -169,7 +169,6 @@ const mapStateToProps = (state) => {
     credentials: {netid: state.login.netid, password: state.login.password},
     loginError: state.login.errorMessage,
     registerError: state.registrar.errorMessage,
-    currentScene: state.routes.scene,
     deviceToken: state.registrar.deviceToken
   }
 }

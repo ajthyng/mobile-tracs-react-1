@@ -4,12 +4,9 @@ import {View, StyleSheet, Animated} from 'react-native'
 import {logout} from '../../actions/login'
 import * as Storage from '../../utils/storage'
 import CourseList from '../CourseList/CourseList'
-import Header from '../../_components/CircleHeader/Header'
-import {setHeaderState} from '../../actions/header'
 import {getSiteInfo, getFavorites} from '../../actions/sites'
 import {getGrades} from '../../actions/grades'
 import {getNotifications} from '../../actions/notifications'
-import {getForums} from '../../actions/forums'
 import styled from 'styled-components'
 
 const Home = styled.View`
@@ -25,7 +22,6 @@ class HomeScreen extends Component {
 
   constructor(props) {
     super(props)
-    this.props.setHeaderState(Header.EXPANDED)
     this.state = {
       refreshing: false
     }
@@ -94,11 +90,6 @@ const mapDispatchToProps = (dispatch, props) => {
     logout: () => {
       Storage.credentials.reset()
       dispatch(logout())
-    },
-    setHeaderState: (isCollapsed) => {
-      if (props.isCollapsed !== isCollapsed) {
-        dispatch(setHeaderState(isCollapsed))
-      }
     },
     getSites: (netid) => dispatch(getSiteInfo(netid)),
     getGrades: () => dispatch(getGrades()),

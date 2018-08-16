@@ -31,7 +31,7 @@ const initialState = {
   loadingMessages: false
 }
 
-const requestForums = (state, action) => {
+const requestForums = (state) => {
   return {
     ...state,
     loadingForums: true,
@@ -56,7 +56,7 @@ const forumsFailure = (state, action) => {
   }
 }
 
-const requestTopics = (state, action) => {
+const requestTopics = (state) => {
   return {
     ...state,
     loadingTopics: true,
@@ -87,7 +87,7 @@ const topicsFailure = (state, action) => {
   }
 }
 
-const requestMessages = (state, action) => {
+const requestMessages = (state) => {
   return {
     ...state,
     loadingMessages: true,

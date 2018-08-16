@@ -12,10 +12,8 @@ import {combineReducers} from 'redux'
 import {loginReducer} from './login'
 import {registerReducer} from './registrar'
 import {sitesReducer} from './sites'
-import {routesReducer} from './routes'
 import {settingsReducer} from './settings'
 import {notificationsReducer} from './notifications'
-import {headerReducer} from './header'
 import {authActions as auth} from '../constants/actions'
 import {announcementsReducer} from './announcements'
 import {themeReducer} from './theme'
@@ -26,10 +24,8 @@ const appReducer = combineReducers({
 	login: loginReducer,
 	registrar: registerReducer,
 	tracsSites: sitesReducer,
-	routes: routesReducer,
 	settings: settingsReducer,
 	notifications: notificationsReducer,
-	header: headerReducer,
 	theme: themeReducer,
 	grades: gradesReducer,
 	announcements: announcementsReducer,

@@ -13,20 +13,22 @@ import {defaultTheme} from '../constants/themes'
 
 const {SET_THEME} = themeActions
 const initialState = {
-	colors: defaultTheme,
-	name: 'default'
+  colors: defaultTheme,
+  name: 'default'
 }
 
 const setTheme = (state, action) => {
-	return {
-		colors: action.theme,
-		name: action.themeName
-	}
+  return {
+    colors: action.theme,
+    name: action.themeName
+  }
 }
 
-export function themeReducer (state = initialState, action) {
-	switch (action.type) {
-		case SET_THEME: return setTheme(state, action)
-		default: return state
-	}
+export function themeReducer(state = initialState, action) {
+  switch (action.type) {
+    case SET_THEME:
+      return setTheme(state, action)
+    default:
+      return state
+  }
 }

@@ -12,12 +12,12 @@ import {Platform} from 'react-native';
 import {registrarActions} from '../constants/actions';
 
 const {
-	REQUEST_REGISTRATION, // Done
-	REGISTRATION_SUCCESS, // ???
-	REGISTRATION_FAILURE, // Done
-	REQUEST_UNREGISTER, //Done
-	UNREGISTER_SUCCESS,// Done
-	UNREGISTER_FAILURE, // Done
+	REQUEST_REGISTRATION,
+	REGISTRATION_SUCCESS,
+	REGISTRATION_FAILURE,
+	REQUEST_UNREGISTER,
+	UNREGISTER_SUCCESS,
+	UNREGISTER_FAILURE,
 	IS_GUEST_ACCOUNT,
 	SET_TOKEN,
 	CLEAR_REGISTER_ERROR
@@ -34,7 +34,7 @@ export const initialState = {
 	isGuestAccount: false
 };
 
-function requestRegistration(state, action) {
+function requestRegistration() {
 	return {
 		...initialState,
 		isRegistering: true,
@@ -63,7 +63,7 @@ function registrationFailure(state, action) {
 }
 
 
-function requestUnregister(state, action) {
+function requestUnregister(state) {
 	return {
 		...state,
 		isDeleting: true,
@@ -72,7 +72,7 @@ function requestUnregister(state, action) {
 	}
 }
 
-function unregisterSuccess(state, action) {
+function unregisterSuccess() {
 	return {
 		...initialState
 	}
@@ -94,7 +94,7 @@ function setGuestAccount(state, action) {
 	}
 }
 
-function clearRegisterError(state, action) {
+function clearRegisterError(state) {
 	return {
 		...state,
 		errorMessage: ''

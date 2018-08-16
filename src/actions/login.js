@@ -22,7 +22,6 @@ const {
   REQUEST_LOGOUT,
   LOGOUT_SUCCESS,
   LOGOUT_FAILURE,
-  SET_CREDENTIALS,
   CLEAR_ERROR
 } = authActions
 
@@ -179,13 +178,13 @@ export function logout() {
     const logoutUrl = `${global.urls.baseUrl}${global.urls.logout}`
     return axios(logoutUrl, {
       method: 'get'
-    }).then(res => {
-      CookieManager.clearAll().then(result => {
+    }).then(() => {
+      CookieManager.clearAll().then(() => {
         dispatch(logoutSuccess())
       }).catch(err => {
         dispatch(logoutFailure(err))
       })
-    }).catch(err => {
+    }).catch(() => {
       dispatch(logoutFailure(new Error("Could not log out of TRACS.")))
     })
   }

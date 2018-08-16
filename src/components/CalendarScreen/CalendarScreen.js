@@ -1,15 +1,12 @@
 import React, {Component} from 'react'
 import {FlatList, View, Text} from 'react-native'
-
 import {Agenda} from 'react-native-calendars'
 import {connect} from 'react-redux'
-import {setHeaderState} from '../../actions/header'
 import styled, {withTheme} from 'styled-components'
 import DueDateItem from './DueDateItem'
 import EmptyCalendarItem from './EmptyCalendarItem'
 import CalendarDay from './CalendarDay'
 import dayjs from 'dayjs'
-import agendaStyle from '../../../node_modules/react-native-calendars/src/agenda/style'
 
 const ContainerView = styled.View`
 	alignItems: flex-start;
@@ -110,14 +107,6 @@ CalendarView.navigationOptions = {
   title: 'Calendar'
 }
 
-const mapDispatchToProps = (dispatch, props) => ({
-  setHeaderState: isCollapsed => {
-    if (props.isCollapsed !== isCollapsed) {
-      dispatch(setHeaderState(isCollapsed))
-    }
-  }
-})
-
 const gradesWithoutDueDates = grade => {
   const hasDueDate = !!grade.dueDate && grade.dueDate !== null && grade.dueDate !== undefined
   let dueDateIsInFuture
@@ -153,4 +142,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withTheme(CalendarScreen))
+export default connect(mapStateToProps, null)(withTheme(CalendarScreen))

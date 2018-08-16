@@ -50,6 +50,7 @@ const sections = ({setTheme, themeName, sites, blacklist, announcementsDisabled,
     .reduce(isSiteDisabled(blacklist, sites), [])
     .map(site => ({...site, onToggle}))
     .map(site => ({...site, type: 'site'}))
+
   return [
     {
       title: '', data: [

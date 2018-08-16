@@ -33,7 +33,6 @@ const gradesFailure = (error) => ({
 
 export const getGrades = () => (
   async (dispatch) => {
-    const start = new Date()
     dispatch(requestGrades())
 
     const url = `${global.urls.baseUrl}${global.urls.grades}`

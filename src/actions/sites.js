@@ -19,7 +19,6 @@ const {
 } = toggleStatus
 
 const {
-	CLEAR_SITES,
 	REQUEST_SITES,
 	SITES_SUCCESS,
 	SITES_FAILURE,
@@ -29,13 +28,6 @@ const {
 	SET_FILTER,
   SET_TOGGLE_STATUS
 } = sitesActions;
-
-export const clearSites = () => {
-	return {
-		type: CLEAR_SITES,
-		userSites: {}
-	}
-};
 
 const requestSites = () => {
 	return {
