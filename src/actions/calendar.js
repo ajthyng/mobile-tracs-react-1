@@ -1,4 +1,5 @@
 import {calendarActions} from '../constants/actions'
+import {haxios as axios} from '../utils/networking'
 
 const {
   REQUEST_ASSESSMENTS,
@@ -68,11 +69,11 @@ export const getCalendarEvents = (siteId = null) => {
 
 const requestAssignments = () => ({type: REQUEST_ASSIGNMENTS})
 
-const assignmentsSuccess = (assignments) => ({type: ASSIGNMENTS_SUCCESS, assignments})
+const assignmentsSuccess = (assignments, siteName) => ({type: ASSIGNMENTS_SUCCESS, assignments, siteName})
 
 const assignmentsFailure = (error) => ({type: ASSIGNMENTS_FAILURE, errorMessage: error.message || 'No assignments found'})
 
-export const getAssignments = (siteId = null) => {
+export const getAssignments = (siteId = null, siteName = '') => {
   return dispatch => {
     dispatch(requestAssignments())
 
@@ -84,7 +85,7 @@ export const getAssignments = (siteId = null) => {
     const url = `${global.urls.baseUrl}${global.urls.assignment(siteId)}`
 
     return axios(url).then(res => {
-      dispatch(assignmentsSuccess(res.data.assignment_collection))
+      dispatch(assignmentsSuccess(res.data.assignment_collection, siteName))
     }).catch(err => {
       dispatch(assignmentsFailure(err))
     })

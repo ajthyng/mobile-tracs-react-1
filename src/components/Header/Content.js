@@ -16,47 +16,55 @@ const Container = styled.View`
 `
 
 const BackButton = (props) => (
-	<HeaderBackButton {...props} />
+  <HeaderBackButton {...props} />
 )
 
 const CalendarButton = (props) => (
-	<CalendarIcon
-		{...props}
-		size={28}
-		onPress={props.goToCalendar}
-	/>
+  <CalendarIcon
+    {...props}
+    size={28}
+    onPress={props.goToCalendar}
+  />
 )
 
 class Content extends Component {
-	goToCalendar = () => {
-		this.props.navigation.navigate('Calendar', {transition: 'cardFromBottom'})
-	}
+  goToCalendar = () => {
+    this.props.navigation.navigate('Calendar', {transition: 'cardFromBottom'})
+  }
 
-	render() {
-		const {navigation} = this.props
-		const canGoBack = navigation.state.index > 0
+  render() {
+    const {navigation} = this.props
+    const canGoBack = navigation.state.index > 0
 
-		const previousRoute = (navigation.state.routes[navigation.state.index - 1] || {}).routeName
 
-		const title = (previousRoute || '').replace(/([a-z])([A-Z])/g, '$1 $2')
 
-		const leftButton = canGoBack ?
-			<BackButton
-				tintColor='white'
-				title={title}
-				onPress={() => {
-					this.props.navigation.navigate(previousRoute)
-				}}
-			/> :
-			<CalendarButton goToCalendar={this.goToCalendar} />
+    const previousRoute = (navigation.state.routes[navigation.state.index - 1] || {}).routeName
 
-		return (
-			<Container canGoBack={canGoBack}>
-				{leftButton}
-				<ProfileMenu navigation={navigation} />
-			</Container>
-		)
-	}
+    let title = (previousRoute || '').replace(/([a-z])([A-Z])/g, '$1 $2')
+
+    const routes = navigation.state.routes
+    const currentParams = (routes[navigation.state.index] || {}).params || {}
+    if (currentParams.hasOwnProperty('siteName')) {
+      title = currentParams.siteName
+    }
+
+    const leftButton = canGoBack ?
+      <BackButton
+        tintColor='white'
+        title={title}
+        onPress={() => {
+          this.props.navigation.navigate(previousRoute)
+        }}
+      /> :
+      <CalendarButton goToCalendar={this.goToCalendar} />
+
+    return (
+      <Container canGoBack={canGoBack}>
+        {leftButton}
+        <ProfileMenu navigation={navigation} />
+      </Container>
+    )
+  }
 }
 
 export default Content

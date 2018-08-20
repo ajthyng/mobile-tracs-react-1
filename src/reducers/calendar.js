@@ -1,4 +1,5 @@
 import {calendarActions} from '../constants/actions'
+import {CALENDAR, ASSIGNMENT, ASSESSMENT} from '../constants/calendar'
 
 const {
   REQUEST_ASSESSMENTS,
@@ -30,10 +31,18 @@ const requestAssessments = (state, action) => {
 }
 
 const assessmentsSuccess = (state, action) => {
+  const assessments = action.assessments.map(({title, dueDate, startDate, ownerSite: siteName, ownerSiteId: siteId}) => ({
+    title,
+    startDate,
+    dueDate,
+    siteName,
+    siteId,
+    eventType: ASSESSMENT
+  }))
   return {
     ...state,
     loadingAssessments: false,
-    assessments: action.assessments
+    assessments
   }
 }
 
@@ -53,10 +62,19 @@ const requestCalendar = (state, action) => {
 }
 
 const calendarSuccess = (state, action) => {
+  const calendarEvents = action.calendarEvents.map(({firstTime, title, type, assignmentId, siteId, siteName}) => ({
+    firstTime,
+    title,
+    type,
+    assignmentId,
+    siteId,
+    siteName,
+    eventType: CALENDAR
+  }))
   return {
     ...state,
     loadingCalendar: false,
-    calendarEvents: action.calendarEvents
+    calendarEvents
   }
 }
 
@@ -76,10 +94,14 @@ const requestAssignments = (state, action) => {
 }
 
 const assignmentsSuccess = (state, action) => {
+  const assignments = action.assignments.map(({closeTime, openTime, dueTime, title, id: siteId}) => {
+    const siteName = action.siteName
+    return {closeTime, openTime, dueTime, title, siteId, siteName, eventType: ASSIGNMENT}
+  })
   return {
     ...state,
     loadingAssignments: false,
-    assignments: action.assignments
+    assignments
   }
 }
 

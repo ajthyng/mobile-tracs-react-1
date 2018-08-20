@@ -19,19 +19,16 @@ const CourseDetailHeader = styled(ScreenHeader)`
 class CourseDetailScreen extends Component {
   constructor(props) {
     super(props)
-  }
-
-  render() {
-    const {navigation} = this.props
-
-    const course = navigation.getParam('course', {
+    this.course = this.props.navigation.getParam('course', {
       contactInfo: {
         name: 'Instructor name not found'
       },
       name: 'Course title not set'
     })
+  }
 
-    const {contactInfo: {name: courseContactName}, name: title} = course
+  render() {
+    const {contactInfo: {name: courseContactName}, name: title} = this.course
 
     return (
       <Container>
@@ -40,7 +37,7 @@ class CourseDetailScreen extends Component {
           title={title}
           subtitle={courseContactName}
         />
-        <CourseOptions course={course} />
+        <CourseOptions course={this.course} />
       </Container>
     )
   }

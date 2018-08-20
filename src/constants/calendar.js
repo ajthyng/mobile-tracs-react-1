@@ -1,0 +1,5 @@
+module.exports = {
+  CALENDAR: 'CALENDAR',
+  ASSIGNMENT: 'ASSIGNMENT',
+  ASSESSMENT: 'ASSESSMENT'
+}

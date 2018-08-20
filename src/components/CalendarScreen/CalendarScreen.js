@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {FlatList, Dimensions, View, Text} from 'react-native'
+import ActivityIndicator from '../ActivityIndicator'
 import {Agenda} from 'react-native-calendars'
 import {connect} from 'react-redux'
 import {getAssignments, getAssessments, getCalendarEvents} from '../../actions/calendar'
@@ -8,13 +9,6 @@ import DueDateItem from './DueDateItem'
 import EmptyCalendarItem from './EmptyCalendarItem'
 import CalendarDay from './CalendarDay'
 import dayjs from 'dayjs'
-
-const ContainerView = styled.View`
-	alignItems: flex-start;
-	justify-content: center;
-	flex: 1;
-	background-color: ${props => props.theme.viewBackground};
-`
 
 const CalendarView = styled(Agenda)``
 
@@ -41,7 +35,7 @@ const createAssignmentCalendarItems = (assignments) => {
 }
 
 const renderItem = (item, colors) => (
-  <DueDateItem item={item} color={colors[item.siteId]} />
+  <DueDateItem item={item} color='dodgerblue' />
 )
 
 const renderEmptyDate = () => (
@@ -68,9 +62,9 @@ class CalendarScreen extends Component {
 
   componentDidMount() {
     const siteId = this.props.navigation.getParam('siteId', null)
-
+    const siteName = this.props.navigation.getParam('siteName', null)
     if (siteId !== null) {
-      this.props.getAssignments(siteId)
+      this.props.getAssignments(siteId, siteName)
       this.props.getAssessments(siteId)
       this.props.getCalendarEvents(siteId)
     }
@@ -93,7 +87,7 @@ class CalendarScreen extends Component {
   }
 
   createEmptyItems(day) {
-    const {assignments} = this.props
+    const {items: assignments} = this.props
     let items = {...createAssignmentCalendarItems(assignments), ...this.state.items}
     const date = dayjs(day.dateString)
     for (let i = 0; i < 35; i++) {
@@ -106,10 +100,10 @@ class CalendarScreen extends Component {
   }
 
   render() {
-    const {theme} = this.props
+    const {theme, loading} = this.props
     const {items} = this.state
 
-    return (
+    return loading ? <ActivityIndicator/> : (
       <Agenda
         ref={c => this.agenda = c}
         items={items}
@@ -118,6 +112,7 @@ class CalendarScreen extends Component {
           this.setState({selectedDay: day.timestamp})
         }}
         loadItemsForMonth={this.createEmptyItems}
+        renderEmptyData={() => <ActivityIndicator />}
         renderItem={(item) => renderItem(item, this.colorMapping)}
         renderDay={renderDay}
         renderEmptyDate={renderEmptyDate}
@@ -132,44 +127,59 @@ CalendarView.navigationOptions = {
   title: 'Calendar'
 }
 
-const gradesWithoutDueDates = grade => {
-  const hasDueDate = !!grade.dueDate && grade.dueDate !== null && grade.dueDate !== undefined
-  let dueDateIsInFuture
-  if (hasDueDate) {
-    const dueDate = dayjs(grade.dueDate).startOf('day')
-    const today = dayjs().startOf('day')
-
-    dueDateIsInFuture = dueDate.isAfter(today) || dueDate.isSame(today)
-  }
-  const isNotGraded = grade.grade === null || grade.grade === undefined
-  return isNotGraded && dueDateIsInFuture
-}
-
-const toGradesArray = (accum, site) => {
-  const siteGrades = site.grades.map(grade => {
-    grade.siteName = site.name
-    grade.siteId = site.id
-    return grade
-  })
-  accum.push(...siteGrades)
-  return accum
-}
-
 const mapStateToProps = state => {
   const {loadingAssessments, loadingAssignments, loadingCalendarEvents} = state.calendar
   const loading = loadingAssessments || loadingAssignments || loadingCalendarEvents
 
+  const calendarItems = state.calendar.calendarEvents.reduce((accum, item) => {
+    const eventDate = dayjs(item.firstTime.time).startOf('day').format('YYYY-MM-DD')
+    if (!accum[eventDate]) accum[eventDate] = []
+    accum[eventDate].push(item)
+    return accum
+  }, {})
+
+  const assignments = state.calendar.assignments.reduce((accum, item) => {
+    const open = dayjs(item.openTime.time).startOf('day').format('YYYY-MM-DD')
+    const due = dayjs(item.dueTime.time).startOf('day').format('YYYY-MM-DD')
+    const close = dayjs(item.closeTime.time).startOf('day').format('YYYY-MM-DD')
+
+    if (!accum[open]) accum[open] = []
+    if (!accum[due]) accum[due] = []
+    if (!accum[close]) accum[close] = []
+
+    accum[open].push({...item, event: 'open'})
+    accum[due].push({...item, event: 'due'})
+    accum[close].push({...item, event: 'close'})
+
+    return accum
+  }, calendarItems)
+
+  const assessments = state.calendar.assessments.reduce((accum, item) => {
+    const open = dayjs(item.startDate).startOf('day').format('YYYY-MM-DD')
+    const due = dayjs(item.dueDate).startOf('day').format('YYYY-MM-DD')
+
+    if (!accum[open]) accum[open] = []
+    if (!accum[due]) accum[due] = []
+
+    accum[open].push({...item, event: 'open'})
+    accum[due].push({...item, event: 'due'})
+
+    return accum
+  }, assignments)
+
+  console.log(assessments)
+
   return {
-    assignments: [],
+    items: [],
     loading,
     sites: state.tracsSites.userSites
   }
 }
 
 const mapDispatchToProps = dispatch => ({
-  getAssignments: () => dispatch(getAssignments()),
-  getCalendarEvents: () => dispatch(getCalendarEvents()),
-  getAssessments: () => dispatch(getAssessments())
+  getAssignments: (siteId, siteName) => dispatch(getAssignments(siteId, siteName)),
+  getCalendarEvents: (siteId) => dispatch(getCalendarEvents(siteId)),
+  getAssessments: (siteId) => dispatch(getAssessments(siteId))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTheme(CalendarScreen))

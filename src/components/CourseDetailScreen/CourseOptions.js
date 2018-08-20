@@ -4,7 +4,7 @@ import CourseOption from './CourseOption'
 import Entypo from 'react-native-vector-icons/Entypo'
 import {NavigationActions, withNavigation} from 'react-navigation'
 
-const Container = styled.View`
+const Container = styled.ScrollView`
   flex: 1;
   width: 100%;
 `
@@ -44,6 +44,16 @@ class CourseOptions extends Component {
     //TODO: Send them to forums screen
   }
 
+  goToCalendar = () => {
+    const {course, navigation: {navigate}} = this.props
+
+    navigate('Calendar', {
+      transition: 'cardFromRight',
+      siteId: course.id,
+      siteName: course.name
+    })
+  }
+
   goToAnnouncements = () => {
     const {course, navigation: {navigate}} = this.props
     navigate('Announcements', {
@@ -62,6 +72,9 @@ class CourseOptions extends Component {
         <Row>
           <CourseOption label='Forum Posts' name='comments-o' />
           <CourseOption label='Announcements' name='bullhorn' onClick={this.goToAnnouncements} />
+        </Row>
+        <Row style={{justifyContent: 'flex-start', marginLeft: 5}}>
+          <CourseOption label='Calendar' name='calendar' onClick={this.goToCalendar} />
         </Row>
       </Container>
     )
