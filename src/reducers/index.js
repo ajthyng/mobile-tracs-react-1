@@ -19,6 +19,7 @@ import {announcementsReducer} from './announcements'
 import {themeReducer} from './theme'
 import {gradesReducer} from './grades'
 import {forumReducer} from './forums'
+import {calendarReducer} from './calendar'
 
 const appReducer = combineReducers({
 	login: loginReducer,
@@ -29,7 +30,8 @@ const appReducer = combineReducers({
 	theme: themeReducer,
 	grades: gradesReducer,
 	announcements: announcementsReducer,
-	forums: forumReducer
+	forums: forumReducer,
+	calendar: calendarReducer
 });
 
 const rootReducer = (state, action) => {

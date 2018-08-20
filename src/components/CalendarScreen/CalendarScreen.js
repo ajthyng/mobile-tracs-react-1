@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
-import {FlatList, View, Text} from 'react-native'
+import {FlatList, Dimensions, View, Text} from 'react-native'
 import {Agenda} from 'react-native-calendars'
 import {connect} from 'react-redux'
+import {getAssignments, getAssessments, getCalendarEvents} from '../../actions/calendar'
 import styled, {withTheme} from 'styled-components'
 import DueDateItem from './DueDateItem'
 import EmptyCalendarItem from './EmptyCalendarItem'
@@ -11,13 +12,11 @@ import dayjs from 'dayjs'
 const ContainerView = styled.View`
 	alignItems: flex-start;
 	justify-content: center;
-	background-color: ${props => props.theme.viewBackground};
 	flex: 1;
+	background-color: ${props => props.theme.viewBackground};
 `
 
-const CalendarView = styled(Agenda)`
-	width: 100%;
-`
+const CalendarView = styled(Agenda)``
 
 const getRandomColor = (colors) => {
   return colors[Math.floor(Math.random() * 100) % colors.length]
@@ -59,11 +58,34 @@ class CalendarScreen extends Component {
     this.colorMapping = mapColorsToSites(sites, colors)
 
     this.state = {
-      items: {}
+      items: {},
+      selectedDay: dayjs().valueOf()
     }
 
     this.createEmptyItems = this.createEmptyItems.bind(this)
     this.goToGradebook = this.goToGradebook.bind(this)
+  }
+
+  componentDidMount() {
+    const siteId = this.props.navigation.getParam('siteId', null)
+
+    if (siteId !== null) {
+      this.props.getAssignments(siteId)
+      this.props.getAssessments(siteId)
+      this.props.getCalendarEvents(siteId)
+    }
+
+    Dimensions.addEventListener('change', this.scrollCalendar)
+  }
+
+  componentWillUnmount () {
+    Dimensions.removeEventListener('change', this.scrollCalendar)
+  }
+
+  scrollCalendar = () => {
+    const calendar = this.agenda.calendar || null
+    const offset = (this.agenda && this.agenda.calendarOffset()) || 0
+    calendar && calendar.scrollToDay(this.state.selectedDay, offset, false)
   }
 
   goToGradebook() {
@@ -85,20 +107,23 @@ class CalendarScreen extends Component {
 
   render() {
     const {theme} = this.props
+    const {items} = this.state
 
     return (
-      <ContainerView>
-        <CalendarView
-          items={this.state.items}
-          selected={dayjs().format('YYYY-MM-DD')}
-          loadItemsForMonth={this.createEmptyItems}
-          renderItem={(item) => renderItem(item, this.colorMapping)}
-          renderDay={renderDay}
-          renderEmptyDate={renderEmptyDate}
-          rowHasChanged={(r1, r2) => r1.itemName !== r2.itemName}
-          theme={{...theme.calendar}}
-        />
-      </ContainerView>
+      <Agenda
+        ref={c => this.agenda = c}
+        items={items}
+        selected={dayjs().valueOf()}
+        onDayPress={(day) => {
+          this.setState({selectedDay: day.timestamp})
+        }}
+        loadItemsForMonth={this.createEmptyItems}
+        renderItem={(item) => renderItem(item, this.colorMapping)}
+        renderDay={renderDay}
+        renderEmptyDate={renderEmptyDate}
+        rowHasChanged={(r1, r2) => r1.itemName !== r2.itemName}
+        theme={{...theme.calendar}}
+      />
     )
   }
 }
@@ -131,15 +156,20 @@ const toGradesArray = (accum, site) => {
 }
 
 const mapStateToProps = state => {
-  let {grades: {grades}} = state
-  const gradesSortedByDate = grades
-    .reduce(toGradesArray, [])
-    .filter(gradesWithoutDueDates)
+  const {loadingAssessments, loadingAssignments, loadingCalendarEvents} = state.calendar
+  const loading = loadingAssessments || loadingAssignments || loadingCalendarEvents
 
   return {
-    assignments: gradesSortedByDate,
+    assignments: [],
+    loading,
     sites: state.tracsSites.userSites
   }
 }
 
-export default connect(mapStateToProps, null)(withTheme(CalendarScreen))
+const mapDispatchToProps = dispatch => ({
+  getAssignments: () => dispatch(getAssignments()),
+  getCalendarEvents: () => dispatch(getCalendarEvents()),
+  getAssessments: () => dispatch(getAssessments())
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(withTheme(CalendarScreen))

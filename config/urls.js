@@ -23,6 +23,12 @@ const endpoints = {
   assessments (siteId) {
     return `/direct/sam_pub/context/${siteId}.json`
   },
+  calendar (siteId) {
+    return `/direct/calendar/site/${siteId}.json`
+  },
+  assignment (siteId) {
+    return `/direct/assignment/site/${siteId}.json`
+  },
   profile (netid) {
     return `/direct/profile/${netid}.json`
   },
