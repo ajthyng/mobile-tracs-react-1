@@ -7,7 +7,7 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import React from 'react'
+import React, {PureComponent} from 'react'
 import dayjs from 'dayjs'
 import styled from 'styled-components'
 
@@ -37,23 +37,23 @@ const ShortMonthName = styled.Text`
 	width: 100%;
 `
 
-const CalendarDay = ({day}) => {
-	if (!day) {
-		return <DayContainer />
-	}
+class CalendarDay extends PureComponent {
+  render() {
+    const {day} = this.props
 
-	const date = dayjs(day.dateString)
+    const date = dayjs(day ? day.timestamp : undefined)
 
-	return (
-		<DayContainer>
-			<DayNumber>{date.format('DD')}</DayNumber>
-			<ShortMonthName>{date.format('MMM')}</ShortMonthName>
-		</DayContainer>
-	)
+    return day ? (
+      <DayContainer>
+        <DayNumber>{date.format('DD')}</DayNumber>
+        <ShortMonthName>{date.format('MMM')}</ShortMonthName>
+      </DayContainer>
+    ) : <DayContainer />
+  }
 }
 
 CalendarDay.defaultProps = {
-	day: null
+  day: null
 }
 
 export default CalendarDay

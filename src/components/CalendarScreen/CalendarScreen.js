@@ -1,30 +1,17 @@
 import React, {Component} from 'react'
-import {FlatList, Dimensions, View, Text} from 'react-native'
+import {Dimensions} from 'react-native'
 import ActivityIndicator from '../ActivityIndicator'
 import {Agenda} from 'react-native-calendars'
 import {connect} from 'react-redux'
 import {getAssignments, getAssessments, getCalendarEvents} from '../../actions/calendar'
-import styled, {withTheme} from 'styled-components'
+import {withTheme} from 'styled-components'
 import DueDateItem from './DueDateItem'
 import EmptyCalendarItem from './EmptyCalendarItem'
 import CalendarDay from './CalendarDay'
 import dayjs from 'dayjs'
-import {CALENDAR, ASSESSMENT, ASSIGNMENT} from '../../constants/calendar'
+import {CALENDAR, ASSIGNMENT} from '../../constants/calendar'
 
-const CalendarView = styled(Agenda)``
-
-const getRandomColor = (colors) => {
-  return colors[Math.floor(Math.random() * 100) % colors.length]
-}
-
-const mapColorsToSites = (sites, colors) => {
-  return Object.keys(sites).reduce((accum, siteId) => {
-    accum[siteId] = getRandomColor(colors)
-    return accum
-  }, {})
-}
-
-const renderItem = (item, colors) => (
+const renderItem = (colors) => (item) => (
   <DueDateItem item={item} color='dodgerblue' />
 )
 
@@ -35,22 +22,29 @@ const renderEmptyDate = () => (
 const renderDay = (day) => <CalendarDay day={day} />
 
 class CalendarScreen extends Component {
-  constructor(props) {
-    super(props)
-    const {sites, theme: {assignments: colors}} = this.props
-
-    this.colorMapping = mapColorsToSites(sites, colors)
-
-    this.state = {
-      items: {},
-      selectedDay: dayjs().valueOf()
-    }
-
-    this.createEmptyItems = this.createEmptyItems.bind(this)
-    this.goToGradebook = this.goToGradebook.bind(this)
+  state = {
+    items: {},
+    selectedDay: dayjs().valueOf()
   }
 
   componentDidMount() {
+    this.getEvents()
+    Dimensions.addEventListener('change', this.scrollCalendar)
+  }
+
+  componentWillUnmount() {
+    Dimensions.removeEventListener('change', this.scrollCalendar)
+  }
+
+  componentDidUpdate (prevProps) {
+    const wasLoading = prevProps.loading
+    const doneLoading = !this.props.loading
+    if (wasLoading && doneLoading) {
+      this.setState({items: this.props.items})
+    }
+  }
+
+  getEvents = () => {
     const siteId = this.props.navigation.getParam('siteId', null)
     const siteName = this.props.navigation.getParam('siteName', null)
     if (siteId !== null) {
@@ -58,12 +52,6 @@ class CalendarScreen extends Component {
       this.props.getAssessments(siteId)
       this.props.getCalendarEvents(siteId)
     }
-
-    Dimensions.addEventListener('change', this.scrollCalendar)
-  }
-
-  componentWillUnmount () {
-    Dimensions.removeEventListener('change', this.scrollCalendar)
   }
 
   scrollCalendar = () => {
@@ -72,14 +60,13 @@ class CalendarScreen extends Component {
     calendar && calendar.scrollToDay(this.state.selectedDay, offset, false)
   }
 
-  goToGradebook() {
-    this.props.navigation.navigate('Gradebook')
-  }
-
-  createEmptyItems(day) {
-    let items = {...this.state.items, ...this.props.items}
-    const date = dayjs(day.dateString)
-    for (let i = 0; i < 35; i++) {
+  createEmptyItems = (day) => {
+    const items = {...this.state.items}
+    const date = dayjs(day.timestamp)
+    const endOfMonth = date.add(2, 'months').endOf('month')
+    const daysToMake = endOfMonth.diff(date, 'days')
+    console.log('DAYS TO MAKE: ', daysToMake)
+    for (let i = 0; i < daysToMake; i++) {
       const visibleDay = date.add(i, 'days').format('YYYY-MM-DD')
       if (!items[visibleDay]) {
         items[visibleDay] = []
@@ -92,7 +79,7 @@ class CalendarScreen extends Component {
     const {theme, loading} = this.props
     const {items} = this.state
 
-    return loading ? <ActivityIndicator/> : (
+    return loading ? <ActivityIndicator /> : (
       <Agenda
         ref={c => this.agenda = c}
         items={items}
@@ -101,8 +88,7 @@ class CalendarScreen extends Component {
           this.setState({selectedDay: day.timestamp})
         }}
         loadItemsForMonth={this.createEmptyItems}
-        renderEmptyData={() => <ActivityIndicator />}
-        renderItem={(item) => renderItem(item, this.colorMapping)}
+        renderItem={renderItem(this.colorMapping)}
         renderDay={renderDay}
         renderEmptyDate={renderEmptyDate}
         rowHasChanged={(r1, r2) => r1.itemName !== r2.itemName}
@@ -110,10 +96,6 @@ class CalendarScreen extends Component {
       />
     )
   }
-}
-
-CalendarView.navigationOptions = {
-  title: 'Calendar'
 }
 
 const filterDuplicateEvents = (items) => {
