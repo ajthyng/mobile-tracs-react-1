@@ -34,6 +34,7 @@ const SettingsList = styled(SectionList)`
 `
 
 const onThemeToggle = (setTheme) => (on) => {
+  console.log('THEME SWITCH IS: ', on ? 'ON' : 'OFF')
   const theme = on ? darkTheme : defaultTheme
   const name = on ? darkTheme.NAME : defaultTheme.NAME
   setTheme(theme, name)

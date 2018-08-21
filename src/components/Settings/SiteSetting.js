@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import Toggle from '../Toggle'
+import {types} from '../../constants/notifications'
 
 const Container = styled.View`
   height: 40px;
@@ -20,9 +21,11 @@ const SiteSetting = ({name, enabled, on, siteId, onValueChange, type}) => {
   const onToggle = on => {
     if (type === 'site') {
       return onValueChange({other_keys: {site_id: siteId}}, on)
-    } else {
+    } else if (type === types.ANNOUNCEMENT || type === types.FORUM) {
       return onValueChange({keys: {object_type: type}}, on)
     }
+
+    return onValueChange(on)
   }
   return (
     <Container>

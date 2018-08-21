@@ -10,7 +10,8 @@ const {
   CALENDAR_FAILURE,
   REQUEST_ASSIGNMENTS,
   ASSIGNMENTS_SUCCESS,
-  ASSIGNMENTS_FAILURE
+  ASSIGNMENTS_FAILURE,
+  RESET_AGGREGATE
 } = calendarActions
 
 const requestAssessments = () => ({type: REQUEST_ASSESSMENTS})
@@ -91,3 +92,7 @@ export const getAssignments = (siteId = null, siteName = '') => {
     })
   }
 }
+
+export const resetEvents = () => ({
+  type: RESET_AGGREGATE
+})

@@ -3,7 +3,7 @@ import {Dimensions} from 'react-native'
 import ActivityIndicator from '../ActivityIndicator'
 import {Agenda} from 'react-native-calendars'
 import {connect} from 'react-redux'
-import {getAssignments, getAssessments, getCalendarEvents} from '../../actions/calendar'
+import {getAssignments, getAssessments, getCalendarEvents, resetEvents} from '../../actions/calendar'
 import {withTheme} from 'styled-components'
 import DueDateItem from './DueDateItem'
 import EmptyCalendarItem from './EmptyCalendarItem'
@@ -11,7 +11,7 @@ import CalendarDay from './CalendarDay'
 import dayjs from 'dayjs'
 import {CALENDAR, ASSIGNMENT} from '../../constants/calendar'
 
-const renderItem = (colors) => (item) => (
+const renderItem = (item) => (
   <DueDateItem item={item} color='dodgerblue' />
 )
 
@@ -47,7 +47,9 @@ class CalendarScreen extends Component {
   getEvents = () => {
     const siteId = this.props.navigation.getParam('siteId', null)
     const siteName = this.props.navigation.getParam('siteName', null)
+
     if (siteId !== null) {
+      this.props.resetEvents()
       this.props.getAssignments(siteId, siteName)
       this.props.getAssessments(siteId)
       this.props.getCalendarEvents(siteId)
@@ -63,15 +65,17 @@ class CalendarScreen extends Component {
   createEmptyItems = (day) => {
     const items = {...this.state.items}
     const date = dayjs(day.timestamp)
+
     const endOfMonth = date.add(2, 'months').endOf('month')
     const daysToMake = endOfMonth.diff(date, 'days')
-    console.log('DAYS TO MAKE: ', daysToMake)
+
     for (let i = 0; i < daysToMake; i++) {
       const visibleDay = date.add(i, 'days').format('YYYY-MM-DD')
       if (!items[visibleDay]) {
         items[visibleDay] = []
       }
     }
+
     this.setState({items})
   }
 
@@ -88,10 +92,10 @@ class CalendarScreen extends Component {
           this.setState({selectedDay: day.timestamp})
         }}
         loadItemsForMonth={this.createEmptyItems}
-        renderItem={renderItem(this.colorMapping)}
+        renderItem={renderItem}
         renderDay={renderDay}
         renderEmptyDate={renderEmptyDate}
-        rowHasChanged={(r1, r2) => r1.itemName !== r2.itemName}
+        rowHasChanged={(r1, r2) => r1.title !== r2.title}
         theme={{...theme.calendar}}
       />
     )
@@ -129,7 +133,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
   getAssignments: (siteId, siteName) => dispatch(getAssignments(siteId, siteName)),
   getCalendarEvents: (siteId) => dispatch(getCalendarEvents(siteId)),
-  getAssessments: (siteId) => dispatch(getAssessments(siteId))
+  getAssessments: (siteId) => dispatch(getAssessments(siteId)),
+  resetEvents: () => dispatch(resetEvents())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTheme(CalendarScreen))

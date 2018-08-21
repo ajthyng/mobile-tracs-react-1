@@ -11,7 +11,8 @@ const {
   CALENDAR_FAILURE,
   REQUEST_ASSIGNMENTS,
   ASSIGNMENTS_SUCCESS,
-  ASSIGNMENTS_FAILURE
+  ASSIGNMENTS_FAILURE,
+  RESET_AGGREGATE
 } = calendarActions
 
 const initialState = {
@@ -160,6 +161,13 @@ const assignmentsFailure = (state, action) => {
   }
 }
 
+const resetAggregate = (state, action) => {
+  return {
+    ...state,
+    aggregate: {}
+  }
+}
+
 export function calendarReducer(state = initialState, action) {
   switch (action.type) {
     case REQUEST_ASSESSMENTS:
@@ -180,6 +188,8 @@ export function calendarReducer(state = initialState, action) {
       return assignmentsSuccess(state, action)
     case ASSIGNMENTS_FAILURE:
       return assignmentsFailure(state, action)
+    case RESET_AGGREGATE:
+      return resetAggregate(state, action)
     default:
       return state
   }
