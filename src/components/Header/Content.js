@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import CalendarIcon from '../CalendarIcon'
 import ProfileMenu from '../ProfileMenu/ProfileMenu'
 import {HeaderBackButton} from 'react-navigation'
+import Icon from 'react-native-vector-icons/FontAwesome'
 
 const Container = styled.View`
 	height: 63px;
@@ -56,7 +57,7 @@ class Content extends Component {
           this.props.navigation.navigate(previousRoute)
         }}
       /> :
-      <CalendarButton goToCalendar={this.goToCalendar} />
+      <Icon name="question" size={36} color='white' />
 
     return (
       <Container canGoBack={canGoBack}>

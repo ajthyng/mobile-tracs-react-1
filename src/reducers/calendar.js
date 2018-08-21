@@ -1,5 +1,6 @@
 import {calendarActions} from '../constants/actions'
 import {CALENDAR, ASSIGNMENT, ASSESSMENT} from '../constants/calendar'
+import dayjs from 'dayjs'
 
 const {
   REQUEST_ASSESSMENTS,
@@ -20,6 +21,7 @@ const initialState = {
   assessments: [],
   assignments: [],
   calendarEvents: [],
+  aggregate: {},
   errorMessage: '',
 }
 
@@ -39,10 +41,27 @@ const assessmentsSuccess = (state, action) => {
     siteId,
     eventType: ASSESSMENT
   }))
+
+  let aggregate = {...state.aggregate}
+
+  aggregate = assessments.reduce((accum, item) => {
+    const open = dayjs(item.startDate).startOf('day').format('YYYY-MM-DD')
+    const due = dayjs(item.dueDate).startOf('day').format('YYYY-MM-DD')
+
+    if (!accum[open]) accum[open] = []
+    if (!accum[due]) accum[due] = []
+
+    accum[open].push({...item, event: 'open'})
+    accum[due].push({...item, event: 'due'})
+
+    return accum
+  }, aggregate)
+
   return {
     ...state,
     loadingAssessments: false,
-    assessments
+    assessments,
+    aggregate
   }
 }
 
@@ -71,10 +90,21 @@ const calendarSuccess = (state, action) => {
     siteName,
     eventType: CALENDAR
   }))
+
+  let aggregate = {...state.aggregate}
+
+  aggregate = calendarEvents.reduce((accum, item) => {
+    const eventDate = dayjs(item.firstTime.time).startOf('day').format('YYYY-MM-DD')
+    if (!accum[eventDate]) accum[eventDate] = []
+    accum[eventDate].push(item)
+    return accum
+  }, aggregate)
+
   return {
     ...state,
     loadingCalendar: false,
-    calendarEvents
+    calendarEvents,
+    aggregate
   }
 }
 
@@ -94,14 +124,31 @@ const requestAssignments = (state, action) => {
 }
 
 const assignmentsSuccess = (state, action) => {
-  const assignments = action.assignments.map(({closeTime, openTime, dueTime, title, id: siteId}) => {
+  const assignments = action.assignments.map(({closeTime, openTime, dueTime, title, id}) => {
     const siteName = action.siteName
-    return {closeTime, openTime, dueTime, title, siteId, siteName, eventType: ASSIGNMENT}
+    return {openTime, dueTime, title, id, siteName, eventType: ASSIGNMENT}
   })
+
+  let aggregate = {...state.aggregate}
+
+  aggregate = assignments.reduce((accum, item) => {
+    const open = dayjs(item.openTime.time).startOf('day').format('YYYY-MM-DD')
+    const due = dayjs(item.dueTime.time).startOf('day').format('YYYY-MM-DD')
+
+    if (!accum[open]) accum[open] = []
+    if (!accum[due]) accum[due] = []
+
+    accum[open].push({...item, event: 'open'})
+    accum[due].push({...item, event: 'due'})
+
+    return accum
+  }, aggregate)
+
   return {
     ...state,
     loadingAssignments: false,
-    assignments
+    assignments,
+    aggregate
   }
 }
 

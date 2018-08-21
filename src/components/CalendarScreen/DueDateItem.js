@@ -10,6 +10,7 @@
 
 import React, {Component} from 'react'
 import styled, {withTheme} from 'styled-components'
+import {ASSIGNMENT, ASSESSMENT, CALENDAR} from '../../constants/calendar'
 
 const DueDateContainer = styled.View`
 	width: 100%;
@@ -55,7 +56,7 @@ const DueDateItem = ({item, color}) => {
     <DueDateContainer>
       <SideColor color={color} />
       <ContentContainer>
-        <DueDateTitle>{item.itemName}</DueDateTitle>
+        <DueDateTitle>{item.title + `${item.event === 'open' ? ' - Available' : ''}`}</DueDateTitle>
         <DueDateCourse>{item.siteName}</DueDateCourse>
       </ContentContainer>
     </DueDateContainer>
@@ -64,8 +65,8 @@ const DueDateItem = ({item, color}) => {
 
 DueDateItem.defaultProps = {
   item: {
-    itemName: 'No assignment name set',
-    siteName: 'Could not find course name'
+    title: '',
+    siteName: ''
   },
   color: '#501214'
 }

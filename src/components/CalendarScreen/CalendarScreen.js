@@ -9,6 +9,7 @@ import DueDateItem from './DueDateItem'
 import EmptyCalendarItem from './EmptyCalendarItem'
 import CalendarDay from './CalendarDay'
 import dayjs from 'dayjs'
+import {CALENDAR, ASSESSMENT, ASSIGNMENT} from '../../constants/calendar'
 
 const CalendarView = styled(Agenda)``
 
@@ -19,17 +20,6 @@ const getRandomColor = (colors) => {
 const mapColorsToSites = (sites, colors) => {
   return Object.keys(sites).reduce((accum, siteId) => {
     accum[siteId] = getRandomColor(colors)
-    return accum
-  }, {})
-}
-
-const createAssignmentCalendarItems = (assignments) => {
-  return assignments.reduce((accum, assign) => {
-    const dueDate = dayjs(assign.dueDate).startOf('day').format('YYYY-MM-DD')
-
-    if (!accum[dueDate]) accum[dueDate] = []
-    accum[dueDate].push(assign)
-
     return accum
   }, {})
 }
@@ -87,8 +77,7 @@ class CalendarScreen extends Component {
   }
 
   createEmptyItems(day) {
-    const {items: assignments} = this.props
-    let items = {...createAssignmentCalendarItems(assignments), ...this.state.items}
+    let items = {...this.state.items, ...this.props.items}
     const date = dayjs(day.dateString)
     for (let i = 0; i < 35; i++) {
       const visibleDay = date.add(i, 'days').format('YYYY-MM-DD')
@@ -127,50 +116,29 @@ CalendarView.navigationOptions = {
   title: 'Calendar'
 }
 
+const filterDuplicateEvents = (items) => {
+  const keys = Object.keys(items) || []
+  return keys.reduce((accum, key) => {
+    const events = items[key]
+    let assignmentIdsCalendar = events
+      .filter(({eventType}) => eventType === CALENDAR)
+      .filter(({assignmentId}) => assignmentId.length > 0)
+      .map(({assignmentId}) => assignmentId)
+
+    accum[key] = events.filter(event => {
+      return !(event.eventType === ASSIGNMENT && assignmentIdsCalendar.includes(event.id))
+    })
+
+    return accum
+  }, {})
+}
+
 const mapStateToProps = state => {
   const {loadingAssessments, loadingAssignments, loadingCalendarEvents} = state.calendar
   const loading = loadingAssessments || loadingAssignments || loadingCalendarEvents
 
-  const calendarItems = state.calendar.calendarEvents.reduce((accum, item) => {
-    const eventDate = dayjs(item.firstTime.time).startOf('day').format('YYYY-MM-DD')
-    if (!accum[eventDate]) accum[eventDate] = []
-    accum[eventDate].push(item)
-    return accum
-  }, {})
-
-  const assignments = state.calendar.assignments.reduce((accum, item) => {
-    const open = dayjs(item.openTime.time).startOf('day').format('YYYY-MM-DD')
-    const due = dayjs(item.dueTime.time).startOf('day').format('YYYY-MM-DD')
-    const close = dayjs(item.closeTime.time).startOf('day').format('YYYY-MM-DD')
-
-    if (!accum[open]) accum[open] = []
-    if (!accum[due]) accum[due] = []
-    if (!accum[close]) accum[close] = []
-
-    accum[open].push({...item, event: 'open'})
-    accum[due].push({...item, event: 'due'})
-    accum[close].push({...item, event: 'close'})
-
-    return accum
-  }, calendarItems)
-
-  const assessments = state.calendar.assessments.reduce((accum, item) => {
-    const open = dayjs(item.startDate).startOf('day').format('YYYY-MM-DD')
-    const due = dayjs(item.dueDate).startOf('day').format('YYYY-MM-DD')
-
-    if (!accum[open]) accum[open] = []
-    if (!accum[due]) accum[due] = []
-
-    accum[open].push({...item, event: 'open'})
-    accum[due].push({...item, event: 'due'})
-
-    return accum
-  }, assignments)
-
-  console.log(assessments)
-
   return {
-    items: [],
+    items: filterDuplicateEvents(state.calendar.aggregate),
     loading,
     sites: state.tracsSites.userSites
   }
