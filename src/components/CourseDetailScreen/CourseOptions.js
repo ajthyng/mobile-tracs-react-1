@@ -41,7 +41,13 @@ class CourseOptions extends Component {
   }
 
   goToForums = () => {
-    //TODO: Send them to forums screen
+    const {course, navigation} = this.props
+
+    const openForums = NavigationActions.navigate({
+      routeName: 'Forums',
+      params: {course, transition: 'cardFromRight'}
+    })
+    navigation.dispatch(openForums)
   }
 
   goToCalendar = () => {
@@ -70,7 +76,7 @@ class CourseOptions extends Component {
           <CourseOption Icon={Entypo} label='Course Website' name='browser' onClick={this.goToWeb} />
         </Row>
         <Row>
-          <CourseOption label='Forum Posts' name='comments-o' />
+          <CourseOption label='Forum Posts' name='comments-o' onClick={this.goToForums} />
           <CourseOption label='Announcements' name='bullhorn' onClick={this.goToAnnouncements} />
         </Row>
         <Row style={{justifyContent: 'flex-start', marginLeft: 5}}>

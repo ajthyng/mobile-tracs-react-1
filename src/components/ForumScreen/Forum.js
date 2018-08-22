@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {TouchableWithoutFeedback} from 'react-native'
+import {TouchableOpacity, TouchableWithoutFeedback} from 'react-native'
 import styled from 'styled-components'
 import Topics from './Topics'
 
@@ -12,29 +12,42 @@ const Container = styled.View`
   shadow-radius: 2px;
 `
 
-const ForumLabel = styled.Text`
-  background-color: ${props => props.theme.viewBackground};
-  font-size: 22px;
-  padding: 10px;
+const UnreadIndicator = styled.View`
+  height: 10px;
+  width: 10px;
+  background-color: #501214;
+`
+
+const ForumTitleContainer = styled(TouchableOpacity)`
+  height: 40px;
+  flex-direction: row; 
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 8px;
+  width: 100%;
+  background-color: ${props => props.theme.announcementBackground};
+`
+
+const ForumTitle = styled.Text`
+  font-weight: bold;
+  font-size: 18px;
+  margin-left: 8px;
   color: ${props => props.theme.darkText};
 `
 
 class Forum extends Component {
-  state = {
-    open: false
-  }
-
   render() {
-    const {title, siteId, forum} = this.props
-    const {open} = this.state
+    const {notification} = this.props
+    const {title} = (notification.tracs_data || {})
+    const unread = !notification.read
 
     return (
-      <TouchableWithoutFeedback onPress={() => this.setState(prev => ({open: !prev.open}))}>
-        <Container>
-          <ForumLabel>{title}</ForumLabel>
-          <Topics open={open} siteId={siteId} forum={forum} />
-        </Container>
-      </TouchableWithoutFeedback>
+      <Container>
+        <ForumTitleContainer>
+          {unread ? <UnreadIndicator/> : null}
+          <ForumTitle>{title}</ForumTitle>
+        </ForumTitleContainer>
+      </Container>
     )
   }
 }

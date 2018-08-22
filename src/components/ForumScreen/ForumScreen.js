@@ -1,10 +1,11 @@
 import React, {Component} from 'react'
 import {FlatList, View} from 'react-native'
 import styled, {withTheme} from 'styled-components'
-import {getForums} from '../../actions/forums'
 import {connect} from 'react-redux'
 import ActivityIndicator from '../ActivityIndicator'
 import Forum from './Forum'
+import {getNotifications} from '../../actions/notifications'
+import Subject from '../../utils/subject'
 
 const Container = styled.View`
   flex: 1;
@@ -25,39 +26,68 @@ const Spinner = () => (
 )
 
 class ForumScreen extends Component {
-  componentDidMount () {
-    let {getForums, course} = this.props
+  state = {
+    silentLoad: false,
+    refreshing: false
+  }
+  componentDidMount() {
+    this.props.getNotifications()
+    Subject.subscribe('notification', this.silentRefresh)
+  }
 
-    getForums(course.id)
+  componentWillUnmount() {
+    Subject.unsubscribe('notification', this.silentRefresh)
+  }
+
+  silentRefresh = () => {
+    this.setState({silentLoad: true}, this.props.getNotifications)
+  }
+
+  refresh = () => {
+    this.setState({silentLoad: true, refreshing: true}, this.props.getNotifications)
+  }
+
+  componentDidUpdate (prevProps) {
+    if (prevProps.loading && !this.props.loading) {
+      this.setState({silentLoad: false, refreshing: false})
+    }
   }
 
   render() {
-    const {forums, loading, course} = this.props
-    return loading ? (<Spinner />) : (
+    const {forums, loading} = this.props
+    const {silentLoad, refreshing} = this.state
+
+
+    return loading && !silentLoad ? (<Spinner />) : (
       <Container>
         <ForumsList
           data={forums}
-          renderItem={({item: {title, id}}) => <Forum title={title} siteId={course.id} forum={id} />}
-          keyExtractor={item => item.entityURL}
+          refreshing={refreshing}
+          onRefresh={this.refresh}
+          renderItem={({item}) => <Forum notification={item} />}
+          keyExtractor={item => item.id}
         />
       </Container>
     )
   }
 }
 
-ForumScreen.defaultProps = {
-  course: {
-    id: 'f1003153-75b9-4abc-bc09-7a0e83d21293'
+const mapStateToProps = (state, props) => {
+  const {id: siteId} = props.navigation.getParam('course', {id: ''})
+
+  const forums = state.notifications.forums.filter(post => {
+    return ((post || {}).other_keys || {}).site_id === siteId
+  })
+
+  return {
+    siteId,
+    forums,
+    loading: state.notifications.isLoading
   }
 }
 
-const mapStateToProps = state => ({
-  forums: state.forums.forums,
-  loading: state.forums.loadingForums
-})
-
 const mapDispatchToProps = dispatch => ({
-  getForums: (siteId) => dispatch(getForums(siteId))
+  getNotifications: () => dispatch(getNotifications())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTheme(ForumScreen))
