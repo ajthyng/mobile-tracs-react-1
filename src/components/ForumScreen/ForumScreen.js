@@ -52,9 +52,19 @@ class ForumScreen extends Component {
     this.props.batchUpdate([id], {read: true})
   }
 
+  markAsSeen = () => {
+    const ids = this.props.forums.reduce((accum, post) => {
+      if (!post.seen) accum.push(post.id)
+      return accum
+    }, [])
+
+    if (ids.length > 0) this.props.batchUpdate(ids, {seen: true})
+  }
+
   componentDidUpdate (prevProps) {
     if (prevProps.loading && !this.props.loading) {
       this.setState({silentLoad: false, refreshing: false})
+      this.markAsSeen()
     }
   }
 
