@@ -44,7 +44,7 @@ const store = createStore(
 
 const persistor = persistStore(store)
 
-export default function configureStore() {
+export default function configureStore () {
   if (module.hot) {
     module.hot.accept(() => {
       const nextRootReducer = require('../reducers/index').default

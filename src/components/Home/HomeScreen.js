@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {View, StyleSheet, Animated} from 'react-native'
 import {logout} from '../../actions/login'
 import * as Storage from '../../utils/storage'
 import CourseList from '../CourseList/CourseList'
@@ -10,9 +9,9 @@ import {getNotifications} from '../../actions/notifications'
 import styled from 'styled-components'
 
 const Home = styled.View`
-		flex: 1;
-		background-color: ${props => props.theme.viewBackground};
-		width: 100%;
+  flex: 1;
+  background-color: ${props => props.theme.viewBackground};
+  width: 100%;
 `
 
 class HomeScreen extends Component {
@@ -20,14 +19,14 @@ class HomeScreen extends Component {
     title: 'Home'
   }
 
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       refreshing: false
     }
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.initHomeScreen()
   }
 
@@ -50,7 +49,7 @@ class HomeScreen extends Component {
     if (!loading && refreshing) this.setState({refreshing: false})
   }
 
-  render() {
+  render () {
     const {loadingSites, loadingFavorites} = this.props
     const {refreshing} = this.state
     return (
@@ -67,10 +66,10 @@ class HomeScreen extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const {isFetchingSites: loadingSites} =  state.tracsSites
-  const {isFetchingFavorites: loadingFavorites} =  state.tracsSites
-  const {isLoading: loadingGrades} =  state.grades
-  const {isLoading: loadingNotifications} =  state.notifications
+  const {isFetchingSites: loadingSites} = state.tracsSites
+  const {isFetchingFavorites: loadingFavorites} = state.tracsSites
+  const {isLoading: loadingGrades} = state.grades
+  const {isLoading: loadingNotifications} = state.notifications
 
   const loading = loadingSites || loadingFavorites || loadingGrades || loadingNotifications
 
@@ -94,7 +93,7 @@ const mapDispatchToProps = (dispatch, props) => {
     getSites: (netid) => dispatch(getSiteInfo(netid)),
     getGrades: () => dispatch(getGrades()),
     getFavorites: () => dispatch(getFavorites()),
-    getNotifications: () => dispatch(getNotifications()),
+    getNotifications: () => dispatch(getNotifications())
   }
 }
 

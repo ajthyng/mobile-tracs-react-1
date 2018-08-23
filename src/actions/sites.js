@@ -8,137 +8,130 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {sitesActions} from '../constants/actions';
-import {Analytics} from '../utils/analytics';
-import {haxios as axios} from '../utils/networking';
+import {sitesActions} from '../constants/actions'
+import {Analytics} from '../utils/analytics'
+import {haxios as axios} from '../utils/networking'
 import {toggleStatus} from '../constants/sites'
 
 const {
-	FAVORITES,
-	ALL_SITES
+  FAVORITES,
+  ALL_SITES
 } = toggleStatus
 
 const {
-	REQUEST_SITES,
-	SITES_SUCCESS,
-	SITES_FAILURE,
-	REQUEST_FAVORITES,
-	FAVORITES_SUCCESS,
-	FAVORITES_FAILURE,
-	SET_FILTER,
+  REQUEST_SITES,
+  SITES_SUCCESS,
+  SITES_FAILURE,
+  REQUEST_FAVORITES,
+  FAVORITES_SUCCESS,
+  FAVORITES_FAILURE,
+  SET_FILTER,
   SET_TOGGLE_STATUS
-} = sitesActions;
+} = sitesActions
 
 const requestSites = () => {
-	return {
-		type: REQUEST_SITES
-	}
-};
+  return {
+    type: REQUEST_SITES
+  }
+}
 
 const sitesSuccess = (userSites, loadTime) => {
-	Analytics().logSiteCounts(userSites);
-	Analytics().logSiteLoadTime(loadTime);
-	console.log(loadTime);
-	return {
-		type: SITES_SUCCESS,
-		userSites: userSites
-	}
-};
+  Analytics().logSiteCounts(userSites)
+  Analytics().logSiteLoadTime(loadTime)
+  console.log(loadTime)
+  return {
+    type: SITES_SUCCESS,
+    userSites: userSites
+  }
+}
 
 const sitesFailure = (error) => {
-	return {
-		type: SITES_FAILURE,
-		errorMessage: error.message
-	}
-};
+  return {
+    type: SITES_FAILURE,
+    errorMessage: error.message
+  }
+}
 
-export function getSiteInfo(netid) {
-	return async (dispatch) => {
-		let startTime = new Date();
-		dispatch(requestSites());
+export function getSiteInfo (netid) {
+  return async (dispatch) => {
+    let startTime = new Date()
+    dispatch(requestSites())
 
-		const limit = 500;
-		const start = 0;
-		const sitesUrl = `${global.urls.baseUrl}${global.urls.sites(limit, start)}`;
-		let res = await axios(sitesUrl, {method: 'get'}).catch(err => err);
-		if (res instanceof Error) {
-			dispatch(sitesFailure(res));
-		}
+    const limit = 500
+    const start = 0
+    const sitesUrl = `${global.urls.baseUrl}${global.urls.sites(limit, start)}`
+    let res = await axios(sitesUrl, {method: 'get'}).catch(err => err)
+    if (res instanceof Error) {
+      dispatch(sitesFailure(res))
+    }
 
-		let sites = (res.data || {}).site_collection;
-		let userSites = sites.reduce((accum, site) => {
-			accum[site.id] = {
-				id: site.id,
-				name: site.title,
-				contactInfo: {
-					name: site.props && site.props['contact-name'],
-					email: site.props && site.props['contact-email']
-				},
-				tools: Object.keys(site.props || {}).reduce((accum, key) => {
-					if (key.indexOf("sakai") >= 0) {
-						try {
-							accum[key] = JSON.parse(site.props[key] || "{}");
-						} catch (err) {}
-					}
-					return accum;
-				}, {}),
-				owner: netid,
-				type: site.type,
-				forumCount: 0,
-				unseenCount: 0
-			};
-			return accum;
-		}, {});
+    let sites = (res.data || {}).site_collection
+    let userSites = sites.reduce((accum, site) => {
+      accum[site.id] = {
+        id: site.id,
+        name: site.title,
+        contactInfo: {
+          name: site.props && site.props['contact-name'],
+          email: site.props && site.props['contact-email']
+        },
+        tools: Object.keys(site.props || {}).reduce((accum, key) => {
+          if (key.indexOf('sakai') >= 0) {
+            try {
+              accum[key] = JSON.parse(site.props[key] || '{}')
+            } catch (err) {}
+          }
+          return accum
+        }, {}),
+        owner: netid,
+        type: site.type,
+        forumCount: 0,
+        unseenCount: 0
+      }
+      return accum
+    }, {})
 
-		let siteLoadTime = new Date() - startTime;
-		//setTimeout(() => dispatch(sitesSuccess(userSites, siteLoadTime)), 3000);
-		dispatch(sitesSuccess(userSites, siteLoadTime))
-	}
+    let siteLoadTime = new Date() - startTime
+    // setTimeout(() => dispatch(sitesSuccess(userSites, siteLoadTime)), 3000);
+    dispatch(sitesSuccess(userSites, siteLoadTime))
+  }
 }
 
 const requestFavorites = () => ({
-	type: REQUEST_FAVORITES
+  type: REQUEST_FAVORITES
 })
 
 const favoritesSuccess = (favorites) => ({
-	type: FAVORITES_SUCCESS,
-	favorites
+  type: FAVORITES_SUCCESS,
+  favorites
 })
 
 const favoritesFailure = (error) => ({
-	type: FAVORITES_FAILURE,
-	error
+  type: FAVORITES_FAILURE,
+  error
 })
 
-export function getFavorites() {
-	return async (dispatch) => {
-		dispatch(requestFavorites())
-		const favoritesUrl = `${global.urls.baseUrl}${global.urls.favorites}`
-		axios(favoritesUrl, {method: 'get'}).then(({data: favorites}) => {
-			dispatch(favoritesSuccess(favorites))
-		}).catch(err => {
-			dispatch(favoritesFailure(err))
-		})
-	}
+export function getFavorites () {
+  return async (dispatch) => {
+    dispatch(requestFavorites())
+    const favoritesUrl = `${global.urls.baseUrl}${global.urls.favorites}`
+    axios(favoritesUrl, {method: 'get'}).then(({data: favorites}) => {
+      dispatch(favoritesSuccess(favorites))
+    }).catch(err => {
+      dispatch(favoritesFailure(err))
+    })
+  }
 }
 
-export function setFilter(filter) {
-	return {
-		type: SET_FILTER,
-		filter
-	}
-}
-
-export function setToggleStatus(toggleStatus) {
-	if (toggleStatus === FAVORITES || toggleStatus === ALL_SITES) {
+export function setToggleStatus (toggleStatus) {
+  if (toggleStatus === FAVORITES || toggleStatus === ALL_SITES) {
     return {
       type: SET_TOGGLE_STATUS,
       toggleStatus
     }
   } else {
-		return {
-			type: SET_TOGGLE_STATUS,
-			toggleStatus: FAVORITES
-		}
-	}
+    return {
+      type: SET_TOGGLE_STATUS,
+      toggleStatus: FAVORITES
+    }
+  }
 }

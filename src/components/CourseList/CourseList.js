@@ -1,17 +1,23 @@
 import React, {Component} from 'react'
-import {ScrollView, RefreshControl} from 'react-native'
 
 import {connect} from 'react-redux'
 import styled from 'styled-components'
 import Modal from 'react-native-modal'
+import {toggleStatus} from '../../constants/sites'
 
 import CourseCard from './CourseCard/CourseCard'
 import CourseSkeletonCard from './CourseSkeletonCard'
 import CourseScreen from '../CourseScreen/CourseScreen'
 
+const {ALL_SITES, FAVORITES} = toggleStatus
+
+const Courses = styled.FlatList`
+  width: 100%;
+`
+
 const CourseListContainer = styled.View`
-	flex: 1;
-	width: 100%;
+  flex: 1;
+  width: 100%;
 `
 
 const loadingSites = new Array(10).fill(0).map((item, index) => (
@@ -19,8 +25,8 @@ const loadingSites = new Array(10).fill(0).map((item, index) => (
 ))
 
 class CourseList extends Component {
-  constructor(props) {
-    super(props)
+  constructor () {
+    super()
     this.state = {
       y: 0,
       isVisible: false,
@@ -38,15 +44,14 @@ class CourseList extends Component {
       marginLeft: 20,
       marginRight: 20
     }
-
   }
 
   renderCourses = () => {
     const {sites, loading, refreshing} = this.props
 
-    return loading && !refreshing ?
-      loadingSites :
-      sites.map(item => (
+    return loading && !refreshing
+      ? loadingSites
+      : sites.map(item => (
         <CourseCard
           {...item}
           key={item.id}
@@ -63,16 +68,21 @@ class CourseList extends Component {
     this.setState({isVisible: false})
   }
 
-  render() {
+  render () {
     const {refreshing, onRefresh, navigation} = this.props
     const {isVisible, course} = this.state
     return (
       <CourseListContainer>
-        <ScrollView
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-        >
-          {this.renderCourses()}
-        </ScrollView>
+        <Courses
+          data={this.props.sites}
+          style={{width: '100%'}}
+          keyExtractor={item => item.id}
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          renderItem={({item}) => {
+            return <CourseCard {...item} goToCourse={this.showModal(item)} />
+          }}
+        />
         <Modal
           isVisible={isVisible}
           onBackButtonPress={this.hideModal}
@@ -94,10 +104,21 @@ class CourseList extends Component {
 }
 
 const mapStateToProps = (state) => {
+  const {toggleStatus, favorites, userSites} = state.tracsSites
+
   const sites = Object.keys(state.tracsSites.userSites).reduce((accum, siteId) => {
-    accum.push(state.tracsSites.userSites[siteId])
+    const favoritesFilterActive = toggleStatus === FAVORITES
+    const allSitesFilterActive = toggleStatus === ALL_SITES
+    const siteIsFavorite = favorites.includes(siteId)
+
+    if (favoritesFilterActive && siteIsFavorite) {
+      accum.push(userSites[siteId])
+    } else if (allSitesFilterActive) {
+      accum.push(userSites[siteId])
+    }
+
     return accum
-  }, []).filter(state.tracsSites.filter(state.tracsSites.favorites))
+  }, [])
 
   return {
     sites

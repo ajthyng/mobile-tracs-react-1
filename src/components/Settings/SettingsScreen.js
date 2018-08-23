@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {StatusBar, Dimensions, SectionList} from 'react-native'
+import {Dimensions, SectionList} from 'react-native'
 import styled, {withTheme} from 'styled-components'
 import {connect} from 'react-redux'
 import {getSettings, saveSettings} from '../../actions/settings'
@@ -34,7 +34,6 @@ const SettingsList = styled(SectionList)`
 `
 
 const onThemeToggle = (setTheme) => (on) => {
-  console.log('THEME SWITCH IS: ', on ? 'ON' : 'OFF')
   const theme = on ? darkTheme : defaultTheme
   const name = on ? darkTheme.NAME : defaultTheme.NAME
   setTheme(theme, name)
@@ -54,7 +53,8 @@ const sections = ({setTheme, themeName, sites, blacklist, announcementsDisabled,
 
   return [
     {
-      title: '', data: [
+      title: '',
+      data: [
         {
           name: 'Dark Mode',
           onToggle: onThemeToggle(setTheme),
@@ -87,7 +87,7 @@ const sections = ({setTheme, themeName, sites, blacklist, announcementsDisabled,
 }
 
 class SettingsScreen extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     const {width, height} = Dimensions.get('window')
     this.state = {
@@ -97,13 +97,13 @@ class SettingsScreen extends Component {
     }
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.props.getSettings()
     this.props.getSites()
     Dimensions.addEventListener('change', this.updateWidth)
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     Dimensions.removeEventListener('change', this.updateWidth)
   }
 
@@ -153,7 +153,7 @@ class SettingsScreen extends Component {
     }
   }
 
-  render() {
+  render () {
     const {loading} = this.props
 
     const settings = sections(this.props, this.updateSettings)

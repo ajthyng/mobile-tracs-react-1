@@ -15,10 +15,6 @@ const Row = styled.View`
 `
 
 class CourseOptions extends Component {
-  constructor(props) {
-    super(props)
-  }
-
   goToGradebook = () => {
     const {course, navigation} = this.props
     const openGradebook = NavigationActions.navigate({
@@ -68,7 +64,7 @@ class CourseOptions extends Component {
     })
   }
 
-  render() {
+  render () {
     return (
       <Container>
         <Row>

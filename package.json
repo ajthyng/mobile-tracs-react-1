@@ -13,7 +13,9 @@
       "node_modules/**",
       "tests/**"
     ],
-    "env": ["jest"],
+    "env": [
+      "jest"
+    ],
     "parser": "babel-eslint"
   },
   "dependencies": {

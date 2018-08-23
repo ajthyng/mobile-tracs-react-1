@@ -10,7 +10,7 @@
 import * as sites from '../constants/actions'
 import {toggleStatus} from '../constants/sites'
 
-const {FAVORITES} = toggleStatus
+const {FAVORITES, ALL_SITES} = toggleStatus
 
 const {
   CLEAR_SITES,
@@ -29,8 +29,7 @@ export const initialState = {
   isFetchingSites: false,
   hasFailed: false,
   favorites: [],
-  filter: (favorites) => (site) => favorites.contains((site || {}).id),
-  toggleStatus: FAVORITES
+  toggleStatus: ALL_SITES
 }
 
 let clearSites = (state, action) => {
@@ -90,13 +89,6 @@ const favoritesFailure = (state, action) => {
   }
 }
 
-const setFilter = (state, action) => {
-  return {
-    ...state,
-    filter: action.filter
-  }
-}
-
 const setToggleStatus = (state, action) => {
   return {
     ...state,
@@ -104,7 +96,7 @@ const setToggleStatus = (state, action) => {
   }
 }
 
-export function sitesReducer(state = initialState, action) {
+export function sitesReducer (state = initialState, action) {
   switch (action.type) {
     case CLEAR_SITES:
       return clearSites(state, action)
@@ -120,8 +112,6 @@ export function sitesReducer(state = initialState, action) {
       return favoritesSuccess(state, action)
     case FAVORITES_FAILURE:
       return favoritesFailure(state, action)
-    case SET_FILTER:
-      return setFilter(state, action)
     case SET_TOGGLE_STATUS:
       return setToggleStatus(state, action)
     default:
