@@ -1,27 +1,27 @@
 import React, {Component} from 'react'
-import {Animated, Easing, Image, StyleSheet, View} from 'react-native'
+import {Animated, Easing} from 'react-native'
 import styled, {withTheme} from 'styled-components'
 
 const tracsLogo = require('../../img/tracs-logo-center.png')
 
 const Container = styled.View`
-	flex: 1;
-	align-items: center;
-	justify-content: center;
-	width: 100%;
-	background-color: ${props => props.theme.viewBackground};
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background-color: ${props => props.theme.viewBackground};
 `
 
 const ImageContainer = styled(Animated.View)`
-	width: ${props => props.size}px;
-	height: ${props => props.size}px;
-	align-items: center;
-	justify-content: flex-end;
+  width: ${props => props.size}px;
+  height: ${props => props.size}px;
+  align-items: center;
+  justify-content: flex-end;
 `
 
 const TracsLOGO = styled.Image`
-	width: ${props => props.size}px;
-	height: ${props => props.size}px;
+  width: ${props => props.size}px;
+  height: ${props => props.size}px;
 `
 
 class ActivityIndicator extends Component {
@@ -40,11 +40,11 @@ class ActivityIndicator extends Component {
     ).start()
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.rotateImage()
   }
 
-  render() {
+  render () {
     const {size} = this.props
     const {animationRange} = this.state
 

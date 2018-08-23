@@ -1,8 +1,8 @@
-import React, {Component} from 'react'
+import React, {PureComponent} from 'react'
 import styled from 'styled-components'
 import {connect} from 'react-redux'
 import {batchUpdateNotification} from '../../actions/notifications'
-import {Dimensions, Linking, TouchableWithoutFeedback, WebView} from 'react-native'
+import {Dimensions, Linking, TouchableOpacity, WebView} from 'react-native'
 
 const AnnouncementContainer = styled.View`
   background-color: ${props => props.theme.announcementBackground};
@@ -26,7 +26,7 @@ const UnreadIndicator = styled.View`
   background-color: #501214;
 `
 
-const AnnouncementTitleContainer = styled(TouchableWithoutFeedback)`
+const AnnouncementTitleContainer = styled(TouchableOpacity)`
   height: 40px;
   flex-direction: row;
   align-items: center;
@@ -77,15 +77,13 @@ const makeHTML = (body, theme) => (
   `
 )
 
-class Announcement extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      height: 100,
-      showBody: false
-    }
-    this.contentMargin = 10
+class Announcement extends PureComponent {
+  state = {
+    height: 100,
+    showBody: false
   }
+  contentMargin = 10
+  webView = React.createRef()
 
   updateHeight = event => {
     const {title, jsEvaluationValue} = event
@@ -93,7 +91,7 @@ class Announcement extends Component {
   }
 
   onPress = () => {
-    const {notification, announcement: {title}} = this.props
+    const {notification} = this.props
 
     this.setState(prev => ({showBody: !prev.showBody}), () => {
       if (notification && !notification.read && this.state.showBody) {
@@ -114,13 +112,13 @@ class Announcement extends Component {
         </AnnouncementTitleContainer>
         <AnnouncementBody
           margin={this.contentMargin}
-          innerRef={c => this.webView = c}
+          innerRef={this.webView}
           style={{height: showBody ? height : 0}}
           mixedContentMode='compatibility'
           injectedJavaScript='(() => document.body.scrollHeight)()'
           onNavigationStateChange={(event) => {
             if (event.url !== 'about:blank') {
-              this.webView.stopLoading()
+              this.webView.current.stopLoading()
               if (Linking.canOpenURL(event.url)) {
                 Linking.openURL(event.url).then(result => console.log(result)).catch(err => console.log(err))
               }

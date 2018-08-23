@@ -1,8 +1,4 @@
 import React, {Component} from 'react'
-import {
-  FlatList,
-  View
-} from 'react-native'
 import styled, {withTheme} from 'styled-components'
 import {connect} from 'react-redux'
 import {getAnnouncements} from '../../actions/announcements'
@@ -19,33 +15,52 @@ const Container = styled.View`
   background-color: ${props => props.theme.viewBackground};
 `
 
-const filterSeen = announcements => announcements
-  .filter(({seen}) => !seen)
-  .map(({id}) => id)
-  .filter(id => id !== null)
+const AnnouncementsList = styled.FlatList`
+  width: 100%;
+`
 
 class AnnouncementsScreen extends Component {
+  state = {
+    silentLoad: false,
+    refreshing: false
+  }
+
   componentDidMount () {
     this.props.getAnnouncements()
-    Subject.subscribe('notification', this.props.getAnnouncements)
+    Subject.subscribe('notification', this.loadAnnouncements)
   }
 
   componentWillUnmount () {
-    Subject.unsubscribe('notification', this.props.getAnnouncements)
+    Subject.unsubscribe('notification', this.loadAnnouncements)
   }
 
-  componentDidUpdate () {
-    const { isBatchUpdating, notificationErrorMessage } = this.props
-    if (!isBatchUpdating && !notificationErrorMessage) {
-      this.batchUpdateSeen(this.props.announcementNotifications)
+  componentDidUpdate (prevProps) {
+    if (prevProps.loading && !this.props.loading) {
+      this.setState({silentLoad: false, refreshing: false})
+      this.markAsSeen()
     }
   }
 
-  batchUpdateSeen = (announcements = []) => {
-    const ids = filterSeen(announcements)
+  markAsSeen = () => {
+    const announcements = this.props.announcementNotifications
+    const ids = announcements.reduce((accum, announcement) => {
+      if (!announcement.seen) accum.push(announcement.id)
+      return accum
+    }, [])
+
     if (ids.length > 0) {
       this.props.batchUpdate(ids, {seen: true})
     }
+  }
+
+  refreshAnnouncements = () => {
+    this.setState({silentLoad: true, refreshing: true})
+    this.props.getAnnouncements()
+  }
+
+  loadAnnouncements = () => {
+    this.setState({silentLoad: true})
+    this.props.getAnnouncements()
   }
 
   renderAnnouncement = ({item}) => {
@@ -68,16 +83,14 @@ class AnnouncementsScreen extends Component {
 
   render () {
     const {announcements, loading} = this.props
-    return loading ? (
-      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        <ActivityIndicator />
-      </View>
-    ) : (
+    const {refreshing, silentLoad} = this.state
+
+    return loading && !silentLoad ? (<ActivityIndicator />) : (
       <Container>
-        <FlatList
-          bounces={false}
-          data={announcements.reverse()}
-          style={{width: '100%'}}
+        <AnnouncementsList
+          data={announcements}
+          refreshing={refreshing}
+          onRefresh={this.refreshAnnouncements}
           contentContainerStyle={null}
           keyExtractor={item => item.announcementId}
           renderItem={this.renderAnnouncement}
@@ -96,10 +109,8 @@ const mapStateToProps = (state, props) => {
 
   let announcements = []
 
-  if (id === null || id === undefined) return {announcements}
-
   const announcementNotifications = state.notifications.announcements
-  announcements = state.announcements.all.filter(item => item.siteId === id)
+  announcements = state.announcements.all.filter(item => item.siteId === id).reverse()
 
   return {
     announcements,
