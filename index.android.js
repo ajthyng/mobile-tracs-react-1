@@ -7,7 +7,7 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {AppRegistry, AppState, Text, StyleSheet, Platform, PermissionsAndroid} from 'react-native'
+import {AppRegistry, AppState, YellowBox, Text, StyleSheet, Platform, PermissionsAndroid} from 'react-native'
 import React, {Component} from 'react'
 import {Provider} from 'react-redux'
 import {PersistGate} from 'redux-persist/integration/react'
@@ -19,7 +19,6 @@ import {credentials} from './src/utils/storage'
 import {Analytics} from './src/utils/analytics'
 import {login} from './src/actions/login'
 
-import {YellowBox} from 'react-native'
 import ThemedApp from './src/ThemedApp'
 
 YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'You are setting the style', 'Module RCTImageLoader'])
@@ -32,7 +31,7 @@ global.android = Platform.OS === 'android'
 
 const textFixStyle = StyleSheet.create({
   defaultFontFamily: {
-    fontFamily: 'lucida grande',
+    fontFamily: 'lucida grande'
   }
 })
 
@@ -46,7 +45,7 @@ Text.prototype.render = function (...args) {
 }
 
 class App extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.analytics = Analytics(store)
     this.analytics.logAppStart()
@@ -64,23 +63,23 @@ class App extends Component {
   handleNotification = (notification) => {
     console.log(notification)
     if (notification.local_notification) {
-      //Not used but I don't want to forget the option
+      // Not used but I don't want to forget the option
     } else if (notification.opened_from_tray) {
 
     } else {
       FCM.presentLocalNotification({
         title: `${notification.fcm.title}`,
         body: `${notification.fcm.body}`,
-        priority: "high",
-        sound: "default",
+        priority: 'high',
+        sound: 'default',
         show_in_foreground: true,
-        icon: "ic_notification"
+        icon: 'ic_notification'
       })
       store.dispatch(getNotifications())
     }
   }
 
-  handleAppStateChange(nextAppState) {
+  handleAppStateChange (nextAppState) {
     if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
       credentials.get().then(creds => {
         if (creds.username && creds.password) {
@@ -93,35 +92,35 @@ class App extends Component {
     })
   }
 
-  componentDidMount() {
+  componentDidMount () {
     FCM.on(FCMEvent.Notification, this.handleNotification)
     AppState.addEventListener('change', this.handleAppStateChange)
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     AppState.removeEventListener('change', this.handleAppStateChange)
   }
 
-  async requestStoragePermission() {
+  async requestStoragePermission () {
     try {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
         {
-          'title': "TRACS Storage Permission",
-          'message': "TRACS needs permission to store downloads, notifications, and other data on your device; TRACS may not function properly without it."
+          'title': 'TRACS Storage Permission',
+          'message': 'TRACS needs permission to store downloads, notifications, and other data on your device; TRACS may not function properly without it.'
         }
       )
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log("Cache Enabled")
+        console.log('Cache Enabled')
       } else {
-        console.log("Cache Disabled")
+        console.log('Cache Disabled')
       }
     } catch (err) {
-      console.log("Cache Disabled")
+      console.log('Cache Disabled')
     }
   }
 
-  render() {
+  render () {
     return (
       <Provider store={store}>
         <PersistGate persistor={persistor}>
@@ -133,11 +132,3 @@ class App extends Component {
 }
 
 AppRegistry.registerComponent('TRACSMobile', () => App)
-
-
-
-
-
-
-
-

@@ -4,7 +4,7 @@ import styled, {withTheme} from 'styled-components'
 import {connect} from 'react-redux'
 import ActivityIndicator from '../ActivityIndicator'
 import Forum from './Forum'
-import {getNotifications} from '../../actions/notifications'
+import {getNotifications, batchUpdateNotification} from '../../actions/notifications'
 import Subject from '../../utils/subject'
 
 const Container = styled.View`
@@ -30,12 +30,13 @@ class ForumScreen extends Component {
     silentLoad: false,
     refreshing: false
   }
-  componentDidMount() {
+
+  componentDidMount () {
     this.props.getNotifications()
     Subject.subscribe('notification', this.silentRefresh)
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     Subject.unsubscribe('notification', this.silentRefresh)
   }
 
@@ -47,24 +48,27 @@ class ForumScreen extends Component {
     this.setState({silentLoad: true, refreshing: true}, this.props.getNotifications)
   }
 
+  markAsRead = (id) => {
+    this.props.batchUpdate([id], {read: true})
+  }
+
   componentDidUpdate (prevProps) {
     if (prevProps.loading && !this.props.loading) {
       this.setState({silentLoad: false, refreshing: false})
     }
   }
 
-  render() {
+  render () {
     const {forums, loading} = this.props
     const {silentLoad, refreshing} = this.state
 
-
-    return loading && !silentLoad ? (<Spinner />) : (
+    return loading && !silentLoad ? <Spinner /> : (
       <Container>
         <ForumsList
           data={forums}
           refreshing={refreshing}
           onRefresh={this.refresh}
-          renderItem={({item}) => <Forum notification={item} />}
+          renderItem={({item}) => <Forum notification={item} onPress={this.markAsRead} />}
           keyExtractor={item => item.id}
         />
       </Container>
@@ -87,7 +91,8 @@ const mapStateToProps = (state, props) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  getNotifications: () => dispatch(getNotifications())
+  getNotifications: () => dispatch(getNotifications()),
+  batchUpdate: (ids, status) => dispatch(batchUpdateNotification(ids, status))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTheme(ForumScreen))

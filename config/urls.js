@@ -1,21 +1,19 @@
-//import env from './env.json';
-
-const devBaseUrl = "http://ajt79.its.txstate.edu:8080"
-const stagingBaseUrl = "https://staging.tracs.txstate.edu"
-const prodBaseUrl = "https://tracs.txstate.edu"
-const dispatchQualUrl = "https://dispatchqa1.its.qual.txstate.edu"
-const dispatchProdUrl = "https://dispatch.its.txstate.edu"
-const feedbackUrl = "https://txstate.co1.qualtrics.com/jfe/form/SV_exO0EYONZuNkKmp"
-const supportUrl = "https://txstate.co1.qualtrics.com/jfe/form/SV_0B2IRTJVBxGjiDP"
+const devBaseUrl = 'http://ajt79.its.txstate.edu:8080'
+const stagingBaseUrl = 'https://staging.tracs.txstate.edu'
+const prodBaseUrl = 'https://tracs.txstate.edu'
+const dispatchQualUrl = 'https://dispatchqa1.its.qual.txstate.edu'
+const dispatchProdUrl = 'https://dispatch.its.txstate.edu'
+const feedbackUrl = 'https://txstate.co1.qualtrics.com/jfe/form/SV_exO0EYONZuNkKmp'
+const supportUrl = 'https://txstate.co1.qualtrics.com/jfe/form/SV_0B2IRTJVBxGjiDP'
 
 const endpoints = {
-  session: "/direct/session/current.json",
-  membership: "/direct/membership.json",
-  portal: "/portal",
-  login: "/direct/session",
-  logout: "/portal/logout",
-  jwt: ":3000/token.pl",
-  registrationBase: "/registrations",
+  session: '/direct/session/current.json',
+  membership: '/direct/membership.json',
+  portal: '/portal',
+  login: '/direct/session',
+  logout: '/portal/logout',
+  jwt: ':3000/token.pl',
+  registrationBase: '/registrations',
   webUrl: '/portal/site',
   favorites: '/portal/favorites/list',
   allAnnouncements: '/direct/announcement/all.json',

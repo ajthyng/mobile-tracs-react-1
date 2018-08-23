@@ -1,4 +1,4 @@
-import {AppRegistry, Platform, AppState, SafeAreaView, PushNotificationIOS} from 'react-native'
+import {AppRegistry, Platform, AppState, YellowBox, PushNotificationIOS} from 'react-native'
 import React, {Component} from 'react'
 import {PersistGate} from 'redux-persist/integration/react'
 import {Provider} from 'react-redux'
@@ -11,19 +11,18 @@ import {Analytics} from './src/utils/analytics'
 import {getNotifications} from './src/actions/notifications'
 import {setToken} from './src/actions/registrar'
 import ThemedApp from './src/ThemedApp'
-import {YellowBox} from 'react-native'
 import Subject from './src/utils/subject'
 
 const {store, persistor} = configureStore()
 
-YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', "Received data was not a string", "Warning: Can't call setState (or forceUpdate)", 'You are setting the style', 'Module RCTImageLoader', 'Class RCTCxxModule'])
+YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Received data was not a string', "Warning: Can't call setState (or forceUpdate)", 'You are setting the style', 'Module RCTImageLoader', 'Class RCTCxxModule'])
 
 global.urls = urls
 global['ios'] = Platform.OS === 'ios'
 global['android'] = Platform.OS === 'android'
 
 class App extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     global.simulator = this.props.isSimulator
     console.log('First Run: ', this.props.isFirstRun)
@@ -38,11 +37,11 @@ class App extends Component {
       appState: AppState.currentState
     }
     if (global.simulator) {
-      store.dispatch(setToken("9561548f635aad3fd3361c3dfe4c345d0aa0d3a32542675563eea05a6212dc95"))
+      store.dispatch(setToken('9561548f635aad3fd3361c3dfe4c345d0aa0d3a32542675563eea05a6212dc95'))
     }
     PushNotification.configure({
       onRegister: ({token, os}) => {
-        if (!!token) {
+        if (token) {
           store.dispatch(setToken(token))
         }
         console.log(`Token: ${token}\nOS: ${os}`)
@@ -57,11 +56,11 @@ class App extends Component {
     })
   }
 
-  componentDidMount() {
+  componentDidMount () {
     AppState.addEventListener('change', this.handleAppStateChange)
   }
 
-  handleAppStateChange(nextAppState) {
+  handleAppStateChange (nextAppState) {
     if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
       credentials.get().then(creds => {
         if (creds.username && creds.password) {
@@ -74,7 +73,7 @@ class App extends Component {
     })
   }
 
-  handleNotification(notification) {
+  handleNotification (notification) {
     console.log('IOS Notification: ', notification)
     if (notification.data.remote) {
       PushNotificationIOS.presentLocalNotification({
@@ -88,7 +87,7 @@ class App extends Component {
     store.dispatch(getNotifications())
   }
 
-  render() {
+  render () {
     return (
       <Provider store={store}>
         <PersistGate persistor={persistor} loading={null}>

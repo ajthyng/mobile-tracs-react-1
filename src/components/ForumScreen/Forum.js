@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
-import {TouchableOpacity, TouchableWithoutFeedback} from 'react-native'
+import {TouchableOpacity} from 'react-native'
 import styled from 'styled-components'
-import Topics from './Topics'
+
+const Touchable = ({children, onPress}) => <TouchableOpacity onPress={onPress} activeOpacity={0.5} >{children}</TouchableOpacity>
 
 const Container = styled.View`
   margin: 6px;
@@ -18,7 +19,7 @@ const UnreadIndicator = styled.View`
   background-color: #501214;
 `
 
-const ForumTitleContainer = styled(TouchableOpacity)`
+const ForumTitleContainer = styled.View`
   height: 40px;
   flex-direction: row; 
   align-items: center;
@@ -36,18 +37,26 @@ const ForumTitle = styled.Text`
 `
 
 class Forum extends Component {
-  render() {
+  onPress = (id) => () => {
+    if (!this.props.notification.read) {
+      this.props.onPress(id)
+    }
+  }
+
+  render () {
     const {notification} = this.props
     const {title} = (notification.tracs_data || {})
     const unread = !notification.read
 
     return (
-      <Container>
-        <ForumTitleContainer>
-          {unread ? <UnreadIndicator/> : null}
-          <ForumTitle>{title}</ForumTitle>
-        </ForumTitleContainer>
-      </Container>
+      <Touchable onPress={this.onPress(notification.id)} >
+        <Container>
+          <ForumTitleContainer>
+            {unread ? <UnreadIndicator /> : null}
+            <ForumTitle>{title}</ForumTitle>
+          </ForumTitleContainer>
+        </Container>
+      </Touchable>
     )
   }
 }

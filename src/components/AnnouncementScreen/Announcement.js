@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import styled from 'styled-components'
 import {connect} from 'react-redux'
 import {batchUpdateNotification} from '../../actions/notifications'
-import {Dimensions, Linking, TouchableOpacity, WebView} from 'react-native'
+import {Dimensions, Linking, TouchableWithoutFeedback, WebView} from 'react-native'
 
 const AnnouncementContainer = styled.View`
   background-color: ${props => props.theme.announcementBackground};
@@ -26,7 +26,7 @@ const UnreadIndicator = styled.View`
   background-color: #501214;
 `
 
-const AnnouncementTitleContainer = styled(TouchableOpacity)`
+const AnnouncementTitleContainer = styled(TouchableWithoutFeedback)`
   height: 40px;
   flex-direction: row;
   align-items: center;
@@ -78,7 +78,7 @@ const makeHTML = (body, theme) => (
 )
 
 class Announcement extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       height: 100,
@@ -102,14 +102,14 @@ class Announcement extends Component {
     })
   }
 
-  render() {
+  render () {
     const {announcement: {body, title}, theme, unread} = this.props
     const {height, showBody} = this.state
 
     return (
       <AnnouncementContainer style={{margin: this.contentMargin}}>
         <AnnouncementTitleContainer activeOpacity={1} onPress={this.onPress}>
-          {unread ? <UnreadIndicator/> : null}
+          {unread ? <UnreadIndicator /> : null}
           <AnnouncementTitle>{title}</AnnouncementTitle>
         </AnnouncementTitleContainer>
         <AnnouncementBody

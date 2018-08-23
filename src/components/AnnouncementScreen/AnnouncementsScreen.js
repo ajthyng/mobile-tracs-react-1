@@ -25,7 +25,7 @@ const filterSeen = announcements => announcements
   .filter(id => id !== null)
 
 class AnnouncementsScreen extends Component {
-  componentDidMount() {
+  componentDidMount () {
     this.props.getAnnouncements()
     Subject.subscribe('notification', this.props.getAnnouncements)
   }
@@ -35,7 +35,7 @@ class AnnouncementsScreen extends Component {
   }
 
   componentDidUpdate () {
-    const {isBatchUpdating, notificationErrorMessage } = this.props
+    const { isBatchUpdating, notificationErrorMessage } = this.props
     if (!isBatchUpdating && !notificationErrorMessage) {
       this.batchUpdateSeen(this.props.announcementNotifications)
     }
@@ -49,12 +49,12 @@ class AnnouncementsScreen extends Component {
   }
 
   renderAnnouncement = ({item}) => {
-    const {announcementNotifications, theme} = this.props
+    const { announcementNotifications, theme } = this.props
     const unreadAnnouncements = announcementNotifications
-      .filter(({read}) => !read).map(({keys: {object_id}}) => object_id).filter(id => id !== null)
+      .filter(({read}) => !read).map(({keys}) => keys.object_id).filter(id => id !== null)
 
     const unread = unreadAnnouncements.contains(item.announcementId)
-    const notification = announcementNotifications.find(({keys: {object_id}}) => object_id === item.announcementId)
+    const notification = announcementNotifications.find(({keys}) => keys.object_id === item.announcementId)
 
     return (
       <Announcement
@@ -66,7 +66,7 @@ class AnnouncementsScreen extends Component {
     )
   }
 
-  render() {
+  render () {
     const {announcements, loading} = this.props
     return loading ? (
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
