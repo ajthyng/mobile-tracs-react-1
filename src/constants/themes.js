@@ -118,23 +118,4 @@ const darkTheme = {
   ]
 }
 
-const blackAndWhite = {
-  header: '#737373',
-  selectedHeader: '#a3a3a3',
-  androidStatusBar: '#737373',
-  courseWithGrade: '#a3a3a3',
-  courseWithoutGrade: '#a3a3a3',
-  viewCourse: '#4a4a4a',
-  darkText: '#363534',
-  lightText: '#fff',
-  notificationBadge: '#a0a0a0',
-  assignments: [
-    '#111111',
-    '#333333',
-    '#555555',
-    '#777777',
-    '#999999'
-  ]
-}
-
 module.exports = { defaultTheme, darkTheme }

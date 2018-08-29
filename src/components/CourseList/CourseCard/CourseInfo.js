@@ -10,8 +10,8 @@ const Container = styled.View`
 `
 
 const Name = styled.Text`
-  font-size: 22px;
-  line-height: 22px;
+  font-size: 20px;
+  line-height: 20px;
   font-weight: 300;
 `
 
@@ -24,7 +24,7 @@ class CourseInfo extends PureComponent {
     const {name, instructor} = this.props
     return (
       <Container>
-        <Name>{name}</Name>
+        <Name numberOfLines={1} >{name}</Name>
         <Instructor>{instructor}</Instructor>
       </Container>
     )

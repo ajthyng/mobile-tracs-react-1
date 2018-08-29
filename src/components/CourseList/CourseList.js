@@ -28,6 +28,7 @@ class CourseList extends Component {
     this.state = {
       y: 0,
       isVisible: false,
+      scroll: true,
       course: {}
     }
 
@@ -44,15 +45,8 @@ class CourseList extends Component {
     }
   }
 
-  renderCourse = ({item}) => {
-    const {loading, refreshing, theme} = this.props
-    return loading && !refreshing
-      ? loadingSite
-      : (<CourseCard
-        {...item}
-        goToCourse={this.showModal(item)}
-        color={theme.colors.courseCard.defaultColorBar}
-      />)
+  renderCourse = (setScroll) => ({item}) => {
+    return <CourseCard {...item} goToCourse={this.showModal(item)} setScroll={setScroll} />
   }
 
   showModal = (item) => () => {
@@ -63,6 +57,10 @@ class CourseList extends Component {
     this.setState({isVisible: false})
   }
 
+  setScroll = (enabled) => {
+    this.setState({scroll: enabled})
+  }
+
   render () {
     const {refreshing, onRefresh, navigation} = this.props
     const {isVisible, course} = this.state
@@ -70,12 +68,13 @@ class CourseList extends Component {
       <CourseListContainer>
         <Courses
           data={this.props.sites}
+          canCancelContentTouches={this.state.scroll}
           contentContainerStyle={{marginTop: 10, marginBottom: 10, marginLeft: 0, marginRight: 0}}
           style={{width: '100%'}}
           keyExtractor={item => item.id}
           refreshing={refreshing}
           onRefresh={onRefresh}
-          renderItem={this.renderCourse}
+          renderItem={this.renderCourse(this.setScroll)}
         />
         <Modal
           isVisible={isVisible}
@@ -99,6 +98,7 @@ class CourseList extends Component {
 
 const mapStateToProps = (state) => {
   const {filterStatus, favorites, userSites} = state.tracsSites
+  const {colorBar} = state.theme.colors.courseCard
 
   const sites = Object.keys(state.tracsSites.userSites).reduce((accum, siteId) => {
     const favoritesFilterActive = filterStatus === FAVORITES
@@ -106,9 +106,13 @@ const mapStateToProps = (state) => {
     const siteIsFavorite = favorites.includes(siteId)
 
     if (favoritesFilterActive && siteIsFavorite) {
-      accum.push(userSites[siteId])
+      const currentLength = accum.length
+      const colorOptions = colorBar.length
+      const color = colorBar[currentLength % colorOptions]
+      accum.push({...userSites[siteId], color})
     } else if (allSitesFilterActive) {
-      accum.push(userSites[siteId])
+      const color = state.theme.colors.courseCard.defaultColorBar
+      accum.push({...userSites[siteId], color})
     }
 
     return accum
