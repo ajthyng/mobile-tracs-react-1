@@ -10,6 +10,13 @@
 
 const defaultTheme = {
   NAME: 'DEFAULT',
+  courseCard: {
+    colorBar: ['#7473A8', '#8D734A', '#DEB407', '#8BAEA1'],
+    defaultColorBar: '#ABABAB',
+    background: '#FFFFFF',
+    shadow: '#142945',
+    text: '#363534'
+  },
   header: '#501214',
   selectedHeader: '#4a89f4',
   androidStatusBar: '#224575',

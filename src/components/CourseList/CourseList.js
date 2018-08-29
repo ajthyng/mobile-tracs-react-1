@@ -20,9 +20,7 @@ const CourseListContainer = styled.View`
   width: 100%;
 `
 
-const loadingSites = new Array(10).fill(0).map((item, index) => (
-  <CourseSkeletonCard key={`${index}`} />
-))
+const loadingSite = <CourseSkeletonCard />
 
 class CourseList extends Component {
   constructor () {
@@ -46,18 +44,15 @@ class CourseList extends Component {
     }
   }
 
-  renderCourses = () => {
-    const {sites, loading, refreshing} = this.props
-
+  renderCourse = ({item}) => {
+    const {loading, refreshing, theme} = this.props
     return loading && !refreshing
-      ? loadingSites
-      : sites.map(item => (
-        <CourseCard
-          {...item}
-          key={item.id}
-          goToCourse={this.showModal(item)}
-        />
-      ))
+      ? loadingSite
+      : (<CourseCard
+        {...item}
+        goToCourse={this.showModal(item)}
+        color={theme.colors.courseCard.defaultColorBar}
+      />)
   }
 
   showModal = (item) => () => {
@@ -75,13 +70,12 @@ class CourseList extends Component {
       <CourseListContainer>
         <Courses
           data={this.props.sites}
+          contentContainerStyle={{marginTop: 10, marginBottom: 10, marginLeft: 0, marginRight: 0}}
           style={{width: '100%'}}
           keyExtractor={item => item.id}
           refreshing={refreshing}
           onRefresh={onRefresh}
-          renderItem={({item}) => {
-            return <CourseCard {...item} goToCourse={this.showModal(item)} />
-          }}
+          renderItem={this.renderCourse}
         />
         <Modal
           isVisible={isVisible}
@@ -121,7 +115,8 @@ const mapStateToProps = (state) => {
   }, [])
 
   return {
-    sites
+    sites,
+    theme: state.theme
   }
 }
 
