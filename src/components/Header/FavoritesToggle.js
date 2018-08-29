@@ -15,7 +15,7 @@ const Container = styled.View`
   width: 250px;
   height: 45px;
   background-color: #501214;
-  border-radius: 5px;
+  border-radius: 2px;
   flex-direction: row;
   border: 2px solid ${BORDER_COLOR};
 `
@@ -49,9 +49,9 @@ class FavoritesToggle extends PureComponent {
     status: this.props.status
   }
 
-  onClick = (status) => () => {
+  onPress = (status) => () => {
     this.setState({status})
-    this.props.onValueChange()
+    this.props.onValueChange(status)
   }
 
   render () {
@@ -60,11 +60,11 @@ class FavoritesToggle extends PureComponent {
 
     return (
       <Container>
-        <Favorite active={favoritesActive} onPress={this.onClick(FAVORITES)}>
+        <Favorite active={favoritesActive} onPress={this.onPress(FAVORITES)}>
           <StyledIcon name='star' active={favoritesActive} />
           <Label active={favoritesActive}>FAVORITES</Label>
         </Favorite>
-        <AllSites active={allSitesActive} onPress={this.onClick(ALL_SITES)}>
+        <AllSites active={allSitesActive} onPress={this.onPress(ALL_SITES)}>
           <StyledIcon name='th' active={allSitesActive} />
           <Label active={allSitesActive}>ALL SITES</Label>
         </AllSites>

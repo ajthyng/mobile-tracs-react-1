@@ -3,16 +3,10 @@ import {StatusBar, Platform} from 'react-native'
 import styled, {withTheme} from 'styled-components'
 import {connect} from 'react-redux'
 import {setFilterStatus} from '../../actions/sites'
-import {toggleStatus} from '../../constants/sites'
 
 import StatusBarSpace from './StatusBarSpace'
 import Content from './Content'
 import AdditionalContent from './AdditionalContent'
-
-const {
-  FAVORITES,
-  ALL_SITES
-} = toggleStatus
 
 const HeaderContainer = styled.View`
   background-color: transparent;
@@ -54,7 +48,7 @@ class Header extends Component {
 
   onValueChange = (status) => {
     this.setState({filterStatus: status}, () => {
-      this.props.setFilterStatus(this.state.status)
+      this.props.setFilterStatus(this.state.filterStatus)
     })
   }
 
