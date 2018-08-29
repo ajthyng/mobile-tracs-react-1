@@ -1,5 +1,5 @@
 import React, {PureComponent} from 'react'
-import {Animated, TouchableWithoutFeedback, PanResponder} from 'react-native'
+import {Animated, View, TouchableWithoutFeedback, PanResponder} from 'react-native'
 import styled, {withTheme} from 'styled-components'
 import {connect} from 'react-redux'
 import Grade from './Grade'
@@ -17,7 +17,11 @@ const ShadowCard = styled.View`
   background-color: transparent;
 `
 
-const CardBoundary = styled(Animated.View)`
+const CardSwipe = styled(Animated.View)`
+  flex: 1;
+`
+
+const CardBoundary = styled.View`
   height: 100%;
   background-color: ${props => props.theme.courseCard.background};
   border-radius: 2px;
@@ -85,15 +89,15 @@ class CourseCard extends PureComponent {
 
     return (
       <ShadowCard>
-        <CardBoundary {...panResponder.panHandlers} style={transform} >
-          <TouchableWithoutFeedback onPress={() => console.log('press')}>
-            <React.Fragment>
+        <CardSwipe {...panResponder.panHandlers} style={transform} >
+          <TouchableWithoutFeedback onPress={goToCourse}>
+            <CardBoundary>
               <ColorBar color={color} />
               <Grade letterGrade={mappedGrade} percentGrade={calculatedGrade} />
               <CourseInfo name={name} instructor={instructor} />
-            </React.Fragment>
+            </CardBoundary>
           </TouchableWithoutFeedback>
-        </CardBoundary>
+        </CardSwipe>
       </ShadowCard>
     )
   }
