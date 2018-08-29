@@ -46,7 +46,7 @@ class CourseCard extends PureComponent {
         const xDistance = Math.abs(dx)
         const yDistance = Math.abs(dy)
         const xVelocity = vx
-        const yVelocity = vy
+        const yVelocity = Math.abs(vy)
 
         if (xDistance > yDistance && (xDistance - yDistance > 0 || xVelocity > 100) && yVelocity < 10) {
           this.props.setScroll(false)
