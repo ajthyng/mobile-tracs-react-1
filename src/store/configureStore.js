@@ -19,12 +19,12 @@ import rootReducer from '../reducers/index'
 
 const statusFilter = createTransform((inboundState, key) => {
   if (key === 'tracsSites') {
-    return {toggleStatus: inboundState.toggleStatus}
+    return {filterStatus: inboundState.filterStatus}
   }
   return inboundState
 }, (outboundState, key) => {
   if (key === 'tracsSites') {
-    return {...initialState, toggleStatus: outboundState.toggleStatus}
+    return {...initialState, filterStatus: outboundState.filterStatus}
   }
   return outboundState
 })

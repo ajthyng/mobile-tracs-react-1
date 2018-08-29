@@ -20,8 +20,7 @@ const {
   REQUEST_FAVORITES,
   FAVORITES_SUCCESS,
   FAVORITES_FAILURE,
-  SET_FILTER,
-  SET_TOGGLE_STATUS
+  SET_FILTER_STATUS
 } = sites.sitesActions
 
 export const initialState = {
@@ -29,7 +28,7 @@ export const initialState = {
   isFetchingSites: false,
   hasFailed: false,
   favorites: [],
-  toggleStatus: ALL_SITES
+  filterStatus: ALL_SITES
 }
 
 let clearSites = (state, action) => {
@@ -89,10 +88,10 @@ const favoritesFailure = (state, action) => {
   }
 }
 
-const setToggleStatus = (state, action) => {
+const setFilterStatus = (state, action) => {
   return {
     ...state,
-    toggleStatus: action.toggleStatus
+    filterStatus: action.filterStatus
   }
 }
 
@@ -112,8 +111,8 @@ export function sitesReducer (state = initialState, action) {
       return favoritesSuccess(state, action)
     case FAVORITES_FAILURE:
       return favoritesFailure(state, action)
-    case SET_TOGGLE_STATUS:
-      return setToggleStatus(state, action)
+    case SET_FILTER_STATUS:
+      return setFilterStatus(state, action)
     default:
       return state
   }

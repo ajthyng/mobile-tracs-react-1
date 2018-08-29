@@ -25,8 +25,7 @@ const {
   REQUEST_FAVORITES,
   FAVORITES_SUCCESS,
   FAVORITES_FAILURE,
-  SET_FILTER,
-  SET_TOGGLE_STATUS
+  SET_FILTER_STATUS
 } = sitesActions
 
 const requestSites = () => {
@@ -122,16 +121,16 @@ export function getFavorites () {
   }
 }
 
-export function setToggleStatus (toggleStatus) {
-  if (toggleStatus === FAVORITES || toggleStatus === ALL_SITES) {
+export function setFilterStatus (filterStatus) {
+  if (filterStatus === FAVORITES || filterStatus === ALL_SITES) {
     return {
-      type: SET_TOGGLE_STATUS,
-      toggleStatus
+      type: SET_FILTER_STATUS,
+      filterStatus
     }
   } else {
     return {
-      type: SET_TOGGLE_STATUS,
-      toggleStatus: FAVORITES
+      type: SET_FILTER_STATUS,
+      filterStatus: FAVORITES
     }
   }
 }

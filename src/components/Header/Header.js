@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {StatusBar, Platform} from 'react-native'
 import styled, {withTheme} from 'styled-components'
 import {connect} from 'react-redux'
-import {setToggleStatus} from '../../actions/sites'
+import {setFilterStatus} from '../../actions/sites'
 import {toggleStatus} from '../../constants/sites'
 
 import StatusBarSpace from './StatusBarSpace'
@@ -27,7 +27,7 @@ class Header extends Component {
     StatusBar.setBarStyle('light-content')
 
     if (global.android) {
-      StatusBar.setBackgroundColor(props.theme.header)
+      StatusBar.setBackgroundColor(this.props.theme.header)
     }
 
     this.statusBarHeight = Platform.select({
@@ -36,7 +36,7 @@ class Header extends Component {
     })
 
     this.state = {
-      allSitesFilter: props.toggleStatus === ALL_SITES
+      filterStatus: this.props.filterStatus
     }
   }
 
@@ -52,14 +52,15 @@ class Header extends Component {
     return route.routeName
   }
 
-  onValueChange = (on) => {
-    this.setState({allSitesFilter: on})
-    this.props.setToggleStatus(on ? ALL_SITES : FAVORITES)
+  onValueChange = (status) => {
+    this.setState({filterStatus: status}, () => {
+      this.props.setFilterStatus(this.state.status)
+    })
   }
 
   render () {
     const currentRoute = this.getActiveRouteName(this.props.navigation.state)
-    const {allSitesFilter} = this.state
+    const {filterStatus} = this.state
 
     if (global.android && currentRoute === 'TRACSWeb') return null
 
@@ -68,7 +69,7 @@ class Header extends Component {
         <StatusBarSpace statusBarHeight={this.statusBarHeight} />
         <Content {...this.props} />
         <AdditionalContent
-          allSitesFilter={allSitesFilter}
+          allSitesFilter={filterStatus}
           visible={currentRoute === 'Home'}
           onValueChange={this.onValueChange}
         />
@@ -78,11 +79,11 @@ class Header extends Component {
 }
 
 const mapStateToProps = state => ({
-  toggleStatus: state.tracsSites.toggleStatus
+  filterStatus: state.tracsSites.filterStatus
 })
 
 const mapDispatchToProps = dispatch => ({
-  setToggleStatus: status => dispatch(setToggleStatus(status))
+  setFilterStatus: status => dispatch(setFilterStatus(status))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTheme(Header))

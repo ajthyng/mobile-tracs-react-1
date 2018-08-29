@@ -22,23 +22,23 @@ import {forumReducer} from './forums'
 import {calendarReducer} from './calendar'
 
 const appReducer = combineReducers({
-	login: loginReducer,
-	registrar: registerReducer,
-	tracsSites: sitesReducer,
-	settings: settingsReducer,
-	notifications: notificationsReducer,
-	theme: themeReducer,
-	grades: gradesReducer,
-	announcements: announcementsReducer,
-	forums: forumReducer,
-	calendar: calendarReducer
-});
+  login: loginReducer,
+  registrar: registerReducer,
+  tracsSites: sitesReducer,
+  settings: settingsReducer,
+  notifications: notificationsReducer,
+  theme: themeReducer,
+  grades: gradesReducer,
+  announcements: announcementsReducer,
+  forums: forumReducer,
+  calendar: calendarReducer
+})
 
 const rootReducer = (state, action) => {
-	if (action.type === auth.REQUEST_LOGOUT) {
-		state = undefined
-	}
-	return appReducer(state, action)
+  if (action.type === auth.REQUEST_LOGOUT) {
+    state = undefined
+  }
+  return appReducer(state, action)
 }
 
 export default rootReducer

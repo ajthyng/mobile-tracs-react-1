@@ -104,11 +104,11 @@ class CourseList extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const {toggleStatus, favorites, userSites} = state.tracsSites
+  const {filterStatus, favorites, userSites} = state.tracsSites
 
   const sites = Object.keys(state.tracsSites.userSites).reduce((accum, siteId) => {
-    const favoritesFilterActive = toggleStatus === FAVORITES
-    const allSitesFilterActive = toggleStatus === ALL_SITES
+    const favoritesFilterActive = filterStatus === FAVORITES
+    const allSitesFilterActive = filterStatus === ALL_SITES
     const siteIsFavorite = favorites.includes(siteId)
 
     if (favoritesFilterActive && siteIsFavorite) {
