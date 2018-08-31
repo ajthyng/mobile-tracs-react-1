@@ -1,5 +1,5 @@
 import React, {PureComponent} from 'react'
-import {Animated, Dimensions, View, TouchableWithoutFeedback, TouchableOpacity, PanResponder} from 'react-native'
+import {Animated, Dimensions, View, TouchableWithoutFeedback, Vibration, Platform, TouchableOpacity, PanResponder} from 'react-native'
 import styled, {withTheme} from 'styled-components'
 import {connect} from 'react-redux'
 import Grade from './Grade'
@@ -8,6 +8,10 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 
 const OPEN_WIDTH = -100
 const HEIGHT = 80
+const LONG_PRESS_VIBRATION = Platform.select({
+  ios: 100,
+  android: 200
+})
 
 const ShadowCard = styled.View`
   height: ${HEIGHT}px;
@@ -130,19 +134,13 @@ class CourseCard extends PureComponent {
   }
 
   closeCard = () => {
-    Animated.spring(this.state.pan, {
-      toValue: {x: 0, y: 0},
-      duration: 200,
-      friction: 10
-    }).start(() => this.setState({isOpen: false}))
+    console.log('card pressed')
+    this.setState({isOpen: false}, this.resetCard())
   }
 
   openCard = () => {
-    Animated.spring(this.state.pan, {
-      toValue: {x: OPEN_WIDTH, y: 0},
-      duration: 200,
-      friction: 10
-    }).start(() => this.setState({isOpen: true}))
+    Vibration.vibrate(LONG_PRESS_VIBRATION)
+    this.setState({isOpen: true}, () => this.setCardTo(OPEN_WIDTH))
   }
 
   onPress = (goToCourse) => () => {
@@ -174,7 +172,7 @@ class CourseCard extends PureComponent {
         </Background>
         <ShadowCard pointerEvents='box-none'>
           <CardSwipe {...panResponder.panHandlers} style={transform} >
-            <TouchableWithoutFeedback onPress={this.onPress(goToCourse)}>
+            <TouchableWithoutFeedback onPress={this.onPress(goToCourse)} onLongPress={this.openCard}>
               <CardBoundary>
                 <ColorBar color={color} />
                 <Grade letterGrade={mappedGrade} percentGrade={calculatedGrade} />
