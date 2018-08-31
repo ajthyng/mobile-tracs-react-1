@@ -15,9 +15,10 @@ const endpoints = {
   jwt: ':3000/token.pl',
   registrationBase: '/registrations',
   webUrl: '/portal/site',
-  favorites: '/portal/favorites/list',
+  favorites: `/portal/favorites/list`,
   allAnnouncements: '/direct/announcement/all.json',
   grades: '/direct/gradebook/my.json',
+  updateFavorites: '/portal/favorites/update',
   assessments (siteId) {
     return `/direct/sam_pub/context/${siteId}.json`
   },

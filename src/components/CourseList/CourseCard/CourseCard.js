@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react'
+import React, {Component} from 'react'
 import {Animated, Dimensions, View, TouchableWithoutFeedback, Vibration, Platform, TouchableOpacity, PanResponder} from 'react-native'
 import styled, {withTheme} from 'styled-components'
 import {connect} from 'react-redux'
@@ -15,14 +15,12 @@ const LONG_PRESS_VIBRATION = Platform.select({
 
 const ShadowCard = styled.View`
   height: ${HEIGHT}px;
-  background-color: ${props => props.theme.courseCard.background};
   shadow-color: ${props => props.theme.courseCard.shadow};
   shadow-offset: 0px 2px;
   shadow-opacity: 0.3;
   shadow-radius: 2px;
   elevation: 3;
   margin: 15px;
-  background-color: transparent;
 `
 
 const CardSwipe = styled(Animated.View)`
@@ -44,7 +42,7 @@ const ColorBar = styled.View`
   background-color: ${props => props.color || '#000'};
 `
 
-class CourseCard extends PureComponent {
+class CourseCard extends Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -79,6 +77,7 @@ class CourseCard extends PureComponent {
         this.state.pan.setOffset({x: this.state.pan.x._value, y: this.state.pan.y._value})
         this.state.pan.setValue({x: 0, y: 0})
       },
+      onPanResponderTerminationRequest: () => true,
       onPanResponderMove: (e, gestureState) => {
         const {isOpen} = this.state
         const {dx} = gestureState
@@ -134,7 +133,6 @@ class CourseCard extends PureComponent {
   }
 
   closeCard = () => {
-    console.log('card pressed')
     this.setState({isOpen: false}, this.resetCard())
   }
 
@@ -143,16 +141,29 @@ class CourseCard extends PureComponent {
     this.setState({isOpen: true}, () => this.setCardTo(OPEN_WIDTH))
   }
 
-  onPress = (goToCourse) => () => {
+  onPress = () => {
     if (this.state.isOpen) {
       this.closeCard()
     } else {
-      goToCourse()
+      // TODO: Open the course page
     }
   }
 
+  updateFavorite = (id) => () => {
+    this.props.updateFavorite && this.props.updateFavorite(id)
+  }
+
   render () {
-    const {name, color, calculatedGrade, mappedGrade, goToCourse, contactInfo: {name: instructor}} = this.props
+    const {
+      name,
+      color,
+      calculatedGrade,
+      mappedGrade,
+      isFavorite,
+      id,
+      contactInfo: {name: instructor}
+    } = this.props
+
     const {cardWidth} = this.state
     const panResponder = this._panResponder || {}
 
@@ -162,17 +173,19 @@ class CourseCard extends PureComponent {
       }]
     }
 
+    const iconName = isFavorite ? 'eye-slash' : 'star'
+
     return (
       <View>
-        <Background cardWidth={cardWidth}>
-          <ButtonContainer onPress={() => console.log('icon pressed')}>
-            <Icon ref='icon' name='star' color='white' size={24} />
-            <IconLabel>ADD TO{'\n'}FAVORITES</IconLabel>
+        <Background cardWidth={cardWidth} color={this.props.color} >
+          <ButtonContainer onPress={this.updateFavorite(id)}>
+            <Icon ref='icon' name={iconName} color='white' size={24} />
+            <IconLabel>{isFavorite ? 'REMOVE FROM' : 'ADD TO'}{'\n'}FAVORITES</IconLabel>
           </ButtonContainer>
         </Background>
         <ShadowCard pointerEvents='box-none'>
           <CardSwipe {...panResponder.panHandlers} style={transform} >
-            <TouchableWithoutFeedback onPress={this.onPress(goToCourse)} onLongPress={this.openCard}>
+            <TouchableWithoutFeedback onPress={this.onPress} onLongPress={this.openCard}>
               <CardBoundary>
                 <ColorBar color={color} />
                 <Grade letterGrade={mappedGrade} percentGrade={calculatedGrade} />
@@ -207,7 +220,7 @@ const Background = styled.View`
   width: ${props => props.cardWidth}px;
   margin: 15px;
   border-radius: 3px;
-  background-color: hotpink;
+  background-color: ${props => props.color};
   align-items: flex-end;
   justify-content: center;
   elevation: -1;
@@ -222,16 +235,19 @@ CourseCard.defaultProps = {
   borderRadius: 3,
   name: 'Course Name Not Found',
   instructor: 'Instructor TBA',
-  grades: []
+  grades: [],
+  favorites: []
 }
 
 const mapStateToProps = (state, props) => {
   const siteGrades = state.grades[props.id]
   const grades = (siteGrades || {}).grades || []
+  const favorites = state.tracsSites.favorites || []
 
   const {calculatedGrade, mappedGrade} = siteGrades || {}
 
   return {
+    favs: favorites,
     grades,
     calculatedGrade,
     mappedGrade,

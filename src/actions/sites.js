@@ -25,7 +25,10 @@ const {
   REQUEST_FAVORITES,
   FAVORITES_SUCCESS,
   FAVORITES_FAILURE,
-  SET_FILTER_STATUS
+  SET_FILTER_STATUS,
+  REQUEST_UPDATE_FAVORITES,
+  UPDATE_FAVORITES_SUCCESS,
+  UPDATE_FAVORITES_FAILURE
 } = sitesActions
 
 const requestSites = () => {
@@ -132,5 +135,34 @@ export function setFilterStatus (filterStatus) {
       type: SET_FILTER_STATUS,
       filterStatus: FAVORITES
     }
+  }
+}
+
+const requestUpdateFavorites = () => ({
+  type: REQUEST_UPDATE_FAVORITES
+})
+
+const updateFavoritesSuccess = (favorites) => ({
+  type: UPDATE_FAVORITES_SUCCESS,
+  favorites
+})
+
+const updateFavoritesFailure = (err) => ({
+  type: UPDATE_FAVORITES_FAILURE,
+  errorMessage: err.message || 'Could not update favorites'
+})
+
+export function updateFavorites (ids) {
+  return async dispatch => {
+    dispatch(requestUpdateFavorites())
+    const updateFavoritesURL = `${global.urls.baseUrl}${global.urls.updateFavorites}?favorites=${ids.join(';')}`
+    axios(updateFavoritesURL, {
+      method: 'post',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
+    }).then(res => {
+      return dispatch(updateFavoritesSuccess(ids))
+    }).catch(err => {
+      return dispatch(updateFavoritesFailure(err))
+    })
   }
 }

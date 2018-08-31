@@ -7,7 +7,7 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import * as sites from '../constants/actions'
+import {sitesActions} from '../constants/actions'
 import {toggleStatus} from '../constants/sites'
 
 const {FAVORITES, ALL_SITES} = toggleStatus
@@ -20,12 +20,17 @@ const {
   REQUEST_FAVORITES,
   FAVORITES_SUCCESS,
   FAVORITES_FAILURE,
-  SET_FILTER_STATUS
-} = sites.sitesActions
+  SET_FILTER_STATUS,
+  REQUEST_UPDATE_FAVORITES,
+  UPDATE_FAVORITES_SUCCESS,
+  UPDATE_FAVORITES_FAILURE
+} = sitesActions
 
 export const initialState = {
   userSites: {},
   isFetchingSites: false,
+  isFetchingFavorites: false,
+  isUpdatingFavorites: false,
   hasFailed: false,
   favorites: [],
   filterStatus: ALL_SITES
@@ -72,7 +77,6 @@ const requestFavorites = (state) => {
 
 const favoritesSuccess = (state, action) => {
   const favorites = (action.favorites || '').split(';').filter(site => (site || '').length > 0)
-
   return {
     ...state,
     isFetchingFavorites: false,
@@ -95,6 +99,32 @@ const setFilterStatus = (state, action) => {
   }
 }
 
+const requestUpdateFavorites = (state, action) => {
+  return {
+    ...state,
+    isUpdatingFavorites: true,
+    errorMessage: ''
+  }
+}
+
+const updateFavoritesSuccess = (state, action) => {
+  const favorites = action.favorites
+  return {
+    ...state,
+    favorites,
+    isUpdatingFavorites: false,
+    errorMessage: ''
+  }
+}
+
+const updateFavoritesFailure = (state, action) => {
+  return {
+    ...state,
+    isUpdatingFavorites: false,
+    errorMessage: action.errorMessage
+  }
+}
+
 export function sitesReducer (state = initialState, action) {
   switch (action.type) {
     case CLEAR_SITES:
@@ -113,6 +143,12 @@ export function sitesReducer (state = initialState, action) {
       return favoritesFailure(state, action)
     case SET_FILTER_STATUS:
       return setFilterStatus(state, action)
+    case REQUEST_UPDATE_FAVORITES:
+      return requestUpdateFavorites(state, action)
+    case UPDATE_FAVORITES_SUCCESS:
+      return updateFavoritesSuccess(state, action)
+    case UPDATE_FAVORITES_FAILURE:
+      return updateFavoritesFailure(state, action)
     default:
       return state
   }

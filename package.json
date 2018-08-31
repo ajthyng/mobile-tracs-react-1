@@ -14,7 +14,8 @@
       "tests/**"
     ],
     "env": [
-      "jest"
+      "jest",
+      "browser"
     ],
     "parser": "babel-eslint"
   },

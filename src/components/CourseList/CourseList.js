@@ -3,6 +3,7 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import styled from 'styled-components'
 import {toggleStatus} from '../../constants/sites'
+import {getFavorites, updateFavorites} from '../../actions/sites'
 
 import CourseCard from './CourseCard/CourseCard'
 import CourseSkeletonCard from './CourseSkeletonCard'
@@ -29,36 +30,70 @@ class CourseList extends Component {
     }
   }
 
-  renderCourse = (setScroll) => ({item}) => {
-    const isFavorite = this.props.favorites.some(id => item.id === id)
-    return (
-      <CourseCard
-        {...item}
-        goToCourse={this.showModal(item)}
-        setScroll={setScroll}
-        isFavorite={isFavorite}
-      />
-    )
+  isFavorite = (id) => this.props.favorites.some(favId => favId === id)
+
+  updateFavorite = (id) => {
+    const {favorites, isUpdatingFavorites} = this.props
+    if (isUpdatingFavorites) return
+
+    const isFavorite = this.isFavorite(id)
+    if (isFavorite) {
+      const ids = favorites.filter(favId => favId !== id)
+      this.props.updateFavorites(ids)
+    } else {
+      favorites.splice(favorites.length, 0, id)
+      this.props.updateFavorites(favorites)
+    }
+  }
+
+  makeData = () => {
+    return this.props.sites.map(item => {
+      const isFavorite = this.isFavorite(item.id)
+      return {
+        component: (
+          <CourseCard
+            {...item}
+            ref={item.id}
+            setScroll={this.setScroll}
+            isFavorite={isFavorite}
+            updateFavorite={this.updateFavorite}
+          />
+        ),
+        key: item.id,
+        cardRef: item.id
+      }
+    })
   }
 
   setScroll = (enabled) => {
     this.setState({scroll: enabled})
   }
 
+  componentDidUpdate (prevProps) {
+    const oldFilter = prevProps.favoritesFilterActive
+    const newFilter = this.props.favoritesFilterActive
+    if (oldFilter !== newFilter) {
+      if (this.data) {
+        this.data.forEach(({cardRef}) => this.refs[cardRef].forceUpdate())
+      }
+    }
+  }
+
   render () {
     const {refreshing, onRefresh} = this.props
+    this.data = this.makeData()
     const {scroll} = this.state
     return (
       <CourseListContainer>
         <Courses
-          data={this.props.sites}
+          data={this.data}
           canCancelContentTouches={scroll}
           contentContainerStyle={{marginTop: 10, marginBottom: 10, marginLeft: 0, marginRight: 0}}
           style={{width: '100%'}}
-          keyExtractor={item => item.id}
           refreshing={refreshing}
           onRefresh={onRefresh}
-          renderItem={this.renderCourse(this.setScroll)}
+          keyExtractor={item => item.key}
+          renderItem={({item}) => item.component}
         />
       </CourseListContainer>
     )
@@ -66,7 +101,7 @@ class CourseList extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const {filterStatus, favorites, userSites} = state.tracsSites
+  const {filterStatus, favorites, userSites, isUpdatingFavorites} = state.tracsSites
   const {colorBar} = state.theme.colors.courseCard
 
   const sites = Object.keys(state.tracsSites.userSites).reduce((accum, siteId) => {
@@ -90,9 +125,15 @@ const mapStateToProps = (state) => {
   return {
     sites,
     favorites,
+    isUpdatingFavorites,
     favoritesFilterActive: filterStatus === FAVORITES,
     theme: state.theme
   }
 }
 
-export default connect(mapStateToProps, null)(CourseList)
+const mapDispatchToProps = dispatch => ({
+  getFavorites: () => dispatch(getFavorites()),
+  updateFavorites: (ids) => dispatch(updateFavorites(ids))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(CourseList)
