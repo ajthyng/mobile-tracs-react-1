@@ -2,12 +2,10 @@ import React, {Component} from 'react'
 
 import {connect} from 'react-redux'
 import styled from 'styled-components'
-import Modal from 'react-native-modal'
 import {toggleStatus} from '../../constants/sites'
 
 import CourseCard from './CourseCard/CourseCard'
 import CourseSkeletonCard from './CourseSkeletonCard'
-import CourseScreen from '../CourseScreen/CourseScreen'
 
 const {ALL_SITES, FAVORITES} = toggleStatus
 
@@ -23,38 +21,24 @@ const CourseListContainer = styled.View`
 const loadingSite = <CourseSkeletonCard />
 
 class CourseList extends Component {
-  constructor () {
-    super()
+  constructor (props) {
+    super(props)
     this.state = {
-      y: 0,
-      isVisible: false,
       scroll: true,
       course: {}
-    }
-
-    this.modalAnimation = {
-      from: { scale: 0, opacity: 0 },
-      to: { scale: 1, opacity: 1 }
-    }
-
-    this.modalStyle = {
-      marginTop: 55,
-      marginBottom: 55,
-      marginLeft: 20,
-      marginRight: 20
     }
   }
 
   renderCourse = (setScroll) => ({item}) => {
-    return <CourseCard {...item} goToCourse={this.showModal(item)} setScroll={setScroll} />
-  }
-
-  showModal = (item) => () => {
-    this.setState({isVisible: true, course: item})
-  }
-
-  hideModal = () => {
-    this.setState({isVisible: false})
+    const isFavorite = this.props.favorites.some(id => item.id === id)
+    return (
+      <CourseCard
+        {...item}
+        goToCourse={this.showModal(item)}
+        setScroll={setScroll}
+        isFavorite={isFavorite}
+      />
+    )
   }
 
   setScroll = (enabled) => {
@@ -62,8 +46,8 @@ class CourseList extends Component {
   }
 
   render () {
-    const {refreshing, onRefresh, navigation} = this.props
-    const {isVisible, course, scroll} = this.state
+    const {refreshing, onRefresh} = this.props
+    const {scroll} = this.state
     return (
       <CourseListContainer>
         <Courses
@@ -76,21 +60,6 @@ class CourseList extends Component {
           onRefresh={onRefresh}
           renderItem={this.renderCourse(this.setScroll)}
         />
-        <Modal
-          isVisible={isVisible}
-          onBackButtonPress={this.hideModal}
-          onBackdropPress={this.hideModal}
-          swipeDirection='down'
-          onSwipe={this.hideModal}
-          animationIn={this.modalAnimation}
-          style={this.modalStyle}
-        >
-          <CourseScreen
-            course={course}
-            navigation={navigation}
-            dismiss={this.hideModal}
-          />
-        </Modal>
       </CourseListContainer>
     )
   }
@@ -120,6 +89,8 @@ const mapStateToProps = (state) => {
 
   return {
     sites,
+    favorites,
+    favoritesFilterActive: filterStatus === FAVORITES,
     theme: state.theme
   }
 }
