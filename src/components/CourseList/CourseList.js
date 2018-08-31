@@ -63,12 +63,12 @@ class CourseList extends Component {
 
   render () {
     const {refreshing, onRefresh, navigation} = this.props
-    const {isVisible, course} = this.state
+    const {isVisible, course, scroll} = this.state
     return (
       <CourseListContainer>
         <Courses
           data={this.props.sites}
-          canCancelContentTouches={this.state.scroll}
+          canCancelContentTouches={scroll}
           contentContainerStyle={{marginTop: 10, marginBottom: 10, marginLeft: 0, marginRight: 0}}
           style={{width: '100%'}}
           keyExtractor={item => item.id}

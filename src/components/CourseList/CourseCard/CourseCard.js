@@ -1,12 +1,16 @@
 import React, {PureComponent} from 'react'
-import {Animated, View, TouchableWithoutFeedback, PanResponder} from 'react-native'
+import {Animated, Dimensions, View, TouchableWithoutFeedback, TouchableOpacity, PanResponder} from 'react-native'
 import styled, {withTheme} from 'styled-components'
 import {connect} from 'react-redux'
 import Grade from './Grade'
 import CourseInfo from './CourseInfo'
+import Icon from 'react-native-vector-icons/FontAwesome'
+
+const OPEN_WIDTH = -100
+const HEIGHT = 80
 
 const ShadowCard = styled.View`
-  height: 80px;
+  height: ${HEIGHT}px;
   background-color: ${props => props.theme.courseCard.background};
   shadow-color: ${props => props.theme.courseCard.shadow};
   shadow-offset: 0px 2px;
@@ -40,19 +44,27 @@ class CourseCard extends PureComponent {
   constructor (props) {
     super(props)
     this.state = {
-      pan: new Animated.ValueXY()
+      pan: new Animated.ValueXY(),
+      cardWidth: Dimensions.get('window').width - 30,
+      isOpen: false,
+      offset: 0
     }
+    this.sensitivity = 25
   }
 
   componentDidMount () {
     this._panResponder = PanResponder.create({
-      onMoveShouldSetPanResponder: (e, {dx, dy, vx, vy}) => {
+      onMoveShouldSetPanResponderCapture: (e, {dx, dy, vx, vy}) => {
         const xDistance = Math.abs(dx)
         const yDistance = Math.abs(dy)
-        const xVelocity = vx
-        const yVelocity = Math.abs(vy)
 
-        if (xDistance > yDistance && dx < 0 && (xDistance - yDistance > 0 || xVelocity > 100) && yVelocity < 10) {
+        const xMovement = xDistance > this.sensitivity
+        const noYMovement = yDistance <= this.sensitivity
+
+        const {isOpen} = this.state
+        const shouldMove = dx < 0 || (dx > 0 && isOpen)
+
+        if (xMovement && noYMovement && shouldMove) {
           this.props.setScroll(false)
           return true
         }
@@ -60,25 +72,90 @@ class CourseCard extends PureComponent {
         return false
       },
       onPanResponderGrant: (e, gestureState) => {
+        this.state.pan.setOffset({x: this.state.pan.x._value, y: this.state.pan.y._value})
         this.state.pan.setValue({x: 0, y: 0})
       },
-      onPanResponderTerminationRequest: (e, gestureState) => { return true },
-      onPanResponderMove: Animated.event([null, {dx: this.state.pan.x}]),
-      onPanResponderTerminate: this.returnToCenter,
-      onPanResponderRelease: this.returnToCenter
+      onPanResponderMove: (e, gestureState) => {
+        const {isOpen} = this.state
+        const {dx} = gestureState
+        if (isOpen && dx > 100) return
+        if (!isOpen && dx > 0) return
+        return Animated.event([null, {dx: this.state.pan.x}])(e, gestureState)
+      },
+      onPanResponderTerminate: this.resetCard,
+      onPanResponderRelease: (e, gestureState) => {
+        this.state.pan.flattenOffset()
+        this.snapCard(e, gestureState)
+      }
     })
   }
 
-  returnToCenter = () => {
+  resetCard = () => {
     this.props.setScroll(true)
+    this.setState({isOpen: false}, () => this.setCardTo(0))
+  }
+
+  setCardTo = (value) => {
     Animated.spring(this.state.pan, {
-      toValue: {x: 0, y: 0},
+      toValue: {x: value, y: 0},
+      duration: 200,
       friction: 10
     }).start()
   }
 
+  snapCard = (e, {dx}) => {
+    this.props.setScroll(true)
+    const {isOpen} = this.state
+
+    if (dx < -50 && !isOpen) {
+      this.setState({isOpen: true}, () => this.setCardTo(OPEN_WIDTH))
+    }
+    if (dx < 0 && isOpen) {
+      this.setCardTo(OPEN_WIDTH)
+    }
+    if (dx < 0 && dx >= -50 && !isOpen) {
+      this.setCardTo(0)
+    }
+    if (dx > 0 && isOpen) {
+      if (dx > 50) {
+        this.setState({isOpen: false}, () => this.setCardTo(0))
+      } else {
+        this.setCardTo(OPEN_WIDTH)
+      }
+    }
+
+    if (dx > 0 && !isOpen) {
+      this.setCardTo(0)
+    }
+  }
+
+  closeCard = () => {
+    Animated.spring(this.state.pan, {
+      toValue: {x: 0, y: 0},
+      duration: 200,
+      friction: 10
+    }).start(() => this.setState({isOpen: false}))
+  }
+
+  openCard = () => {
+    Animated.spring(this.state.pan, {
+      toValue: {x: OPEN_WIDTH, y: 0},
+      duration: 200,
+      friction: 10
+    }).start(() => this.setState({isOpen: true}))
+  }
+
+  onPress = (goToCourse) => () => {
+    if (this.state.isOpen) {
+      this.closeCard()
+    } else {
+      goToCourse()
+    }
+  }
+
   render () {
     const {name, color, calculatedGrade, mappedGrade, goToCourse, contactInfo: {name: instructor}} = this.props
+    const {cardWidth} = this.state
     const panResponder = this._panResponder || {}
 
     const transform = {
@@ -88,20 +165,60 @@ class CourseCard extends PureComponent {
     }
 
     return (
-      <ShadowCard>
-        <CardSwipe {...panResponder.panHandlers} style={transform} >
-          <TouchableWithoutFeedback onPress={goToCourse}>
-            <CardBoundary>
-              <ColorBar color={color} />
-              <Grade letterGrade={mappedGrade} percentGrade={calculatedGrade} />
-              <CourseInfo name={name} instructor={instructor} />
-            </CardBoundary>
-          </TouchableWithoutFeedback>
-        </CardSwipe>
-      </ShadowCard>
+      <View>
+        <Background cardWidth={cardWidth}>
+          <ButtonContainer onPress={() => console.log('icon pressed')}>
+            <Icon ref='icon' name='star' color='white' size={24} />
+            <IconLabel>ADD TO{'\n'}FAVORITES</IconLabel>
+          </ButtonContainer>
+        </Background>
+        <ShadowCard pointerEvents='box-none'>
+          <CardSwipe {...panResponder.panHandlers} style={transform} >
+            <TouchableWithoutFeedback onPress={this.onPress(goToCourse)}>
+              <CardBoundary>
+                <ColorBar color={color} />
+                <Grade letterGrade={mappedGrade} percentGrade={calculatedGrade} />
+                <CourseInfo name={name} instructor={instructor} />
+              </CardBoundary>
+            </TouchableWithoutFeedback>
+          </CardSwipe>
+        </ShadowCard>
+      </View>
     )
   }
 }
+
+const ButtonContainer = styled(TouchableOpacity)`
+  height: 100%;
+  width: 100px;
+  align-items: center;
+  justify-content: center;
+  z-index: 0;
+`
+
+const IconLabel = styled.Text`
+  font-size: 10px;
+  color: white;
+  text-align: center;
+`
+
+const Background = styled.View`
+  position: absolute;
+  right: 0;
+  height: ${HEIGHT}px;
+  width: ${props => props.cardWidth}px;
+  margin: 15px;
+  border-radius: 3px;
+  background-color: hotpink;
+  align-items: flex-end;
+  justify-content: center;
+  elevation: -1;
+  shadow-color: ${props => props.theme.courseCard.shadow};
+  shadow-offset: -1px -1px;
+  shadow-opacity: 0.3;
+  shadow-radius: 2px;
+  overflow: hidden;
+`
 
 CourseCard.defaultProps = {
   borderRadius: 3,
