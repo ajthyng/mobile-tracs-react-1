@@ -1,7 +1,9 @@
 import React, {PureComponent} from 'react'
 import {Dimensions} from 'react-native'
 import styled from 'styled-components'
+import Svg, {Path} from 'react-native-svg'
 import ExampleCourseCard from './CourseCard/ExampleCourseCard'
+
 const Container = styled.View`
   width: 100%;
   align-items: center;
@@ -46,7 +48,9 @@ class EmptyCourseList extends PureComponent {
   render () {
     return (
       <Container style={this.state}>
-        <Arrow />
+        <Svg height='55' width='50' >
+          <Path strokeWidth={2} d='M 40 5 C 40 25 25 51 2 51 M 40.5 5 L 45 20 M 40.5 5 L 30 18' fill='none' stroke='#808080' />
+        </Svg>
         <EmptyMessage>
           {message}
         </EmptyMessage>
