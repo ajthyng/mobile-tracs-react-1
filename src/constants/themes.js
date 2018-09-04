@@ -15,7 +15,8 @@ const defaultTheme = {
     defaultColorBar: '#ABABAB',
     background: '#FFFFFF',
     shadow: '#142945',
-    text: '#363534'
+    text: '#363534',
+    skeleton: '#F0F0F0'
   },
   header: '#501214',
   selectedHeader: '#4a89f4',

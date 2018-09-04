@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-
+import {Dimensions} from 'react-native'
 import {connect} from 'react-redux'
 import styled from 'styled-components'
 import {toggleStatus} from '../../constants/sites'
@@ -18,8 +18,6 @@ const CourseListContainer = styled.View`
   flex: 1;
   width: 100%;
 `
-
-const loadingSite = <CourseSkeletonCard />
 
 class CourseList extends Component {
   constructor (props) {
@@ -55,23 +53,39 @@ class CourseList extends Component {
   }
 
   makeData = () => {
-    return this.props.sites.map(course => {
-      const isFavorite = this.isFavorite(course.id)
-      return {
-        component: (
-          <CourseCard
-            {...course}
-            ref={course.id}
-            setScroll={this.setScroll}
-            isFavorite={isFavorite}
-            updateFavorite={this.updateFavorite}
-            onPress={this.goToCourse(course)}
-          />
-        ),
-        key: course.id,
-        cardRef: course.id
+    let sites = []
+    if (this.props.sites.length >= 0) {
+      const cardsToRender = Math.floor(1.2 * Dimensions.get('window').height / 80)
+      for (let i = 0; i < cardsToRender; i++) {
+        const id = i.toString(10)
+        sites.push({
+          component: (
+            <CourseSkeletonCard ref={id} />
+          ),
+          key: id,
+          cardRef: id
+        })
       }
-    })
+    } else {
+      sites = this.props.sites.map(course => {
+        const isFavorite = this.isFavorite(course.id)
+        return {
+          component: (
+            <CourseCard
+              {...course}
+              ref={course.id}
+              setScroll={this.setScroll}
+              isFavorite={isFavorite}
+              updateFavorite={this.updateFavorite}
+              onPress={this.goToCourse(course)}
+            />
+          ),
+          key: course.id,
+          cardRef: course.id
+        }
+      })
+    }
+    return sites
   }
 
   setScroll = (enabled) => {
@@ -82,20 +96,20 @@ class CourseList extends Component {
     const oldFilter = prevProps.favoritesFilterActive
     const newFilter = this.props.favoritesFilterActive
     if (oldFilter !== newFilter) {
-      if (this.data) {
-        this.data.forEach(({cardRef}) => this.refs[cardRef].forceUpdate())
+      if (this.siteData) {
+        this.siteData.forEach(({cardRef}) => this.refs[cardRef].forceUpdate())
       }
     }
   }
 
   render () {
     const {refreshing, onRefresh} = this.props
-    this.data = this.makeData()
+    this.siteData = this.makeData()
     const {scroll} = this.state
     return (
       <CourseListContainer>
         <Courses
-          data={this.data}
+          data={this.siteData}
           canCancelContentTouches={scroll}
           contentContainerStyle={{marginTop: 10, marginBottom: 10, marginLeft: 0, marginRight: 0}}
           style={{width: '100%'}}
