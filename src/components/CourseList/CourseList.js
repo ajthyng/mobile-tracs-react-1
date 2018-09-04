@@ -7,6 +7,7 @@ import {getFavorites, updateFavorites} from '../../actions/sites'
 
 import CourseCard from './CourseCard/CourseCard'
 import CourseSkeletonCard from './CourseSkeletonCard'
+import EmptyCourseList from './EmptyCourseList'
 
 const {ALL_SITES, FAVORITES} = toggleStatus
 
@@ -54,7 +55,7 @@ class CourseList extends Component {
 
   makeData = () => {
     let sites = []
-    if (this.props.sites.length >= 0) {
+    if (this.props.sites.length === 0 && this.props.loading) {
       const cardsToRender = Math.floor(1.2 * Dimensions.get('window').height / 80)
       for (let i = 0; i < cardsToRender; i++) {
         const id = i.toString(10)
@@ -110,6 +111,7 @@ class CourseList extends Component {
       <CourseListContainer>
         <Courses
           data={this.siteData}
+          ListEmptyComponent={EmptyCourseList}
           canCancelContentTouches={scroll}
           contentContainerStyle={{marginTop: 10, marginBottom: 10, marginLeft: 0, marginRight: 0}}
           style={{width: '100%'}}
