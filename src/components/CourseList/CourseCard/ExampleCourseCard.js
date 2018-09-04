@@ -7,7 +7,7 @@ const OPEN_WIDTH = -100
 const HEIGHT = 80
 
 const ShadowCard = styled.View`
-  height: 80px;
+  height: ${HEIGHT}px;
   shadow-color: ${props => props.theme.courseCard.shadow};
   shadow-offset: 0px 2px;
   shadow-opacity: 0.3;
@@ -20,7 +20,7 @@ const CardSwipe = styled(Animated.View)`
 `
 
 const CardBoundary = styled.View`
-  height: 80px;
+  height: ${HEIGHT}px;
   width: ${Dimensions.get('window').width - 30}px;
   background-color: ${props => props.theme.courseCard.background};
   border-radius: 2px;
@@ -122,7 +122,7 @@ const IconLabel = styled.Text`
 const Background = styled.View`
   position: absolute;
   right: 0;
-  height: 80px;
+  height: ${HEIGHT}px;
   width: ${props => props.cardWidth}px;
   border-radius: 3px;
   background-color: ${props => props.theme.courseCard.skeleton};
