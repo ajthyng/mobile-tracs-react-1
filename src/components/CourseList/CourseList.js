@@ -46,21 +46,30 @@ class CourseList extends Component {
     }
   }
 
+  goToCourse = (course) => () => {
+    const {navigation: {navigate}} = this.props
+    navigate('CourseDetail', {
+      transition: 'cardFromRight',
+      course
+    })
+  }
+
   makeData = () => {
-    return this.props.sites.map(item => {
-      const isFavorite = this.isFavorite(item.id)
+    return this.props.sites.map(course => {
+      const isFavorite = this.isFavorite(course.id)
       return {
         component: (
           <CourseCard
-            {...item}
-            ref={item.id}
+            {...course}
+            ref={course.id}
             setScroll={this.setScroll}
             isFavorite={isFavorite}
             updateFavorite={this.updateFavorite}
+            onPress={this.goToCourse(course)}
           />
         ),
-        key: item.id,
-        cardRef: item.id
+        key: course.id,
+        cardRef: course.id
       }
     })
   }

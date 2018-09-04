@@ -1,19 +1,9 @@
-/**
- * Copyright 2018 Andrew Thyng
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
-
 import LoginScreen from '../components/Login/LoginScreen'
 import HomeScreen from '../components/Home/HomeScreen'
 import Header from '../components/Header/Header'
 
 import React from 'react'
-import {View, Easing, Platform, Animated, Dimensions, Text} from 'react-native'
+import {Easing, Platform, Animated} from 'react-native'
 
 import {createSwitchNavigator, createStackNavigator} from 'react-navigation'
 import CalendarScreen from '../components/CalendarScreen/CalendarScreen'
@@ -27,15 +17,11 @@ import AnnouncementsScreen from '../components/AnnouncementScreen/AnnouncementsS
 import ForumScreen from '../components/ForumScreen/ForumScreen'
 import GradebookScreen from '../components/GradebookScreen/GradebookScreen'
 
-Array.prototype.contains = function (value) {
-  return this.indexOf(value) >= 0
-}
-
 const transitionSpec = {
   duration: Platform.select({android: 500, ios: 500}),
   timing: Animated.timing,
   easing: Easing.out(Easing.poly(4)),
-  useNativeDriver: true,
+  useNativeDriver: true
 }
 
 const MainNavigator = createStackNavigator(
@@ -44,10 +30,10 @@ const MainNavigator = createStackNavigator(
       screen: HomeScreen
     },
     Course: {
-      screen: CourseScreen,
+      screen: CourseScreen
     },
     Calendar: {
-      screen: CalendarScreen,
+      screen: CalendarScreen
     },
     Gradebook: {
       screen: GradebookScreen
@@ -56,7 +42,7 @@ const MainNavigator = createStackNavigator(
       screen: CourseDetailScreen
     },
     Settings: {
-      screen: SettingsScreen,
+      screen: SettingsScreen
     },
     Announcements: {
       screen: AnnouncementsScreen
@@ -71,7 +57,7 @@ const MainNavigator = createStackNavigator(
       screen: () => <SimpleWebView url={`${global.urls.support}`} />
     },
     TRACSWeb: {
-      screen: TRACSWebView,
+      screen: TRACSWebView
     }
   }, {
     initialRouteName: 'Home',
@@ -96,19 +82,19 @@ const MainNavigator = createStackNavigator(
         }[transition]
       }
     }),
-    gestures: {},
+    gestures: {}
   }
 )
 
 const AuthenticationNavigator = (props) => {
   const Nav = createSwitchNavigator({
-      Login: LoginScreen,
-      Main: MainNavigator
-    }, {
-      initialRouteName: 'Login',
-      navigationOptions: {header: null},
-      resetOnBlur: false
-    }
+    Login: LoginScreen,
+    Main: MainNavigator
+  }, {
+    initialRouteName: 'Login',
+    navigationOptions: {header: null},
+    resetOnBlur: false
+  }
   )
   return <Nav {...props} />
 }

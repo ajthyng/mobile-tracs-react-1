@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import styled, {withTheme} from 'styled-components'
 import ScreenHeader from '../ScreenHeader'
-import CourseOption from './CourseOption'
 import CourseOptions from './CourseOptions'
 
 const Container = styled.View`
@@ -13,11 +12,11 @@ const Container = styled.View`
 `
 
 const CourseDetailHeader = styled(ScreenHeader)`
-	background-color: ${props => props.theme.gradeSummaryBackground};
+  background-color: ${props => props.theme.gradeSummaryBackground};
 `
 
 class CourseDetailScreen extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.course = this.props.navigation.getParam('course', {
       contactInfo: {
@@ -27,7 +26,7 @@ class CourseDetailScreen extends Component {
     })
   }
 
-  render() {
+  render () {
     const {contactInfo: {name: courseContactName}, name: title} = this.course
 
     return (

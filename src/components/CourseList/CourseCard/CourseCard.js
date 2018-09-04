@@ -145,12 +145,13 @@ class CourseCard extends Component {
     if (this.state.isOpen) {
       this.closeCard()
     } else {
-      // TODO: Open the course page
+      this.props.onPress && this.props.onPress()
     }
   }
 
   updateFavorite = (id) => () => {
     this.props.updateFavorite && this.props.updateFavorite(id)
+    this.closeCard()
   }
 
   render () {
@@ -223,11 +224,6 @@ const Background = styled.View`
   background-color: ${props => props.color};
   align-items: flex-end;
   justify-content: center;
-  elevation: -1;
-  shadow-color: ${props => props.theme.courseCard.shadow};
-  shadow-offset: -1px -1px;
-  shadow-opacity: 0.3;
-  shadow-radius: 2px;
   overflow: hidden;
 `
 
