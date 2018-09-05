@@ -4,7 +4,7 @@ import CourseOption from './CourseOption'
 import Entypo from 'react-native-vector-icons/Entypo'
 import {NavigationActions, withNavigation} from 'react-navigation'
 
-const Container = styled.ScrollView`
+const Container = styled.View`
   flex: 1;
   width: 100%;
 `
@@ -67,17 +67,11 @@ class CourseOptions extends Component {
   render () {
     return (
       <Container>
-        <Row>
-          <CourseOption label='Gradebook' name='book' onClick={this.goToGradebook} />
-          <CourseOption Icon={Entypo} label='Course Website' name='browser' onClick={this.goToWeb} />
-        </Row>
-        <Row>
-          <CourseOption label='Forum Posts' name='comments-o' onClick={this.goToForums} />
-          <CourseOption label='Announcements' name='bullhorn' onClick={this.goToAnnouncements} />
-        </Row>
-        <Row style={{justifyContent: 'flex-start', marginLeft: 5}}>
-          <CourseOption label='Calendar' name='calendar' onClick={this.goToCalendar} />
-        </Row>
+        <CourseOption label='Gradebook' name='book' onClick={this.goToGradebook} />
+        <CourseOption Icon={Entypo} label='Course Website' name='browser' onClick={this.goToWeb} />
+        <CourseOption label='Forum Posts' name='comments-o' onClick={this.goToForums} />
+        <CourseOption label='Announcements' name='bullhorn' onClick={this.goToAnnouncements} />
+        <CourseOption label='Calendar' name='calendar' onClick={this.goToCalendar} />
       </Container>
     )
   }

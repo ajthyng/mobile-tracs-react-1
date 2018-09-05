@@ -19,7 +19,6 @@ const ShadowCard = styled.View`
   shadow-offset: 0px 2px;
   shadow-opacity: 0.3;
   shadow-radius: 2px;
-  elevation: 3;
   margin: 15px;
 `
 
@@ -34,6 +33,7 @@ const CardBoundary = styled.View`
   flex-direction: row;
   flex: 1;
   overflow: hidden;
+  border: solid 1px ${props => props.color};
 `
 
 const ColorBar = styled.View`
@@ -187,7 +187,7 @@ class CourseCard extends Component {
         <ShadowCard pointerEvents='box-none'>
           <CardSwipe {...panResponder.panHandlers} style={transform} >
             <TouchableWithoutFeedback onPress={this.onPress} onLongPress={this.openCard}>
-              <CardBoundary>
+              <CardBoundary color={color}>
                 <ColorBar color={color} />
                 <Grade letterGrade={mappedGrade} percentGrade={calculatedGrade} />
                 <CourseInfo name={name} instructor={instructor} />

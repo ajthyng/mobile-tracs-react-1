@@ -14,9 +14,9 @@ const Container = styled(Ripple)`
   justify-content: center;
   
   shadow-color: #363534;
-	shadow-opacity: 0.5;
-	shadow-offset: 0 1px;
-	shadow-radius: 1px;
+  shadow-opacity: 0.5;
+  shadow-offset: 0 1px;
+  shadow-radius: 1px;
 `
 
 const Label = styled.Text`
@@ -30,7 +30,7 @@ const CourseOption = (props) => {
   const {label, name, theme, Icon, onClick} = props
   return (
     <Container onPress={onClick} square={width}>
-      <Icon name={name} color={theme.darkText} size={64}/>
+      <Icon name={name} color={theme.darkText} size={64} />
       <Label>{label}</Label>
     </Container>
   )

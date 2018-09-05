@@ -1,4 +1,4 @@
-import {AppRegistry, Platform, AppState, YellowBox, PushNotificationIOS} from 'react-native'
+import {AppRegistry, Text, StyleSheet, Platform, AppState, YellowBox, PushNotificationIOS} from 'react-native'
 import React, {Component} from 'react'
 import {PersistGate} from 'redux-persist/integration/react'
 import {Provider} from 'react-redux'
@@ -20,6 +20,21 @@ YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Received dat
 global.urls = urls
 global['ios'] = Platform.OS === 'ios'
 global['android'] = Platform.OS === 'android'
+
+const textFixStyle = StyleSheet.create({
+  defaultFontFamily: {
+    fontFamily: 'Roboto'
+  }
+})
+
+const oldRender = Text.prototype.render
+
+Text.prototype.render = function (...args) {
+  const origin = oldRender.call(this, ...args)
+  return React.cloneElement(origin, {
+    style: [textFixStyle.defaultFontFamily, origin.props.style]
+  })
+}
 
 class App extends Component {
   constructor (props) {

@@ -3,33 +3,32 @@ import RecentGrade from './RecentGrade'
 import styled from 'styled-components'
 
 const RecentGradesContainer = styled.View`
-  flex: 1;
-  padding: 0 8px 0 8px;
+  padding: 0 0 0 0;
   background-color: ${props => props.theme.transparent};
   height: 80px;
+  width: 100%;
 `
+const renderGrades = (gradeItem, index) => {
+  const {itemName, grade, points, postedDate, comment} = gradeItem
+  return (
+    <RecentGrade
+      key={index.toString(10)}
+      name={itemName}
+      grade={grade}
+      points={points}
+      postedDate={postedDate}
+      comment={comment}
+    />
+  )
+}
 
 class RecentGrades extends Component {
-  renderGrades (gradeItem, index) {
-    const {itemName, grade, points, postedDate, comment} = gradeItem
-    return (
-      <RecentGrade
-        key={index.toString(10)}
-        name={itemName}
-        grade={grade}
-        points={points}
-        dateGraded={postedDate}
-        comment={comment}
-      />
-    )
-  }
-
   render () {
     const {grades} = this.props
 
     return (
       <RecentGradesContainer>
-        {grades.map(this.renderGrades)}
+        {grades.slice(0, 3).map(renderGrades)}
       </RecentGradesContainer>
     )
   }
@@ -38,5 +37,7 @@ class RecentGrades extends Component {
 RecentGrades.defaultProps = {
   grades: []
 }
+
+RecentGrades.displayName = 'RecentGrades'
 
 export default RecentGrades
