@@ -47,6 +47,7 @@
     "react-native-modal": "^6.4.0",
     "react-native-popup-menu": "^0.13.2",
     "react-native-push-notification": "^3.0.1",
+    "react-native-shadow": "^1.2.2",
     "react-native-storage": "^0.2.2",
     "react-native-svg": "^6.5.2",
     "react-native-swipeout": "^2.3.1",
