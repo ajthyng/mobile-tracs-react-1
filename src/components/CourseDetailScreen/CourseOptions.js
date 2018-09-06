@@ -77,12 +77,12 @@ class CourseOptions extends Component {
   }
 
   render () {
-    const {hasAnnouncements} = this.props
+    const {hasAnnouncements, hasForums} = this.props
     return (
       <Container>
         <ButtonContainer>
           <CourseOption label='Announcements' name='bullhorn' onClick={this.goToAnnouncements} newContent={hasAnnouncements} />
-          <CourseOption label='Forum Posts' name='comments' onClick={this.goToForums} />
+          <CourseOption label='Forum Posts' name='comments' onClick={this.goToForums} newContent={hasForums} />
           <CourseOption label='Attendance' name='check-square' onClick={this.goToAttendance} />
         </ButtonContainer>
         <CourseSiteButton title='Course Site' onPress={this.goToWeb} />
@@ -92,7 +92,8 @@ class CourseOptions extends Component {
 }
 
 const mapStateToProps = (state, props) => ({
-  hasAnnouncements: (state.notifications.badgeCounts[props.course.id] || {}).announceCount > 0
+  hasAnnouncements: (state.notifications.badgeCounts[props.course.id] || {}).announceCount > 0,
+  hasForums: (state.notifications.badgeCounts[props.course.id] || {}).forumCount > 0
 })
 
 export default connect(mapStateToProps, null)(withNavigation(CourseOptions))
