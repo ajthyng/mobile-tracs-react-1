@@ -6,9 +6,10 @@ import RecentGrades from './RecentGrades/RecentGrades'
 import {connect} from 'react-redux'
 
 const Container = styled.View`
+  flex: 1;
+  width: 100%;
   align-items: center;
   justify-content: flex-start;
-  flex: 1;
   background-color: ${props => props.theme.viewBackground};
 `
 
@@ -17,14 +18,23 @@ const CourseDetailHeader = styled(ScreenHeader)`
 `
 
 const RecentGradesSection = styled.View`
-  flex: 1;
   width: 100%;
   align-items: flex-start;
+  border-radius: 3px;
+  background-color: rgb(234, 234, 234);
 `
 
 const Title = styled.Text`
   font-size: 12px;
+  margin-left: 15px;
+  margin-top: 15px;
   color: ${props => props.theme.darkText};
+  background-color: rgb(234, 234, 234);
+`
+
+const OptionsSection = styled.View`
+  flex: 1;
+  align-self: stretch;
 `
 
 class CourseDetailScreen extends PureComponent {
@@ -43,6 +53,9 @@ class CourseDetailScreen extends PureComponent {
           <Title>RECENTLY POSTED GRADES</Title>
           <RecentGrades grades={grades} />
         </RecentGradesSection>
+        <OptionsSection>
+          <CourseOptions course={course} />
+        </OptionsSection>
       </Container>
     )
   }
@@ -75,9 +88,11 @@ const byPostedDate = (a, b) => {
 const mapStateToProps = (state, props) => {
   const course = props.navigation && props.navigation.getParam('course', null)
   const siteId = course.id || null
-  const grades = (state.grades[siteId] || {}).grades || []
+  let grades = (state.grades[siteId] || {}).grades || []
 
-  grades.sort(byPostedDate)
+  grades = grades
+    .filter(({postedDate}) => postedDate !== null)
+    .sort(byPostedDate)
 
   return {
     course,

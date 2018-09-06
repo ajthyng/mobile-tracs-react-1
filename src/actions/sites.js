@@ -68,6 +68,7 @@ export function getSiteInfo (netid) {
     }
 
     let sites = (res.data || {}).site_collection
+    console.log(sites)
     let userSites = sites.reduce((accum, site) => {
       accum[site.id] = {
         id: site.id,

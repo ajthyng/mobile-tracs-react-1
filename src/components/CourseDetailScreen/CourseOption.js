@@ -3,13 +3,14 @@ import styled, {withTheme} from 'styled-components'
 import {Dimensions, Text} from 'react-native'
 import {FlatList, TouchableWithoutFeedback, StyleSheet} from 'react-native'
 import Ripple from 'react-native-material-ripple'
-import Icon from 'react-native-vector-icons/FontAwesome'
+import FAIcon from 'react-native-vector-icons/FontAwesome'
 
 const Container = styled(Ripple)`
-  width: ${props => props.square - 10}px;
-  height: ${props => props.square - 10}px;
+  width: 100px;
+  height: 80px;
+  border-radius: 3px;
   margin: 3px;
-  background-color: ${props => props.theme.optionItemBackground};
+  background-color: #3A6B86;
   align-items: center;
   justify-content: center;
   
@@ -21,17 +22,21 @@ const Container = styled(Ripple)`
 
 const Label = styled.Text`
   margin-top: 8px;
-  font-size: 18px;
-  color: ${props => props.theme.darkText};
+  font-size: 8px;
+  color: ${props => props.theme.lightText};
+`
+
+const Icon = styled(FAIcon)`
+  color: ${props => props.theme.lightText};
+  font-size: 40px;
 `
 
 const CourseOption = (props) => {
-  const width = Math.floor(Dimensions.get('window').width / 2)
   const {label, name, theme, Icon, onClick} = props
   return (
-    <Container onPress={onClick} square={width}>
-      <Icon name={name} color={theme.darkText} size={64} />
-      <Label>{label}</Label>
+    <Container onPress={onClick}>
+      <Icon name={name} color={theme.lightText} size={36} />
+      <Label>{label.toUpperCase()}</Label>
     </Container>
   )
 }

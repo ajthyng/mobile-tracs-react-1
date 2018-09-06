@@ -80,7 +80,7 @@ class GradeInfo extends PureComponent {
           <Name numberOfLines={1} ellipsizeMode='tail'>{name}</Name>
         </Title>
         <Info>
-          <Posted>{dayjs(posted).format('MMM D H:mma')}</Posted>
+          {posted ? <Posted>{dayjs(posted).format('MMM D, h:mma')}</Posted> : null}
           <TouchableWithoutFeedback onPress={this.showComment} >
             <CommentBox>
               <Comment comment={comment} />

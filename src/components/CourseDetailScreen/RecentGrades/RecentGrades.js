@@ -1,13 +1,14 @@
-import React, {Component} from 'react'
+import React, {PureComponent} from 'react'
 import RecentGrade from './RecentGrade'
 import styled from 'styled-components'
 
 const RecentGradesContainer = styled.View`
-  padding: 0 0 0 0;
-  background-color: ${props => props.theme.transparent};
-  height: 80px;
-  width: 100%;
+  margin: 4px 15px 15px 15px;
+  align-self: stretch;
+  background-color: ${props => props.theme.viewBackground};
+  border-radius: 3px;
 `
+
 const renderGrades = (gradeItem, index) => {
   const {itemName, grade, points, postedDate, comment} = gradeItem
   return (
@@ -22,13 +23,13 @@ const renderGrades = (gradeItem, index) => {
   )
 }
 
-class RecentGrades extends Component {
+class RecentGrades extends PureComponent {
   render () {
     const {grades} = this.props
 
     return (
       <RecentGradesContainer>
-        {grades.slice(0, 3).map(renderGrades)}
+        {grades.slice(0, 2).map(renderGrades)}
       </RecentGradesContainer>
     )
   }

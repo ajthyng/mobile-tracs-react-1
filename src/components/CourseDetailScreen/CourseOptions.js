@@ -1,17 +1,28 @@
 import React, {Component} from 'react'
 import styled from 'styled-components'
 import CourseOption from './CourseOption'
-import Entypo from 'react-native-vector-icons/Entypo'
+import RoundedButton from './RoundedButton'
 import {NavigationActions, withNavigation} from 'react-navigation'
 
 const Container = styled.View`
   flex: 1;
-  width: 100%;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 16px;
 `
 
-const Row = styled.View`
-  justify-content: center;
+const ButtonContainer = styled.View`
+  flex: 1;
+  width: 100%;
   flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+`
+
+const CourseSiteButton = styled(RoundedButton)`
+  width: 250px;
+  height: 50px;
+  border-radius: 25px;
 `
 
 class CourseOptions extends Component {
@@ -46,14 +57,24 @@ class CourseOptions extends Component {
     navigation.dispatch(openForums)
   }
 
-  goToCalendar = () => {
-    const {course, navigation: {navigate}} = this.props
+  goToAttendance = () => {
+    const {course, navigation} = this.props
 
-    navigate('Calendar', {
+    const siteId = course.id
+    const pageId = (course.tools['sakai.attendance'] || {}).pageId
+    const mainSite = `${global.urls.baseUrl}${global.urls.portal}`
+    const url = `${global.urls.baseUrl}${global.urls.webUrl}/${siteId}/page/${pageId}`
+
+    const openAttendance = NavigationActions.navigate({
+      routeName: 'TRACSWeb',
       transition: 'cardFromRight',
-      siteId: course.id,
-      siteName: course.name
+      params: {
+        baseUrl: pageId ? url : mainSite,
+        transition: 'cardFromRight'
+      }
     })
+
+    navigation && navigation.dispatch(openAttendance)
   }
 
   goToAnnouncements = () => {
@@ -67,11 +88,12 @@ class CourseOptions extends Component {
   render () {
     return (
       <Container>
-        <CourseOption label='Gradebook' name='book' onClick={this.goToGradebook} />
-        <CourseOption Icon={Entypo} label='Course Website' name='browser' onClick={this.goToWeb} />
-        <CourseOption label='Forum Posts' name='comments-o' onClick={this.goToForums} />
-        <CourseOption label='Announcements' name='bullhorn' onClick={this.goToAnnouncements} />
-        <CourseOption label='Calendar' name='calendar' onClick={this.goToCalendar} />
+        <ButtonContainer>
+          <CourseOption label='Announcements' name='bullhorn' onClick={this.goToAnnouncements} />
+          <CourseOption label='Forum Posts' name='comments' onClick={this.goToForums} />
+          <CourseOption label='Attendance' name='check-square' onClick={this.goToAttendance} />
+        </ButtonContainer>
+        <CourseSiteButton title='Course Site' onPress={this.goToWeb} />
       </Container>
     )
   }

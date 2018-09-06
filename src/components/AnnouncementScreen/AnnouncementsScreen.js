@@ -68,7 +68,7 @@ class AnnouncementsScreen extends Component {
     const unreadAnnouncements = announcementNotifications
       .filter(({read}) => !read).map(({keys}) => keys.object_id).filter(id => id !== null)
 
-    const unread = unreadAnnouncements.contains(item.announcementId)
+    const unread = unreadAnnouncements.includes(item.announcementId)
     const notification = announcementNotifications.find(({keys}) => keys.object_id === item.announcementId)
 
     return (

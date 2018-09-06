@@ -29,13 +29,13 @@ const Title = styled.Text`
 const Subtitle = styled.Text`
   color: ${props => props.theme.darkText};
   font-size: 14px;
-  font-weight: 100;
+  font-weight: 300;
 `
 
 const Email = styled.Text`
   color: #0645AD;
   font-size: 14px;
-  font-weight: 100;
+  font-weight: 300;
   text-decoration: underline;
   text-decoration-color: #0645AD;
 `
