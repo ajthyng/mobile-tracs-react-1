@@ -133,15 +133,16 @@ const mapStateToProps = (state) => {
     const favoritesFilterActive = filterStatus === FAVORITES
     const allSitesFilterActive = filterStatus === ALL_SITES
     const siteIsFavorite = favorites.includes(siteId)
+    const siteHasNotifications = (state.notifications.badgeCounts[siteId] || {}).unseenCount > 0
 
     if (favoritesFilterActive && siteIsFavorite) {
       const currentLength = accum.length
       const colorOptions = colorBar.length
       const color = colorBar[currentLength % colorOptions]
-      accum.push({...userSites[siteId], color})
+      accum.push({...userSites[siteId], color, hasNewContent: siteHasNotifications})
     } else if (allSitesFilterActive) {
       const color = state.theme.colors.courseCard.defaultColorBar
-      accum.push({...userSites[siteId], color})
+      accum.push({...userSites[siteId], color, hasNewContent: siteHasNotifications})
     }
 
     return accum

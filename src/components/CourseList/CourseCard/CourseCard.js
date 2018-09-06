@@ -33,7 +33,7 @@ const CardBoundary = styled.View`
   flex-direction: row;
   flex: 1;
   overflow: hidden;
-  border: solid 1px ${props => props.color};
+  border: solid ${props => props.new ? '1' : '0'}px ${props => props.color};
 `
 
 const ColorBar = styled.View`
@@ -162,6 +162,7 @@ class CourseCard extends Component {
       mappedGrade,
       isFavorite,
       id,
+      hasNewContent,
       contactInfo: {name: instructor}
     } = this.props
 
@@ -187,7 +188,7 @@ class CourseCard extends Component {
         <ShadowCard pointerEvents='box-none'>
           <CardSwipe {...panResponder.panHandlers} style={transform} >
             <TouchableWithoutFeedback onPress={this.onPress} onLongPress={this.openCard}>
-              <CardBoundary color={color}>
+              <CardBoundary color={color} new={hasNewContent} >
                 <ColorBar color={color} />
                 <Grade letterGrade={mappedGrade} percentGrade={calculatedGrade} />
                 <CourseInfo name={name} instructor={instructor} />
