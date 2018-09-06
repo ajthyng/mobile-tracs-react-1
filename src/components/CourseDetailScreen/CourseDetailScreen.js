@@ -4,6 +4,7 @@ import ScreenHeader from '../ScreenHeader'
 import CourseOptions from './CourseOptions'
 import RecentGrades from './RecentGrades/RecentGrades'
 import {connect} from 'react-redux'
+import {NavigationActions} from 'react-navigation'
 
 const Container = styled.View`
   flex: 1;
@@ -45,6 +46,15 @@ const OptionsSection = styled.View`
 `
 
 class CourseDetailScreen extends PureComponent {
+  goToGradebook = () => {
+    const {course, navigation} = this.props
+    const openGradebook = NavigationActions.navigate({
+      routeName: 'Gradebook',
+      params: {course, transition: 'cardFromRight'}
+    })
+    navigation.dispatch(openGradebook)
+  }
+
   render () {
     const {course, grades} = this.props
     const {contactInfo: {email: facultyEmail}, name: title} = course
@@ -64,7 +74,7 @@ class CourseDetailScreen extends PureComponent {
         >
           <RecentGradesSection>
             <Title>RECENTLY POSTED GRADES</Title>
-            <RecentGrades grades={grades} />
+            <RecentGrades grades={grades} goToGradebook={this.goToGradebook} />
           </RecentGradesSection>
           <OptionsSection>
             <CourseOptions course={course} />

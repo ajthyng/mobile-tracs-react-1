@@ -1,31 +1,22 @@
 import React, {Component} from 'react'
 import styled from 'styled-components'
-import CalendarIcon from '../CalendarIcon'
 import ProfileMenu from '../ProfileMenu/ProfileMenu'
 import {HeaderBackButton} from 'react-navigation'
-import Icon from 'react-native-vector-icons/FontAwesome'
+import FavoritesToggle from './FavoritesToggle'
 
 const Container = styled.View`
-	height: 63px;
-	width: 100%;
-	flex-direction: row;
-	align-items: center;
-	justify-content: space-between;
-	background-color: ${props => props.theme.header};
-	padding-left: ${props => props.canGoBack ? 0 : 16}px;
-	padding-right: 16px;
+  height: 75px;
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  background-color: ${props => props.theme.header};
+  padding-left: ${props => props.canGoBack ? 0 : 16}px;
+  padding-right: 16px;
 `
 
 const BackButton = (props) => (
   <HeaderBackButton {...props} />
-)
-
-const CalendarButton = (props) => (
-  <CalendarIcon
-    {...props}
-    size={28}
-    onPress={props.goToCalendar}
-  />
 )
 
 class Content extends Component {
@@ -33,11 +24,9 @@ class Content extends Component {
     this.props.navigation.navigate('Calendar', {transition: 'cardFromBottom'})
   }
 
-  render() {
-    const {navigation} = this.props
+  render () {
+    const {navigation, onValueChange, allSitesFilter} = this.props
     const canGoBack = navigation.state.index > 0
-
-
 
     const previousRoute = (navigation.state.routes[navigation.state.index - 1] || {}).routeName
 
@@ -49,15 +38,15 @@ class Content extends Component {
       title = currentParams.siteName
     }
 
-    const leftButton = canGoBack ?
-      <BackButton
+    const leftButton = canGoBack
+      ? <BackButton
         tintColor='white'
         title={title}
         onPress={() => {
           this.props.navigation.navigate(previousRoute)
         }}
-      /> :
-      <Icon name="question" size={36} color='white' />
+      />
+      : <FavoritesToggle onValueChange={onValueChange} status={allSitesFilter} />
 
     return (
       <Container canGoBack={canGoBack}>

@@ -12,7 +12,7 @@ const HeaderContainer = styled.View`
   background-color: transparent;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  align-self: stretch;
 `
 
 class Header extends Component {
@@ -61,10 +61,9 @@ class Header extends Component {
     return (
       <HeaderContainer>
         <StatusBarSpace statusBarHeight={this.statusBarHeight} />
-        <Content {...this.props} />
-        <AdditionalContent
+        <Content
+          {...this.props}
           allSitesFilter={filterStatus}
-          visible={currentRoute === 'Home'}
           onValueChange={this.onValueChange}
         />
       </HeaderContainer>

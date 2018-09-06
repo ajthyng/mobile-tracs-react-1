@@ -9,11 +9,11 @@ const {
   ALL_SITES
 } = toggleStatus
 
-const BORDER_COLOR = '#00000060'
+const BORDER_COLOR = '#000000A0'
 
 const Container = styled.View`
-  width: 250px;
-  height: 45px;
+  width: 225px;
+  height: 40px;
   background-color: #501214;
   border-radius: 2px;
   flex-direction: row;
@@ -37,10 +37,12 @@ const Label = styled.Text`
   margin-left: 6px;
   color: ${props => props.active ? 'white' : '#501214'};
   font-size: 14px;
+  line-height: 16px;
 `
 
 const StyledIcon = styled(Icon)`
   font-size: 14px;
+  line-height: 14px;
   color: ${props => props.active ? 'white' : '#501214'};
 `
 

@@ -25,15 +25,6 @@ const CourseSiteButton = styled(RoundedButton)`
 `
 
 class CourseOptions extends Component {
-  goToGradebook = () => {
-    const {course, navigation} = this.props
-    const openGradebook = NavigationActions.navigate({
-      routeName: 'Gradebook',
-      params: {course, transition: 'cardFromRight'}
-    })
-    navigation.dispatch(openGradebook)
-  }
-
   goToWeb = () => {
     const {course: {id: siteId}, navigation} = this.props
 

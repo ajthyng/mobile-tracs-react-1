@@ -60,12 +60,15 @@ const NoGrades = () => (
 )
 
 class RecentGrades extends PureComponent {
+  goToGradebook = () => {
+    this.props.goToGradebook && this.props.goToGradebook()
+  }
   render () {
     const {grades, loading} = this.props
     const hasGrades = grades.length > 0
 
     let content = null
-    if (loading) {
+    if (loading && !hasGrades) {
       content = (<SpinContainer><ActivityIndicator size='large' /></SpinContainer>)
     } else if (hasGrades) {
       content = grades.slice(0, 3).map(renderGrades)
@@ -75,7 +78,7 @@ class RecentGrades extends PureComponent {
     return (
       <RecentGradesContainer>
         {content}
-        <GradebookButton title='All Grades' />
+        <GradebookButton title='All Grades' onPress={this.goToGradebook} />
       </RecentGradesContainer>
     )
   }
