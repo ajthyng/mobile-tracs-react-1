@@ -57,7 +57,6 @@ class CourseDetailScreen extends PureComponent {
           email={facultyEmail}
         />
         <Content
-          bounces={false}
           contentContainerStyle={{
             flexGrow: 1,
             justifyContent: 'space-between'

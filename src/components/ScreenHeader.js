@@ -1,10 +1,10 @@
 import React, {PureComponent} from 'react'
 import styled, {withTheme} from 'styled-components'
-import {Dimensions} from 'react-native'
+import {Dimensions, TouchableWithoutFeedback, Linking} from 'react-native'
 
 const HeaderContainer = styled.View`
   height: 80px;
-  width: 100%;
+  align-self: stretch;
   align-items: center;
   justify-content: center;
   background-color: ${props => props.theme.courseDetailHeaderBackground};
@@ -41,6 +41,15 @@ const Email = styled.Text`
 `
 
 class ScreenHeader extends PureComponent {
+  openEmail = () => {
+    const {email, title} = this.props
+    if (email) {
+      Linking
+        .openURL(`mailto:?to=${email}&subject=${title}`)
+        .catch(() => null)
+    }
+  }
+
   render () {
     const {title, email} = this.props
     const {width} = Dimensions.get('window')
@@ -50,7 +59,9 @@ class ScreenHeader extends PureComponent {
           <Title>{title}</Title>
           <Subtitle>
             Faculty: {'\t'}
-            <Email>{email}</Email>
+            <TouchableWithoutFeedback onPress={this.openEmail}>
+              <Email>{email}</Email>
+            </TouchableWithoutFeedback>
           </Subtitle>
         </TitleContainer>
       </HeaderContainer>
@@ -59,8 +70,8 @@ class ScreenHeader extends PureComponent {
 }
 
 ScreenHeader.defaultProps = {
-  title: 'No title set',
-  subtitle: 'No subtitle set'
+  title: 'Course Name Not Found',
+  email: 'tracs@txstate.edu'
 }
 
 export default withTheme(ScreenHeader)
