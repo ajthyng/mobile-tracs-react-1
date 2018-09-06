@@ -129,9 +129,10 @@ const mapStateToProps = (state) => {
   const {filterStatus, favorites, userSites, isUpdatingFavorites} = state.tracsSites
   const {colorBar} = state.theme.colors.courseCard
 
-  const sites = Object.keys(state.tracsSites.userSites).reduce((accum, siteId) => {
-    const favoritesFilterActive = filterStatus === FAVORITES
-    const allSitesFilterActive = filterStatus === ALL_SITES
+  const favoritesFilterActive = filterStatus === FAVORITES
+  const allSitesFilterActive = filterStatus === ALL_SITES
+
+  let sites = Object.keys(state.tracsSites.userSites).reduce((accum, siteId) => {
     const siteIsFavorite = favorites.includes(siteId)
     const siteHasNotifications = (state.notifications.badgeCounts[siteId] || {}).unseenCount > 0
 
@@ -147,6 +148,13 @@ const mapStateToProps = (state) => {
 
     return accum
   }, [])
+
+  if (favoritesFilterActive) {
+    sites = favorites.reduce((accum, favId) => {
+      accum.push(sites.find(site => site.id === favId))
+      return accum
+    }, []).filter(site => site !== undefined)
+  }
 
   return {
     sites,
