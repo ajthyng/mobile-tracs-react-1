@@ -24,6 +24,7 @@ const Name = styled.Text`
 `
 
 const Posted = styled.Text`
+  align-self: flex-start;
   padding-left: 8px;
   font-size: 12px;
   color: ${props => props.theme.darkText};
@@ -79,7 +80,7 @@ class GradeInfo extends PureComponent {
           <Name numberOfLines={1} ellipsizeMode='tail'>{name}</Name>
         </Title>
         <Info>
-          <Posted>Graded: {dayjs(posted).format('MMM DD H:mma')}</Posted>
+          <Posted>{dayjs(posted).format('MMM D H:mma')}</Posted>
           <TouchableWithoutFeedback onPress={this.showComment} >
             <CommentBox>
               <Comment comment={comment} />

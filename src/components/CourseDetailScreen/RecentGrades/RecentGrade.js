@@ -30,6 +30,7 @@ class RecentGrade extends Component {
     const {grade, points} = props
 
     this.driver = new Animated.Value(0)
+    this.comments = React.createRef()
     this.hue = getHue(parseInt(grade, 10), points)
   }
 
@@ -48,7 +49,7 @@ class RecentGrade extends Component {
       useNativeDriver: true
     }).start(() => {
       if (showComment) {
-        this.comments.flashScrollIndicators()
+        this.comments.current && this.comments.current.flashScrollIndicators()
       }
     })
   }
@@ -90,7 +91,7 @@ class RecentGrade extends Component {
         </Container>
         <Comments
           theme={theme}
-          ref={c => this.comments = c}
+          ref={this.comments}
           onPress={this.hideComment}
           comment={comment}
           style={{
