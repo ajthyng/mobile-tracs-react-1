@@ -32,12 +32,32 @@ const renderGrades = (gradeItem, index) => {
   )
 }
 
+const NoGradeContainer = styled.View`
+  background-color: ${props => props.theme.viewBackground};
+  align-items: center;
+  justify-content: center;
+  height: 150px;
+`
+
+const NoGradeText = styled.Text`
+  color: ${props => props.theme.darkText};
+  font-size: 18px;
+  text-align: center;
+`
+
+const NoGrades = () => (
+  <NoGradeContainer>
+    <NoGradeText>NO GRADES{'\n'}HAVE BEEN POSTED</NoGradeText>
+  </NoGradeContainer>
+)
+
 class RecentGrades extends PureComponent {
   render () {
     const {grades} = this.props
-
+    const hasGrades = grades.length > 0
     return (
       <RecentGradesContainer>
+        {hasGrades ? null : <NoGrades />}
         {grades.slice(0, 3).map(renderGrades)}
         <GradebookButton title='All Grades' />
       </RecentGradesContainer>
