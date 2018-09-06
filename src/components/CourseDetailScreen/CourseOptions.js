@@ -5,18 +5,17 @@ import RoundedButton from './RoundedButton'
 import {NavigationActions, withNavigation} from 'react-navigation'
 
 const Container = styled.View`
-  flex: 1;
   align-items: center;
   justify-content: center;
   padding-bottom: 16px;
 `
 
 const ButtonContainer = styled.View`
-  flex: 1;
-  width: 100%;
+  align-self: stretch;
   flex-direction: row;
   justify-content: space-evenly;
-  align-items: center;
+  align-items: flex-end;
+  padding: 32px 0 32px 0;
 `
 
 const CourseSiteButton = styled(RoundedButton)`

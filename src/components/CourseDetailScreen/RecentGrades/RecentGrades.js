@@ -1,12 +1,21 @@
 import React, {PureComponent} from 'react'
 import RecentGrade from './RecentGrade'
 import styled from 'styled-components'
+import RoundedButton from '../RoundedButton'
 
 const RecentGradesContainer = styled.View`
   margin: 4px 15px 15px 15px;
   align-self: stretch;
   background-color: ${props => props.theme.viewBackground};
   border-radius: 3px;
+`
+
+const GradebookButton = styled(RoundedButton)`
+  width: 250px;
+  height: 40px;
+  border-radius: 20px;
+  align-self: center;
+  margin: 8px;
 `
 
 const renderGrades = (gradeItem, index) => {
@@ -29,7 +38,8 @@ class RecentGrades extends PureComponent {
 
     return (
       <RecentGradesContainer>
-        {grades.slice(0, 2).map(renderGrades)}
+        {grades.slice(0, 3).map(renderGrades)}
+        <GradebookButton title='All Grades' />
       </RecentGradesContainer>
     )
   }

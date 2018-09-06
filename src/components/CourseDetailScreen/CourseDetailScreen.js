@@ -7,10 +7,15 @@ import {connect} from 'react-redux'
 
 const Container = styled.View`
   flex: 1;
-  width: 100%;
+  align-self: stretch;
   align-items: center;
   justify-content: flex-start;
   background-color: ${props => props.theme.viewBackground};
+`
+
+const Content = styled.ScrollView`
+  align-self: stretch;
+  background-color: rgb(234, 234, 234);
 `
 
 const CourseDetailHeader = styled(ScreenHeader)`
@@ -18,7 +23,7 @@ const CourseDetailHeader = styled(ScreenHeader)`
 `
 
 const RecentGradesSection = styled.View`
-  width: 100%;
+  align-self: stretch;
   align-items: flex-start;
   border-radius: 3px;
   background-color: rgb(234, 234, 234);
@@ -35,6 +40,8 @@ const Title = styled.Text`
 const OptionsSection = styled.View`
   flex: 1;
   align-self: stretch;
+  justify-content: flex-end;
+  background-color: ${props => props.theme.viewBackground};
 `
 
 class CourseDetailScreen extends PureComponent {
@@ -49,13 +56,21 @@ class CourseDetailScreen extends PureComponent {
           title={title}
           email={facultyEmail}
         />
-        <RecentGradesSection>
-          <Title>RECENTLY POSTED GRADES</Title>
-          <RecentGrades grades={grades} />
-        </RecentGradesSection>
-        <OptionsSection>
-          <CourseOptions course={course} />
-        </OptionsSection>
+        <Content
+          bounces={false}
+          contentContainerStyle={{
+            flexGrow: 1,
+            justifyContent: 'space-between'
+          }}
+        >
+          <RecentGradesSection>
+            <Title>RECENTLY POSTED GRADES</Title>
+            <RecentGrades grades={grades} />
+          </RecentGradesSection>
+          <OptionsSection>
+            <CourseOptions course={course} />
+          </OptionsSection>
+        </Content>
       </Container>
     )
   }
