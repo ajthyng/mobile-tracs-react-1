@@ -28,7 +28,7 @@ const renderContent = (letter, percent) => {
     return (
       <React.Fragment>
         <LetterGrade>{letter}</LetterGrade>
-        <PercentGrade>{percent}</PercentGrade>
+        <PercentGrade>{Math.trunc(parseFloat(percent) * 100) / 100}</PercentGrade>
       </React.Fragment>
     )
   } else {
