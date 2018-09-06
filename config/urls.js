@@ -35,7 +35,7 @@ const endpoints = {
     return `/direct/profile/${netid}/image.jpeg`
   },
   sites (limit, start) {
-    return `/direct/site.json?withPerms=site.visit&_limit=${limit}&_start=${start}`
+    return `/direct/site/withPerm.json?permission=site.visit&_limit=${limit}&_start=${start}`
   },
   getForumPage (siteID, toolPageID) {
     return `/${siteID}/tool-reset/${toolPageID}`
