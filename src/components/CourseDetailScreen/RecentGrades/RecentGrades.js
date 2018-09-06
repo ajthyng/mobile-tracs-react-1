@@ -1,4 +1,6 @@
 import React, {PureComponent} from 'react'
+import {ActivityIndicator} from 'react-native'
+import {connect} from 'react-redux'
 import RecentGrade from './RecentGrade'
 import styled from 'styled-components'
 import RoundedButton from '../RoundedButton'
@@ -45,6 +47,12 @@ const NoGradeText = styled.Text`
   text-align: center;
 `
 
+const SpinContainer = styled.View`
+  height: 150px;
+  align-self: stretch;
+  justify-content: center;
+`
+
 const NoGrades = () => (
   <NoGradeContainer>
     <NoGradeText>NO GRADES{'\n'}HAVE BEEN POSTED</NoGradeText>
@@ -53,12 +61,20 @@ const NoGrades = () => (
 
 class RecentGrades extends PureComponent {
   render () {
-    const {grades} = this.props
+    const {grades, loading} = this.props
     const hasGrades = grades.length > 0
+
+    let content = null
+    if (loading) {
+      content = (<SpinContainer><ActivityIndicator size='large' /></SpinContainer>)
+    } else if (hasGrades) {
+      content = grades.slice(0, 3).map(renderGrades)
+    } else {
+      content = <NoGrades />
+    }
     return (
       <RecentGradesContainer>
-        {hasGrades ? null : <NoGrades />}
-        {grades.slice(0, 3).map(renderGrades)}
+        {content}
         <GradebookButton title='All Grades' />
       </RecentGradesContainer>
     )
@@ -71,4 +87,8 @@ RecentGrades.defaultProps = {
 
 RecentGrades.displayName = 'RecentGrades'
 
-export default RecentGrades
+const mapStateToProps = state => ({
+  loading: state.grades.isLoading
+})
+
+export default connect(mapStateToProps, null)(RecentGrades)
