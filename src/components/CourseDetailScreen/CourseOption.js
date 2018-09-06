@@ -31,12 +31,24 @@ const Icon = styled(FAIcon)`
   font-size: 40px;
 `
 
+const Dot = styled.View`
+  background-color: ${props => props.theme.lightText}
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  position: absolute;
+  top: 5px;
+  right: 20px;
+  opacity: ${props => props.active ? 1 : 0};
+`
+
 const CourseOption = (props) => {
-  const {label, name, theme, Icon, onClick} = props
+  const {label, name, theme, Icon, onClick, newContent} = props
   return (
     <Container onPress={onClick}>
-      <Icon name={name} color={theme.lightText} size={36} />
+      <Icon name={name} color={theme.lightText} size={32} />
       <Label>{label.toUpperCase()}</Label>
+      <Dot active={newContent} />
     </Container>
   )
 }

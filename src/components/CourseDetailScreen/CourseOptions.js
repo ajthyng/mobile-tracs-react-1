@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import CourseOption from './CourseOption'
 import RoundedButton from './RoundedButton'
 import {NavigationActions, withNavigation} from 'react-navigation'
+import {connect} from 'react-redux'
 
 const Container = styled.View`
   align-items: center;
@@ -76,10 +77,11 @@ class CourseOptions extends Component {
   }
 
   render () {
+    const {hasAnnouncements} = this.props
     return (
       <Container>
         <ButtonContainer>
-          <CourseOption label='Announcements' name='bullhorn' onClick={this.goToAnnouncements} />
+          <CourseOption label='Announcements' name='bullhorn' onClick={this.goToAnnouncements} newContent={hasAnnouncements} />
           <CourseOption label='Forum Posts' name='comments' onClick={this.goToForums} />
           <CourseOption label='Attendance' name='check-square' onClick={this.goToAttendance} />
         </ButtonContainer>
@@ -89,4 +91,8 @@ class CourseOptions extends Component {
   }
 }
 
-export default withNavigation(CourseOptions)
+const mapStateToProps = (state, props) => ({
+  hasAnnouncements: (state.notifications.badgeCounts[props.course.id] || {}).announceCount > 0
+})
+
+export default connect(mapStateToProps, null)(withNavigation(CourseOptions))

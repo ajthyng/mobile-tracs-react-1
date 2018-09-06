@@ -33,7 +33,7 @@ const initialState = {
   announcements: [],
   forums: [],
   badgeCounts: {},
-  errorMessage: "",
+  errorMessage: ''
 }
 
 const requestNotifications = (state) => {
@@ -41,18 +41,27 @@ const requestNotifications = (state) => {
     ...state,
     isLoading: true,
     isLoaded: false,
-    errorMessage: ""
+    errorMessage: ''
   }
 }
 const countAnnouncements = (badgeCounts) => {
   return announcement => {
-    let site_id = announcement.other_keys.site_id
+    let siteId = announcement.other_keys.site_id
     if (!announcement.seen) {
-      if (badgeCounts.hasOwnProperty(site_id)) {
-        badgeCounts[site_id].unseenCount += 1
+      if (badgeCounts.hasOwnProperty(siteId)) {
+        badgeCounts[siteId].unseenCount += 1
+        if (badgeCounts[siteId].hasOwnProperty('announceCount')) {
+          badgeCounts[siteId].announceCount += 1
+        } else {
+          badgeCounts[siteId] = {
+            ...badgeCounts[siteId],
+            announceCount: 1
+          }
+        }
       } else {
-        badgeCounts[site_id] = {
-          unseenCount: 1
+        badgeCounts[siteId] = {
+          unseenCount: 1,
+          announceCount: 1
         }
       }
 
@@ -67,20 +76,20 @@ const countAnnouncements = (badgeCounts) => {
 
 const countForums = (badgeCounts) => {
   return forum => {
-    let site_id = forum.other_keys.site_id
+    let siteId = forum.other_keys.site_id
     if (!forum.seen) {
-      if (badgeCounts.hasOwnProperty(site_id)) {
-        badgeCounts[site_id].unseenCount += 1
-        if (badgeCounts[site_id].hasOwnProperty('forumCount')) {
-          badgeCounts[site_id].forumCount += 1
+      if (badgeCounts.hasOwnProperty(siteId)) {
+        badgeCounts[siteId].unseenCount += 1
+        if (badgeCounts[siteId].hasOwnProperty('forumCount')) {
+          badgeCounts[siteId].forumCount += 1
         } else {
-          badgeCounts[site_id] = {
-            ...badgeCounts[site_id],
+          badgeCounts[siteId] = {
+            ...badgeCounts[siteId],
             forumCount: 1
           }
         }
       } else {
-        badgeCounts[site_id] = {
+        badgeCounts[siteId] = {
           unseenCount: 1,
           forumCount: 1
         }
@@ -125,7 +134,7 @@ const notificationsSuccess = (state, action) => {
     ...state,
     isLoading: false,
     isLoaded: true,
-    errorMessage: "",
+    errorMessage: '',
     badgeCounts: badgeCounts,
     announcements: notifs[types.ANNOUNCEMENT],
     forums: notifs[types.FORUM]
@@ -135,7 +144,7 @@ const notificationsSuccess = (state, action) => {
 const notificationsFailure = (state, actions) => {
   return {
     ...initialState,
-    errorMessage: actions.errorMessage,
+    errorMessage: actions.errorMessage
   }
 }
 
@@ -143,7 +152,7 @@ const requestNotificationUpdate = (state, action) => {
   return {
     ...state,
     isBatchUpdating: true,
-    errorMessage: ""
+    errorMessage: ''
   }
 }
 
@@ -151,7 +160,7 @@ const notificationUpdateSuccess = (state, action) => {
   return {
     ...state,
     isBatchUpdating: false,
-    errorMessage: ""
+    errorMessage: ''
   }
 }
 
@@ -174,7 +183,7 @@ const removeNotification = (state, action) => {
       return {
         ...state,
         announcements: announcements || [],
-        errorMessage: ""
+        errorMessage: ''
       }
     case types.FORUM:
       index = state.forums.findIndex(i => i.id === notification.id)
@@ -183,19 +192,18 @@ const removeNotification = (state, action) => {
       return {
         ...state,
         forums: forums || [],
-        errorMessage: ""
+        errorMessage: ''
       }
     default:
       break
   }
-
 }
 
 const requestBatchUpdate = (state) => {
   return {
     ...state,
     isBatchUpdating: true,
-    errorMessage: ""
+    errorMessage: ''
   }
 }
 
@@ -225,7 +233,7 @@ const batchUpdateSuccess = (state, action) => {
     ...state,
     isBatchUpdating: false,
     badgeCounts: badgeCounts,
-    errorMessage: ""
+    errorMessage: ''
   }
 }
 
