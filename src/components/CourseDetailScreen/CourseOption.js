@@ -1,7 +1,5 @@
 import React from 'react'
 import styled, {withTheme} from 'styled-components'
-import {Dimensions, Text} from 'react-native'
-import {FlatList, TouchableWithoutFeedback, StyleSheet} from 'react-native'
 import Ripple from 'react-native-material-ripple'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 
