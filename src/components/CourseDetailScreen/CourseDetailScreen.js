@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react'
 import styled, {withTheme} from 'styled-components'
-import ScreenHeader from '../ScreenHeader'
+import CourseDetailHeader from './CourseDetailHeader'
 import CourseOptions from './CourseOptions'
 import RecentGrades from './RecentGrades/RecentGrades'
 import {connect} from 'react-redux'
@@ -19,7 +19,7 @@ const Content = styled.ScrollView`
   background-color: rgb(234, 234, 234);
 `
 
-const CourseDetailHeader = styled(ScreenHeader)`
+const Header = styled(CourseDetailHeader)`
   background-color: ${props => props.theme.gradeSummaryBackground};
 `
 
@@ -61,7 +61,7 @@ class CourseDetailScreen extends PureComponent {
 
     return (
       <Container>
-        <CourseDetailHeader
+        <Header
           navigation={this.props.navigation}
           title={title}
           email={facultyEmail}

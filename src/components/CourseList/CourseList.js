@@ -150,10 +150,12 @@ const mapStateToProps = (state) => {
   }, [])
 
   if (favoritesFilterActive) {
-    sites = favorites.reduce((accum, favId) => {
-      accum.push(sites.find(site => site.id === favId))
-      return accum
-    }, []).filter(site => site !== undefined)
+    sites = favorites
+      .reduce((accum, favId) => {
+        accum.push(sites.find(({id}) => id === favId))
+        return accum
+      }, [])
+      .filter(site => site !== undefined)
   }
 
   return {

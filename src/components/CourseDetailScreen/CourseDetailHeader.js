@@ -40,7 +40,7 @@ const Email = styled.Text`
   text-decoration-color: #0645AD;
 `
 
-class ScreenHeader extends PureComponent {
+class CourseDetailHeader extends PureComponent {
   openEmail = () => {
     const {email, title} = this.props
     if (email) {
@@ -69,9 +69,9 @@ class ScreenHeader extends PureComponent {
   }
 }
 
-ScreenHeader.defaultProps = {
+CourseDetailHeader.defaultProps = {
   title: 'Course Name Not Found',
   email: 'tracs@txstate.edu'
 }
 
-export default withTheme(ScreenHeader)
+export default withTheme(CourseDetailHeader)

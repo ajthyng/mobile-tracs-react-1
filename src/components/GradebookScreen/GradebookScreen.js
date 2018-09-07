@@ -20,7 +20,7 @@ const GradeList = styled(FlatList)`
 `
 
 class GradebookScreen extends Component {
-  componentDidMount() {
+  componentDidMount () {
     const {getGrades} = this.props
     getGrades && getGrades()
   }
@@ -31,21 +31,21 @@ class GradebookScreen extends Component {
       grade = `${item.grade} / ${item.points}`
     }
 
-    return <GradebookItem title={item.itemName} grade={grade}/>
+    return <GradebookItem title={item.itemName} grade={grade} />
   }
 
-  render() {
+  render () {
     const {loading, grades, navigation: {getParam}} = this.props
     const course = getParam('course', { id: '' })
 
     const courseGrades = (grades[course.id] || {}).grades || []
-    return loading ?
-      (
+    return loading
+      ? (
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
           <ActivityIndicator />
         </View>
-      ) :
-      (
+      )
+      : (
         <Container>
           <GradeList
             data={courseGrades}
