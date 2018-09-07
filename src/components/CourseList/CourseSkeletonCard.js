@@ -4,6 +4,7 @@ import styled, { withTheme } from 'styled-components'
 
 const HEIGHT = 80
 const ShadowCard = styled.View`
+  height: ${HEIGHT}px;
   shadow-color: ${props => props.theme.courseCard.shadow};
   shadow-offset: 0px 2px;
   shadow-opacity: 0.3;
