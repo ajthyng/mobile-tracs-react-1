@@ -1,44 +1,56 @@
-import React, {Component} from 'react'
+import React, {PureComponent} from 'react'
 import styled from 'styled-components'
+import Grade from './Grade'
 
 const Container = styled.View`
-  margin: 5px;
-  align-items: flex-start;
-  justify-content: center;
+  height: 70px;
+  align-self: stretch;
+  flex-direction: row;
   background-color: ${props => props.theme.viewBackground};
-  shadow-opacity: 0.8;
-  shadow-color: #363534;
-  shadow-radius: 1px;
-  shadow-offset: 1px 1px;
-  elevation: 2;
 `
 
 const Title = styled.Text`
-  font-size: 16px;
-  padding: 8px;
-  color: ${props => props.theme.darkText}
+  font-size: 20px;
+  line-height: 20px;
+  font-weight: 400;
+  color: ${props => props.theme.darkText};
 `
 
-const Grade = styled.Text`
-  font-size: 16px;
-  padding: 8px;
-  color: ${props => props.theme.darkText}
+const SubTitle = styled.Text`
+  font-size: 12px;
+  line-height: 14px;
+  color: ${props => props.theme.darkText};
 `
 
-const GradebookItem = ({title, grade}) => {
+const Info = styled.View`
+  flex: 1;
+  height: 100%;
+  padding: 0 8px 0 16px;
+  justify-content: center;
+`
+
+const GradeContainer = styled.View`
+  width: 70px;
+  height: 100%;
+`
+
+class GradebookItem extends PureComponent {
+  render () {
+    const {earned, total, title, subtitle} = this.props
     return (
       <Container>
-        <Title
-          numberOfLines={1}
-          ellipsizeMode='tail'
-        >
-          {title}
-        </Title>
-        <Grade>
-          {grade}
-        </Grade>
+        <GradeContainer>
+          <Grade earned={earned} total={total} />
+        </GradeContainer>
+        <Info>
+          <Title numberOfLines={1} ellipsizeMode='tail'>
+            {title}
+          </Title>
+          <SubTitle>{subtitle}</SubTitle>
+        </Info>
       </Container>
     )
+  }
 }
 
 GradebookItem.defaultProps = {
