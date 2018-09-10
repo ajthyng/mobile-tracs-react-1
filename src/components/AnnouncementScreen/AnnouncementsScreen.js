@@ -3,10 +3,13 @@ import styled, {withTheme} from 'styled-components'
 import {connect} from 'react-redux'
 import {getAnnouncements} from '../../actions/announcements'
 import {batchUpdateNotification} from '../../actions/notifications'
-import {withNavigation} from 'react-navigation'
+import {withNavigation, NavigationActions} from 'react-navigation'
 import ActivityIndicator from '../ActivityIndicator'
 import Announcement from './Announcement'
 import Subject from '../../utils/subject'
+import Header from './AnnouncementsHeader'
+import Footer from './AnnouncementsFooter'
+import EmptyAnnouncements from './EmptyAnnouncements'
 
 const Container = styled.View`
   flex: 1;
@@ -15,8 +18,13 @@ const Container = styled.View`
   background-color: ${props => props.theme.viewBackground};
 `
 
-const AnnouncementsList = styled.FlatList`
-  width: 100%;
+const Announcements = styled.ScrollView`
+  background-color: rgb(234, 234, 234);
+  align-self: stretch;
+`
+
+const AnnouncementsContainer = styled.View`
+  margin: 5px;
 `
 
 class AnnouncementsScreen extends Component {
@@ -63,7 +71,7 @@ class AnnouncementsScreen extends Component {
     this.props.getAnnouncements()
   }
 
-  renderAnnouncement = ({item}) => {
+  renderAnnouncement = (item) => {
     const { announcementNotifications, theme } = this.props
     const unreadAnnouncements = announcementNotifications
       .filter(({read}) => !read).map(({keys}) => keys.object_id).filter(id => id !== null)
@@ -73,6 +81,7 @@ class AnnouncementsScreen extends Component {
 
     return (
       <Announcement
+        key={item.announcementId}
         theme={theme}
         announcement={item}
         unread={unread}
@@ -81,20 +90,35 @@ class AnnouncementsScreen extends Component {
     )
   }
 
+  goToWeb = () => {
+    const {id: siteId, tools} = this.props.navigation && this.props.navigation.getParam('course', {id: null, tools: []})
+    const {navigation} = this.props
+
+    const url = `${global.urls.baseUrl}${global.urls.webUrl}/${siteId}/tool-reset/${tools['sakai.announcements'].id}`
+    const mainSite = `${global.urls.baseUrl}${global.urls.portal}`
+
+    const openWebView = NavigationActions.navigate({
+      routeName: 'TRACSWeb',
+      params: {baseUrl: siteId ? url : mainSite, transition: 'cardFromRight'}
+    })
+    navigation.dispatch(openWebView)
+  }
+
   render () {
     const {announcements, loading} = this.props
     const {refreshing, silentLoad} = this.state
+    const course = this.props.navigation && this.props.navigation.getParam('course', {})
+    const announcementList = announcements.map(this.renderAnnouncement)
 
     return loading && !silentLoad ? (<ActivityIndicator />) : (
       <Container>
-        <AnnouncementsList
-          data={announcements}
-          refreshing={refreshing}
-          onRefresh={this.refreshAnnouncements}
-          contentContainerStyle={null}
-          keyExtractor={item => item.announcementId}
-          renderItem={this.renderAnnouncement}
-        />
+        <Header title={course.name} />
+        <Announcements contentContainerStyle={{backgroundColor: 'rgb(234, 234, 234)'}} >
+          <AnnouncementsContainer>
+            {announcementList.length > 0 ? announcementList : <EmptyAnnouncements />}
+          </AnnouncementsContainer>
+          <Footer onPress={this.goToWeb} />
+        </Announcements>
       </Container>
     )
   }

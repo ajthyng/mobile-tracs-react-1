@@ -3,43 +3,40 @@ import styled from 'styled-components'
 import {connect} from 'react-redux'
 import {batchUpdateNotification} from '../../actions/notifications'
 import {Dimensions, Linking, TouchableOpacity, WebView} from 'react-native'
+import dayjs from 'dayjs'
 
-const AnnouncementContainer = styled.View`
+const Container = styled.View`
   background-color: ${props => props.theme.announcementBackground};
   align-items: flex-start;
   justify-content: center;
+  align-self: stretch;
   elevation: 3;
-  shadow-color: ${props => props.theme.announcementShadow};
-  shadow-opacity: 0.5;
-  shadow-radius: 2px;
-  shadow-offset: 0px 2px;
+  margin: 5px;
 `
 
-const AnnouncementBody = styled(WebView)`
-  width: ${props => Dimensions.get('window').width - props.margin * 2}px;
+const Body = styled(WebView)`
+  width: ${Dimensions.get('window').width - 10}px;
   background-color: ${props => props.theme.announcementBackground};
 `
 
-const UnreadIndicator = styled.View`
-  height: 10px;
-  width: 10px;
-  background-color: #501214;
-`
-
-const AnnouncementTitleContainer = styled(TouchableOpacity)`
-  height: 40px;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  padding-left: 8px;
-  width: 100%;
+const TitleContainer = styled(TouchableOpacity)`
+  align-items: flex-start;
+  justify-content: center;
+  padding: 16px 24px 16px 10px;
+  align-self: stretch;
   background-color: ${props => props.theme.announcementBackground};
 `
 
-const AnnouncementTitle = styled.Text`
-  font-weight: bold;
-  font-size: 18px;
-  margin-left: 8px;
+const Title = styled.Text`
+  font-weight: ${props => props.unread ? 'bold' : '400'};
+  text-decoration: ${props => props.unread ? 'underline' : 'none'};
+  font-size: 20px;
+  color: ${props => props.theme.darkText};
+`
+
+const Posted = styled.Text`
+  font-weight: 400;
+  font-size: 12px;
   color: ${props => props.theme.darkText};
 `
 
@@ -80,14 +77,19 @@ const makeHTML = (body, theme) => (
 class Announcement extends PureComponent {
   state = {
     height: 100,
-    showBody: false
+    width: Dimensions.get('window').width - 10,
+    showBody: false,
+    html: makeHTML(this.props.announcement.body, this.props.theme)
   }
-  contentMargin = 10
   webView = React.createRef()
 
   updateHeight = event => {
     const {title, jsEvaluationValue} = event
     this.setState({height: parseInt(jsEvaluationValue || title)})
+  }
+
+  updateWidth = ({window: {width}}) => {
+    this.setState({width})
   }
 
   onPress = () => {
@@ -100,20 +102,28 @@ class Announcement extends PureComponent {
     })
   }
 
+  componentDidMount () {
+    Dimensions.addEventListener('change', this.updateWidth)
+  }
+
+  componentWillUnmount () {
+    Dimensions.removeEventListener('change', this.updateWidth)
+  }
+
   render () {
-    const {announcement: {body, title}, theme, unread} = this.props
-    const {height, showBody} = this.state
+    const {announcement: {body, title, createdOn}, theme, unread} = this.props
+    const {height, showBody, width, html} = this.state
+    const posted = dayjs(createdOn).format('MMMM D hh:mma')
 
     return (
-      <AnnouncementContainer style={{margin: this.contentMargin}}>
-        <AnnouncementTitleContainer activeOpacity={1} onPress={this.onPress}>
-          {unread ? <UnreadIndicator /> : null}
-          <AnnouncementTitle>{title}</AnnouncementTitle>
-        </AnnouncementTitleContainer>
-        <AnnouncementBody
-          margin={this.contentMargin}
+      <Container>
+        <TitleContainer activeOpacity={1} onPress={this.onPress}>
+          <Title numberOfLines={1} ellipsizeMode='tail' unread={unread}>{title}</Title>
+          <Posted>{posted}</Posted>
+        </TitleContainer>
+        <Body
           innerRef={this.webView}
-          style={{height: showBody ? height : 0}}
+          style={{height: showBody ? height : 0, width}}
           mixedContentMode='compatibility'
           injectedJavaScript='(() => document.body.scrollHeight)()'
           onNavigationStateChange={(event) => {
@@ -126,9 +136,9 @@ class Announcement extends PureComponent {
             }
             this.updateHeight(event)
           }}
-          source={{html: makeHTML(body, theme)}}
+          source={{html}}
         />
-      </AnnouncementContainer>
+      </Container>
     )
   }
 }

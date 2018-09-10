@@ -8,6 +8,7 @@ import ActivityIndicator from '../ActivityIndicator'
 import GradebookItem from './GradebookItem'
 import Header from './GradebookHeader'
 import Footer from './GradebookFooter'
+import EmptyGrades from './EmptyGrades'
 
 const Container = styled.View`
   flex: 1;
@@ -59,10 +60,11 @@ class GradebookScreen extends Component {
     if (loading) return <ActivityIndicator />
 
     const courseGrades = (grades[this.course.id] || {}).grades || []
+    const gradesList = courseGrades.map(this.renderGrade)
     return (
       <GradeList>
         <GradeListContainer>
-          {courseGrades.map(this.renderGrade)}
+          {gradesList.length > 0 ? gradesList : <EmptyGrades />}
         </GradeListContainer>
         <Footer onPress={this.goToWeb} />
       </GradeList>
