@@ -111,7 +111,7 @@ class Announcement extends PureComponent {
   }
 
   render () {
-    const {announcement: {body, title, createdOn}, theme, unread} = this.props
+    const {announcement: {title, createdOn}, unread} = this.props
     const {height, showBody, width, html} = this.state
     const posted = dayjs(createdOn).format('MMMM D hh:mma')
 

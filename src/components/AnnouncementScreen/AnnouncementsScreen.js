@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import styled, {withTheme} from 'styled-components'
+import {RefreshControl} from 'react-native'
 import {connect} from 'react-redux'
 import {getAnnouncements} from '../../actions/announcements'
 import {batchUpdateNotification} from '../../actions/notifications'
@@ -113,7 +114,10 @@ class AnnouncementsScreen extends Component {
     return loading && !silentLoad ? (<ActivityIndicator />) : (
       <Container>
         <Header title={course.name} />
-        <Announcements contentContainerStyle={{backgroundColor: 'rgb(234, 234, 234)'}} >
+        <Announcements
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.refreshAnnouncements} />}
+          contentContainerStyle={{backgroundColor: 'rgb(234, 234, 234)'}}
+        >
           <AnnouncementsContainer>
             {announcementList.length > 0 ? announcementList : <EmptyAnnouncements />}
           </AnnouncementsContainer>
