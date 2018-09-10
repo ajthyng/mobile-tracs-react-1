@@ -57,7 +57,7 @@ const sections = ({setTheme, themeName, sites, blacklist, announcementsDisabled,
       data: [
         {
           name: 'Dark Mode',
-          onToggle: onThemeToggle(setTheme),
+          onToggle: () => null,
           on: themeName === darkTheme.NAME,
           id: '2'
         }
