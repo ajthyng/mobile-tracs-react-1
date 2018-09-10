@@ -1,60 +1,54 @@
 import React, {Component} from 'react'
 import {TouchableOpacity} from 'react-native'
 import styled from 'styled-components'
+import dayjs from 'dayjs'
 
 const Touchable = ({children, onPress}) => <TouchableOpacity onPress={onPress} activeOpacity={0.5} >{children}</TouchableOpacity>
 
 const Container = styled.View`
-  margin: 6px;
+  margin: 5px;
   background-color: ${props => props.theme.viewBackground};
-  shadow-opacity: 0.5;
-  shadow-color: #363534;
-  shadow-offset: 0px 2px;
-  shadow-radius: 2px;
 `
 
-const UnreadIndicator = styled.View`
-  height: 10px;
-  width: 10px;
-  background-color: #501214;
-`
-
-const ForumTitleContainer = styled.View`
-  height: 40px;
-  flex-direction: row; 
-  align-items: center;
-  justify-content: flex-start;
-  padding-left: 8px;
-  width: 100%;
+const TitleContainer = styled.View`
+  align-items: flex-start;
+  justify-content: center;
+  padding: 16px 24px 16px 10px;
+  align-self: stretch;
   background-color: ${props => props.theme.announcementBackground};
 `
 
-const ForumTitle = styled.Text`
-  font-weight: bold;
-  font-size: 18px;
-  margin-left: 8px;
+const Title = styled.Text`
+  font-weight: ${props => props.unread ? 'bold' : '400'};
+  text-decoration: ${props => props.unread ? 'underline' : 'none'};
+  font-size: 20px;
+  color: ${props => props.theme.darkText};
+`
+
+const Posted = styled.Text`
+  font-weight: 400;
+  font-size: 12px;
   color: ${props => props.theme.darkText};
 `
 
 class Forum extends Component {
-  onPress = (id) => () => {
-    if (!this.props.notification.read) {
-      this.props.onPress(id)
-    }
+  onPress = (id, unread) => () => {
+    this.props.onPress && this.props.onPress(id, unread)
   }
 
   render () {
     const {notification} = this.props
-    const {title} = (notification.tracs_data || {})
+    const {title, createdOn} = (notification.tracs_data || {})
     const unread = !notification.read
 
+    const posted = dayjs(createdOn).format('MMMM D h:mma')
     return (
-      <Touchable onPress={this.onPress(notification.id)} >
+      <Touchable onPress={this.onPress(notification.id, unread)} >
         <Container>
-          <ForumTitleContainer>
-            {unread ? <UnreadIndicator /> : null}
-            <ForumTitle>{title}</ForumTitle>
-          </ForumTitleContainer>
+          <TitleContainer>
+            <Title unread={unread}>{title}</Title>
+            <Posted>{posted}</Posted>
+          </TitleContainer>
         </Container>
       </Touchable>
     )

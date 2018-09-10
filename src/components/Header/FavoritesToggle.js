@@ -35,7 +35,7 @@ const AllSites = styled(Favorite)`
 
 const Label = styled.Text`
   margin-left: 6px;
-  color: ${props => props.active ? 'white' : '#501214'};
+  color: ${props => props.active ? 'white' : '#b77c7e'};
   font-size: 14px;
   line-height: 16px;
 `
@@ -43,7 +43,7 @@ const Label = styled.Text`
 const StyledIcon = styled(Icon)`
   font-size: 14px;
   line-height: 14px;
-  color: ${props => props.active ? 'white' : '#501214'};
+  color: ${props => props.active ? 'white' : '#b77c7e'};
 `
 
 class FavoritesToggle extends PureComponent {

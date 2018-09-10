@@ -15,7 +15,6 @@ const Container = styled.View`
 `
 
 const Body = styled(WebView)`
-  width: ${Dimensions.get('window').width - 10}px;
   background-color: ${props => props.theme.announcementBackground};
 `
 
@@ -51,7 +50,7 @@ const makeHTML = (body, theme) => (
       </script>
       <style>
         body {
-            background-color: ${theme.announcementBackground}      
+            background-color: ${theme.announcementBackground};
         }
         a:link {
             color: #30B1FF;
@@ -77,9 +76,9 @@ const makeHTML = (body, theme) => (
 class Announcement extends PureComponent {
   state = {
     height: 100,
-    width: Dimensions.get('window').width - 10,
     showBody: false,
-    html: makeHTML(this.props.announcement.body, this.props.theme)
+    html: makeHTML(this.props.announcement.body, this.props.theme),
+    width: Dimensions.get('window').width - 20
   }
   webView = React.createRef()
 
@@ -89,7 +88,7 @@ class Announcement extends PureComponent {
   }
 
   updateWidth = ({window: {width}}) => {
-    this.setState({width})
+    this.setState({width: width - 20})
   }
 
   onPress = () => {

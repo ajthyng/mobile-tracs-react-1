@@ -1,11 +1,15 @@
 import React, {Component} from 'react'
-import {FlatList, View} from 'react-native'
+import {RefreshControl} from 'react-native'
 import styled, {withTheme} from 'styled-components'
+import {NavigationActions} from 'react-navigation'
 import {connect} from 'react-redux'
 import ActivityIndicator from '../ActivityIndicator'
 import Forum from './Forum'
 import {getNotifications, batchUpdateNotification} from '../../actions/notifications'
 import Subject from '../../utils/subject'
+import Header from './ForumHeader'
+import Footer from './ForumFooter'
+import EmptyForums from './EmptyForums'
 
 const Container = styled.View`
   flex: 1;
@@ -15,15 +19,16 @@ const Container = styled.View`
   background-color: ${props => props.theme.viewBackground};
 `
 
-const ForumsList = styled(FlatList)`
-  width: 100%;
+const ForumsList = styled.ScrollView`
+  align-self: stretch;
+  background-color: rgb(234, 234, 234);
 `
 
-const Spinner = () => (
-  <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-    <ActivityIndicator />
-  </View>
-)
+const ForumsContainer = styled.View`
+  margin: 5px;
+`
+
+const Spinner = () => (<ActivityIndicator />)
 
 class ForumScreen extends Component {
   state = {
@@ -48,8 +53,23 @@ class ForumScreen extends Component {
     this.setState({silentLoad: true, refreshing: true}, this.props.getNotifications)
   }
 
-  markAsRead = (id) => {
-    this.props.batchUpdate([id], {read: true})
+  goToForums = () => {
+    const {id: siteId, tools} = this.props.navigation && this.props.navigation.getParam('course', {id: null, tools: []})
+    const {navigation} = this.props
+
+    const url = `${global.urls.baseUrl}${global.urls.webUrl}/${siteId}/tool-reset/${tools['sakai.forums'].id}`
+    const mainSite = `${global.urls.baseUrl}${global.urls.portal}`
+
+    const openWebView = NavigationActions.navigate({
+      routeName: 'TRACSWeb',
+      params: {baseUrl: siteId ? url : mainSite, transition: 'cardFromRight'}
+    })
+    navigation.dispatch(openWebView)
+  }
+
+  onPress = (id, unread) => {
+    if (unread) this.props.batchUpdate([id], {read: true})
+    this.goToForums()
   }
 
   markAsSeen = () => {
@@ -68,19 +88,25 @@ class ForumScreen extends Component {
     }
   }
 
-  render () {
-    const {forums, loading} = this.props
-    const {silentLoad, refreshing} = this.state
+  renderForum = item => <Forum notification={item} onPress={this.onPress} key={item.id} />
 
+  render () {
+    const {forums, loading, navigation} = this.props
+    const {silentLoad, refreshing} = this.state
+    const course = navigation && navigation.getParam('course', {})
+
+    const forumPosts = forums.map(this.renderForum)
     return loading && !silentLoad ? <Spinner /> : (
       <Container>
+        <Header title={course.name} />
         <ForumsList
-          data={forums}
-          refreshing={refreshing}
-          onRefresh={this.refresh}
-          renderItem={({item}) => <Forum notification={item} onPress={this.markAsRead} />}
-          keyExtractor={item => item.id}
-        />
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.refresh} />}
+        >
+          <ForumsContainer>
+            {forumPosts.length > 0 ? forumPosts : <EmptyForums />}
+          </ForumsContainer>
+          <Footer />
+        </ForumsList>
       </Container>
     )
   }
