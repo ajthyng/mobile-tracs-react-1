@@ -1,9 +1,9 @@
-import React from 'react'
+import React, {PureComponent} from 'react'
+import {TouchableOpacity} from 'react-native'
 import styled, {withTheme} from 'styled-components'
-import Ripple from 'react-native-material-ripple'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 
-const Container = styled(Ripple)`
+const Container = styled.View`
   width: 120px;
   height: 80px;
   border-radius: 3px;
@@ -16,11 +16,11 @@ const Label = styled.Text`
   margin-top: 12px;
   font-size: 12px;
   font-weight: 500;
-  color: #3A6B86;
+  color: ${props => props.enabled ? '#3A6B86' : '#80808080'};
 `
 
 const Icon = styled(FAIcon)`
-  color: #3A6B86;
+  color: ${props => props.enabled ? '#3A6B86' : '#80808080'};
   font-size: 38px;
 `
 
@@ -34,20 +34,28 @@ const Dot = styled.View`
   right: 30px;
   opacity: ${props => props.active ? 1 : 0};
 `
-
-const CourseOption = (props) => {
-  const {label, name, Icon, onClick, newContent} = props
-  return (
-    <Container onPress={onClick}>
-      <Icon name={name} />
-      <Label>{label.toUpperCase()}</Label>
-      <Dot active={newContent} />
-    </Container>
-  )
+class CourseOption extends PureComponent {
+  onPress = () => {
+    const {onPress, enabled} = this.props
+    if (enabled) {
+      onPress && onPress()
+    }
+  }
+  render () {
+    const {label, name, Icon, newContent, enabled} = this.props
+    return (
+      <TouchableOpacity onPress={this.onPress} activeOpacity={enabled ? 0.2 : 1}>
+        <Container>
+          <Icon name={name} enabled={enabled} />
+          <Label>{label.toUpperCase()}</Label>
+          <Dot active={newContent} enabled={enabled} />
+        </Container>
+      </TouchableOpacity>
+    )
+  }
 }
 
 CourseOption.defaultProps = {
-  onClick: () => null,
   name: 'book',
   Icon: Icon,
   label: 'Announcements'

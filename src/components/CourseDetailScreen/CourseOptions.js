@@ -78,13 +78,18 @@ class CourseOptions extends Component {
   }
 
   render () {
-    const {hasAnnouncements, hasForums} = this.props
+    const {newAnnouncements, newForumPosts} = this.props
+
+    const hasForumsTool = this.props.course.tools.hasOwnProperty('sakai.forums')
+    const hasAnnouncementsTool = this.props.course.tools.hasOwnProperty('sakai.announcements')
+    const hasAttendanceTool = this.props.course.tools.hasOwnProperty('sakai.attendance')
+
     return (
       <Container>
         <ButtonContainer style={{transform: [{scale: 0.94}]}}>
-          <CourseOption label='Forum Posts' name='comments' onClick={this.goToForums} newContent={hasForums} />
-          <CourseOption label='Announcements' name='bullhorn' onClick={this.goToAnnouncements} newContent={hasAnnouncements} />
-          <CourseOption label='Attendance' name='check-square' onClick={this.goToAttendance} />
+          <CourseOption label='Forum Posts' name='comments' onPress={this.goToForums} newContent={newForumPosts} enabled={hasForumsTool} />
+          <CourseOption label='Announcements' name='bullhorn' onPress={this.goToAnnouncements} newContent={newAnnouncements} enabled={hasAnnouncementsTool} />
+          <CourseOption label='Attendance' name='check-square' onPress={this.goToAttendance} enabled={hasAttendanceTool} />
         </ButtonContainer>
         <CourseSiteButton title='Course Site' onPress={this.goToWeb} />
       </Container>
