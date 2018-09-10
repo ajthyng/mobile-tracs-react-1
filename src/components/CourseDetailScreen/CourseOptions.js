@@ -6,7 +6,7 @@ import {NavigationActions, withNavigation} from 'react-navigation'
 import {connect} from 'react-redux'
 
 const Container = styled.View`
-  align-self: center;
+  align-self: stretch;
   align-items: center;
   justify-content: center;
   padding-bottom: 16px;
@@ -16,7 +16,7 @@ const ButtonContainer = styled.View`
   max-width: 500px;
   align-self: stretch;
   flex-direction: row;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   align-items: flex-end;
   padding: 16px 0;
 `
@@ -87,9 +87,9 @@ class CourseOptions extends Component {
     return (
       <Container>
         <ButtonContainer style={{transform: [{scale: 0.94}]}}>
-          <CourseOption label='Forum Posts' name='comments' onPress={this.goToForums} newContent={newForumPosts} enabled={hasForumsTool} />
-          <CourseOption label='Announcements' name='bullhorn' onPress={this.goToAnnouncements} newContent={newAnnouncements} enabled={hasAnnouncementsTool} />
-          <CourseOption label='Attendance' name='check-square' onPress={this.goToAttendance} enabled={hasAttendanceTool} />
+          {hasForumsTool ? <CourseOption label='Forum Posts' name='comments' onPress={this.goToForums} newContent={newForumPosts} /> : null}
+          {hasAnnouncementsTool ? <CourseOption label='Announcements' name='bullhorn' onPress={this.goToAnnouncements} newContent={newAnnouncements} /> : null}
+          {hasAttendanceTool ? <CourseOption label='Attendance' name='check-square' onPress={this.goToAttendance} /> : null}
         </ButtonContainer>
         <CourseSiteButton title='Course Site' onPress={this.goToWeb} />
       </Container>
@@ -98,8 +98,8 @@ class CourseOptions extends Component {
 }
 
 const mapStateToProps = (state, props) => ({
-  hasAnnouncements: (state.notifications.badgeCounts[props.course.id] || {}).announceCount > 0,
-  hasForums: (state.notifications.badgeCounts[props.course.id] || {}).forumCount > 0
+  newAnnouncements: (state.notifications.badgeCounts[props.course.id] || {}).announceCount > 0,
+  newForumPosts: (state.notifications.badgeCounts[props.course.id] || {}).forumCount > 0
 })
 
 export default connect(mapStateToProps, null)(withNavigation(CourseOptions))

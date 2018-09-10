@@ -16,11 +16,11 @@ const Label = styled.Text`
   margin-top: 12px;
   font-size: 12px;
   font-weight: 500;
-  color: ${props => props.enabled ? '#3A6B86' : '#80808080'};
+  color: #3A6B86;
 `
 
 const Icon = styled(FAIcon)`
-  color: ${props => props.enabled ? '#3A6B86' : '#80808080'};
+  color: #3A6B86;
   font-size: 38px;
 `
 
@@ -36,19 +36,17 @@ const Dot = styled.View`
 `
 class CourseOption extends PureComponent {
   onPress = () => {
-    const {onPress, enabled} = this.props
-    if (enabled) {
-      onPress && onPress()
-    }
+    const {onPress} = this.props
+    onPress && onPress()
   }
   render () {
-    const {label, name, Icon, newContent, enabled} = this.props
+    const {label, name, Icon, newContent} = this.props
     return (
-      <TouchableOpacity onPress={this.onPress} activeOpacity={enabled ? 0.2 : 1}>
+      <TouchableOpacity onPress={this.onPress} >
         <Container>
-          <Icon name={name} enabled={enabled} />
+          <Icon name={name} />
           <Label>{label.toUpperCase()}</Label>
-          <Dot active={newContent} enabled={enabled} />
+          <Dot active={newContent} />
         </Container>
       </TouchableOpacity>
     )
