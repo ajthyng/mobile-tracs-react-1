@@ -4,11 +4,10 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 
 const Container = styled.View`
   align-self: stretch;
-  height: 100px;
   background-color: ${props => props.theme.viewBackground};
   border-bottom-width: 1px;
   border-bottom-color: #80808080;
-  padding: 0 0 0 24px;
+  padding: 10px 0 10px 24px;
   justify-content: center;
 `
 

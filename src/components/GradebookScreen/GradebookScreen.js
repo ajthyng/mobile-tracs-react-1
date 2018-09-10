@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import styled, {withTheme} from 'styled-components'
-import {FlatList} from 'react-native'
+import {ScrollView} from 'react-native'
 import {connect} from 'react-redux'
 import {getGrades} from '../../actions/grades'
 import {NavigationActions} from 'react-navigation'
@@ -16,11 +16,12 @@ const Container = styled.View`
   background-color: rgb(234, 234, 234);
 `
 
-const GradeList = styled(FlatList)``
+const GradeList = styled(ScrollView)`
+  align-self: stretch;
+`
 
 const GradeListContainer = styled.View`
-  margin: 16px;
-  flex: 1;
+  margin: 10px;
   align-self: stretch;
 `
 
@@ -48,9 +49,9 @@ class GradebookScreen extends Component {
     getGrades && getGrades()
   }
 
-  renderGrade = ({item}) => {
+  renderGrade = (item, i) => {
     const subtitle = this.props.grades[this.course.id].name
-    return <GradebookItem title={item.itemName} subtitle={subtitle} earned={item.grade} total={item.points} />
+    return <GradebookItem key={i.toString(10)} title={item.itemName} subtitle={subtitle} earned={item.grade} total={item.points} />
   }
 
   renderContent = () => {
@@ -59,13 +60,12 @@ class GradebookScreen extends Component {
 
     const courseGrades = (grades[this.course.id] || {}).grades || []
     return (
-      <GradeListContainer>
-        <GradeList
-          data={courseGrades}
-          renderItem={this.renderGrade}
-          keyExtractor={(item, index) => index.toString(10)}
-        />
-      </GradeListContainer>
+      <GradeList>
+        <GradeListContainer>
+          {courseGrades.map(this.renderGrade)}
+        </GradeListContainer>
+        <Footer onPress={this.goToWeb} />
+      </GradeList>
     )
   }
 
@@ -75,7 +75,6 @@ class GradebookScreen extends Component {
       <Container>
         <Header title={name} />
         {this.renderContent()}
-        <Footer onPress={this.goToWeb} />
       </Container>
     )
   }
