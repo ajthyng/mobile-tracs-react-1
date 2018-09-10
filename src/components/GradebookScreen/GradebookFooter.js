@@ -11,9 +11,8 @@ const Container = styled.View`
 `
 
 const CourseSiteButton = styled(RoundedButton)`
-  height: 40px;
-  width: 200px;
-  border-radius: 20px;
+  width: 290px;
+  border-radius: 24px;
 `
 
 class GradebookFooter extends PureComponent {

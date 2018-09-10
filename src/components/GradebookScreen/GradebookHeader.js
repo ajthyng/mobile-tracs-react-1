@@ -1,5 +1,6 @@
 import React, {PureComponent} from 'react'
 import styled from 'styled-components'
+import Icon from 'react-native-vector-icons/FontAwesome'
 
 const Container = styled.View`
   align-self: stretch;
@@ -11,13 +12,25 @@ const Container = styled.View`
   justify-content: center;
 `
 
-const CourseTitle = styled.Text`
+const TitleContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+`
+
+const Title = styled.Text`
   font-size: 24px;
   color: ${props => props.theme.darkText};
 `
 
+const TitleIcon = styled(Icon)`
+  font-size: 22;
+  color: ${props => props.theme.darkText};
+  margin-right: 8px;
+`
+
 const Subtitle = styled.Text`
-  font-size: 24px;
+  font-size: 19px;
+  font-weight: 300;
   color: ${props => props.theme.darkText};
 `
 
@@ -26,8 +39,11 @@ class GradebookHeader extends PureComponent {
     const {title} = this.props
     return (
       <Container>
-        <CourseTitle>{title}</CourseTitle>
-        <Subtitle>Gradebook</Subtitle>
+        <TitleContainer>
+          <TitleIcon name='book' />
+          <Title>Gradebook Items</Title>
+        </TitleContainer>
+        <Subtitle>{title}</Subtitle>
       </Container>
     )
   }

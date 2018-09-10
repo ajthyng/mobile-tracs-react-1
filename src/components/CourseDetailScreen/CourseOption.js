@@ -36,7 +36,7 @@ const Dot = styled.View`
 `
 
 const CourseOption = (props) => {
-  const {label, name, theme, Icon, onClick, newContent} = props
+  const {label, name, Icon, onClick, newContent} = props
   return (
     <Container onPress={onClick}>
       <Icon name={name} />
