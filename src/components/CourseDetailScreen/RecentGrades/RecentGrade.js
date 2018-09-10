@@ -11,27 +11,14 @@ const Container = styled(Animated.View)`
   align-items: center;
   justify-content: center;
   flex-direction: row;
+  margin: 6px 0 6px 0;
 `
-
-function getHue (grade, points) {
-  const failingThreshold = 0.6
-  const failingPoints = failingThreshold * points
-  const remainder = (1 - failingThreshold) * points
-
-  const gradePercent = (points - (grade < failingPoints ? failingPoints : grade)) / remainder
-
-  const normalizedGrade = 1 - gradePercent
-  return normalizedGrade * 120
-}
 
 class RecentGrade extends Component {
   constructor (props) {
     super(props)
-    const {grade, points} = props
-
     this.driver = new Animated.Value(0)
     this.comments = React.createRef()
-    this.hue = getHue(parseInt(grade, 10), points)
   }
 
   showComment = () => {

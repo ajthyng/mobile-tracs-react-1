@@ -6,23 +6,24 @@ import {NavigationActions, withNavigation} from 'react-navigation'
 import {connect} from 'react-redux'
 
 const Container = styled.View`
+  align-self: center;
   align-items: center;
   justify-content: center;
   padding-bottom: 16px;
 `
 
 const ButtonContainer = styled.View`
+  max-width: 500px;
   align-self: stretch;
   flex-direction: row;
   justify-content: space-evenly;
   align-items: flex-end;
-  padding: 32px 0 32px 0;
+  padding: 16px 0;
 `
 
 const CourseSiteButton = styled(RoundedButton)`
-  width: 250px;
-  height: 50px;
-  border-radius: 25px;
+  width: 290px;
+  border-radius: 24px;
 `
 
 class CourseOptions extends Component {
@@ -80,9 +81,9 @@ class CourseOptions extends Component {
     const {hasAnnouncements, hasForums} = this.props
     return (
       <Container>
-        <ButtonContainer>
-          <CourseOption label='Announcements' name='bullhorn' onClick={this.goToAnnouncements} newContent={hasAnnouncements} />
+        <ButtonContainer style={{transform: [{scale: 0.94}]}}>
           <CourseOption label='Forum Posts' name='comments' onClick={this.goToForums} newContent={hasForums} />
+          <CourseOption label='Announcements' name='bullhorn' onClick={this.goToAnnouncements} newContent={hasAnnouncements} />
           <CourseOption label='Attendance' name='check-square' onClick={this.goToAttendance} />
         </ButtonContainer>
         <CourseSiteButton title='Course Site' onPress={this.goToWeb} />

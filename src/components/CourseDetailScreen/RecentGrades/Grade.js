@@ -9,7 +9,7 @@ const Container = styled.View`
 `
 
 const Points = styled.Text`
-  font-size: 30px;
+  font-size: 28px;
   text-align: center;
   color: ${props => props.theme.darkText};
 `

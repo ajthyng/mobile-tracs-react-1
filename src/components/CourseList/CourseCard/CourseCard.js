@@ -18,7 +18,7 @@ const ShadowCard = styled.View`
   shadow-color: ${props => props.theme.courseCard.shadow};
   shadow-offset: 0px 2px;
   shadow-opacity: 0.3;
-  shadow-radius: 2px;
+  shadow-radius: 3px;
   margin: 15px;
 `
 
@@ -33,7 +33,7 @@ const CardBoundary = styled.View`
   flex-direction: row;
   flex: 1;
   overflow: hidden;
-  border: solid ${props => props.new ? '1' : '0'}px ${props => props.color};
+  border: solid ${props => props.new ? '2' : '0'}px ${props => props.color};
 `
 
 const ColorBar = styled.View`
@@ -191,7 +191,7 @@ class CourseCard extends Component {
               <CardBoundary color={color} new={hasNewContent} >
                 <ColorBar color={color} />
                 <Grade letterGrade={mappedGrade} percentGrade={calculatedGrade} />
-                <CourseInfo name={name} instructor={instructor} />
+                <CourseInfo name={name} instructor={instructor} hasNewContent={hasNewContent} />
               </CardBoundary>
             </TouchableWithoutFeedback>
           </CardSwipe>

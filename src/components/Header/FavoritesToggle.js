@@ -12,7 +12,7 @@ const {
 const BORDER_COLOR = '#000000A0'
 
 const Container = styled.View`
-  width: 225px;
+  width: 250px;
   height: 40px;
   background-color: #501214;
   border-radius: 2px;

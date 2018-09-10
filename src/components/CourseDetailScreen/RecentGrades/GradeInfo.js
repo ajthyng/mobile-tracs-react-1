@@ -11,8 +11,8 @@ const Container = styled.View`
 
 const Info = styled.View`
   flex: 1;
-  flex-direction: row;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   justify-content: space-between;
   height: 100%;
 `
@@ -31,11 +31,8 @@ const Posted = styled.Text`
 `
 
 const CommentBox = styled.View`
-  height: 100%;
   flex-direction: row;
-  align-items: center;
-  justify-content: flex-end;
-  padding-right: 8px;
+  padding-left: 8px;
 `
 
 const ViewComments = styled.Text`

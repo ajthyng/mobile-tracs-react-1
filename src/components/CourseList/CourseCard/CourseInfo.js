@@ -12,19 +12,20 @@ const Container = styled.View`
 const Name = styled.Text`
   font-size: 20px;
   line-height: 20px;
-  font-weight: 300;
+  font-weight: ${props => props.hasNewContent ? '500' : '400'};
+  text-decoration: ${props => props.hasNewContent ? 'underline' : 'none'};
 `
 
 const Instructor = styled.Text`
-  font-weight: 100;
+  font-weight: 300;
 `
 
 class CourseInfo extends PureComponent {
   render () {
-    const {name, instructor} = this.props
+    const {name, hasNewContent, instructor} = this.props
     return (
       <Container>
-        <Name numberOfLines={1} >{name}</Name>
+        <Name hasNewContent={hasNewContent} numberOfLines={1} >{name}</Name>
         <Instructor>{instructor}</Instructor>
       </Container>
     )

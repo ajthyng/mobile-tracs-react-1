@@ -3,7 +3,7 @@ import styled, {withTheme} from 'styled-components'
 import {Dimensions, TouchableWithoutFeedback, Linking} from 'react-native'
 
 const HeaderContainer = styled.View`
-  height: 80px;
+  padding: 12px 0;
   align-self: stretch;
   align-items: center;
   justify-content: center;
@@ -23,13 +23,14 @@ const Title = styled.Text`
   color: ${props => props.theme.darkText};
   font-size: 21px;
   font-weight: 600;
-  padding: 4px 4px 4px 0;
+  padding: 0 4px 0 0;
 `
 
 const Subtitle = styled.Text`
   color: ${props => props.theme.darkText};
   font-size: 14px;
-  font-weight: 300;
+  font-weight: 400;
+  padding: 2px 0 0 0;
 `
 
 const Email = styled.Text`

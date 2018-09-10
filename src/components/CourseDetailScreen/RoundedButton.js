@@ -9,9 +9,9 @@ const Container = styled(Animated.View)`
 `
 
 const Title = styled(Animated.Text)`
-  font-size: 22px;
+  font-size: 18px;
   font-weight: 500;
-  padding-bottom: 4px;
+  padding: 10px 0 14px 0;
   text-decoration: underline;
   text-decoration-color: ${props => props.color};
 `
@@ -33,18 +33,18 @@ class RoundedButton extends PureComponent {
     const {title, style} = this.props
     const backgroundColor = this.driver.interpolate({
       inputRange: [0, 0.7, 1],
-      outputRange: ['#FFFFFF', '#7473A8', '#FFFFFF']
+      outputRange: ['#FFFFFF', '#48396A', '#FFFFFF']
     })
 
     const fontColor = this.driver.interpolate({
       inputRange: [0, 0.7, 1],
-      outputRange: ['#7473A8', '#FFFFFF', '#7473A8']
+      outputRange: ['#48396A', '#FFFFFF', '#48396A']
     })
 
     return (
       <TouchableWithoutFeedback onPress={this.onPress} >
-        <Container style={[style, {backgroundColor}]} color='#7473a8'>
-          <Title style={{color: fontColor, textDecorationColor: fontColor}} color='#7473a8'>{title}</Title>
+        <Container style={[style, {backgroundColor}]} color='#48396A'>
+          <Title style={{color: fontColor, textDecorationColor: fontColor}} color='#48396A'>{title}</Title>
         </Container>
       </TouchableWithoutFeedback>
     )

@@ -90,7 +90,7 @@ let urls = {
 
 if (true) {
   urls = {
-    baseUrl: devBaseUrl,
+    baseUrl: stagingBaseUrl,
     dispatchUrl: dispatchQualUrl,
     feedback: feedbackUrl,
     support: supportUrl,

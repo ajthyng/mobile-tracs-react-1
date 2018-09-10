@@ -13,11 +13,10 @@ const RecentGradesContainer = styled.View`
 `
 
 const GradebookButton = styled(RoundedButton)`
-  width: 250px;
-  height: 40px;
-  border-radius: 20px;
+  width: 290px;
+  border-radius: 24px;
   align-self: center;
-  margin: 8px;
+  margin: 18px 0 16px 0;
 `
 
 const renderGrades = (gradeItem, index) => {
@@ -43,8 +42,10 @@ const NoGradeContainer = styled.View`
 
 const NoGradeText = styled.Text`
   color: ${props => props.theme.darkText};
-  font-size: 18px;
+  opacity: 0.8;
+  font-size: 17px;
   text-align: center;
+  font-variant: small-caps;
 `
 
 const SpinContainer = styled.View`
@@ -55,7 +56,7 @@ const SpinContainer = styled.View`
 
 const NoGrades = () => (
   <NoGradeContainer>
-    <NoGradeText>NO GRADES{'\n'}HAVE BEEN POSTED</NoGradeText>
+    <NoGradeText>No grades have been posted</NoGradeText>
   </NoGradeContainer>
 )
 
@@ -71,7 +72,7 @@ class RecentGrades extends PureComponent {
     if (loading && !hasGrades) {
       content = (<SpinContainer><ActivityIndicator size='large' /></SpinContainer>)
     } else if (hasGrades) {
-      content = grades.slice(0, 3).map(renderGrades)
+      content = grades.slice(0, 2).map(renderGrades)
     } else {
       content = <NoGrades />
     }

@@ -31,9 +31,9 @@ const RecentGradesSection = styled.View`
 `
 
 const Title = styled.Text`
-  font-size: 12px;
-  margin-left: 15px;
-  margin-top: 15px;
+  font-size: 13px;
+  margin: 15px 0 5px 15px;
+  font-variant: small-caps;
   color: ${props => props.theme.darkText};
   background-color: rgb(234, 234, 234);
 `
@@ -73,7 +73,7 @@ class CourseDetailScreen extends PureComponent {
           }}
         >
           <RecentGradesSection>
-            <Title>RECENTLY POSTED GRADES</Title>
+            <Title>recently posted grades</Title>
             <RecentGrades grades={grades} goToGradebook={this.goToGradebook} />
           </RecentGradesSection>
           <OptionsSection>
