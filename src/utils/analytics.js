@@ -8,107 +8,107 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import firebase from 'react-native-firebase';
-import moment from 'moment';
-import {types as siteTypes} from '../constants/sites';
+import firebase from 'react-native-firebase'
+import moment from 'moment'
+import {types as siteTypes} from '../constants/sites'
 
-const analytics = firebase.analytics();
+const analytics = firebase.analytics()
 const events = {
-	COURSE_OPEN: 'CourseOpen',
-	PROJECT_OPEN: 'ProjectOpen',
-	DASHBOARD_OPEN: 'DashboardOpen',
-	TRACS_WEB_OPEN: 'TracsWebOpen',
-	FORUMS_OPEN: 'ForumsOpen',
-	ANNOUNCEMENTS_OPEN: 'AnnouncementsOpen',
-	APP_START: 'AppStart',
-	NOTIFICATION_LOAD_TIME: 'NotificationLoadTime',
-	SITE_LOAD_TIME: 'SiteLoadTime'
-};
+  COURSE_OPEN: 'CourseOpen',
+  PROJECT_OPEN: 'ProjectOpen',
+  DASHBOARD_OPEN: 'DashboardOpen',
+  TRACS_WEB_OPEN: 'TracsWebOpen',
+  FORUMS_OPEN: 'ForumsOpen',
+  ANNOUNCEMENTS_OPEN: 'AnnouncementsOpen',
+  APP_START: 'AppStart',
+  NOTIFICATION_LOAD_TIME: 'NotificationLoadTime',
+  SITE_LOAD_TIME: 'SiteLoadTime'
+}
 const properties = {
-	COURSES: 'courses',
-	PROJECTS: 'projects',
-};
+  COURSES: 'courses',
+  PROJECTS: 'projects'
+}
 
-analytics.setAnalyticsCollectionEnabled(true);
+analytics.setAnalyticsCollectionEnabled(true)
 
-let store = null;
+let store = null
 
 const logEvent = (event, params = {}) => {
-	let eventParams = {
-		...params,
-		time: moment().format()
-	};
-	analytics.logEvent(event, eventParams);
-};
+  let eventParams = {
+    ...params,
+    time: moment().format()
+  }
+  analytics.logEvent(event, eventParams)
+}
 
 const setUserProperty = (name = null, value = null) => {
-	if (name === null && value === null) return;
-	analytics.setUserProperty(name, value);
-};
+  if (name === null && value === null) return
+  analytics.setUserProperty(name, value)
+}
 
 const methods = (reduxStore) => {
-	if (store === null) {
-		store = reduxStore;
-	}
-	return {
-		setScreen: (name = null, className = null) => {
-			if (name === null && className === null) return;
-			analytics.setCurrentScreen(name, className);
-		},
-		setUserId: (id) => {
-			analytics.setUserId(id)
-		},
-		logSiteClick: (type, id) => {
-			let params = {
-				time: moment().format(),
-				siteId: id
-			};
-			let eventName = type === siteTypes.COURSE ? events.COURSE_OPEN : events.PROJECT_OPEN;
-			analytics.logEvent(eventName, params);
-		},
-		logDashboardOpen: () => {
-			logEvent(events.DASHBOARD_OPEN)
-		},
-		logForumsOpen: () => {
-			logEvent(events.FORUMS_OPEN);
-		},
-		logAnnouncementsOpen: () => {
-			logEvent(events.ANNOUNCEMENTS_OPEN);
-		},
-		logTracsWebOpen: () => {
-			logEvent(events.TRACS_WEB_OPEN);
-		},
-		logAppStart: () => {
-			logEvent(events.APP_START);
-		},
-		logNotificationLoadTime: (time) => {
-			let notifications = store.getState().notifications;
-			let notificationCount = notifications.announcements.length + notifications.forums.length;
-			logEvent(events.NOTIFICATION_LOAD_TIME, {
-				loadTime: time,
-				notificationCount: notificationCount
-			});
-		},
-		logSiteLoadTime: (time) => {
-			logEvent(events.SITE_LOAD_TIME, {
-				loadTime: time,
-				siteCount: Object.keys(store.getState().tracsSites.userSites).length
-			});
-		},
-		logSiteCounts: (sites) => {
-			let courseCount = 0;
-			let projectCount = 0;
-			let userSites = Object.values(sites);
-			userSites.forEach(site => {
-				courseCount += site.type === siteTypes.COURSE ? 1 : 0;
-				projectCount += site.type === siteTypes.PROJECT ? 1 : 0;
-			});
-			setUserProperty(properties.COURSES, courseCount.toString(10));
-			setUserProperty(properties.PROJECTS, projectCount.toString(10));
-		}
-	}
-};
+  if (store === null) {
+    store = reduxStore
+  }
+  return {
+    setScreen: (name = null, className = null) => {
+      if (name === null && className === null) return
+      analytics.setCurrentScreen(name, className)
+    },
+    setUserId: (id) => {
+      analytics.setUserId(id)
+    },
+    logSiteClick: (type, id) => {
+      let params = {
+        time: moment().format(),
+        siteId: id
+      }
+      let eventName = type === siteTypes.COURSE ? events.COURSE_OPEN : events.PROJECT_OPEN
+      analytics.logEvent(eventName, params)
+    },
+    logDashboardOpen: () => {
+      logEvent(events.DASHBOARD_OPEN)
+    },
+    logForumsOpen: () => {
+      logEvent(events.FORUMS_OPEN)
+    },
+    logAnnouncementsOpen: () => {
+      logEvent(events.ANNOUNCEMENTS_OPEN)
+    },
+    logTracsWebOpen: () => {
+      logEvent(events.TRACS_WEB_OPEN)
+    },
+    logAppStart: () => {
+      logEvent(events.APP_START)
+    },
+    logNotificationLoadTime: (time) => {
+      let notifications = store.getState().notifications
+      let notificationCount = notifications.announcements.length + notifications.forums.length
+      logEvent(events.NOTIFICATION_LOAD_TIME, {
+        loadTime: time,
+        notificationCount: notificationCount
+      })
+    },
+    logSiteLoadTime: (time) => {
+      logEvent(events.SITE_LOAD_TIME, {
+        loadTime: time,
+        siteCount: Object.keys(store.getState().tracsSites.userSites).length
+      })
+    },
+    logSiteCounts: (sites) => {
+      let courseCount = 0
+      let projectCount = 0
+      let userSites = Object.values(sites)
+      userSites.forEach(site => {
+        courseCount += site.type === siteTypes.COURSE ? 1 : 0
+        projectCount += site.type === siteTypes.PROJECT ? 1 : 0
+      })
+      setUserProperty(properties.COURSES, courseCount.toString(10))
+      setUserProperty(properties.PROJECTS, projectCount.toString(10))
+    }
+  }
+}
 
 export let Analytics = (store) => {
-	return methods(store);
-};
+  return methods(store)
+}

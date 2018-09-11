@@ -7,15 +7,15 @@ import {haxios as axios} from '../../utils/networking'
 const CancelToken = require('axios').CancelToken
 
 const StyledProfile = styled.View`
-	background-color: transparent;
-	align-items: center;
-	justify-content: center;
+  background-color: transparent;
+  align-items: center;
+  justify-content: center;
 `
 
 const ProfileImage = styled.Image`
-	border-radius: ${props => props.diameter / 2}px;
-	height: ${props => props.diameter};
-	width: ${props => props.diameter};
+  border-radius: ${props => props.diameter / 2}px;
+  height: ${props => props.diameter};
+  width: ${props => props.diameter};
 `
 
 const ProfileText = styled.Text``
@@ -27,7 +27,7 @@ class Profile extends Component {
     name: null
   }
 
-  componentDidMount() {
+  componentDidMount () {
     const {netid} = this.props
 
     if (!netid) return
@@ -53,7 +53,7 @@ class Profile extends Component {
       .catch(err => console.log(err))
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this.state.source.cancel()
   }
 
@@ -70,8 +70,8 @@ class Profile extends Component {
     )
   }
 
-  render() {
-    const {name: defaultName, style} = this.props
+  render () {
+    const {style} = this.props
     const {name: storedName} = this.state
 
     let displayName = null
@@ -95,7 +95,7 @@ Profile.defaultProps = {
   diameter: 30,
   name: '',
   style: {
-    container: {flexDirection: 'row'},
+    container: {flexDirection: 'row', marginLeft: 8},
     text: {
       color: 'white',
       fontSize: 16,

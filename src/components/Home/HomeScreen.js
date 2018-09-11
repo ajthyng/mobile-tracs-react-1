@@ -7,6 +7,7 @@ import {getSiteInfo, getFavorites} from '../../actions/sites'
 import {getGrades} from '../../actions/grades'
 import {getNotifications} from '../../actions/notifications'
 import styled from 'styled-components'
+import Subject from '../../utils/subject'
 
 const Home = styled.View`
   flex: 1;
@@ -26,7 +27,12 @@ class HomeScreen extends Component {
     }
   }
 
+  componentWillUnmount () {
+    Subject.unsubscribe('notification', this.initHomeScreen)
+  }
+
   componentDidMount () {
+    Subject.subscribe('notification', this.initHomeScreen)
     this.initHomeScreen()
   }
 

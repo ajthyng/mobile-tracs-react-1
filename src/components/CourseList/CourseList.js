@@ -98,7 +98,7 @@ class CourseList extends Component {
     const newFilter = this.props.favoritesFilterActive
     if (oldFilter !== newFilter) {
       if (this.siteData) {
-        this.siteData.forEach(({cardRef}) => this.refs[cardRef].forceUpdate())
+        this.siteData.forEach(({cardRef}) => this.refs[cardRef] && this.refs[cardRef].forceUpdate())
       }
     }
   }

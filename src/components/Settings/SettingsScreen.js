@@ -116,7 +116,10 @@ class SettingsScreen extends Component {
   }
 
   renderItem = ({item}) => {
-    const {enabled} = this.state
+    let {enabled} = this.state
+    if (item.name === 'Dark Mode') {
+      enabled = false
+    }
     const {onToggle, on, name, id, type} = item
     return (
       <SiteSetting

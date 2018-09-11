@@ -33,7 +33,7 @@ const CardBoundary = styled.View`
   flex-direction: row;
   flex: 1;
   overflow: hidden;
-  border: solid ${props => props.new ? '2' : '0'}px ${props => props.color};
+  border: solid ${props => props.new ? '2' : Platform.select({ios: '0', android: '1'})}px ${props => props.color};
 `
 
 const ColorBar = styled.View`

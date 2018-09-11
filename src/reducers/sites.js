@@ -33,7 +33,7 @@ export const initialState = {
   isUpdatingFavorites: false,
   hasFailed: false,
   favorites: [],
-  filterStatus: ALL_SITES
+  filterStatus: FAVORITES
 }
 
 let clearSites = (state, action) => {

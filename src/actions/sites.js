@@ -40,7 +40,7 @@ const requestSites = () => {
 const sitesSuccess = (userSites, loadTime) => {
   Analytics().logSiteCounts(userSites)
   Analytics().logSiteLoadTime(loadTime)
-  console.log(loadTime)
+
   return {
     type: SITES_SUCCESS,
     userSites: userSites
@@ -68,7 +68,6 @@ export function getSiteInfo (netid) {
     }
 
     let sites = (res.data || {}).site_collection
-    console.log(sites)
     let userSites = sites.reduce((accum, site) => {
       accum[site.id] = {
         id: site.id,
