@@ -14,7 +14,7 @@ import {PersistGate} from 'redux-persist/integration/react'
 import FCM, {FCMEvent} from 'react-native-fcm'
 import configureStore from './src/store/configureStore'
 import * as urls from './config/urls'
-import {getNotifications} from './src/actions/notifications'
+import Subject from './src/utils/subject'
 import {credentials} from './src/utils/storage'
 import {Analytics} from './src/utils/analytics'
 import {login} from './src/actions/login'
@@ -63,9 +63,9 @@ class App extends Component {
   handleNotification = (notification) => {
     console.log(notification)
     if (notification.local_notification) {
-      // Not used but I don't want to forget the option
+      console.log('local notification')
     } else if (notification.opened_from_tray) {
-
+      console.log('from tray')
     } else {
       FCM.presentLocalNotification({
         title: `${notification.fcm.title}`,
@@ -75,7 +75,7 @@ class App extends Component {
         show_in_foreground: true,
         icon: 'ic_notification'
       })
-      store.dispatch(getNotifications())
+      Subject.fire('notification')
     }
   }
 

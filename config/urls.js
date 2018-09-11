@@ -88,7 +88,7 @@ let urls = {
   ...endpoints
 }
 
-if (true) {
+if (__DEV__) {
   urls = {
     baseUrl: stagingBaseUrl,
     dispatchUrl: dispatchQualUrl,

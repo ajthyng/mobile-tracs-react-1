@@ -13,6 +13,8 @@ target 'TRACSMobile' do
 
   pod 'RNSVG', :path => '../node_modules/react-native-svg'
 
+  pod 'ReactNativeFabric', :path => '../node_modules/react-native-fabric'
+
   target 'TRACSMobileTests' do
     inherit! :search_paths
     # Pods for testing

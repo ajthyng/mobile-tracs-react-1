@@ -12,6 +12,8 @@ import {getNotifications} from './src/actions/notifications'
 import {setToken} from './src/actions/registrar'
 import ThemedApp from './src/ThemedApp'
 import Subject from './src/utils/subject'
+import crashlytics from 'react-native-fabric-crashlytics'
+import {Crashlytics} from 'react-native-fabric'
 
 const {store, persistor} = configureStore()
 
@@ -39,21 +41,24 @@ Text.prototype.render = function (...args) {
 class App extends Component {
   constructor (props) {
     super(props)
+    this.state = {
+      appState: AppState.currentState,
+      firstRun: this.props.firstRun
+    }
     global.simulator = this.props.isSimulator
-    console.log('First Run: ', this.props.isFirstRun)
-    if (this.props.isFirstRun) {
+    crashlytics.init()
+
+    if (this.state.firstRun) {
       credentials.reset()
     }
-    this.handleAppStateChange = this.handleAppStateChange.bind(this)
-    this.handleNotification = this.handleNotification.bind(this)
+
     this.analytics = Analytics(store)
     this.analytics.logAppStart()
-    this.state = {
-      appState: AppState.currentState
-    }
+
     if (global.simulator) {
       store.dispatch(setToken('9561548f635aad3fd3361c3dfe4c345d0aa0d3a32542675563eea05a6212dc95'))
     }
+
     PushNotification.configure({
       onRegister: ({token, os}) => {
         if (token) {
@@ -75,7 +80,11 @@ class App extends Component {
     AppState.addEventListener('change', this.handleAppStateChange)
   }
 
-  handleAppStateChange (nextAppState) {
+  componentWillUnmount () {
+    AppState.removeEventListener('change', this.handleAppStateChange)
+  }
+
+  handleAppStateChange = (nextAppState) => {
     if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
       credentials.get().then(creds => {
         if (creds.username && creds.password) {
@@ -88,8 +97,7 @@ class App extends Component {
     })
   }
 
-  handleNotification (notification) {
-    console.log('IOS Notification: ', notification)
+  handleNotification = (notification) => {
     if (notification.data.remote) {
       PushNotificationIOS.presentLocalNotification({
         alertBody: notification.message,
