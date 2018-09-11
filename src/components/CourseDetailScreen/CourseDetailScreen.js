@@ -57,7 +57,8 @@ class CourseDetailScreen extends PureComponent {
 
   render () {
     const {course, grades} = this.props
-    const {contactInfo: {email: facultyEmail}, name: title} = course
+    const {contactInfo: {email: facultyEmail}, name: title, isFavorite} = course
+    const updateFavorites = this.props.navigation.getParam('updateFavorites', () => null)
 
     return (
       <Container>
@@ -65,6 +66,8 @@ class CourseDetailScreen extends PureComponent {
           navigation={this.props.navigation}
           title={title}
           email={facultyEmail}
+          isFavorite={isFavorite}
+          updateFavorites={updateFavorites}
         />
         <Content
           contentContainerStyle={{

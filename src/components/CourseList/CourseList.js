@@ -20,9 +20,8 @@ class CourseList extends Component {
 
   isFavorite = (id) => this.props.favorites.includes(id)
 
-  updateFavorite = (id) => {
-    const {favorites, isUpdatingFavorites} = this.props
-    if (isUpdatingFavorites) return
+  updateFavorite = (id) => () => {
+    const {favorites} = this.props
 
     const isFavorite = this.isFavorite(id)
     if (isFavorite) {
@@ -38,7 +37,8 @@ class CourseList extends Component {
     const {navigation: {navigate}} = this.props
     navigate('CourseDetail', {
       transition: 'cardFromRight',
-      course
+      course,
+      updateFavorites: this.updateFavorite(course.id)
     })
   }
 

@@ -1,22 +1,22 @@
 import React, {PureComponent} from 'react'
 import styled, {withTheme} from 'styled-components'
 import {Dimensions, TouchableWithoutFeedback, Linking} from 'react-native'
+import Star from './Star'
 
 const HeaderContainer = styled.View`
-  padding: 12px 0;
+  padding: 12px 16px;
   align-self: stretch;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   background-color: ${props => props.theme.courseDetailHeaderBackground};
   border-bottom-color: #80808080;
   border-bottom-width: 1px;
+  flex-direction: row;
 `
 
 const TitleContainer = styled.View`
   align-items: flex-start;
   justify-content: center;
-  width: 100%;
-  padding-left: 16px;
 `
 
 const Title = styled.Text`
@@ -52,10 +52,10 @@ class CourseDetailHeader extends PureComponent {
   }
 
   render () {
-    const {title, email} = this.props
-    const {width} = Dimensions.get('window')
+    const {title, email, isFavorite, updateFavorites} = this.props
+
     return (
-      <HeaderContainer width={width}>
+      <HeaderContainer>
         <TitleContainer>
           <Title>{title}</Title>
           <Subtitle>
@@ -65,6 +65,7 @@ class CourseDetailHeader extends PureComponent {
             </TouchableWithoutFeedback>
           </Subtitle>
         </TitleContainer>
+        <Star active={isFavorite} onPress={updateFavorites} />
       </HeaderContainer>
     )
   }

@@ -222,7 +222,7 @@ class CourseCard extends Component {
             <IconLabel>{iconLabel}</IconLabel>
           </ButtonContainer>
         </Background>
-        <CardSwipe {...this._panResponder.panHandlers} style={transform} >
+        <CardSwipe style={transform} >
           <TouchableWithoutFeedback onPress={this.onPress} onLongPress={this.openCard}>
             <CardBoundary color={color} new={hasNewContent} >
               <ColorBar color={color} new={hasNewContent} />
