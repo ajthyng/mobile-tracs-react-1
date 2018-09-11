@@ -123,7 +123,15 @@ const mapStateToProps = (state) => {
 
   const sites = Object.keys(userSites).reduce((accum, siteId) => {
     const hasNewContent = (badgeCounts[siteId] || {}).unseenCount > 0
-    accum.push({...userSites[siteId], hasNewContent, color: defaultColorBar, isFavorite: favorites.includes(siteId)})
+    const {mappedGrade, calculatedGrade} = (state.grades[siteId] || {})
+    accum.push({
+      ...userSites[siteId],
+      hasNewContent,
+      color: defaultColorBar,
+      mappedGrade,
+      calculatedGrade,
+      isFavorite: favorites.includes(siteId)
+    })
     return accum
   }, [])
 
