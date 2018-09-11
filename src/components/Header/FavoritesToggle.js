@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react'
+import React, {Component} from 'react'
 import {TouchableOpacity} from 'react-native'
 import styled from 'styled-components'
 import {toggleStatus} from '../../constants/sites'
@@ -46,7 +46,7 @@ const StyledIcon = styled(Icon)`
   color: ${props => props.active ? 'white' : '#b77c7e'};
 `
 
-class FavoritesToggle extends PureComponent {
+class FavoritesToggle extends Component {
   state = {
     status: this.props.status
   }

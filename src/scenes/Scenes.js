@@ -7,7 +7,6 @@ import {Easing, Platform, Animated} from 'react-native'
 
 import {createSwitchNavigator, createStackNavigator} from 'react-navigation'
 import CalendarScreen from '../components/CalendarScreen/CalendarScreen'
-import CourseScreen from '../components/CourseScreen/CourseScreen'
 import {cardFromRight, cardFromBottom, cardFromLeft, cardFromTop, defaultTransition} from './Transitions'
 import CourseDetailScreen from '../components/CourseDetailScreen/CourseDetailScreen'
 import SettingsScreen from '../components/Settings/SettingsScreen'
@@ -28,9 +27,6 @@ const MainNavigator = createStackNavigator(
   {
     Home: {
       screen: HomeScreen
-    },
-    Course: {
-      screen: CourseScreen
     },
     Calendar: {
       screen: CalendarScreen

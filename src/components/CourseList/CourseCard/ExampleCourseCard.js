@@ -6,17 +6,14 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 const OPEN_WIDTH = -100
 const HEIGHT = 80
 
-const ShadowCard = styled.View`
+const CardSwipe = styled(Animated.View)`
   height: ${HEIGHT}px;
+  background-color: white;
   shadow-color: ${props => props.theme.courseCard.shadow};
   shadow-offset: 0px 2px;
   shadow-opacity: 0.3;
   shadow-radius: 2px;
   elevation: 3;
-`
-
-const CardSwipe = styled(Animated.View)`
-  flex: 1;
 `
 
 const CardBoundary = styled.View`
@@ -88,18 +85,16 @@ class ExampleCourseCard extends Component {
             <IconLabel>ADD TO{'\n'}FAVORITES</IconLabel>
           </ButtonContainer>
         </Background>
-        <ShadowCard>
-          <CardSwipe style={transform}>
-            <CardBoundary>
-              <ColorBar />
-              <EmptyGrade />
-              <EmptyContent>
-                <TitleBar />
-                <SubtitleBar />
-              </EmptyContent>
-            </CardBoundary>
-          </CardSwipe>
-        </ShadowCard>
+        <CardSwipe style={transform}>
+          <CardBoundary>
+            <ColorBar />
+            <EmptyGrade />
+            <EmptyContent>
+              <TitleBar />
+              <SubtitleBar />
+            </EmptyContent>
+          </CardBoundary>
+        </CardSwipe>
       </View>
     )
   }
@@ -110,7 +105,6 @@ const ButtonContainer = styled(TouchableOpacity)`
   width: 100px;
   align-items: center;
   justify-content: center;
-  z-index: 0;
 `
 
 const IconLabel = styled.Text`

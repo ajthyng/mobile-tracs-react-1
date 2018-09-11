@@ -3,21 +3,17 @@ import {Animated} from 'react-native'
 import styled, { withTheme } from 'styled-components'
 
 const HEIGHT = 80
-const ShadowCard = styled.View`
-  height: ${HEIGHT}px;
-  shadow-color: ${props => props.theme.courseCard.shadow};
-  shadow-offset: 0px 2px;
-  shadow-opacity: 0.3;
-  shadow-radius: 2px;
-  elevation: 3;
-`
+
 const CardBoundary = styled.View`
   height: ${HEIGHT}px;
   background-color: ${props => props.theme.courseCardBackground};
   margin: 10px;
   border-radius: 3px;
   flex-direction: row;
-  overflow: hidden;
+  shadow-color: ${props => props.theme.courseCard.shadow};
+  shadow-offset: 0px 2px;
+  shadow-opacity: 0.3;
+  shadow-radius: 2px;
   flex: 1;
 `
 
@@ -25,6 +21,8 @@ const ColorBar = styled.View`
   height: 100%;
   width: 10px;
   background-color: #F0F0F0;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
 `
 
 const EmptyGrade = styled.View`
@@ -78,16 +76,14 @@ class CourseSkeletonCard extends Component {
     const scaleXY = [{scale}]
 
     return (
-      <ShadowCard>
-        <CardBoundary>
-          <ColorBar />
-          <EmptyGrade />
-          <EmptyContent>
-            <TitleBar style={{transform: scaleXY}} />
-            <SubtitleBar style={{transform: scaleXY}} />
-          </EmptyContent>
-        </CardBoundary>
-      </ShadowCard>
+      <CardBoundary>
+        <ColorBar />
+        <EmptyGrade />
+        <EmptyContent>
+          <TitleBar style={{transform: scaleXY}} />
+          <SubtitleBar style={{transform: scaleXY}} />
+        </EmptyContent>
+      </CardBoundary>
     )
   }
 }

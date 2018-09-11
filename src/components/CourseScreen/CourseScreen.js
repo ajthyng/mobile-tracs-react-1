@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import {Dimensions, TouchableOpacity} from 'react-native'
 import styled, {withTheme} from 'styled-components'
 import dayjs from 'dayjs'
 import {connect} from 'react-redux'
@@ -36,10 +35,6 @@ const RecentText = styled.Text`
 class CourseScreen extends Component {
   static navigationOptions = {
     title: 'Course'
-  }
-
-  constructor (props) {
-    super(props)
   }
 
   goToCourseDetail = () => {

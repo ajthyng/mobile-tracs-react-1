@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react'
+import React, {Component} from 'react'
 import {Dimensions} from 'react-native'
 import styled from 'styled-components'
 import Svg, {Path} from 'react-native-svg'
@@ -24,7 +24,7 @@ const EmptyCourse = styled(ExampleCourseCard)`
 
 const message = `You have no Favorited courses\nGo to All Sites and swipe left on a course\nto add favorites to this screen`
 
-class EmptyCourseList extends PureComponent {
+class EmptyCourseList extends Component {
   state = {
     height: Dimensions.get('window').height / 2
   }

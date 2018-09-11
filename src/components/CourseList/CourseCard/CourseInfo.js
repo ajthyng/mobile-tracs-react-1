@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react'
+import React, {Component} from 'react'
 import styled from 'styled-components'
 
 const Container = styled.View`
@@ -20,7 +20,7 @@ const Instructor = styled.Text`
   font-weight: 300;
 `
 
-class CourseInfo extends PureComponent {
+class CourseInfo extends Component {
   render () {
     const {name, hasNewContent, instructor} = this.props
     return (
