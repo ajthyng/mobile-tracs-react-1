@@ -4,7 +4,7 @@ import styled from 'styled-components'
 const Container = styled.View`
   align-items: center;
   justify-content: center;
-  width: 110px;
+  width: 95px;
   border-right-width: 1px;
   borderRightColor: #80808030;
 `

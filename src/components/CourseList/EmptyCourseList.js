@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {PureComponent} from 'react'
 import {Dimensions} from 'react-native'
 import styled from 'styled-components'
 import ExampleCourseCard from './CourseCard/ExampleCourseCard'
@@ -23,7 +23,7 @@ const EmptyCourse = styled(ExampleCourseCard)`
 
 const message = `You have no Favorited courses\nGo to All Sites and press the star\nto add favorites to this screen`
 
-class EmptyCourseList extends Component {
+class EmptyCourseList extends PureComponent {
   state = {
     height: Dimensions.get('window').height / 2
   }
