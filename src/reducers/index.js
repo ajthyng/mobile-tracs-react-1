@@ -20,6 +20,7 @@ import {themeReducer} from './theme'
 import {gradesReducer} from './grades'
 import {forumReducer} from './forums'
 import {calendarReducer} from './calendar'
+import PushNotification from 'react-native-push-notification'
 
 const appReducer = combineReducers({
   login: loginReducer,
@@ -37,6 +38,7 @@ const appReducer = combineReducers({
 const rootReducer = (state, action) => {
   if (action.type === auth.REQUEST_LOGOUT) {
     state = undefined
+    PushNotification.setApplicationIconBadgeNumber(0)
   }
   return appReducer(state, action)
 }

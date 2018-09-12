@@ -90,7 +90,7 @@ let urls = {
 
 if (__DEV__) {
   urls = {
-    baseUrl: prodBaseUrl,
+    baseUrl: stagingBaseUrl,
     dispatchUrl: dispatchQualUrl,
     feedback: feedbackUrl,
     support: supportUrl,
