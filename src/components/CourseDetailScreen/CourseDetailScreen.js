@@ -117,13 +117,17 @@ const mapStateToProps = (state, props) => {
   const siteId = course.id || null
   let grades = (state.grades[siteId] || {}).grades || []
 
-  grades = grades
-    .filter(({postedDate}) => postedDate !== null)
+  let filteredGrades = grades
+    .filter(({postedDate, grade}) => postedDate !== null && grade !== null)
     .sort(byPostedDate)
+
+  if (filteredGrades.length === 0) {
+    filteredGrades = grades.filter(({grade}) => grade !== null).reverse()
+  }
 
   return {
     course,
-    grades
+    grades: filteredGrades
   }
 }
 

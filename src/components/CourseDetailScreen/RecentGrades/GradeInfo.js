@@ -32,6 +32,8 @@ const Posted = styled.Text`
 
 const CommentBox = styled.View`
   flex-direction: row;
+  align-items: center;
+  justify-content: center;
   padding-left: 8px;
 `
 
@@ -45,7 +47,8 @@ const Dot = styled.View`
   height: 10px;
   width: 10px;
   border-radius: 5px;
-  margin-left: 4px;
+  margin-left: 6px;
+  margin-top: 2px;
 `
 
 const Title = styled.View`
