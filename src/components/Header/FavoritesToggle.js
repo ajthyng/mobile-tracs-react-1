@@ -12,8 +12,9 @@ const {
 const BORDER_COLOR = '#000000A0'
 
 const Container = styled.View`
-  width: 250px;
-  height: 40px;
+  flex: 2;
+  max-width: ${props => props.small ? '75%' : '250px'};
+  height: ${props => props.small ? '35px' : '40px'};
   background-color: #501214;
   border-radius: 2px;
   flex-direction: row;
@@ -21,7 +22,6 @@ const Container = styled.View`
 `
 
 const Favorite = styled((props) => <TouchableOpacity {...props} activeOpacity={1} />)`
-  height: 100%;
   flex-direction: row;
   flex: 1;
   align-items: center;
@@ -36,12 +36,12 @@ const AllSites = styled(Favorite)`
 const Label = styled.Text`
   margin-left: 6px;
   color: ${props => props.active ? 'white' : '#b77c7e'};
-  font-size: 14px;
-  line-height: 16px;
+  font-size: ${props => props.small ? '12' : '14'}px;
+  padding-bottom: 2px;
 `
 
 const StyledIcon = styled(Icon)`
-  font-size: 14px;
+  font-size: ${props => props.small ? '12' : '14'}px;
   line-height: 14px;
   color: ${props => props.active ? 'white' : '#b77c7e'};
 `
@@ -54,16 +54,17 @@ class FavoritesToggle extends Component {
   render () {
     const favoritesActive = this.props.status === FAVORITES
     const allSitesActive = this.props.status === ALL_SITES
+    const {small} = this.props
 
     return (
-      <Container>
+      <Container small={small}>
         <Favorite active={favoritesActive} onPress={this.onPress(FAVORITES)}>
-          <StyledIcon name='star' active={favoritesActive} />
-          <Label active={favoritesActive}>FAVORITES</Label>
+          <StyledIcon name='star' active={favoritesActive} small={small} />
+          <Label active={favoritesActive} small={small}>FAVORITES</Label>
         </Favorite>
         <AllSites active={allSitesActive} onPress={this.onPress(ALL_SITES)}>
-          <StyledIcon name='th' active={allSitesActive} />
-          <Label active={allSitesActive}>ALL SITES</Label>
+          <StyledIcon name='th' active={allSitesActive} small={small} />
+          <Label active={allSitesActive} small={small}>ALL SITES</Label>
         </AllSites>
       </Container>
     )

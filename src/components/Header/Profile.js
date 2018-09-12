@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import {Image, Platform, View, StyleSheet, Text, Animated} from 'react-native'
 import styled from 'styled-components'
 import {connect} from 'react-redux'
 import {haxios as axios} from '../../utils/networking'
@@ -7,7 +6,6 @@ import {haxios as axios} from '../../utils/networking'
 const CancelToken = require('axios').CancelToken
 
 const StyledProfile = styled.View`
-  background-color: transparent;
   align-items: center;
   justify-content: center;
 `
@@ -71,7 +69,7 @@ class Profile extends Component {
   }
 
   render () {
-    const {style} = this.props
+    const {style, shouldDisplayName} = this.props
     const {name: storedName} = this.state
 
     let displayName = null
@@ -83,8 +81,8 @@ class Profile extends Component {
     return (
       <StyledProfile style={style.container}>
         {this.renderProfileImage()}
-        <ProfileText style={style.text}>
-          {displayName}
+        <ProfileText style={style.text} numberOfLines={1} ellipsizeMode='tail'>
+          {shouldDisplayName ? displayName : null}
         </ProfileText>
       </StyledProfile>
     )

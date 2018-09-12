@@ -19,14 +19,14 @@ import {logout} from '../../actions/login'
 import * as Storage from '../../utils/storage'
 
 class CustomMenuRenderer extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       slide: new Animated.Value(0)
     }
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.openAnimation = Animated.timing(this.state.slide, {
       duration: 200,
       toValue: 1,
@@ -35,7 +35,7 @@ class CustomMenuRenderer extends Component {
     }).start()
   }
 
-  close() {
+  close () {
     return new Promise(resolve => {
       Animated.timing(this.state.slide, {
         duration: 200,
@@ -46,11 +46,11 @@ class CustomMenuRenderer extends Component {
     })
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this.openAnimation && this.openAnimation.cancel()
   }
 
-  render() {
+  render () {
     const {style, children, layouts, ...other} = this.props
     const width = layouts.windowLayout.width * 0.65
     const layout = {top: 0, right: 0, height: '100%', position: 'absolute', width}
@@ -72,25 +72,29 @@ class CustomMenuRenderer extends Component {
 }
 
 class ProfileMenu extends Component {
-  render() {
-    const {navigation: {navigate}, theme} = this.props
+  render () {
+    const {navigation: {navigate}, theme, small} = this.props
     return (
       <Menu renderer={CustomMenuRenderer}
-            onSelect={val => {
-              if (val === 'Logout') {
-                this.props.logout()
-              } else {
-                navigate(val, {transition: 'cardFromRight'})
-              }
-            }}>
+        onSelect={val => {
+          if (val === 'Logout') {
+            this.props.logout()
+          } else {
+            navigate(val, {transition: 'cardFromRight'})
+          }
+        }}>
         <MenuTrigger>
           <Profile />
         </MenuTrigger>
         <MenuOptions customStyles={optionStyles(this.props)}>
-          <Profile diameter={50} style={{
-            container: {flexDirection: 'column'},
-            text: {color: theme.darkText, fontSize: 22, fontWeight: 'bold'}
-          }} />
+          <Profile
+            diameter={50}
+            shouldDisplayName
+            style={{
+              container: {flexDirection: 'column', alignItems: 'center', justifyContent: 'center'},
+              text: {color: theme.darkText, fontSize: 22, fontWeight: 'bold'}
+            }}
+          />
           <MenuOption value='Settings' customStyles={{optionWrapper: optionStyles(this.props).topOption}}>
             <ProfileMenuOption label='Settings' icon='cog' size={22} />
           </MenuOption>
