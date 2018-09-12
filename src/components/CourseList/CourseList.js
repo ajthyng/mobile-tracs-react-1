@@ -76,7 +76,6 @@ class CourseList extends Component {
               course={course}
               setScroll={this.setScroll}
               isFavorite={isFavorite}
-              updateFavorite={this.updateFavorite}
               onPress={this.goToCourse(course)}
               onFavorite={this.updateFavorite(course.id)}
             />

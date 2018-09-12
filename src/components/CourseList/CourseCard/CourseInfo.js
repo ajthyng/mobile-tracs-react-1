@@ -17,17 +17,17 @@ const Name = styled.Text`
   text-decoration: ${props => props.hasNewContent ? 'underline' : 'none'};
 `
 
-const Instructor = styled.Text`
+const Faculty = styled.Text`
   font-weight: 300;
 `
 
 class CourseInfo extends Component {
   render () {
-    const {name, hasNewContent, instructor} = this.props
+    const {name, hasNewContent, faculty} = this.props
     return (
       <Container>
         <Name hasNewContent={hasNewContent} numberOfLines={1} >{name}</Name>
-        <Instructor>{instructor}</Instructor>
+        <Faculty>{faculty}</Faculty>
       </Container>
     )
   }
