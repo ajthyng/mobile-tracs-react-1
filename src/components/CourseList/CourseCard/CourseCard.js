@@ -1,56 +1,24 @@
-import React, {Component} from 'react'
-import {Animated, Dimensions, View, TouchableWithoutFeedback, Vibration, Platform, TouchableOpacity, PanResponder} from 'react-native'
+import React, {PureComponent} from 'react'
+import {Animated, Dimensions, TouchableWithoutFeedback, Vibration, Platform, PanResponder} from 'react-native'
 import styled, {withTheme} from 'styled-components'
 import {connect} from 'react-redux'
 import Grade from './Grade'
 import CourseInfo from './CourseInfo'
-import Icon from 'react-native-vector-icons/FontAwesome'
+import Star from './Star'
 import {toggleStatus} from '../../../constants/sites'
 
 const {FAVORITES} = toggleStatus
 const OPEN_WIDTH = -100
-const HEIGHT = 80
 const LONG_PRESS_VIBRATION = Platform.select({
   ios: 100,
   android: 200
 })
 
-const ButtonContainer = styled(TouchableOpacity)`
-  height: 100%;
-  width: 100px;
-  align-items: center;
-  justify-content: center;
-`
-
-const IconLabel = styled.Text`
-  font-size: 10px;
-  color: white;
-  text-align: center;
-`
-
-const Background = styled.View`
-  position: absolute;
-  right: 0;
-  height: ${HEIGHT}px;
-  width: ${props => props.cardWidth}px;
-  margin: 10px;
-  border-radius: 3px;
-  background-color: ${props => props.color};
-  align-items: flex-end;
-  justify-content: center;
-  overflow: hidden;
-`
-
-const CardSwipe = styled(Animated.View)`
-  height: ${HEIGHT}px;
-  margin: 10px;
-`
-
 const CardBoundary = styled.View`
-  height: 100%;
   flex-direction: row;
   background-color: ${props => props.theme.courseCard.background};
   border-radius: 2px;
+  margin: 10px;
   border: solid ${props => props.new ? '2' : Platform.select({ios: '0', android: '1'})}px ${props => props.color};
   shadow-color: ${props => props.theme.courseCard.shadow};
   shadow-offset: 0px 2px;
@@ -59,14 +27,17 @@ const CardBoundary = styled.View`
 `
 
 const ColorBar = styled.View`
-  height: 100%;
   width: 10px;
   background-color: ${props => props.color || '#000'};
   border-top-left-radius: ${props => props.new ? '0' : '2'}px;
   border-bottom-left-radius: ${props => props.new ? '0' : '2'}px;
 `
 
-class CourseCard extends Component {
+const FavoriteStar = styled(Star)`
+  padding: 10px;
+`
+
+class CourseCard extends PureComponent {
   constructor (props) {
     super(props)
     this.state = {
@@ -165,18 +136,7 @@ class CourseCard extends Component {
   }
 
   onPress = () => {
-    if (this.state.isOpen) {
-      this.closeCard()
-    } else {
-      this.props.onPress && this.props.onPress()
-    }
-  }
-
-  canPressBackground = () => {
-    const {favoritesFilterActive, course} = this.props
-    const viewingAllSitesAndCourseIsNotFavorite = !favoritesFilterActive && !course.isFavorite
-    const viewingFavorites = favoritesFilterActive
-    return viewingAllSitesAndCourseIsNotFavorite || viewingFavorites
+    this.props.onPress && this.props.onPress()
   }
 
   updateFavorite = (id) => () => {
@@ -192,46 +152,22 @@ class CourseCard extends Component {
       color,
       calculatedGrade,
       mappedGrade,
-      isFavorite,
-      id,
       hasNewContent,
+      isFavorite,
       contactInfo: {name: instructor}
     } = this.props.course
 
-    const {cardWidth} = this.state
-
-    const transform = {
-      transform: [{
-        translateX: this.state.pan.x
-      }]
-    }
-
-    const iconName = isFavorite ? 'eye-slash' : 'star'
-
-    let iconLabel = 'ALREADY ADDED\nTO FAVORITES'
-    const canPressBackground = this.canPressBackground()
-    if (canPressBackground) {
-      iconLabel = (isFavorite ? 'REMOVE FROM' : 'ADD TO') + '\nFAVORITES'
-    }
+    const {favoritesFilterActive, onFavorite} = this.props
 
     return (
-      <View>
-        <Background cardWidth={cardWidth} color={color} >
-          <ButtonContainer onPress={this.updateFavorite(id)}>
-            {canPressBackground ? <Icon ref='icon' name={iconName} color='white' size={24} /> : null}
-            <IconLabel>{iconLabel}</IconLabel>
-          </ButtonContainer>
-        </Background>
-        <CardSwipe style={transform} >
-          <TouchableWithoutFeedback onPress={this.onPress} onLongPress={this.openCard}>
-            <CardBoundary color={color} new={hasNewContent} >
-              <ColorBar color={color} new={hasNewContent} />
-              <Grade letterGrade={mappedGrade} percentGrade={calculatedGrade} />
-              <CourseInfo name={name} instructor={instructor} hasNewContent={hasNewContent} />
-            </CardBoundary>
-          </TouchableWithoutFeedback>
-        </CardSwipe>
-      </View>
+      <TouchableWithoutFeedback onPress={this.onPress}>
+        <CardBoundary color={color} new={hasNewContent} >
+          <ColorBar color={color} new={hasNewContent} />
+          <Grade letterGrade={mappedGrade} percentGrade={calculatedGrade} />
+          <CourseInfo name={name} instructor={instructor} hasNewContent={hasNewContent} />
+          {favoritesFilterActive ? null : <FavoriteStar active={isFavorite} onPress={onFavorite} />}
+        </CardBoundary>
+      </TouchableWithoutFeedback>
     )
   }
 }

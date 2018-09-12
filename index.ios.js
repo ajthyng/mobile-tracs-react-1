@@ -12,8 +12,8 @@ import {getNotifications} from './src/actions/notifications'
 import {setToken} from './src/actions/registrar'
 import ThemedApp from './src/ThemedApp'
 import Subject from './src/utils/subject'
-import crashlytics from 'react-native-fabric-crashlytics'
-import {Crashlytics} from 'react-native-fabric'
+// import crashlytics from 'react-native-fabric-crashlytics'
+// import {Crashlytics} from 'react-native-fabric'
 
 const {store, persistor} = configureStore()
 
@@ -46,7 +46,6 @@ class App extends Component {
       firstRun: this.props.firstRun
     }
     global.simulator = this.props.isSimulator
-    crashlytics.init()
 
     if (this.state.firstRun) {
       credentials.reset()

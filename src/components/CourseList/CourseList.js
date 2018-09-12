@@ -78,6 +78,7 @@ class CourseList extends Component {
               isFavorite={isFavorite}
               updateFavorite={this.updateFavorite}
               onPress={this.goToCourse(course)}
+              onFavorite={this.updateFavorite(course.id)}
             />
           ),
           id: course.id

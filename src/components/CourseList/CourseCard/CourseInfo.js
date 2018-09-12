@@ -7,6 +7,7 @@ const Container = styled.View`
   justify-content: center;
   padding-left: 16px;
   padding-bottom: 8px;
+  padding: 16px 8px 24px 12px;
 `
 
 const Name = styled.Text`

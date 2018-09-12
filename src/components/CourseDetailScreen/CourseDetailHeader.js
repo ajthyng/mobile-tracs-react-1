@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react'
 import styled, {withTheme} from 'styled-components'
-import {Dimensions, TouchableWithoutFeedback, Linking} from 'react-native'
+import {TouchableWithoutFeedback, Linking} from 'react-native'
 import Star from './Star'
 
 const HeaderContainer = styled.View`
