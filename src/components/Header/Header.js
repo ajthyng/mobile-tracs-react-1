@@ -6,7 +6,6 @@ import {setFilterStatus} from '../../actions/sites'
 
 import StatusBarSpace from './StatusBarSpace'
 import Content from './Content'
-import AdditionalContent from './AdditionalContent'
 
 const HeaderContainer = styled.View`
   background-color: transparent;
@@ -47,9 +46,12 @@ class Header extends Component {
   }
 
   onValueChange = (status) => {
-    this.setState({filterStatus: status}, () => {
-      this.props.setFilterStatus(this.state.filterStatus)
-    })
+    const {filterStatus} = this.state
+    if (filterStatus !== status) {
+      this.setState({filterStatus: status}, () => {
+        this.props.setFilterStatus(this.state.filterStatus)
+      })
+    }
   }
 
   render () {

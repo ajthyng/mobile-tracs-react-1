@@ -47,18 +47,13 @@ const StyledIcon = styled(Icon)`
 `
 
 class FavoritesToggle extends Component {
-  state = {
-    status: this.props.status
-  }
-
   onPress = (status) => () => {
-    this.setState({status})
     this.props.onValueChange(status)
   }
 
   render () {
-    const favoritesActive = this.state.status === FAVORITES
-    const allSitesActive = this.state.status === ALL_SITES
+    const favoritesActive = this.props.status === FAVORITES
+    const allSitesActive = this.props.status === ALL_SITES
 
     return (
       <Container>
