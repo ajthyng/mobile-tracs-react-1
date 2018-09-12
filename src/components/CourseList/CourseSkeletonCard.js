@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
-import {Animated} from 'react-native'
+import {Animated, Dimensions, Platform} from 'react-native'
+import {BoxShadow} from 'react-native-shadow'
 import styled, { withTheme } from 'styled-components'
 
 const HEIGHT = 80
@@ -14,8 +15,13 @@ const CardBoundary = styled.View`
   shadow-offset: 0px 2px;
   shadow-opacity: 0.3;
   shadow-radius: 2px;
-  flex: 1;
+  elevation: 3;
 `
+
+const Shadow = Platform.select({
+  ios: CardBoundary,
+  android: CardBoundary
+})
 
 const ColorBar = styled.View`
   height: 100%;
@@ -76,14 +82,14 @@ class CourseSkeletonCard extends Component {
     const scaleXY = [{scale}]
 
     return (
-      <CardBoundary>
+      <Shadow>
         <ColorBar />
         <EmptyGrade />
         <EmptyContent>
           <TitleBar style={{transform: scaleXY}} />
           <SubtitleBar style={{transform: scaleXY}} />
         </EmptyContent>
-      </CardBoundary>
+      </Shadow>
     )
   }
 }

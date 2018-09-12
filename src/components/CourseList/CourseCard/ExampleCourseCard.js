@@ -15,6 +15,7 @@ const CardBoundary = styled.View`
   shadow-offset: 0px 2px;
   shadow-opacity: 0.3;
   shadow-radius: 2px;
+  elevation: 3;
   margin: 10px;
 `
 

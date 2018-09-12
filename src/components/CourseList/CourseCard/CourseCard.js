@@ -1,5 +1,5 @@
 import React, {PureComponent} from 'react'
-import {TouchableWithoutFeedback, Platform} from 'react-native'
+import {TouchableWithoutFeedback} from 'react-native'
 import styled, {withTheme} from 'styled-components'
 import {connect} from 'react-redux'
 import Grade from './Grade'
@@ -14,11 +14,12 @@ const CardBoundary = styled.View`
   background-color: ${props => props.theme.courseCard.background};
   border-radius: 2px;
   margin: 10px;
-  border: solid ${props => props.new ? '2' : Platform.select({ios: '0', android: '1'})}px ${props => props.color};
+  border: solid ${props => props.new ? '2' : '0'}px ${props => props.color};
   shadow-color: ${props => props.theme.courseCard.shadow};
   shadow-offset: 0px 2px;
   shadow-opacity: 0.3;
   shadow-radius: 3px;
+  elevation: 3;
 `
 
 const ColorBar = styled.View`
