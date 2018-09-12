@@ -2,8 +2,8 @@ import React, {Component} from 'react'
 import {Animated, Dimensions, View, TouchableOpacity} from 'react-native'
 import styled, {withTheme} from 'styled-components'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import Star from './Star'
 
-const OPEN_WIDTH = -100
 const HEIGHT = 80
 
 const CardSwipe = styled(Animated.View)`
@@ -18,7 +18,7 @@ const CardSwipe = styled(Animated.View)`
 
 const CardBoundary = styled.View`
   height: ${HEIGHT}px;
-  width: ${Dimensions.get('window').width - 30}px;
+  align-self: stretch;
   background-color: ${props => props.theme.courseCard.background};
   border-radius: 2px;
   flex-direction: row;
@@ -58,6 +58,10 @@ const SubtitleBar = styled(Animated.View)`
   border-radius: 3px;
 `
 
+const InactiveStar = styled(Star)`
+  padding: 10px;
+`
+
 class ExampleCourseCard extends Component {
   constructor (props) {
     super(props)
@@ -69,23 +73,9 @@ class ExampleCourseCard extends Component {
   }
 
   render () {
-    const {cardWidth} = this.state
-
-    const transform = {
-      transform: [{
-        translateX: OPEN_WIDTH
-      }]
-    }
-
     return (
       <View style={this.props.style}>
-        <Background cardWidth={cardWidth} >
-          <ButtonContainer>
-            <Icon ref='icon' name='star' color='#808080' size={24} />
-            <IconLabel>ADD TO{'\n'}FAVORITES</IconLabel>
-          </ButtonContainer>
-        </Background>
-        <CardSwipe style={transform}>
+        <CardSwipe>
           <CardBoundary>
             <ColorBar />
             <EmptyGrade />
@@ -93,36 +83,12 @@ class ExampleCourseCard extends Component {
               <TitleBar />
               <SubtitleBar />
             </EmptyContent>
+            <InactiveStar />
           </CardBoundary>
         </CardSwipe>
       </View>
     )
   }
 }
-
-const ButtonContainer = styled(TouchableOpacity)`
-  height: 100%;
-  width: 100px;
-  align-items: center;
-  justify-content: center;
-`
-
-const IconLabel = styled.Text`
-  font-size: 10px;
-  color: #808080;
-  text-align: center;
-`
-
-const Background = styled.View`
-  position: absolute;
-  right: 0;
-  height: ${HEIGHT}px;
-  width: ${props => props.cardWidth}px;
-  border-radius: 3px;
-  background-color: ${props => props.theme.courseCard.skeleton};
-  align-items: flex-end;
-  justify-content: center;
-  overflow: hidden;
-`
 
 export default withTheme(ExampleCourseCard)
