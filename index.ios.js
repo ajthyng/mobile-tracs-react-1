@@ -12,9 +12,10 @@ import {getNotifications} from './src/actions/notifications'
 import {setToken} from './src/actions/registrar'
 import ThemedApp from './src/ThemedApp'
 import Subject from './src/utils/subject'
-// import crashlytics from 'react-native-fabric-crashlytics'
-// import {Crashlytics} from 'react-native-fabric'
+import {Crashlytics} from 'react-native-fabric'
+import crashlytics from 'react-native-fabric-crashlytics'
 
+crashlytics.init()
 const {store, persistor} = configureStore()
 
 YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Received data was not a string', "Warning: Can't call setState (or forceUpdate)", 'You are setting the style', 'Module RCTImageLoader', 'Class RCTCxxModule'])

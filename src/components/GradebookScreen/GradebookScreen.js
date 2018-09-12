@@ -46,8 +46,10 @@ class GradebookScreen extends Component {
   }
 
   componentDidMount () {
-    const {getGrades} = this.props
-    getGrades && getGrades()
+    const {getGrades, loading} = this.props
+    if (!loading) {
+      getGrades && getGrades()
+    }
   }
 
   renderGrade = (item, i) => {
@@ -83,7 +85,7 @@ class GradebookScreen extends Component {
 }
 
 const mapStateToProps = state => {
-  const {loading, grades} = state
+  const {grades, grades: {isLoading: loading}} = state
   return {
     loading,
     grades
