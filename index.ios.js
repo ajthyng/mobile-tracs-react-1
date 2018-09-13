@@ -24,20 +24,31 @@ global.urls = urls
 global['ios'] = Platform.OS === 'ios'
 global['android'] = Platform.OS === 'android'
 
-const textFixStyle = StyleSheet.create({
-  defaultFontFamily: {
+const textFixStyle = {
+  style: {
     fontFamily: 'Roboto'
   }
-})
-
-const oldRender = Text.prototype.render
-
-Text.prototype.render = function (...args) {
-  const origin = oldRender.call(this, ...args)
-  return React.cloneElement(origin, {
-    style: [textFixStyle.defaultFontFamily, origin.props.style]
-  })
 }
+
+const setCustomText = customProps => {
+  const TextRender = Text.render
+  const initialDefaultProps = Text.defaultProps
+  Text.defaultProps = {
+    ...initialDefaultProps,
+    ...customProps
+  }
+  Text.render = function render (props) {
+    let oldProps = props
+    props = { ...props, style: [customProps.style, props.style] }
+    try {
+      return TextRender.apply(this, arguments)
+    } finally {
+      props = oldProps
+    }
+  }
+}
+
+setCustomText(textFixStyle)
 
 class App extends Component {
   constructor (props) {
