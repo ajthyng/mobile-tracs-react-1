@@ -54,7 +54,6 @@ class TRACSWebView extends Component {
       ios: <WebView
         ref={c => this.webview = c}
         style={styles.webView}
-        sendCookies
         injectedJavaScript={removeHeaderJS}
         source={{url}}
         {...this.props}
