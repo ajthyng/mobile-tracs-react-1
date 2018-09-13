@@ -40,6 +40,7 @@
 		821B372A2147EA91009C5E4E /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 821B37282147EA90009C5E4E /* Fabric.framework */; };
 		821B372B2147EA91009C5E4E /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 821B37292147EA90009C5E4E /* Crashlytics.framework */; };
 		821B377F2147F43C009C5E4E /* libSMXCrashlytics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 821B377C2147F42C009C5E4E /* libSMXCrashlytics.a */; };
+		821B37862149BF46009C5E4E /* libRCTCameraRoll.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 821B37852149BF37009C5E4E /* libRCTCameraRoll.a */; };
 		823CC8AE20DDB0CD00112872 /* libBVLinearGradient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 823CC87C20DDB07F00112872 /* libBVLinearGradient.a */; };
 		8276A0D6203F31D9009B216C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8276A0D5203F31D9009B216C /* GoogleService-Info.plist */; };
 		8299F00B2110F1500080D4FE /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8299EFD92110F1500080D4FE /* libReact.a */; };
@@ -366,6 +367,13 @@
 			remoteGlobalIDString = 6463C84C1EBA12A60095B8CD;
 			remoteInfo = "SMXCrashlytics-tvOS";
 		};
+		821B37842149BF37009C5E4E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 821B37802149BF37009C5E4E /* RCTCameraRoll.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 58B5115D1A9E6B3D00147676;
+			remoteInfo = RCTCameraRoll;
+		};
 		823CC87B20DDB07F00112872 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 823CC87620DDB07F00112872 /* BVLinearGradient.xcodeproj */;
@@ -504,6 +512,7 @@
 		821B37282147EA90009C5E4E /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		821B37292147EA90009C5E4E /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		821B37432147F42C009C5E4E /* SMXCrashlytics.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SMXCrashlytics.xcodeproj; path = "../node_modules/react-native-fabric/ios/SMXCrashlytics.xcodeproj"; sourceTree = "<group>"; };
+		821B37802149BF37009C5E4E /* RCTCameraRoll.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCameraRoll.xcodeproj; path = "../node_modules/react-native/Libraries/CameraRoll/RCTCameraRoll.xcodeproj"; sourceTree = "<group>"; };
 		823CC87620DDB07F00112872 /* BVLinearGradient.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BVLinearGradient.xcodeproj; path = "../node_modules/react-native-linear-gradient/BVLinearGradient.xcodeproj"; sourceTree = "<group>"; };
 		8276A0CD203F2F50009B216C /* RNFirebase.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNFirebase.xcodeproj; path = "../node_modules/react-native-firebase/ios/RNFirebase.xcodeproj"; sourceTree = "<group>"; };
 		8276A0D5203F31D9009B216C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "TRACSMobile/GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -547,6 +556,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				821B372A2147EA91009C5E4E /* Fabric.framework in Frameworks */,
+				821B37862149BF46009C5E4E /* libRCTCameraRoll.a in Frameworks */,
 				821B377F2147F43C009C5E4E /* libSMXCrashlytics.a in Frameworks */,
 				821B36DC213EE729009C5E4E /* libRNSVG.a in Frameworks */,
 				823CC8AE20DDB0CD00112872 /* libBVLinearGradient.a in Frameworks */,
@@ -776,6 +786,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		821B37812149BF37009C5E4E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				821B37852149BF37009C5E4E /* libRCTCameraRoll.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		823CC87720DDB07F00112872 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -854,6 +872,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				821B37802149BF37009C5E4E /* RCTCameraRoll.xcodeproj */,
 				821B37432147F42C009C5E4E /* SMXCrashlytics.xcodeproj */,
 				821B36D3213EE71C009C5E4E /* RNSVG.xcodeproj */,
 				823CC87620DDB07F00112872 /* BVLinearGradient.xcodeproj */,
@@ -1063,6 +1082,10 @@
 				{
 					ProductGroup = ADBDB9201DFEBF0600ED6528 /* Products */;
 					ProjectRef = ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */;
+				},
+				{
+					ProductGroup = 821B37812149BF37009C5E4E /* Products */;
+					ProjectRef = 821B37802149BF37009C5E4E /* RCTCameraRoll.xcodeproj */;
 				},
 				{
 					ProductGroup = 00C302B61ABCB90400DB3ED1 /* Products */;
@@ -1439,6 +1462,13 @@
 			fileType = archive.ar;
 			path = libSMXCrashlytics.a;
 			remoteRef = 821B377D2147F42C009C5E4E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		821B37852149BF37009C5E4E /* libRCTCameraRoll.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTCameraRoll.a;
+			remoteRef = 821B37842149BF37009C5E4E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		823CC87C20DDB07F00112872 /* libBVLinearGradient.a */ = {

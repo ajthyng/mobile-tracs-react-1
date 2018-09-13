@@ -59,7 +59,7 @@ const MainNavigator = createStackNavigator(
     initialRouteName: 'Home',
     navigationOptions: {
       header: ({navigation}) => (<Header navigation={navigation} />),
-      gesturesEnabled: false
+      gesturesEnabled: true
     },
     headerMode: 'float',
     headerTransitionPreset: 'uikit',
@@ -77,8 +77,7 @@ const MainNavigator = createStackNavigator(
           default: defaultTransition(sceneProps)
         }[transition]
       }
-    }),
-    gestures: {}
+    })
   }
 )
 
