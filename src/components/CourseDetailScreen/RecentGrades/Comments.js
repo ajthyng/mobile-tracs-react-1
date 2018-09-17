@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {TouchableOpacity, ScrollView, Animated} from 'react-native'
+import {TouchableOpacity, Animated} from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
 import styled from 'styled-components'
 
@@ -7,7 +7,6 @@ const Container = styled(Animated.View)`
   flex-direction: row;
   align-items: center;
   height: 80px;
-  align-self: stretch;
 `
 
 const BackButton = styled(Icon)`
@@ -16,11 +15,14 @@ const BackButton = styled(Icon)`
   color: ${props => props.theme.darkText};
 `
 
+const CommentScroll = styled.ScrollView`
+  width: 85%;
+  padding: 4px 16px;
+`
+
 const CommentText = styled.Text`
   color: ${props => props.theme.darkText};
-  align-self: flex-start;
   font-size: 14px;
-  padding: 0 16px 4px 16px;
 `
 
 class Comments extends Component {
@@ -39,8 +41,8 @@ class Comments extends Component {
         <TouchableOpacity onPress={onPress}>
           <BackButton name='ios-arrow-forward' />
         </TouchableOpacity>
-        <ScrollView
-          ref={this.scrollView}
+        <CommentScroll
+          innerRef={this.scrollView}
           bounces={false}
           indicatorStyle={theme.scrollIndicator}
         >
@@ -53,7 +55,7 @@ class Comments extends Component {
             bottom: 0
           }}
           />
-        </ScrollView>
+        </CommentScroll>
       </Container>
     )
   }
