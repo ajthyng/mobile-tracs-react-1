@@ -93,7 +93,8 @@ class SettingsScreen extends Component {
     this.state = {
       width,
       height,
-      enabled: true
+      enabled: true,
+      silentLoad: false
     }
   }
 
@@ -151,8 +152,10 @@ class SettingsScreen extends Component {
 
   componentDidUpdate (prevProps) {
     if (prevProps.isSaving && !this.props.isSaving) {
-      this.props.getSettings()
-      this.setState({enabled: true})
+      this.setState({silentLoad: true}, () => {
+        this.props.getSettings()
+        this.setState({enabled: true})
+      })
     }
   }
 
@@ -160,9 +163,9 @@ class SettingsScreen extends Component {
     const {loading} = this.props
 
     const settings = sections(this.props, this.updateSettings)
-    const {width} = this.state
+    const {width, silentLoad} = this.state
 
-    return loading ? (<ActivityIndicator />) : (
+    return (loading && !silentLoad) ? (<ActivityIndicator />) : (
       <Container>
         <SettingsList
           width={width}
