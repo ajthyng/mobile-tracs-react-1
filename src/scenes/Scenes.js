@@ -59,7 +59,8 @@ const MainNavigator = createStackNavigator(
     initialRouteName: 'Home',
     navigationOptions: {
       header: ({navigation}) => (<Header navigation={navigation} />),
-      gesturesEnabled: true
+      gesturesEnabled: true,
+      headerBackTitleVisible: true
     },
     headerMode: 'float',
     headerTransitionPreset: 'uikit',

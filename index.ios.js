@@ -1,4 +1,4 @@
-import {AppRegistry, Text, StyleSheet, Platform, AppState, YellowBox, PushNotificationIOS} from 'react-native'
+import {AppRegistry, Text, Platform, AppState, YellowBox, PushNotificationIOS} from 'react-native'
 import React, {Component} from 'react'
 import {PersistGate} from 'redux-persist/integration/react'
 import {Provider} from 'react-redux'
@@ -12,7 +12,6 @@ import {getNotifications} from './src/actions/notifications'
 import {setToken} from './src/actions/registrar'
 import ThemedApp from './src/ThemedApp'
 import Subject from './src/utils/subject'
-import {Crashlytics} from 'react-native-fabric'
 import crashlytics from 'react-native-fabric-crashlytics'
 
 crashlytics.init()

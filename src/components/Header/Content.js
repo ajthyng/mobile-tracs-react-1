@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Dimensions} from 'react-native'
+import {Dimensions, Platform} from 'react-native'
 import styled from 'styled-components'
 import ProfileMenu from '../ProfileMenu/ProfileMenu'
 import {HeaderBackButton} from 'react-navigation'
@@ -14,6 +14,13 @@ const Container = styled.View`
   background-color: ${props => props.theme.header};
   padding-left: ${props => props.canGoBack ? 0 : 16}px;
   padding-right: 16px;
+`
+
+const Title = styled.Text`
+  font-size: 19px;
+  color: white;
+  left: 50;
+  position: absolute;
 `
 
 const BackButton = (props) => (
@@ -41,6 +48,7 @@ class Content extends Component {
   componentWillUnmount () {
     Dimensions.removeEventListener('change', this.updateScreenSize)
   }
+
   render () {
     const {navigation, onValueChange, allSitesFilter} = this.props
     const canGoBack = navigation.state.index > 0
@@ -67,9 +75,15 @@ class Content extends Component {
       />
       : <FavoritesToggle onValueChange={onValueChange} status={allSitesFilter} small={smallScreen} />
 
+    const titleComponent = Platform.select({
+      ios: null,
+      android: <Title>{title}</Title>
+    })
+
     return (
       <Container canGoBack={canGoBack}>
         {leftButton}
+        {titleComponent}
         <ProfileMenu navigation={navigation} small={smallScreen} />
       </Container>
     )
