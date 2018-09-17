@@ -35,6 +35,7 @@ class CourseList extends Component {
 
   goToCourse = (course) => () => {
     const {navigation: {navigate}} = this.props
+
     navigate('CourseDetail', {
       transition: 'cardFromRight',
       course,

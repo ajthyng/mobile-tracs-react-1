@@ -87,9 +87,9 @@ class CourseOptions extends Component {
     return (
       <Container>
         <ButtonContainer style={{transform: [{scale: 0.94}]}}>
-          {hasForumsTool ? <CourseOption label='Forum Posts' name='comments' onPress={this.goToForums} newContent={newForumPosts} /> : null}
-          {hasAnnouncementsTool ? <CourseOption label='Announcements' name='bullhorn' onPress={this.goToAnnouncements} newContent={newAnnouncements} /> : null}
-          {hasAttendanceTool ? <CourseOption label='Attendance' name='check-square' onPress={this.goToAttendance} /> : null}
+          <CourseOption label='Forum Posts' name='comments' onPress={this.goToForums} newContent={newForumPosts} enabled={hasForumsTool} />
+          <CourseOption label='Announcements' name='bullhorn' onPress={this.goToAnnouncements} newContent={newAnnouncements} enabled={hasAnnouncementsTool} />
+          <CourseOption label='Attendance' name='check-square' onPress={this.goToAttendance} enabled={hasAttendanceTool} />
         </ButtonContainer>
         <CourseSiteButton title='Course Site' onPress={this.goToWeb} />
       </Container>
