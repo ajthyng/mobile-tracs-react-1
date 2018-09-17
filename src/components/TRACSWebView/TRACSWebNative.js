@@ -3,7 +3,6 @@ import {BackHandler, Dimensions, WebView, Platform, StyleSheet, requireNativeCom
 import WebError from './WebError'
 import {Analytics} from '../../utils/analytics'
 import {withNavigation} from 'react-navigation'
-import ActivityIndicator from '../ActivityIndicator'
 
 const TRACSWeb = requireNativeComponent('TRACSWeb', TRACSWebView)
 const styles = StyleSheet.create({
@@ -19,6 +18,7 @@ class TRACSWebView extends Component {
     this.state = {
       canGoBack: false
     }
+    this.webView = React.createRef()
   }
 
   handleBack = () => {
@@ -44,16 +44,13 @@ class TRACSWebView extends Component {
 
     return Platform.select({
       ios: <WebView
-        ref={c => this.webview = c}
+        ref={this.webview}
         style={styles.webView}
         injectedJavaScript={removeHeaderJS}
         source={{url}}
+        startLoadWithResult={false}
         {...this.props}
-        renderError={() => {
-          return (
-            <WebError refresh={this.webview.reload} />
-          )
-        }}
+        renderError={() => <WebError refresh={this.webview.current.reload} />}
         onNavigationStateChange={({canGoBack}) => {
           this.setState(() => {
             return {canGoBack}
@@ -63,11 +60,10 @@ class TRACSWebView extends Component {
       android: (
         <TRACSWeb
           {...this.props}
-          ref={c => this.webview = c}
+          ref={this.webview}
           style={styles.webView}
           baseUrl={url}
           injectedJavaScript={removeHeaderJS}
-          renderLoading={ActivityIndicator}
         />
       )
     })

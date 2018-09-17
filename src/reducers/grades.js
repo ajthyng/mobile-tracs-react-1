@@ -11,67 +11,72 @@
 import {gradesActions} from '../constants/actions'
 
 const {
-	REQUEST_GRADES,
-	GRADES_SUCCESS,
-	GRADES_FAILURE
+  REQUEST_GRADES,
+  GRADES_SUCCESS,
+  GRADES_FAILURE
 } = gradesActions
 
 export const initialState = {
-	isLoading: false,
-	grades: [],
-	errorMessage: ''
+  isLoading: false,
+  grades: [],
+  errorMessage: ''
 }
 
 const requestGrades = (state) => ({
-	...state,
-	isLoading: true,
-	errorMessage: ''
+  ...state,
+  isLoading: true,
+  errorMessage: ''
 })
 
 const siteWithGrades = (site) => ({
-	name: site.siteName || null,
-	id: site.siteId || null,
-	calculatedGrade: site.calculatedGrade || null,
-	mappedGrade: site.mappedGrade || null,
-	grades: site.assignments || []
+  name: site.siteName || null,
+  id: site.siteId || null,
+  calculatedGrade: site.calculatedGrade || null,
+  mappedGrade: site.mappedGrade || null,
+  grades: site.assignments || []
 })
 
 const gradesSuccess = (state, action) => {
-	const {grades} = action
-	let gradesArray = (grades || []).reduce((accum, site) => {
-		accum.push(siteWithGrades(site))
-		return accum
-	}, [])
-	let gradesBySiteId = (grades || []).reduce((accum, site) => {
-		if (site.hasOwnProperty('siteId')) {
-			accum[site.siteId] = siteWithGrades(site)
-		}
-		return accum
-	}, {})
+  const {grades} = action
+  let gradesArray = []
+  let gradesBySiteId = {}
 
-	return {
-		...state,
-		...gradesBySiteId,
-		grades: gradesArray,
-		isLoading: false,
-		errorMessage: ''
-	}
+  if (Array.isArray(grades)) {
+    gradesArray = (grades || []).reduce((accum, site) => {
+      if (site) accum.push(siteWithGrades(site))
+      return accum
+    }, [])
+    gradesBySiteId = (grades || []).reduce((accum, site) => {
+      if (site && site.hasOwnProperty('siteId')) {
+        accum[site.siteId] = siteWithGrades(site)
+      }
+      return accum
+    }, {})
+  }
+
+  return {
+    ...state,
+    ...gradesBySiteId,
+    grades: gradesArray,
+    isLoading: false,
+    errorMessage: ''
+  }
 }
 
 const gradesFailure = (state, action) => ({
-	...initialState,
-	errorMessage: (action.error || {}).errorMessage || 'No Error Message Provided'
+  ...initialState,
+  errorMessage: (action.error || {}).message || 'No Error Message Provided'
 })
 
-export function gradesReducer(state = initialState, action) {
-	switch (action.type) {
-		case REQUEST_GRADES:
-			return requestGrades(state, action)
-		case GRADES_SUCCESS:
-			return gradesSuccess(state, action)
-		case GRADES_FAILURE:
-			return gradesFailure(state, action)
-		default:
-			return state
-	}
+export function gradesReducer (state = initialState, action) {
+  switch (action.type) {
+    case REQUEST_GRADES:
+      return requestGrades(state, action)
+    case GRADES_SUCCESS:
+      return gradesSuccess(state, action)
+    case GRADES_FAILURE:
+      return gradesFailure(state, action)
+    default:
+      return state
+  }
 }

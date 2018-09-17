@@ -17,7 +17,7 @@ import crashlytics from 'react-native-fabric-crashlytics'
 crashlytics.init()
 const {store, persistor} = configureStore()
 
-YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Received data was not a string', "Warning: Can't call setState (or forceUpdate)", 'You are setting the style', 'Module RCTImageLoader', 'Class RCTCxxModule'])
+YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Received data was not a string', "Warning: Can't call setState (or forceUpdate)", 'You are setting the style', 'Module RCTImageLoader', 'Class RCTCxxModule', 'startLoadWithResult', 'Did not receive response to shouldStartLoad'])
 
 global.urls = urls
 global['ios'] = Platform.OS === 'ios'

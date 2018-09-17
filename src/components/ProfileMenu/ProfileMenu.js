@@ -9,7 +9,7 @@
  */
 
 import React, {Component} from 'react'
-import {StyleSheet, View, Dimensions, Animated, Easing} from 'react-native'
+import {Animated, Easing} from 'react-native'
 import {connect} from 'react-redux'
 import {withTheme} from 'styled-components'
 import {Menu, MenuTrigger, MenuOptions, MenuOption} from 'react-native-popup-menu'
@@ -73,7 +73,7 @@ class CustomMenuRenderer extends Component {
 
 class ProfileMenu extends Component {
   render () {
-    const {navigation: {navigate}, theme, small} = this.props
+    const {navigation: {navigate}, theme} = this.props
     return (
       <Menu renderer={CustomMenuRenderer}
         onSelect={val => {

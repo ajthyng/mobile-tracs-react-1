@@ -25,7 +25,7 @@ const {
   BATCH_UPDATE_FAILURE
 } = notificationActions
 
-const initialState = {
+export const initialState = {
   isLoading: false,
   isLoaded: false,
   isUpdating: false,
@@ -117,16 +117,13 @@ const updateBadgeCount = (notifs) => {
 }
 
 const notificationsSuccess = (state, action) => {
-  let notifs = {}
-  Object.keys(types).forEach(type => {
-    notifs[types[type]] = []
-  })
-  for (const notification in action.notifications) {
-    if (action.notifications.hasOwnProperty(notification)) {
-      let notif = action.notifications[notification]
-      notifs[notif.keys.object_type].push(notif)
-    }
-  }
+  const {notifications} = action
+  let notifs = Object.keys(types).reduce((accum, type) => {
+    accum[types[type]] = notifications.filter(notif => {
+      return notif.keys.object_type === types[type]
+    })
+    return accum
+  }, {})
 
   let badgeCounts = updateBadgeCount(notifs)
 

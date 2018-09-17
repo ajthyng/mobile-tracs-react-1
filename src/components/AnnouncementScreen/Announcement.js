@@ -121,9 +121,11 @@ class Announcement extends PureComponent {
           <Posted>{posted}</Posted>
         </TitleContainer>
         <Body
+          useWebKit
           innerRef={this.webView}
           style={{height: showBody ? height : 0, width}}
           mixedContentMode='compatibility'
+          startLoadWithResult={false}
           injectedJavaScript='(() => document.body.scrollHeight)()'
           onNavigationStateChange={(event) => {
             if (event.url !== 'about:blank') {

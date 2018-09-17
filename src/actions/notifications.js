@@ -9,7 +9,6 @@
  */
 
 import {notificationActions} from '../constants/actions'
-import * as Storage from '../utils/storage'
 import {token as TokenStore} from '../utils/storage'
 import {types} from '../constants/notifications'
 import {Analytics} from '../utils/analytics'
@@ -56,7 +55,7 @@ const fetchNotification = (notification) => {
     case types.FORUM:
       return fetchForumPost(notification)
     default:
-      return Promise.resolve(new Error("Could not fetch unknown notification type"))
+      return Promise.resolve(new Error('Could not fetch unknown notification type'))
   }
 }
 
@@ -68,7 +67,7 @@ const fetchAnnouncement = (notification) => {
       data: res.data
     })
   }).catch(() => {
-    return Promise.resolve(new Error("Could not fetch announcement id " + notification.id))
+    return Promise.resolve(new Error('Could not fetch announcement id ' + notification.id))
   })
 }
 
@@ -81,8 +80,8 @@ const fetchForumPost = async (notification) => {
     return Promise.resolve(new Error("Forum can't be accessed " + notification.id))
   })
 
-  if (siteForums.hasOwnProperty("data") && siteForums.data.hasOwnProperty("forums_collection")) {
-    let forums = siteForums.data["forums_collection"].reduce((acc, forum) => {
+  if (siteForums.hasOwnProperty('data') && siteForums.data.hasOwnProperty('forums_collection')) {
+    let forums = siteForums.data['forums_collection'].reduce((acc, forum) => {
       acc.push(forum.id)
       return acc
     }, [])
@@ -101,7 +100,7 @@ const fetchForumPost = async (notification) => {
         return Promise.resolve(res.data)
       }
     }).catch(() => {
-      return Promise.resolve(new Error("Could not fetch forum message for id " + notification.id))
+      return Promise.resolve(new Error('Could not fetch forum message for id ' + notification.id))
     }),
     axios(topicUrl, {method: 'get'}).then(res => {
       if (res.data) {
@@ -109,17 +108,17 @@ const fetchForumPost = async (notification) => {
         return Promise.resolve(res.data)
       }
     }).catch(() => {
-      return Promise.resolve(new Error("Could not fetch forum topic title for id " + notification.id))
-    }),
+      return Promise.resolve(new Error('Could not fetch forum topic title for id ' + notification.id))
+    })
   ]
 
   return Promise.all(forumPromises).then(data => {
     let tracsData = {}
     data = data.filter(entry => !(entry instanceof Error))
     data.forEach(item => {
-      if (item.type === "topic") {
+      if (item.type === 'topic') {
         tracsData.topic_title = item.title
-      } else if (item.type === "message") {
+      } else if (item.type === 'message') {
         tracsData = {
           ...tracsData,
           ...item
@@ -127,7 +126,7 @@ const fetchForumPost = async (notification) => {
       }
     })
     if (Object.keys(tracsData).length === 0) {
-      return Promise.resolve(new Error("Could not process forum post data"))
+      return Promise.resolve(new Error('Could not process forum post data'))
     } else {
       return Promise.resolve({
         id: notification.id,
@@ -153,9 +152,18 @@ const getNotificationDetail = async (notifications) => {
     return accum
   }, [])
 
-  let tracsAnnouncements = await axios(`${global.urls.baseUrl}${global.urls.allAnnouncements}`, {
-    method: 'get'
-  }).catch(err => err)
+  const announcementUrl = `${global.urls.baseUrl}${global.urls.allAnnouncements}`
+
+  const tracsAnnounceData = await axios(announcementUrl)
+    .then(res => {
+      if (res.data) {
+        return res.data.announcement_collection.reduce((accum, announcement) => {
+          accum[announcement.announcementId] = announcement
+          return accum
+        }, {})
+      }
+    })
+    .catch(err => err)
 
   Object.keys(forumPosts).forEach(id => {
     let notification = forumPosts[id]
@@ -163,26 +171,29 @@ const getNotificationDetail = async (notifications) => {
   })
 
   return Promise.all(notificationPromises).then(tracs => {
-    let updatedNotifications = {}
-    tracs = tracs.filter((notif) => {
-      return !(notif instanceof Error)
-    })
-    tracs.forEach((tracs_notif) => {
-      let id = tracs_notif.id
-      updatedNotifications[id] = forumPosts[id]
-      updatedNotifications[id].tracs_data = tracs_notif.data
-    })
-    let tracsAnnounceData = (tracsAnnouncements.data.announcement_collection || {}).reduce((accum, curr) => {
-      accum[curr.announcementId] = curr
-      return accum
-    }, {})
-    Object.entries(announcements).forEach(([key, announcement]) => {
-      let id = announcement.id
-      if (Object.keys(tracsAnnounceData).indexOf(announcement.keys.object_id) >= 0) {
-        updatedNotifications[id] = announcement
-        updatedNotifications[id].tracs_data = tracsAnnounceData[announcement.keys.object_id]
+    let updatedNotifications = tracs
+      .filter((notif) => {
+        return !(notif instanceof Error)
+      }).reduce((accum, notif) => {
+        accum.push({
+          ...forumPosts[notif.id],
+          tracs_data: notif.data
+        })
+        return accum
+      }, [])
+
+    announcements.reduce((accum, announce) => {
+      const dispatchId = announce.keys.object_id
+      const tracsAnnouncements = Object.keys(tracsAnnounceData)
+      if (tracsAnnouncements.includes(dispatchId)) {
+        accum.push({
+          ...announce,
+          tracs_data: tracsAnnounceData[announce.keys.object_id]
+        })
       }
-    })
+      return accum
+    }, updatedNotifications)
+
     return Promise.resolve(updatedNotifications)
   }).catch(err => console.log(err))
 }
@@ -192,7 +203,7 @@ export const getNotifications = (token) => {
     let startTime = new Date()
     dispatch(requestNotifications())
     if (!token) {
-      await TokenStore.getDeviceToken().then(deviceToken => token = deviceToken)
+      token = await TokenStore.getDeviceToken().then(deviceToken => deviceToken)
     }
     const dispatchURL = global.urls.dispatchUrl
     const notificationURL = `${dispatchURL}${global.urls.getNotifications(token)}`
@@ -259,7 +270,6 @@ export const updateNotification = (newNotif, oldNotif) => {
     dispatch(removeNotification(oldNotif))
 
     return axios(updateURL, options).then(res => {
-      Storage.notifications.delete(oldNotif.id)
       dispatch(updateNotificationSuccess(newNotif))
       dispatch(getNotifications(token))
     }).catch(err => {
@@ -270,7 +280,7 @@ export const updateNotification = (newNotif, oldNotif) => {
 
 const requestBatchUpdate = () => {
   return {
-    type: REQUEST_BATCH_UPDATE,
+    type: REQUEST_BATCH_UPDATE
   }
 }
 
@@ -296,7 +306,7 @@ export const batchUpdateNotification = (ids = [], status = {}, token = null) => 
       return
     }
 
-    token = token ? token : await TokenStore.getDeviceToken().then(deviceToken => deviceToken)
+    token = token || await TokenStore.getDeviceToken().then(deviceToken => deviceToken)
 
     const url = `${global.urls.dispatchUrl}${global.urls.getNotifications(token)}`
     const options = {
@@ -304,7 +314,6 @@ export const batchUpdateNotification = (ids = [], status = {}, token = null) => 
       data: {ids: ids, patches: status}
     }
     return axios(url, options).then(res => {
-      Storage.notifications.update(ids, status)
       dispatch(batchUpdateSuccess(ids, status))
     }).catch(err => {
       dispatch(batchUpdateFailure(err.message))

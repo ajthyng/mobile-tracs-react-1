@@ -6,7 +6,7 @@ import {getSettings, saveSettings} from '../../actions/settings'
 import {getSiteInfo} from '../../actions/sites'
 import {setTheme} from '../../actions/theme'
 import {types} from '../../constants/notifications'
-import {defaultTheme, darkTheme} from '../../constants/themes'
+import {darkTheme} from '../../constants/themes'
 import SiteSetting from './SiteSetting'
 import ActivityIndicator from '../ActivityIndicator'
 
@@ -32,12 +32,6 @@ const SettingsList = styled(SectionList)`
   flex: 1;
   width: ${props => props.width}px;
 `
-
-const onThemeToggle = (setTheme) => (on) => {
-  const theme = on ? darkTheme : defaultTheme
-  const name = on ? darkTheme.NAME : defaultTheme.NAME
-  setTheme(theme, name)
-}
 
 const isSiteDisabled = (blacklist, sites) => (accum, siteId) => {
   const on = !blacklist.some(item => (item.other_keys || {}).site_id === siteId)
