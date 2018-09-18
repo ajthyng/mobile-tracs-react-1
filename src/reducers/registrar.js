@@ -8,117 +8,116 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {Platform} from 'react-native';
-import {registrarActions} from '../constants/actions';
+import { Platform } from 'react-native'
+import { registrarActions } from '../constants/actions'
 
 const {
-	REQUEST_REGISTRATION,
-	REGISTRATION_SUCCESS,
-	REGISTRATION_FAILURE,
-	REQUEST_UNREGISTER,
-	UNREGISTER_SUCCESS,
-	UNREGISTER_FAILURE,
-	IS_GUEST_ACCOUNT,
-	SET_TOKEN,
-	CLEAR_REGISTER_ERROR
-} = registrarActions;
+  REQUEST_REGISTRATION,
+  REGISTRATION_SUCCESS,
+  REGISTRATION_FAILURE,
+  REQUEST_UNREGISTER,
+  UNREGISTER_SUCCESS,
+  UNREGISTER_FAILURE,
+  IS_GUEST_ACCOUNT,
+  SET_TOKEN,
+  CLEAR_REGISTER_ERROR
+} = registrarActions
 
 export const initialState = {
-	isRegistering: false,
-	isRegistered: false,
-	deviceToken: '',
-	netid: '',
-	platform: Platform.OS,
-	isUnregistering: false,
-	errorMessage: '',
-	isGuestAccount: false
-};
-
-function requestRegistration() {
-	return {
-		...initialState,
-		isRegistering: true,
-		isRegistered: false,
-		errorMessage: ''
-	}
+  isRegistering: false,
+  isRegistered: false,
+  deviceToken: '',
+  netid: '',
+  platform: Platform.OS,
+  isUnregistering: false,
+  errorMessage: '',
+  isGuestAccount: false
 }
 
-function registrationSuccess(state, action) {
-	return {
-		...state,
-		isRegistering: false,
-		isRegistered: true,
-		netid: action.netid,
-		deviceToken: action.deviceToken,
-		errorMessage: ''
-	}
+function requestRegistration () {
+  return {
+    ...initialState,
+    isRegistering: true,
+    isRegistered: false,
+    errorMessage: ''
+  }
 }
 
-function registrationFailure(state, action) {
-	return {
-		...initialState,
-		isGuestAccount: true,
-		errorMessage: action.errorMessage
-	}
+function registrationSuccess (state, action) {
+  return {
+    ...state,
+    isRegistering: false,
+    isRegistered: true,
+    netid: action.netid,
+    deviceToken: action.deviceToken,
+    errorMessage: ''
+  }
 }
 
-
-function requestUnregister(state) {
-	return {
-		...state,
-		isDeleting: true,
-		isDeleted: false,
-		errorMessage: ''
-	}
+function registrationFailure (state, action) {
+  return {
+    ...initialState,
+    isGuestAccount: true,
+    errorMessage: action.errorMessage
+  }
 }
 
-function unregisterSuccess() {
-	return {
-		...initialState
-	}
+function requestUnregister (state) {
+  return {
+    ...state,
+    isDeleting: true,
+    isDeleted: false,
+    errorMessage: ''
+  }
 }
 
-function unregisterFailure(state, action) {
-	return {
-		...state,
-		isDeleting: false,
-		isRegistered: true,
-		errorMessage: action.errorMessage
-	}
+function unregisterSuccess () {
+  return {
+    ...initialState
+  }
 }
 
-function setGuestAccount(state, action) {
-	return {
-		...state,
-		isGuestAccount: action.isGuestAccount
-	}
+function unregisterFailure (state, action) {
+  return {
+    ...state,
+    isDeleting: false,
+    isRegistered: true,
+    errorMessage: action.errorMessage
+  }
 }
 
-function clearRegisterError(state) {
-	return {
-		...state,
-		errorMessage: ''
-	}
+function setGuestAccount (state, action) {
+  return {
+    ...state,
+    isGuestAccount: action.isGuestAccount
+  }
 }
 
-function setToken(state, action) {
-	return {
-		...state,
-		deviceToken: action.token
-	}
+function clearRegisterError (state) {
+  return {
+    ...state,
+    errorMessage: ''
+  }
 }
 
-export function registerReducer(state = initialState, action) {
-	switch (action.type) {
-		case REQUEST_REGISTRATION: return requestRegistration(state, action);
-		case REGISTRATION_SUCCESS: return registrationSuccess(state, action);
-		case REGISTRATION_FAILURE: return registrationFailure(state, action);
-		case REQUEST_UNREGISTER: return requestUnregister(state, action);
-		case UNREGISTER_SUCCESS: return unregisterSuccess(state, action);
-		case UNREGISTER_FAILURE: return unregisterFailure(state, action);
-		case IS_GUEST_ACCOUNT: return setGuestAccount(state, action);
-		case CLEAR_REGISTER_ERROR: return clearRegisterError(state, action);
-		case SET_TOKEN: return setToken(state, action);
-		default: return state;
-	}
+function setToken (state, action) {
+  return {
+    ...state,
+    deviceToken: action.token
+  }
+}
+
+export function registerReducer (state = initialState, action) {
+  switch (action.type) {
+    case REQUEST_REGISTRATION: return requestRegistration(state, action)
+    case REGISTRATION_SUCCESS: return registrationSuccess(state, action)
+    case REGISTRATION_FAILURE: return registrationFailure(state, action)
+    case REQUEST_UNREGISTER: return requestUnregister(state, action)
+    case UNREGISTER_SUCCESS: return unregisterSuccess(state, action)
+    case UNREGISTER_FAILURE: return unregisterFailure(state, action)
+    case IS_GUEST_ACCOUNT: return setGuestAccount(state, action)
+    case CLEAR_REGISTER_ERROR: return clearRegisterError(state, action)
+    case SET_TOKEN: return setToken(state, action)
+    default: return state
+  }
 }
