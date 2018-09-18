@@ -7,10 +7,10 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {sitesActions} from '../constants/actions'
-import {toggleStatus} from '../constants/sites'
+import { sitesActions } from '../constants/actions'
+import { toggleStatus } from '../constants/sites'
 
-const {FAVORITES, ALL_SITES} = toggleStatus
+const { FAVORITES } = toggleStatus
 
 const {
   CLEAR_SITES,
@@ -76,11 +76,18 @@ const requestFavorites = (state) => {
 }
 
 const favoritesSuccess = (state, action) => {
-  const favorites = (action.favorites || '').split(';').filter(site => (site || '').length > 0)
+  let favorites = []
+  if (typeof (action.favorites || '') === 'string') {
+    favorites = (action.favorites || '')
+      .split(';')
+      .filter(site => (site || '').length > 0)
+  }
+
   return {
     ...state,
     isFetchingFavorites: false,
-    favorites: Array.from(new Set([...favorites]))
+    favorites: Array.from(new Set([...favorites])),
+    errorMessage: ''
   }
 }
 

@@ -8,132 +8,184 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {initialState, sitesReducer} from '../../src/reducers/sites';
-import {sitesActions} from '../../src/constants/actions';
+import {initialState, sitesReducer} from '../../src/reducers/sites'
+import {sitesActions} from '../../src/constants/actions'
 
-const sites = sitesActions;
+const sites = sitesActions
 
-let currentState = initialState;
+let currentState = initialState
 
-beforeEach(() => {
-	currentState = initialState;
-});
+describe('basic sites reducer actions', () => {
+  beforeEach(() => {
+    currentState = initialState
+  })
 
-it('should return initial state for unknown actions', () => {
-	expect(sitesReducer(undefined, {})).toEqual(initialState);
-});
+  it('should return initial state for unknown actions', () => {
+	  expect(sitesReducer(undefined, {})).toEqual(initialState)
+  })
 
+  it('Should handle CLEAR_SITES action', () => {
+      const action = {
+        type: sites.CLEAR_SITES,
+        userSites: {}
+      }
 
-it('Should handle Clear_Sites action', () => {
+      expect(sitesReducer(initialState, action)).toEqual({
+        ...initialState
+      })
+    }
+  )
 
-		const action = {
-			type: sites.CLEAR_SITES,
-			userSites: {}
+  it('Should handle REQUEST_SITES action', () => {
+      const action = {
+        type: sites.REQUEST_SITES,
+        isFetchingSites: true
+      }
 
+      expect(sitesReducer(initialState, action)).toEqual({
+        ...initialState,
+        isFetchingSites: true
+      })
+    }
+  )
 
-		};
+  it('Should handle SITES_SUCCESS action', () => {
+      const action = {
+        type: sites.SITES_SUCCESS,
+        userSites: {'342908ufa0wefh': 'CS 1301'},
+      }
 
-		expect(sitesReducer(initialState, action)).toEqual({
+      const state = {
+        ...initialState,
+        userSites: {},
+        hasSites: false,
+        isFetchingSites: true
+      }
+      
+      const expectedState = {
+        ...initialState,
+        userSites: action.userSites,
+        hasSites: true,
+        isFetchingSites: false
+      }
 
-			...initialState
-
-
-		});
-
-
-	}
-);
-
-
-it('Should handle Request_Sites action', () => {
-
-		const action = {
-			type: sites.REQUEST_SITES,
-			isFetchingSites: true
-		};
-
-		expect(sitesReducer(initialState, action)).toEqual({
-
-			...initialState,
-			isFetchingSites: true
-
-		});
-
-	}
-);
-
-
-it('Should handle Sites_Success action', () => {
-		const action = {
-			type: sites.SITES_SUCCESS,
-			userSites: {'342908ufa0wefh': 'CS 1301'},
-		};
-
-		const state = {
-			...initialState,
-			userSites: {},
-			hasSites: false,
-			isFetchingSites: true
-		}
-
-		expect(sitesReducer(state, action)).toEqual({
-			userSites: action.userSites,
-			hasSites: true,
-			isFetchingSites: false
-		});
-
-	}
-);
+      expect(sitesReducer(state, action)).toMatchObject(expectedState)
+    }
+  )
 
 
-it('Should handle Sites_Failure action', () => {
+  it('Should handle SITES_FAILURE action', () => {
+      const action = {
+        type: sites.SITES_FAILURE,
+        hasFailed: true,
+        hasSites: undefined
+      }
 
-		const action = {
-			type: sites.SITES_FAILURE,
-			hasFailed: true,
-			hasSites: undefined
+      expect(sitesReducer(initialState, action)).toEqual({
+        ...initialState,
+        hasSites: undefined,
+        hasFailed: true
+      })
+    }
+  )
+})
 
+describe('favorites tests', () => {
+  it('should not add favorites to the existing list', () => {
+    const action = {
+      type: sites.FAVORITES_SUCCESS,
+      favorites: '5;3;4'
+    }
 
-		};
+    const state = {
+      ...initialState,
+      favorites: ['6', '8']
+    }
 
-		expect(sitesReducer(initialState, action)).toEqual({
+    const expectedState = {
+      ...initialState,
+      isFetchingSites: false,
+      favorites: ['5', '3', '4']
+    }
 
-			...initialState,
-			hasSites: undefined,
-			hasFailed: true
+    const newState = sitesReducer(state, action)
 
+    expect(newState).toMatchObject(expectedState)
+  })
 
-		});
+  it('should not have duplicates in favorites', () => {
+    const action = {
+      type: sites.FAVORITES_SUCCESS,
+      favorites: '5;3;4;4;4'
+    }
 
+    const state = {
+      ...initialState,
+      favorites: ['6', '8']
+    }
 
-	}
-);
+    const expectedState = {
+      ...initialState,
+      isFetchingSites: false,
+      favorites: ['5', '3', '4']
+    }
 
+    const newState = sitesReducer(state, action)
 
-it('should handle GET_MEMBERSHIPS action', () => {
-	const userSites = {
-		"518g910h19": {
-			name: "sitename",
-			id: "518g910h19",
-			tools: {
-				"sakai.announcements": "crazyidhere"
-			}
-		},
-		"518g9ga410h19": {
-			name: "anti-sitename",
-			id: "518g9ga410h19",
-			tools: {
-				"sakai.announcements": "evenmorecrazyidhere"
-			}
-		}
-	};
-	const action = {
-		type: sites.GET_MEMBERSHIPS,
-		userSites: userSites
-	};
+    expect(newState.favorites.length).toBe(3)
+    expect(newState.favorites.filter(id => id === '4').length).toBe(1)
+  })
 
-	expect(sitesReducer(currentState, action)).toEqual({
-		...currentState,
-		userSites: userSites
-	});
-});
+  it('should maintain the same favorites order as received', () => {
+    const action = {
+      type: sites.FAVORITES_SUCCESS,
+      favorites: '5;3;4;4;4;2;6;9;12'
+    }
+
+    const expectedOrder = ['5', '3', '4', '2', '6', '9', '12']
+    const state = {
+      ...initialState,
+      favorites: ['6', '8']
+    }
+
+    const newState = sitesReducer(state, action)
+    const matchingOrder = newState.favorites.filter((id, i) => expectedOrder[i] === id)
+
+    expect(matchingOrder.length).toEqual(expectedOrder.length)
+  })
+
+  it('should return empty array for unexpected favorites', () => {
+    const action = {
+      type: sites.FAVORITES_SUCCESS,
+      favorites: {}
+    }
+
+    expect(sitesReducer(initialState, action)).toMatchObject({
+      ...initialState,
+      favorites: []
+    })
+  })
+
+  it('should return empty array for missing favorites', () => {
+    const action = {
+      type: sites.FAVORITES_SUCCESS
+    }
+
+    expect(sitesReducer(initialState, action)).toMatchObject({
+      ...initialState,
+      favorites: []
+    })
+  })
+
+  it('should return empty array for no favorites', () => {
+    const action = {
+      type: sites.FAVORITES_SUCCESS,
+      favorites: ''
+    }
+
+    expect(sitesReducer(initialState, action)).toMatchObject({
+      ...initialState,
+      favorites: []
+    })
+  })
+})

@@ -8,7 +8,7 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {settingsActions} from '../../src/constants/actions'
+import { settingsActions } from '../../src/constants/actions'
 
 const {
   REQUEST_SETTINGS,
@@ -24,7 +24,7 @@ export const initialState = {
     blacklist: [],
     global_disable: false
   },
-  errorMessage: "",
+  errorMessage: '',
   isFetching: false,
   isLoaded: false,
   isSaving: false,
@@ -36,7 +36,7 @@ const requestSettings = (state, action) => {
     ...state,
     isFetching: true,
     isLoaded: false,
-    errorMessage: "",
+    errorMessage: ''
   }
 }
 
@@ -51,10 +51,7 @@ const settingsSuccess = (state, action) => {
 
 const settingsFailure = (state, action) => {
   return {
-    ...state,
-    isFetching: false,
-    isLoaded: false,
-    userSettings: initialState.userSettings,
+    ...initialState,
     errorMessage: action.errorMessage
   }
 }
@@ -64,7 +61,7 @@ const requestSaveSettings = (state, action) => {
     ...state,
     isSaving: true,
     isSaved: false,
-    errorMessage: "",
+    errorMessage: ''
   }
 }
 
@@ -86,7 +83,7 @@ const saveSettingsFailure = (state, action) => {
   }
 }
 
-export function settingsReducer(state = initialState, action) {
+export function settingsReducer (state = initialState, action) {
   switch (action.type) {
     case REQUEST_SETTINGS:
       return requestSettings(state, action)
