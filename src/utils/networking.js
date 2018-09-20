@@ -16,15 +16,15 @@ haxios.defaults.retries = 5
 haxios.defaults.retryCount = 0
 haxios.defaults.baseRetryDelay = 322
 
-haxios.interceptors.request.use(function headerAddition(config) {
+haxios.interceptors.request.use(function headerAddition (config) {
   config.headers['Cache-Control'] = 'no-cache'
   return config
 }, undefined)
 
-haxios.interceptors.response.use(undefined, function retryInterceptor(error) {
+haxios.interceptors.response.use(undefined, function retryInterceptor (error) {
   let config = error.config || {}
   const response = error.response || {}
-  const shouldAbort = 400 <= response.status && response.status < 500
+  const shouldAbort = response.status >= 400 && response.status < 500
 
   if (shouldAbort) {
     return Promise.reject(error)

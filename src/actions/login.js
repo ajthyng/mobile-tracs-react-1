@@ -1,19 +1,8 @@
-/**
- * Copyright 2017 Andrew Thyng
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
-
-import {user} from './registrar'
-import {authActions} from '../constants/actions'
+import { authActions } from '../constants/actions'
 import CookieManager from 'react-native-cookies'
-import {credentials} from '../utils/storage'
-import {Analytics} from '../utils/analytics'
-import {haxios as axios} from '../utils/networking'
+import { credentials } from '../utils/storage'
+import { Analytics } from '../utils/analytics'
+import { haxios as axios } from '../utils/networking'
 
 const {
   REQUEST_LOGIN,
@@ -94,25 +83,25 @@ const logoutFailure = (errorMessage) => {
 
 export const clearError = () => {
   return {
-    type: CLEAR_ERROR,
+    type: CLEAR_ERROR
   }
 }
 
-export function login(netid = '', password = '', silentLogin = false) {
+export function login (netid = '', password = '', silentLogin = false) {
   return async (dispatch) => {
     dispatch(requestLogin(silentLogin))
     if (netid.length === 0) {
       credentials.get().then(credentials => {
         if (!credentials) {
-          dispatch(loginFailure(new Error("Net ID must be filled out")))
+          dispatch(loginFailure(new Error('Net ID must be filled out')))
         } else {
           netid = credentials.username
           password = credentials.password
           dispatch(login(netid, password))
         }
       }).catch(err => {
-        console.log("Storage Error: ", err.message)
-        dispatch(loginFailure(new Error("Could not retrieve stored credentials")))
+        console.log('Storage Error: ', err.message)
+        dispatch(loginFailure(new Error('Could not retrieve stored credentials')))
       })
       return
     }
@@ -125,7 +114,7 @@ export function login(netid = '', password = '', silentLogin = false) {
     const loginUrl = `${global.urls.baseUrl}/portal/relogin?eid=${netid}&pw=${encodeURIComponent(password)}`
     const sessionUrl = `${global.urls.baseUrl}${global.urls.session}`
 
-    let session = await axios(sessionUrl, {method: 'get'}).catch(err => err)
+    let session = await axios(sessionUrl, { method: 'get' }).catch(err => err)
     let needsNewSession = true
 
     if (!(session instanceof Error)) {
@@ -138,18 +127,18 @@ export function login(netid = '', password = '', silentLogin = false) {
     }
 
     await axios(loginUrl, {
-      method: 'post',
+      method: 'post'
     }).then(async res => {
       let creds = {
         netid,
         password
       }
-      axios(sessionUrl, {method: 'get'}).then(async res => {
+      axios(sessionUrl, { method: 'get' }).then(async res => {
         let session = res.headers['content-type'].indexOf('application/json') > -1 ? res.data : null
         if (session === null) {
-          dispatch(loginFailure(new Error("TRACS is down right now. Please try again later.")))
+          dispatch(loginFailure(new Error('TRACS is down right now. Please try again later.')))
         } else if (session === undefined) {
-          dispatch(loginFailure(new Error("There was a problem logging you into TRACS. Please try again later.")))
+          dispatch(loginFailure(new Error('There was a problem logging you into TRACS. Please try again later.')))
         } else {
           if (session.userEid === creds.netid) {
             credentials.store(creds.netid, creds.password).then(() => {
@@ -157,9 +146,9 @@ export function login(netid = '', password = '', silentLogin = false) {
             })
           } else {
             if (session.userEid === null) {
-              dispatch(loginFailure(new Error("Net ID or password is incorrect.")))
+              dispatch(loginFailure(new Error('Net ID or password is incorrect.')))
             } else {
-              dispatch(loginFailure(new Error("There was a problem logging you into TRACS. Please try again later.")))
+              dispatch(loginFailure(new Error('There was a problem logging you into TRACS. Please try again later.')))
             }
           }
         }
@@ -172,7 +161,7 @@ export function login(netid = '', password = '', silentLogin = false) {
   }
 }
 
-export function logout() {
+export function logout () {
   return (dispatch) => {
     dispatch(requestLogout())
     const logoutUrl = `${global.urls.baseUrl}${global.urls.logout}`
@@ -185,7 +174,7 @@ export function logout() {
         dispatch(logoutFailure(err))
       })
     }).catch(() => {
-      dispatch(logoutFailure(new Error("Could not log out of TRACS.")))
+      dispatch(logoutFailure(new Error('Could not log out of TRACS.')))
     })
   }
 }

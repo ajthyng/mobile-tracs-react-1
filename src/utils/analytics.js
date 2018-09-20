@@ -10,7 +10,7 @@
 
 import firebase from 'react-native-firebase'
 import moment from 'moment'
-import {types as siteTypes} from '../constants/sites'
+import { types as siteTypes } from '../constants/sites'
 
 const analytics = firebase.analytics()
 const events = {

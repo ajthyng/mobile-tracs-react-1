@@ -7,7 +7,7 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {authActions} from '../constants/actions'
+import { authActions } from '../constants/actions'
 
 let {
   REQUEST_LOGIN,
@@ -31,7 +31,7 @@ const requestLogin = (state, action) => {
     ...state,
     isAuthenticated: false,
     isLoggingIn: !action.silentLogin,
-    errorMessage: ""
+    errorMessage: ''
   }
 }
 
@@ -40,7 +40,7 @@ const loginSuccess = (state, action) => {
     ...state,
     isAuthenticated: true,
     isLoggingIn: false,
-    errorMessage: "",
+    errorMessage: '',
     tracsID: action.tracsID,
     netid: action.netid,
     password: action.password
@@ -50,7 +50,7 @@ const loginSuccess = (state, action) => {
 const loginFailure = (state, action) => {
   return {
     ...initialState,
-    errorMessage: action.errorMessage,
+    errorMessage: action.errorMessage
   }
 }
 
@@ -59,7 +59,7 @@ const requestLogout = (state) => {
     ...state,
     isLoggingOut: true,
     isAuthenticated: false,
-    errorMessage: ""
+    errorMessage: ''
   }
 }
 
@@ -77,7 +77,7 @@ const clearError = (state) => {
   }
 }
 
-export function loginReducer(state = initialState, action) {
+export function loginReducer (state = initialState, action) {
   switch (action.type) {
     case REQUEST_LOGIN:
       return requestLogin(state, action)

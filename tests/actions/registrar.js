@@ -1,105 +1,202 @@
-/**
- * Copyright 2017 Andrew Thyng
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
-import configureMockStore from '../mocks/store'
+import createMockStore from '../mocks/store'
 import thunk from 'redux-thunk'
-import {Response} from 'whatwg-fetch'
 
-import * as types from '../../src/constants/actions'
-import * as RegistrarActions from '../../src/actions/registrar'
-import * as registrarReducer from '../../src/reducers/registrar'
-import * as loginReducer from '../../src/reducers/login'
-import * as urls from '../../config/urls'
+import {registrarActions as actions, authActions as login} from '../../src/constants/actions'
+import {register} from '../../src/actions/registrar'
+import { token as TokenStore } from '../../src/utils/storage'
+import {initialState} from '../../src/reducers/registrar'
+import {initialState as loginInitialState} from '../../src/reducers/login'
+import {credentials} from '../../src/utils/storage'
+import firebase from 'react-native-firebase'
+import axios from 'axios'
+import MockAdapter from 'axios-mock-adapter'
+import * as Networking from '../../src/utils/networking'
 
-const registrar = types.registrarActions
-const auth = types.authActions
-const registrarInitialState = registrarReducer.initialState
-const loginInitialState = loginReducer.initialState
+const urls = require('../../config/urls')
 
 const netid = 'fak103'
 const password = 'password123'
 
 const middleware = [thunk]
-const mockStore = configureMockStore(middleware)
-global.urls = urls.debug
+const mockStore = createMockStore(middleware)
+const axiosMock = new MockAdapter(axios)
+let store = null
 
-const mockResponse = (status, statusText, response) => {
-  return new Response(response, {
-    status,
-    statusText,
-    headers: {
-      'Content-Type': 'application/json'
-    }
+describe('registrar tests', () => {
+  beforeEach(() => {
+    store = mockStore({})
+    Networking.haxios = axios
+    axiosMock.reset()
+    global.urls = urls
   })
-}
 
-it('should fail registration with empty netid', async () => {
-  const localNetID = ''
-  const store = mockStore({
-    register: registrarInitialState
+  it('should fail registration with empty netid', async () => {
+    const store = mockStore({
+      register: initialState
+    })
+
+    const expectedActions = [
+      {
+        type: actions.REQUEST_REGISTRATION, 
+        isRegistering: true, 
+        isRegistered: false
+      },
+      {
+        type: actions.REGISTRATION_FAILURE, 
+        isRegistering: false, 
+        isRegistered: false,
+        errorMessage: new Error('A NetID is required to login to this application')
+      }
+    ]
+
+    await store.dispatch(register('', password))
+    expect(store.getActions()).toEqual(expectedActions)
   })
-  let tokenResponse = mockResponse(401, 'this would be a webpage',
-    `<html></html>`)
 
-  global.fetch = jest.fn().mockImplementation(() => Promise.resolve(tokenResponse))
+  it('should fail registration with incorrect netid/password', async () => {
+    const store = mockStore({
+      register: initialState
+    })
 
-  const expectedActions = [
-    {type: registrar.IS_REGISTERING, isRegistering: true},
-    {type: registrar.IS_REGISTERING, isRegistering: false},
-    {type: registrar.REGISTRATION_FAILED, hasFailed: true},
-    {type: auth.LOGIN_HAS_FAILED, hasFailed: true}
-  ]
+    const expectedActions = [
+      {
+        type: actions.REQUEST_REGISTRATION, 
+        isRegistering: true, 
+        isRegistered: false
+      },
+      {
+        type: actions.REGISTRATION_FAILURE,
+        isRegistered: false,
+        isRegistering: false,
+        errorMessage: new Error('There was an error logging you in. Please contact support.')
+      }
+    ]
 
-  await store.dispatch(RegistrarActions.register(localNetID, password))
-  expect(store.getActions()).toEqual(expectedActions)
+    const jwtUrl = `${global.urls.dispatchUrl}${global.urls.jwt}`
+    axiosMock.onPost(jwtUrl).reply(400)
+
+    await store.dispatch(register(netid, password))
+    expect(store.getActions()).toEqual(expectedActions)
+  })
+
+  it('should fail registration for 401 errors', () => {
+    const store = mockStore({
+      register: initialState,
+    })
+
+    const expectedActions = [
+      {
+        type: actions.REQUEST_REGISTRATION, 
+        isRegistering: true, 
+        isRegistered: false
+      },
+      {
+        type: login.REQUEST_LOGIN,
+        silentLogin: false,
+      },
+      {
+        type: actions.REGISTRATION_FAILURE,
+        isRegistered: false,
+        isRegistering: false,
+        errorMessage: new Error('There was an error logging you in. Please try again.')
+      }
+    ]
+
+    credentials.store = jest.fn(() => Promise.resolve({username: netid, password}))
+
+    const jwtUrl = `${global.urls.dispatchUrl}${global.urls.jwt}`
+    const sessionUrl = `${global.urls.baseUrl}${global.urls.session}`
+
+    axiosMock
+      .onPost(jwtUrl).reply(401)
+      .onGet(sessionUrl).replyOnce(200, {
+        "attributeNames": {
+        },
+        "attributes": null,
+        "creationTime": 1537454133969,
+        "currentTime": 1537454133970,
+        "id": null,
+        "lastAccessedTime": 1537454133969,
+        "maxInactiveInterval": 1800,
+        "userEid": null,
+        "userId": null,
+        "active": true,
+        "entityReference": "\/session",
+        "entityURL": "https:\/\/staging.tracs.txstate.edu:443\/direct\/session",
+        "entityTitle": "current"
+      })
+
+    return store.dispatch(register(netid, password)).then(() => {
+      expect(store.getActions()).toEqual(expectedActions)
+    })
+  })
+
+  it('should fail registration with network error', () => {
+    const store = mockStore({
+      register: initialState
+    })
+
+    const expectedActions = [
+      {
+        type: actions.REQUEST_REGISTRATION, 
+        isRegistering: true, 
+        isRegistered: false
+      },
+      {
+        type: actions.REGISTRATION_FAILURE,
+        isRegistered: false,
+        isRegistering: false,
+        errorMessage: new Error('Network Error. Please check your internet connection and try again.')
+      }
+    ]
+
+    axiosMock.onAny().networkError()
+
+    return store.dispatch(register(netid, password)).then(() => {
+      expect(store.getActions()).toEqual(expectedActions)
+    })
+  })
+
+  it('should register and login with proper netid and password', () => {
+    const store = mockStore({
+      register: initialState
+    })
+    const token = 'afafafafafaf'
+
+    const expectedActions = [
+      {
+        type: actions.REQUEST_REGISTRATION, 
+        isRegistering: true, 
+        isRegistered: false
+      },
+      {
+        type: actions.REGISTRATION_SUCCESS,
+        isRegistered: true,
+        isRegistering: false,
+        deviceToken: token,
+        netid
+      }
+    ]
+
+
+    TokenStore.getDeviceToken = jest.fn(() => Promise.resolve(token))
+    const getRegistrationUrl = `${global.urls.dispatchUrl}${global.urls.getRegistration(token)}`
+    const jwtUrl = `${global.urls.dispatchUrl}${global.urls.jwt}`
+
+    axiosMock.onPost(jwtUrl).reply(200, 'ey2jtre.rejiownfaowe')
+    axiosMock.onGet(getRegistrationUrl).reply(200, {token, user_id: netid})
+
+    const loginUrl = `${global.urls.baseUrl}/portal/relogin?eid=${netid}&pw=${encodeURIComponent(password)}`
+    axiosMock.onPost(loginUrl).reply(200, {})
+
+    const sessionUrl = `${global.urls.baseUrl}${global.urls.session}`
+    axiosMock.onGet(sessionUrl).reply(200, null, {'content-type': 'application/json'})
+
+
+
+    return store.dispatch(register(netid, password)).then(() => {
+      expect(store.getActions()).toEqual(expectedActions)
+    })
+  })
 })
 
-it('should be marked as guest with invalid ldap credentials', async () => {
-  const store = mockStore({
-    register: registrarInitialState,
-    login: loginInitialState
-  })
-
-  const tokenResponse = mockResponse(401, 'this is the unauthorized webpage',
-    `<html></html>`)
-
-  const tracsResponse = mockResponse(200, 'this is a tracs session', `{
-		"attributeNames": {},
-		"attributes": null,
-		"creationTime": 1505771455492,
-		"currentTime": 1505825298973,
-		"id": null,
-		"lastAccessedTime": 1505825298972,
-		"maxInactiveInterval": 7200,
-		"userEid": "${netid}",
-		"userId": null,
-		"active": true,
-		"entityReference": "/session",
-		"entityURL": "https://staging.tracs.txstate.edu:443/direct/session",
-		"entityTitle": "current"
-	}`)
-
-  global.fetch = jest.fn().mockImplementation((url) => {
-    if (url.includes(':3000/token.pl')) {
-      return Promise.resolve(tokenResponse)
-    } else {
-      return Promise.resolve(tracsResponse)
-    }
-  })
-
-  const expectedActions = [
-    {type: registrar.IS_REGISTERING, isRegistering: true},
-    {type: auth.LOGIN_IS_GUEST, isGuestAccount: true},
-    {type: registrar.IS_REGISTERING, isRegistering: false},
-    {type: registrar.REGISTRATION_FAILED, hasFailed: true},
-    {type: auth.LOGGING_IN, loggingIn: true}
-  ]
-  await store.dispatch(RegistrarActions.register(netid, password))
-  expect(store.getActions()).toEqual(expectedActions)
-})

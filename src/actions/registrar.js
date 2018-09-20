@@ -7,12 +7,12 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {Platform} from 'react-native'
-import {auth, login, loginHasFailed, loginIsGuestAccount} from './login'
-import {token as TokenStore} from '../utils/storage'
+import { Platform } from 'react-native'
+import { login } from './login'
+import { token as TokenStore } from '../utils/storage'
 import base64 from 'base-64'
-import {registrarActions} from '../constants/actions'
-import {haxios as axios} from '../utils/networking'
+import { registrarActions } from '../constants/actions'
+import { haxios as axios } from '../utils/networking'
 
 const {
   REQUEST_REGISTRATION,
@@ -55,10 +55,10 @@ export const registrationFailure = (error, dispatch, netid, password) => {
       errorMessage = 'There was an error logging you in. Please try again.'
       break
     default:
-      if (error.message === "Network Error") {
-        errorMessage = "Network Error. Please check your internet connection and try again."
+      if (error.message === 'Network Error') {
+        errorMessage = 'Network Error. Please check your internet connection and try again.'
       } else {
-        errorMessage = error ? error.message : "There was an error logging you in. Please check your NetID and password."
+        errorMessage = error ? error.message : 'There was an error logging you in. Please check your NetID and password.'
       }
   }
   return {
@@ -103,18 +103,18 @@ const postRegistration = async (payload, dispatch) => {
 
   const getOptions = {
     method: 'get',
-    headers: {'Content-Type': 'application/json'}
+    headers: { 'Content-Type': 'application/json' }
   }
 
   const postOptions = {
     method: 'post',
-    headers: {'Content-Type': 'application/json'},
+    headers: { 'Content-Type': 'application/json' },
     data: registration
   }
 
   const deleteOptions = {
     method: 'delete',
-    headers: {'Content-Type': 'application/json'}
+    headers: { 'Content-Type': 'application/json' }
   }
 
   const postRegistrationRequest = (url, options, deviceToken, netid, password) => {
@@ -122,26 +122,26 @@ const postRegistration = async (payload, dispatch) => {
       dispatch(registrationSuccess(deviceToken, netid))
       dispatch(login(netid, password))
     }).catch(err => {
-      dispatch(registrationFailure(err, dispatch, netid, password))
+      return dispatch(registrationFailure(err, dispatch, netid, password))
     })
   }
 
   return axios(getRegistrationUrl, getOptions).then(res => {
-    if (res.data && res.data.hasOwnProperty("token") && res.data.token === deviceToken) { //We found a token
-      if (res.data.token === deviceToken && res.data.user_id === netid) { //The server token and netid matches, already registered
+    if (res.data && res.data.hasOwnProperty('token') && res.data.token === deviceToken) { // We found a token
+      if (res.data.token === deviceToken && res.data.user_id === netid) { // The server token and netid matches, already registered
         dispatch(registrationSuccess(res.data.token, netid))
         dispatch(login(netid, password))
-      } else { //The stored token is stale, delete and reregister
+      } else { // The stored token is stale, delete and reregister
         axios(registrationUrl, deleteOptions).catch(err => console.log(err))
         return postRegistrationRequest(registrationUrl, postOptions, deviceToken, netid, password)
       }
-    } else { //No registration was there, we should register
+    } else { // No registration was there, we should register
       return postRegistrationRequest(registrationUrl, postOptions, deviceToken, netid, password)
     }
   }).catch(err => {
-    if ((err.response || {}).status === 404) {
+    if ((err.response || {}).status === 404) { // Registration not found, register
       return postRegistrationRequest(registrationUrl, postOptions, deviceToken, netid, password)
-    } else {
+    } else { // Some other error happened, report it
       dispatch(registrationFailure(err, dispatch, netid, password))
     }
   })
@@ -149,7 +149,7 @@ const postRegistration = async (payload, dispatch) => {
 
 const requestUnregister = () => {
   return {
-    type: REQUEST_UNREGISTER,
+    type: REQUEST_UNREGISTER
   }
 }
 
@@ -177,14 +177,14 @@ export const register = (netid = '', password) => {
   return async (dispatch) => {
     dispatch(requestRegistration())
     if (netid.length === 0) {
-      dispatch(registrationFailure(new Error("A NetID is required to login to this application"), dispatch, netid, password))
+      dispatch(registrationFailure(new Error('A NetID is required to login to this application'), dispatch, netid, password))
       return
     }
     netid = netid.toLowerCase().trim()
     const dispatchUrl = global.urls.dispatchUrl
     let auth64 = `${netid}:${password}`
     let headers = {
-      'Authorization': 'Basic ' + base64.encode(auth64),
+      'Authorization': 'Basic ' + base64.encode(auth64)
     }
     return axios(`${dispatchUrl}${global.urls.jwt}`, {
       method: 'post',
@@ -196,9 +196,9 @@ export const register = (netid = '', password) => {
           netid,
           password,
           jwt: res.data,
-          deviceToken,
+          deviceToken
         }
-        postRegistration(payload, dispatch).catch(err => {
+        return postRegistration(payload, dispatch).catch(err => {
           dispatch(registrationFailure(err, dispatch, netid, password))
         })
       }
@@ -223,7 +223,7 @@ export const unregister = (token) => {
     const options = {
       method: 'delete',
       data: form,
-      headers: {'Content-Type': 'multipart/form-data'}
+      headers: { 'Content-Type': 'multipart/form-data' }
     }
 
     axios(deleteRegistrationURL, options).then(res => {
