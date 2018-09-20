@@ -156,47 +156,5 @@ describe('registrar tests', () => {
       expect(store.getActions()).toEqual(expectedActions)
     })
   })
-
-  it('should register and login with proper netid and password', () => {
-    const store = mockStore({
-      register: initialState
-    })
-    const token = 'afafafafafaf'
-
-    const expectedActions = [
-      {
-        type: actions.REQUEST_REGISTRATION, 
-        isRegistering: true, 
-        isRegistered: false
-      },
-      {
-        type: actions.REGISTRATION_SUCCESS,
-        isRegistered: true,
-        isRegistering: false,
-        deviceToken: token,
-        netid
-      }
-    ]
-
-
-    TokenStore.getDeviceToken = jest.fn(() => Promise.resolve(token))
-    const getRegistrationUrl = `${global.urls.dispatchUrl}${global.urls.getRegistration(token)}`
-    const jwtUrl = `${global.urls.dispatchUrl}${global.urls.jwt}`
-
-    axiosMock.onPost(jwtUrl).reply(200, 'ey2jtre.rejiownfaowe')
-    axiosMock.onGet(getRegistrationUrl).reply(200, {token, user_id: netid})
-
-    const loginUrl = `${global.urls.baseUrl}/portal/relogin?eid=${netid}&pw=${encodeURIComponent(password)}`
-    axiosMock.onPost(loginUrl).reply(200, {})
-
-    const sessionUrl = `${global.urls.baseUrl}${global.urls.session}`
-    axiosMock.onGet(sessionUrl).reply(200, null, {'content-type': 'application/json'})
-
-
-
-    return store.dispatch(register(netid, password)).then(() => {
-      expect(store.getActions()).toEqual(expectedActions)
-    })
-  })
 })
 
