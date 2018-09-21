@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react'
+import { Platform } from 'react-native'
 import styled from 'styled-components'
 
 const Container = styled.View`
@@ -10,17 +11,26 @@ const Container = styled.View`
 const Message = styled.Text`
   color: ${props => props.theme.darkText};
   opacity: 0.8;
-  font-size: 17px;
   text-align: center;
   font-variant: small-caps;
   padding: 24px 0;
 `
 
+const message = 'no annoucements have been posted'
+const messageText = Platform.select({
+  ios: message,
+  android: message.toUpperCase()
+})
+const fontSize = Platform.select({
+  ios: 17,
+  android: 14
+})
+
 class EmptyAnnouncements extends PureComponent {
   render () {
     return (
       <Container>
-        <Message>no announcements have been posted</Message>
+        <Message style={{ fontSize }}>{messageText}</Message>
       </Container>
     )
   }
