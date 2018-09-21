@@ -1,10 +1,10 @@
-import React, {PureComponent} from 'react'
-import styled, {withTheme} from 'styled-components'
+import React, { PureComponent } from 'react'
+import styled, { withTheme } from 'styled-components'
 import CourseDetailHeader from './CourseDetailHeader'
 import CourseOptions from './CourseOptions'
 import RecentGrades from './RecentGrades/RecentGrades'
-import {connect} from 'react-redux'
-import {NavigationActions} from 'react-navigation'
+import { connect } from 'react-redux'
+import { NavigationActions } from 'react-navigation'
 
 const Container = styled.View`
   flex: 1;
@@ -47,17 +47,17 @@ const OptionsSection = styled.View`
 
 class CourseDetailScreen extends PureComponent {
   goToGradebook = () => {
-    const {course, navigation} = this.props
+    const { course, navigation } = this.props
     const openGradebook = NavigationActions.navigate({
       routeName: 'Gradebook',
-      params: {course, transition: 'cardFromRight'}
+      params: { course, transition: 'cardFromRight' }
     })
     navigation.dispatch(openGradebook)
   }
 
   render () {
-    const {course, grades} = this.props
-    const {contactInfo: {email: facultyEmail}, name: title, isFavorite} = course
+    const { course, grades } = this.props
+    const { contactInfo: { email: facultyEmail }, name: title, isFavorite } = course
     const updateFavorites = this.props.navigation.getParam('updateFavorites', () => null)
 
     return (
@@ -118,11 +118,11 @@ const mapStateToProps = (state, props) => {
   let grades = (state.grades[siteId] || {}).grades || []
 
   let filteredGrades = grades
-    .filter(({postedDate, grade}) => postedDate !== null && grade !== null)
+    .filter(({ postedDate, grade }) => postedDate !== null && grade !== null)
     .sort(byPostedDate)
 
   if (filteredGrades.length === 0) {
-    filteredGrades = grades.filter(({grade}) => grade !== null).reverse()
+    filteredGrades = grades.filter(({ grade }) => grade !== null).reverse()
   }
 
   return {

@@ -1,10 +1,9 @@
-import React, {PureComponent} from 'react'
-import {TouchableOpacity} from 'react-native'
-import styled, {withTheme} from 'styled-components'
+import React, { PureComponent } from 'react'
+import { TouchableOpacity } from 'react-native'
+import styled, { withTheme } from 'styled-components'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 
 const Container = styled.View`
-  width: 120px;
   height: 80px;
   border-radius: 3px;
   margin: 3px;
@@ -36,11 +35,11 @@ const Dot = styled.View`
 `
 class CourseOption extends PureComponent {
   onPress = () => {
-    const {onPress} = this.props
+    const { onPress } = this.props
     onPress && onPress()
   }
   render () {
-    const {label, name, Icon, newContent, enabled} = this.props
+    const { label, name, Icon, newContent, enabled } = this.props
 
     return (
       <TouchableOpacity disabled={!enabled} onPress={this.onPress} >
