@@ -8,23 +8,23 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {createStore, applyMiddleware} from 'redux'
-import {composeWithDevTools} from 'redux-devtools-extension/developmentOnly'
-import {persistStore, persistReducer, createTransform} from 'redux-persist'
+import { createStore, applyMiddleware } from 'redux'
+import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly'
+import { persistStore, persistReducer, createTransform } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
-import {initialState} from '../reducers/sites'
+import { initialState } from '../reducers/sites'
 
 import thunk from 'redux-thunk'
 import rootReducer from '../reducers/index'
 
 const statusFilter = createTransform((inboundState, key) => {
   if (key === 'tracsSites') {
-    return {filterStatus: inboundState.filterStatus}
+    return { filterStatus: inboundState.filterStatus }
   }
   return inboundState
 }, (outboundState, key) => {
   if (key === 'tracsSites') {
-    return {...initialState, filterStatus: outboundState.filterStatus}
+    return { ...initialState, filterStatus: outboundState.filterStatus }
   }
   return outboundState
 })
@@ -51,5 +51,5 @@ export default function configureStore () {
       store.replaceReducer(persistReducer(persistConfig, nextRootReducer))
     })
   }
-  return {store, persistor}
+  return { store, persistor }
 }

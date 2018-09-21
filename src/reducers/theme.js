@@ -8,10 +8,10 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {themeActions} from '../constants/actions'
-import {defaultTheme} from '../constants/themes'
+import { themeActions } from '../constants/actions'
+import { defaultTheme } from '../constants/themes'
 
-const {SET_THEME} = themeActions
+const { SET_THEME } = themeActions
 const initialState = {
   colors: defaultTheme,
   name: 'default'
@@ -24,7 +24,7 @@ const setTheme = (state, action) => {
   }
 }
 
-export function themeReducer(state = initialState, action) {
+export function themeReducer (state = initialState, action) {
   switch (action.type) {
     case SET_THEME:
       return setTheme(state, action)

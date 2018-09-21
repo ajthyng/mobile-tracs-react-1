@@ -1,8 +1,8 @@
-import React, {PureComponent} from 'react'
+import React, { PureComponent } from 'react'
 import styled from 'styled-components'
-import {connect} from 'react-redux'
-import {batchUpdateNotification} from '../../actions/notifications'
-import {Dimensions, Linking, TouchableOpacity, WebView} from 'react-native'
+import { connect } from 'react-redux'
+import { batchUpdateNotification } from '../../actions/notifications'
+import { Dimensions, Linking, TouchableOpacity, WebView } from 'react-native'
 import dayjs from 'dayjs'
 
 const Container = styled.View`
@@ -83,20 +83,20 @@ class Announcement extends PureComponent {
   webView = React.createRef()
 
   updateHeight = event => {
-    const {title, jsEvaluationValue} = event
-    this.setState({height: parseInt(jsEvaluationValue || title)})
+    const { title, jsEvaluationValue } = event
+    this.setState({ height: parseInt(jsEvaluationValue || title) })
   }
 
-  updateWidth = ({window: {width}}) => {
-    this.setState({width: width - 20})
+  updateWidth = ({ window: { width } }) => {
+    this.setState({ width: width - 20 })
   }
 
   onPress = () => {
-    const {notification} = this.props
+    const { notification } = this.props
 
-    this.setState(prev => ({showBody: !prev.showBody}), () => {
+    this.setState(prev => ({ showBody: !prev.showBody }), () => {
       if (notification && !notification.read && this.state.showBody) {
-        this.props.markAsRead(notification.id, {read: true})
+        this.props.markAsRead(notification.id, { read: true })
       }
     })
   }
@@ -110,8 +110,8 @@ class Announcement extends PureComponent {
   }
 
   render () {
-    const {announcement: {title, createdOn}, unread} = this.props
-    const {height, showBody, width, html} = this.state
+    const { announcement: { title, createdOn }, unread } = this.props
+    const { height, showBody, width, html } = this.state
     const posted = dayjs(createdOn).format('MMMM D hh:mma')
 
     return (
@@ -123,7 +123,7 @@ class Announcement extends PureComponent {
         <Body
           useWebKit
           innerRef={this.webView}
-          style={{height: showBody ? height : 0, width}}
+          style={{ height: showBody ? height : 0, width }}
           mixedContentMode='compatibility'
           startLoadWithResult={false}
           injectedJavaScript='(() => document.body.scrollHeight)()'
@@ -137,7 +137,7 @@ class Announcement extends PureComponent {
             }
             this.updateHeight(event)
           }}
-          source={{html}}
+          source={{ html }}
         />
       </Container>
     )
@@ -149,7 +149,7 @@ Announcement.defaultProps = {
 }
 
 const mapDispatchToProps = dispatch => ({
-  markAsRead: (id) => dispatch(batchUpdateNotification([id], {read: true}))
+  markAsRead: (id) => dispatch(batchUpdateNotification([id], { read: true }))
 })
 
 export default connect(null, mapDispatchToProps)(Announcement)

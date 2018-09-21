@@ -1,5 +1,5 @@
-import React, {PureComponent} from 'react'
-import {Dimensions} from 'react-native'
+import React, { PureComponent } from 'react'
+import { Dimensions } from 'react-native'
 import styled from 'styled-components'
 import ExampleCourseCard from './CourseCard/ExampleCourseCard'
 import Arrow from './Arrow'
@@ -36,8 +36,8 @@ class EmptyCourseList extends PureComponent {
   }
 
   updateSize = () => {
-    const {height} = Dimensions.get('window')
-    this.setState({height: height / 2})
+    const { height } = Dimensions.get('window')
+    this.setState({ height: height / 2 })
   }
 
   render () {

@@ -1,10 +1,9 @@
-import React, {Component} from 'react'
-import {BackHandler, Dimensions, WebView, Platform, StyleSheet, requireNativeComponent} from 'react-native'
+import React, { Component } from 'react'
+import { BackHandler, Dimensions, WebView, Platform, StyleSheet, requireNativeComponent } from 'react-native'
 import WebError from './WebError'
-import {Analytics} from '../../utils/analytics'
-import {withNavigation} from 'react-navigation'
+import { Analytics } from '../../utils/analytics'
+import { withNavigation } from 'react-navigation'
 
-const TRACSWeb = requireNativeComponent('TRACSWeb', TRACSWebView)
 const styles = StyleSheet.create({
   webView: {
     height: '100%',
@@ -35,8 +34,8 @@ class TRACSWebView extends Component {
   }
 
   render () {
-    const {baseUrl, portal} = global.urls
-    const {getParam} = this.props.navigation
+    const { baseUrl, portal } = global.urls
+    const { getParam } = this.props.navigation
 
     const url = getParam('baseUrl', `${baseUrl}${portal}`)
     let removeHeaderJS = 'document.getElementById("loginLinks").style.display = "none";'
@@ -47,13 +46,13 @@ class TRACSWebView extends Component {
         ref={this.webview}
         style={styles.webView}
         injectedJavaScript={removeHeaderJS}
-        source={{url}}
+        source={{ url }}
         startLoadWithResult={false}
         {...this.props}
         renderError={() => <WebError refresh={this.webview.current.reload} />}
-        onNavigationStateChange={({canGoBack}) => {
+        onNavigationStateChange={({ canGoBack }) => {
           this.setState(() => {
-            return {canGoBack}
+            return { canGoBack }
           })
         }}
       />,
@@ -69,5 +68,7 @@ class TRACSWebView extends Component {
     })
   }
 }
+
+const TRACSWeb = requireNativeComponent('TRACSWeb', TRACSWebView)
 
 export default withNavigation(TRACSWebView)

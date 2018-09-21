@@ -1,11 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
-import {Dimensions, StatusBar, Platform} from 'react-native'
+import { Dimensions, StatusBar, Platform } from 'react-native'
 import LoginPage from './LoginComponents/LoginPage'
 import LoginGreeting from './LoginComponents/LoginGreeting'
 import LoginForm from './LoginComponents/LoginForm'
 import UPPSText from './LoginComponents/UPPSText'
-import {getOrientation, PORTRAIT} from '../../utils/orientation'
+import { getOrientation, PORTRAIT } from '../../utils/orientation'
 
 const Container = styled.View`
   flex: 1;
@@ -21,47 +21,47 @@ const KeyboardScroll = styled.ScrollView`
 `
 
 const Login = (props) => {
-    const portrait = getOrientation() === PORTRAIT
-    const {height} = Dimensions.get('window')
-    const statusBarHeight = Platform.select({
-      ios: height,
-      android: height - StatusBar.currentHeight
-    })
+  const portrait = getOrientation() === PORTRAIT
+  const { height } = Dimensions.get('window')
+  const statusBarHeight = Platform.select({
+    ios: height,
+    android: height - StatusBar.currentHeight
+  })
 
-    const {
-      netid, password,
-      onChangeText,
-      onSubmitEditing,
-      onLayout,
-      onPress,
-      getRef
-    } = props
+  const {
+    netid, password,
+    onChangeText,
+    onSubmitEditing,
+    onLayout,
+    onPress,
+    getRef
+  } = props
 
-    return (
-      <KeyboardScroll
-        innerRef={getRef}
-        contentViewStyle={{height: '100%'}}
-        scrollEnabled
-        keyboardDismissMode='none'
-        alwaysBounceVertical={false}
-        keyboardShouldPersistTaps='handled'
-      >
-        <Container style={{height: statusBarHeight}}>
-          <LoginPage portrait={portrait}>
-            <LoginGreeting />
-            <LoginForm
-              netid={netid}
-              password={password}
-              onChangeText={onChangeText}
-              onSubmitEditing={onSubmitEditing}
-              onLayout={onLayout}
-              onPress={onPress}
-            />
-          </LoginPage>
-          <UPPSText />
-        </Container>
-      </KeyboardScroll>
-    )
+  return (
+    <KeyboardScroll
+      innerRef={getRef}
+      contentViewStyle={{ height: '100%' }}
+      scrollEnabled
+      keyboardDismissMode='none'
+      alwaysBounceVertical={false}
+      keyboardShouldPersistTaps='handled'
+    >
+      <Container style={{ height: statusBarHeight }}>
+        <LoginPage portrait={portrait}>
+          <LoginGreeting />
+          <LoginForm
+            netid={netid}
+            password={password}
+            onChangeText={onChangeText}
+            onSubmitEditing={onSubmitEditing}
+            onLayout={onLayout}
+            onPress={onPress}
+          />
+        </LoginPage>
+        <UPPSText />
+      </Container>
+    </KeyboardScroll>
+  )
 }
 
 export default Login

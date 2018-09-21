@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react'
+import React, { PureComponent } from 'react'
 import styled from 'styled-components'
 import Grade from './Grade'
 
@@ -36,7 +36,7 @@ const GradeContainer = styled.View`
 
 class GradebookItem extends PureComponent {
   render () {
-    const {earned, total, title, subtitle} = this.props
+    const { earned, total, title, subtitle } = this.props
     return (
       <Container>
         <GradeContainer>

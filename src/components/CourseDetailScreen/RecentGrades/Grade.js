@@ -1,5 +1,5 @@
-import React, {PureComponent} from 'react'
-import styled, {withTheme} from 'styled-components'
+import React, { PureComponent } from 'react'
+import styled, { withTheme } from 'styled-components'
 
 const Container = styled.View`
   height: 100%;
@@ -26,7 +26,7 @@ const NoGrade = styled.Text`
 
 class Grade extends PureComponent {
   renderContent = () => {
-    const {earned, total} = this.props
+    const { earned, total } = this.props
     if (earned === null) {
       return (<NoGrade>NO GRADE{'\n'}POSTED</NoGrade>)
     } else {

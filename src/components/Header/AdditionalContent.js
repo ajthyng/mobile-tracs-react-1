@@ -1,5 +1,5 @@
-import React, {Component} from 'react'
-import styled, {withTheme} from 'styled-components'
+import React, { Component } from 'react'
+import styled, { withTheme } from 'styled-components'
 import FavoritesToggle from './FavoritesToggle'
 
 const Container = styled.View`
@@ -14,7 +14,7 @@ const Container = styled.View`
 
 class AdditionalContent extends Component {
   render () {
-    const {visible, allSitesFilter, onValueChange} = this.props
+    const { visible, allSitesFilter, onValueChange } = this.props
 
     return visible ? (
       <Container>

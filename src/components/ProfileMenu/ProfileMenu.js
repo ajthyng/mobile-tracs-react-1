@@ -8,14 +8,14 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React, {Component} from 'react'
-import {Animated, Easing} from 'react-native'
-import {connect} from 'react-redux'
-import {withTheme} from 'styled-components'
-import {Menu, MenuTrigger, MenuOptions, MenuOption} from 'react-native-popup-menu'
+import React, { Component } from 'react'
+import { Animated, Easing } from 'react-native'
+import { connect } from 'react-redux'
+import { withTheme } from 'styled-components'
+import { Menu, MenuTrigger, MenuOptions, MenuOption } from 'react-native-popup-menu'
 import Profile from '../Header/Profile'
 import ProfileMenuOption from './ProfileMenuOption'
-import {logout} from '../../actions/login'
+import { logout } from '../../actions/login'
 import * as Storage from '../../utils/storage'
 
 class CustomMenuRenderer extends Component {
@@ -51,9 +51,9 @@ class CustomMenuRenderer extends Component {
   }
 
   render () {
-    const {style, children, layouts, ...other} = this.props
+    const { style, children, layouts, ...other } = this.props
     const width = layouts.windowLayout.width * 0.65
-    const layout = {top: 0, right: 0, height: '100%', position: 'absolute', width}
+    const layout = { top: 0, right: 0, height: '100%', position: 'absolute', width }
     const animation = {
       transform: [{
         translateX: this.state.slide.interpolate({
@@ -73,14 +73,14 @@ class CustomMenuRenderer extends Component {
 
 class ProfileMenu extends Component {
   render () {
-    const {navigation: {navigate}, theme} = this.props
+    const { navigation: { navigate }, theme } = this.props
     return (
       <Menu renderer={CustomMenuRenderer}
         onSelect={val => {
           if (val === 'Logout') {
             this.props.logout()
           } else {
-            navigate(val, {transition: 'cardFromRight'})
+            navigate(val, { transition: 'cardFromRight' })
           }
         }}>
         <MenuTrigger>
@@ -91,11 +91,11 @@ class ProfileMenu extends Component {
             diameter={50}
             shouldDisplayName
             style={{
-              container: {flexDirection: 'column', alignItems: 'center', justifyContent: 'center'},
-              text: {color: theme.darkText, fontSize: 22, fontWeight: 'bold'}
+              container: { flexDirection: 'column', alignItems: 'center', justifyContent: 'center' },
+              text: { color: theme.darkText, fontSize: 22, fontWeight: 'bold' }
             }}
           />
-          <MenuOption value='Settings' customStyles={{optionWrapper: optionStyles(this.props).topOption}}>
+          <MenuOption value='Settings' customStyles={{ optionWrapper: optionStyles(this.props).topOption }}>
             <ProfileMenuOption label='Settings' icon='cog' size={22} />
           </MenuOption>
           <MenuOption value='Feedback'>

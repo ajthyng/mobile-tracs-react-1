@@ -1,5 +1,5 @@
-import React, {PureComponent} from 'react'
-import {TouchableWithoutFeedback, Animated} from 'react-native'
+import React, { PureComponent } from 'react'
+import { TouchableWithoutFeedback, Animated } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import styled from 'styled-components'
 
@@ -20,7 +20,7 @@ class Star extends PureComponent {
 
   onPress = () => {
     this.props.onPress && this.props.onPress()
-    this.setState({active: !this.state.active, driver: new Animated.Value(0)}, () => {
+    this.setState({ active: !this.state.active, driver: new Animated.Value(0) }, () => {
       Animated.spring(this.state.driver, {
         toValue: 1,
         duartion: 200,
@@ -40,8 +40,8 @@ class Star extends PureComponent {
       }]
     }
 
-    const {activeColor, inactiveColor, style} = this.props
-    const {active} = this.state
+    const { activeColor, inactiveColor, style } = this.props
+    const { active } = this.state
 
     return (
       <TouchableWithoutFeedback onPress={this.onPress}>

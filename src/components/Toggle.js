@@ -1,5 +1,5 @@
-import React, {Component} from 'react'
-import {TouchableWithoutFeedback as TouchableContainer, Animated} from 'react-native'
+import React, { Component } from 'react'
+import { TouchableWithoutFeedback as TouchableContainer, Animated } from 'react-native'
 import styled from 'styled-components'
 
 const ToggleContainer = styled.View`
@@ -42,54 +42,54 @@ class Toggle extends Component {
     }
   }
 
-	toggle = () => {
-	  this.props.enabled && this.animateState()
-	}
+  toggle = () => {
+    this.props.enabled && this.animateState()
+  }
 
-	animateState = () => {
-	  this.setState(prevState => ({on: !prevState.on}))
-	  Animated.timing(this.state.animationRange, {
-	    toValue: this.state.on ? 0 : 1,
-	    duration: 200,
-	    useNativeDriver: true
-	  }).start(() => {
-	    this.props.onValueChange(this.state.on)
-	  })
-	}
+  animateState = () => {
+    this.setState(prevState => ({ on: !prevState.on }))
+    Animated.timing(this.state.animationRange, {
+      toValue: this.state.on ? 0 : 1,
+      duration: 200,
+      useNativeDriver: true
+    }).start(() => {
+      this.props.onValueChange(this.state.on)
+    })
+  }
 
-	render () {
-	  const {disabledColor, activeColor, width, height, ios, enabled} = this.props
-	  const {on} = this.state
+  render () {
+    const { disabledColor, activeColor, width, height, ios, enabled } = this.props
+    const { on } = this.state
 
-	  const diameter = height * 1.25
-	  const thumbEndPosition = ios ? diameter + 4 : height * 0.9
+    const diameter = height * 1.25
+    const thumbEndPosition = ios ? diameter + 4 : height * 0.9
 
-	  const translateX = this.state.animationRange.interpolate({
-	    inputRange: [0, 1],
-	    outputRange: [0, width - thumbEndPosition]
-	  })
+    const translateX = this.state.animationRange.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, width - thumbEndPosition]
+    })
 
-	  return (
-	    <TouchableContainer onPress={this.toggle}>
-  <ToggleContainer
-  toggleWidth={ios ? width : width + diameter}
-	        toggleHeight={height}
-	      >
-	        <ToggleTrack {...this.props} on={on} />
-	        <ToggleThumb
-  on={on}
-  enabled={enabled}
-	          style={{transform: [{translateX}]}}
-  trackHeight={height}
-  diameter={diameter}
-	          ios={ios}
-	          disabledColor={disabledColor}
-	          activeColor={activeColor}
-	        />
-	      </ToggleContainer>
-	    </TouchableContainer>
-	  )
-	}
+    return (
+      <TouchableContainer onPress={this.toggle}>
+        <ToggleContainer
+          toggleWidth={ios ? width : width + diameter}
+          toggleHeight={height}
+        >
+          <ToggleTrack {...this.props} on={on} />
+          <ToggleThumb
+            on={on}
+            enabled={enabled}
+            style={{ transform: [{ translateX }] }}
+            trackHeight={height}
+            diameter={diameter}
+            ios={ios}
+            disabledColor={disabledColor}
+            activeColor={activeColor}
+          />
+        </ToggleContainer>
+      </TouchableContainer>
+    )
+  }
 }
 
 Toggle.defaultProps = {

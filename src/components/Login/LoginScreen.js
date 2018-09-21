@@ -1,13 +1,13 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
-import {Alert, Keyboard, Dimensions, StatusBar} from 'react-native'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { Alert, Keyboard, StatusBar } from 'react-native'
 import user from '../../../config/config.json'
 import ActivityIndicator from '../ActivityIndicator'
-import {clearRegisterError, register, registrationFailure} from '../../actions/registrar'
-import {credentials} from '../../utils/storage'
-import {clearError as clearLoginError} from '../../actions/login'
-import {Analytics} from '../../utils/analytics'
-import {loginScreen} from '../../constants/colors'
+import { clearRegisterError, register, registrationFailure } from '../../actions/registrar'
+import { credentials } from '../../utils/storage'
+import { clearError as clearLoginError } from '../../actions/login'
+import { Analytics } from '../../utils/analytics'
+import { loginScreen } from '../../constants/colors'
 import Login from './Login'
 
 const KEYBOARD_EVENT = {
@@ -16,8 +16,8 @@ const KEYBOARD_EVENT = {
 }
 
 const displayAlert = (regErr, loginErr) => {
-  let regErrorMessage = regErr && regErr.message || ''
-  let loginErrorMessage = loginErr && loginErr.message || ''
+  let regErrorMessage = (regErr && regErr.message) || ''
+  let loginErrorMessage = (loginErr && loginErr.message) || ''
   if (regErrorMessage.length > 0) {
     Alert.alert('Login Error', `${regErrorMessage}`)
   } else {
@@ -26,7 +26,7 @@ const displayAlert = (regErr, loginErr) => {
 }
 
 class LoginScreen extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     let netid = user ? user.netid : ''
     let password = user ? user.password : ''
@@ -41,6 +41,7 @@ class LoginScreen extends Component {
         y: 0
       }
     }
+    this.scrollView = React.createRef()
 
     StatusBar.setBarStyle('dark-content')
 
@@ -52,7 +53,7 @@ class LoginScreen extends Component {
   }
 
   checkForStoredCredentials = () => {
-    const {loggingIn, registering} = this.props
+    const { loggingIn, registering } = this.props
     if (!loggingIn && !registering) {
       this.setState({
         checkingCredentials: true
@@ -73,25 +74,26 @@ class LoginScreen extends Component {
   }
 
   userLogin = (netid, password) => {
-    const {loggingIn, login} = this.props
+    const { loggingIn, login } = this.props
     if (!loggingIn) {
       login(netid, password)
     }
   }
 
   scrollTo = (y) => {
-    this.scrollView && this.scrollView.scrollTo({y, animated: true})
+    const { current: scrollView } = this.scrollView
+    scrollView && scrollView.scrollTo({ y, animated: true })
   }
 
   onChangeText = (value) => {
-    this.setState({...value})
+    this.setState({ ...value })
   }
 
   onSubmitEditing = () => {
     this.userLogin(this.state.netid, this.state.password)
   }
 
-  onLayout = ({nativeEvent: {layout}}) => {
+  onLayout = ({ nativeEvent: { layout } }) => {
     this.setState({
       loginPosition: {
         x: layout.x,
@@ -101,31 +103,31 @@ class LoginScreen extends Component {
   }
 
   onPress = () => {
-    const {netid, password} = this.state
+    const { netid, password } = this.state
     this.userLogin(netid, password)
   }
 
   hasErrors = () => {
-    const {loginError, registerError} = this.props
+    const { loginError, registerError } = this.props
     const hasLoginError = !!(loginError || {}).message
     const hasRegisterError = !!(registerError || {}).message
 
     return hasLoginError || hasRegisterError
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.keyboardShowListener = Keyboard.addListener(KEYBOARD_EVENT.HIDE, () => this.scrollTo(0))
     this.keyboardHideListener = Keyboard.addListener(KEYBOARD_EVENT.SHOW, () => this.scrollTo(this.state.loginPosition.y))
     this.checkForStoredCredentials()
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this.keyboardShowListener.remove()
     this.keyboardHideListener.remove()
   }
 
-  componentDidUpdate() {
-    const {clearErrors, isAuthenticated, navigation: {navigate}} = this.props
+  componentDidUpdate () {
+    const { clearErrors, isAuthenticated, navigation: { navigate } } = this.props
 
     if (this.hasErrors()) {
       clearErrors()
@@ -134,21 +136,21 @@ class LoginScreen extends Component {
     isAuthenticated && navigate('Main')
   }
 
-  render() {
-    const {loggingIn, registering, isAuthenticated} = this.props
-    const {checkingCredentials, netid, password} = this.state
+  render () {
+    const { loggingIn, registering, isAuthenticated } = this.props
+    const { checkingCredentials, netid, password } = this.state
     const actionInProgress = loggingIn || registering || checkingCredentials || isAuthenticated
 
     if (actionInProgress) {
       return <ActivityIndicator />
     } else {
       if (this.hasErrors()) {
-        const {registerError, loginError} = this.props
+        const { registerError, loginError } = this.props
         displayAlert(registerError, loginError)
       }
       return (
         <Login
-          getRef={c => this.scrollView = c}
+          getRef={this.scrollView}
           netid={netid}
           password={password}
           onChangeText={this.onChangeText}
@@ -166,7 +168,7 @@ const mapStateToProps = (state) => {
     isAuthenticated: state.login.isAuthenticated,
     loggingIn: state.login.isLoggingIn,
     registering: state.registrar.isRegistering,
-    credentials: {netid: state.login.netid, password: state.login.password},
+    credentials: { netid: state.login.netid, password: state.login.password },
     loginError: state.login.errorMessage,
     registerError: state.registrar.errorMessage,
     deviceToken: state.registrar.deviceToken
@@ -176,8 +178,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     login: (netid, password) => {
-      dispatch(register(netid, password)).catch(err => {
-        dispatch(registrationFailure(new Error("There was a problem connecting to the network. Please try again."), dispatch, netid, password))
+      dispatch(register(netid, password)).catch(() => {
+        dispatch(registrationFailure(new Error('There was a problem connecting to the network. Please try again.'), dispatch, netid, password))
       })
     },
     clearErrors: () => {

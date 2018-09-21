@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react'
+import React, { PureComponent } from 'react'
 import styled from 'styled-components'
 import RoundedButton from '../CourseDetailScreen/RoundedButton'
 
@@ -17,7 +17,7 @@ const CourseSiteButton = styled(RoundedButton)`
 
 class GradebookFooter extends PureComponent {
   render () {
-    const {onPress} = this.props
+    const { onPress } = this.props
     return (
       <Container>
         <CourseSiteButton title='Course Site' onPress={onPress} />

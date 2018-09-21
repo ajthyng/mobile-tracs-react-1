@@ -1,7 +1,7 @@
 import React from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import {TouchableOpacity} from 'react-native'
-import styled, {withTheme} from 'styled-components'
+import { TouchableOpacity } from 'react-native'
+import styled from 'styled-components'
 
 const CommentContainer = styled(TouchableOpacity)`
   padding: 0 0 8px 8px;

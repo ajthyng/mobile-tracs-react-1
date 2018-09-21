@@ -1,5 +1,5 @@
-import React, {PureComponent} from 'react'
-import styled, {withTheme} from 'styled-components'
+import React, { PureComponent } from 'react'
+import styled, { withTheme } from 'styled-components'
 import Star from './Star'
 
 const HEIGHT = 80

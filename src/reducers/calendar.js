@@ -1,5 +1,5 @@
-import {calendarActions} from '../constants/actions'
-import {CALENDAR, ASSIGNMENT, ASSESSMENT} from '../constants/calendar'
+import { calendarActions } from '../constants/actions'
+import { CALENDAR, ASSIGNMENT, ASSESSMENT } from '../constants/calendar'
 import dayjs from 'dayjs'
 
 const {
@@ -23,7 +23,7 @@ const initialState = {
   assignments: [],
   calendarEvents: [],
   aggregate: {},
-  errorMessage: '',
+  errorMessage: ''
 }
 
 const requestAssessments = (state, action) => {
@@ -34,7 +34,7 @@ const requestAssessments = (state, action) => {
 }
 
 const assessmentsSuccess = (state, action) => {
-  const assessments = action.assessments.map(({title, dueDate, startDate, ownerSite: siteName, ownerSiteId: siteId}) => ({
+  const assessments = action.assessments.map(({ title, dueDate, startDate, ownerSite: siteName, ownerSiteId: siteId }) => ({
     title,
     startDate,
     dueDate,
@@ -43,7 +43,7 @@ const assessmentsSuccess = (state, action) => {
     eventType: ASSESSMENT
   }))
 
-  let aggregate = {...state.aggregate}
+  let aggregate = { ...state.aggregate }
 
   aggregate = assessments.reduce((accum, item) => {
     const open = dayjs(item.startDate).startOf('day').format('YYYY-MM-DD')
@@ -52,8 +52,8 @@ const assessmentsSuccess = (state, action) => {
     if (!accum[open]) accum[open] = []
     if (!accum[due]) accum[due] = []
 
-    accum[open].push({...item, event: 'open'})
-    accum[due].push({...item, event: 'due'})
+    accum[open].push({ ...item, event: 'open' })
+    accum[due].push({ ...item, event: 'due' })
 
     return accum
   }, aggregate)
@@ -82,7 +82,7 @@ const requestCalendar = (state, action) => {
 }
 
 const calendarSuccess = (state, action) => {
-  const calendarEvents = action.calendarEvents.map(({firstTime, title, type, assignmentId, siteId, siteName}) => ({
+  const calendarEvents = action.calendarEvents.map(({ firstTime, title, type, assignmentId, siteId, siteName }) => ({
     firstTime,
     title,
     type,
@@ -92,7 +92,7 @@ const calendarSuccess = (state, action) => {
     eventType: CALENDAR
   }))
 
-  let aggregate = {...state.aggregate}
+  let aggregate = { ...state.aggregate }
 
   aggregate = calendarEvents.reduce((accum, item) => {
     const eventDate = dayjs(item.firstTime.time).startOf('day').format('YYYY-MM-DD')
@@ -125,12 +125,12 @@ const requestAssignments = (state, action) => {
 }
 
 const assignmentsSuccess = (state, action) => {
-  const assignments = action.assignments.map(({closeTime, openTime, dueTime, title, id}) => {
+  const assignments = action.assignments.map(({ closeTime, openTime, dueTime, title, id }) => {
     const siteName = action.siteName
-    return {openTime, dueTime, title, id, siteName, eventType: ASSIGNMENT}
+    return { openTime, dueTime, title, id, siteName, eventType: ASSIGNMENT }
   })
 
-  let aggregate = {...state.aggregate}
+  let aggregate = { ...state.aggregate }
 
   aggregate = assignments.reduce((accum, item) => {
     const open = dayjs(item.openTime.time).startOf('day').format('YYYY-MM-DD')
@@ -139,8 +139,8 @@ const assignmentsSuccess = (state, action) => {
     if (!accum[open]) accum[open] = []
     if (!accum[due]) accum[due] = []
 
-    accum[open].push({...item, event: 'open'})
-    accum[due].push({...item, event: 'due'})
+    accum[open].push({ ...item, event: 'open' })
+    accum[due].push({ ...item, event: 'due' })
 
     return accum
   }, aggregate)
@@ -168,7 +168,7 @@ const resetAggregate = (state, action) => {
   }
 }
 
-export function calendarReducer(state = initialState, action) {
+export function calendarReducer (state = initialState, action) {
   switch (action.type) {
     case REQUEST_ASSESSMENTS:
       return requestAssessments(state, action)

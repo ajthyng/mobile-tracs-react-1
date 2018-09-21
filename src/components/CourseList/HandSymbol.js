@@ -1,5 +1,5 @@
-import React, {PureComponent} from 'react'
-import Svg, {Path} from 'react-native-svg'
+import React, { PureComponent } from 'react'
+import Svg, { Path } from 'react-native-svg'
 
 class HandSymbol extends PureComponent {
   render () {

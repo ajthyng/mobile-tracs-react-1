@@ -9,11 +9,11 @@
  */
 
 module.exports = {
-	types: {
-		FORUM: 'discussion',
-		ANNOUNCEMENT: 'announcement',
-		GRADE: 'grade',
-		ASSESSMENT: 'assessment',
-		ASSIGNMENT: 'assignment'
-	}
-};
+  types: {
+    FORUM: 'discussion',
+    ANNOUNCEMENT: 'announcement',
+    GRADE: 'grade',
+    ASSESSMENT: 'assessment',
+    ASSIGNMENT: 'assignment'
+  }
+}

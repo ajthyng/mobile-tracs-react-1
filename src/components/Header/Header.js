@@ -1,8 +1,8 @@
-import React, {Component} from 'react'
-import {StatusBar, Platform} from 'react-native'
-import styled, {withTheme} from 'styled-components'
-import {connect} from 'react-redux'
-import {setFilterStatus} from '../../actions/sites'
+import React, { Component } from 'react'
+import { StatusBar, Platform } from 'react-native'
+import styled, { withTheme } from 'styled-components'
+import { connect } from 'react-redux'
+import { setFilterStatus } from '../../actions/sites'
 
 import StatusBarSpace from './StatusBarSpace'
 import Content from './Content'
@@ -46,17 +46,16 @@ class Header extends Component {
   }
 
   onValueChange = (status) => {
-    const {filterStatus} = this.state
+    const { filterStatus } = this.state
     if (filterStatus !== status) {
-      this.setState({filterStatus: status}, () => {
+      this.setState({ filterStatus: status }, () => {
         this.props.setFilterStatus(this.state.filterStatus)
       })
     }
   }
 
   render () {
-    const currentRoute = this.getActiveRouteName(this.props.navigation.state)
-    const {filterStatus} = this.state
+    const { filterStatus } = this.state
 
     return (
       <HeaderContainer>

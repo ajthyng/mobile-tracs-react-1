@@ -1,13 +1,13 @@
-import React, {PureComponent} from 'react'
-import {TouchableWithoutFeedback} from 'react-native'
-import styled, {withTheme} from 'styled-components'
-import {connect} from 'react-redux'
+import React, { PureComponent } from 'react'
+import { TouchableWithoutFeedback } from 'react-native'
+import styled, { withTheme } from 'styled-components'
+import { connect } from 'react-redux'
 import Grade from './Grade'
 import CourseInfo from './CourseInfo'
 import Star from './Star'
-import {toggleStatus} from '../../../constants/sites'
+import { toggleStatus } from '../../../constants/sites'
 
-const {FAVORITES} = toggleStatus
+const { FAVORITES } = toggleStatus
 
 const CardBoundary = styled.View`
   flex-direction: row;
@@ -46,10 +46,10 @@ class CourseCard extends PureComponent {
       mappedGrade,
       hasNewContent,
       isFavorite,
-      contactInfo: {name: faculty}
+      contactInfo: { name: faculty }
     } = this.props.course
 
-    const {favoritesFilterActive, onFavorite} = this.props
+    const { favoritesFilterActive, onFavorite } = this.props
 
     return (
       <TouchableWithoutFeedback onPress={this.onPress}>
@@ -66,7 +66,7 @@ class CourseCard extends PureComponent {
 
 CourseCard.defaultProps = {
   course: {
-    contactInfo: {name: 'Faculty TBA'},
+    contactInfo: { name: 'Faculty TBA' },
     isFavorite: false,
     hasNewContent: false,
     color: '#808080',
@@ -75,8 +75,8 @@ CourseCard.defaultProps = {
 }
 
 const mapStateToProps = (state, props) => {
-  const {filterStatus} = state.tracsSites
-  const {calculatedGrade, mappedGrade} = state.grades[props.id] || {}
+  const { filterStatus } = state.tracsSites
+  const { calculatedGrade, mappedGrade } = state.grades[props.id] || {}
 
   return {
     calculatedGrade,

@@ -1,5 +1,5 @@
-import React, {PureComponent} from 'react'
-import {TouchableWithoutFeedback} from 'react-native'
+import React, { PureComponent } from 'react'
+import { TouchableWithoutFeedback } from 'react-native'
 import styled from 'styled-components'
 import dayjs from 'dayjs'
 
@@ -57,7 +57,7 @@ const Title = styled.View`
   justify-content: flex-end;
 `
 
-const Comment = ({comment, onPress}) => {
+const Comment = ({ comment, onPress }) => {
   return comment
     ? (
       <React.Fragment>
@@ -73,7 +73,7 @@ class GradeInfo extends PureComponent {
   }
 
   render () {
-    const {name, posted, comment} = this.props
+    const { name, posted, comment } = this.props
     return (
       <Container>
         <Title>

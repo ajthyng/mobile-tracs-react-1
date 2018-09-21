@@ -8,11 +8,11 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {notificationActions} from '../constants/actions'
-import {token as TokenStore} from '../utils/storage'
-import {types} from '../constants/notifications'
-import {Analytics} from '../utils/analytics'
-import {haxios as axios} from '../utils/networking'
+import { notificationActions } from '../constants/actions'
+import { token as TokenStore } from '../utils/storage'
+import { types } from '../constants/notifications'
+import { Analytics } from '../utils/analytics'
+import { haxios as axios } from '../utils/networking'
 
 const {
   REQUEST_NOTIFICATIONS,
@@ -76,7 +76,7 @@ const fetchForumPost = async (notification) => {
   let topicUrl = `${global.urls.baseUrl}${global.urls.forumTopic(notification.keys.object_id)}`
   let forumUrl = `${global.urls.baseUrl}${global.urls.forumUrl(notification.other_keys.site_id)}`
   let forumIsHidden = false
-  let siteForums = await axios(forumUrl).catch(err => {
+  let siteForums = await axios(forumUrl).catch(() => {
     return Promise.resolve(new Error("Forum can't be accessed " + notification.id))
   })
 
@@ -94,7 +94,7 @@ const fetchForumPost = async (notification) => {
   }
 
   let forumPromises = [
-    axios(messageUrl, {method: 'get'}).then(res => {
+    axios(messageUrl, { method: 'get' }).then(res => {
       if (res.data) {
         res.data.type = 'message'
         return Promise.resolve(res.data)
@@ -102,7 +102,7 @@ const fetchForumPost = async (notification) => {
     }).catch(() => {
       return Promise.resolve(new Error('Could not fetch forum message for id ' + notification.id))
     }),
-    axios(topicUrl, {method: 'get'}).then(res => {
+    axios(topicUrl, { method: 'get' }).then(res => {
       if (res.data) {
         res.data.type = 'topic'
         return Promise.resolve(res.data)
@@ -258,7 +258,7 @@ export const updateNotification = (newNotif, oldNotif) => {
     let token = await TokenStore.getDeviceToken().then(deviceToken => deviceToken)
     const dispatchURL = global.urls.dispatchUrl
     const updateURL = `${dispatchURL}${global.urls.updateNotification(token, newNotif)}`
-    let updatedNotif = {...newNotif}
+    let updatedNotif = { ...newNotif }
     delete updatedNotif.tracs_data
     const options = {
       method: 'post',
@@ -311,7 +311,7 @@ export const batchUpdateNotification = (ids = [], status = {}, token = null) => 
     const url = `${global.urls.dispatchUrl}${global.urls.getNotifications(token)}`
     const options = {
       method: 'patch',
-      data: {ids: ids, patches: status}
+      data: { ids: ids, patches: status }
     }
     return axios(url, options).then(res => {
       dispatch(batchUpdateSuccess(ids, status))

@@ -1,6 +1,6 @@
-import React, {Component} from 'react'
-import {Animated, Easing} from 'react-native'
-import styled, {withTheme} from 'styled-components'
+import React, { Component } from 'react'
+import { Animated, Easing } from 'react-native'
+import styled, { withTheme } from 'styled-components'
 
 const tracsLogo = require('../../img/tracs-logo-center.png')
 
@@ -45,8 +45,8 @@ class ActivityIndicator extends Component {
   }
 
   render () {
-    const {size} = this.props
-    const {animationRange} = this.state
+    const { size } = this.props
+    const { animationRange } = this.state
 
     const rotate = animationRange.interpolate({
       inputRange: [0, 1],
@@ -54,7 +54,7 @@ class ActivityIndicator extends Component {
     })
 
     const transform = {
-      transform: [{rotate}]
+      transform: [{ rotate }]
     }
 
     return (

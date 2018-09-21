@@ -1,5 +1,5 @@
-import React, {PureComponent} from 'react'
-import {TouchableWithoutFeedback, Animated} from 'react-native'
+import React, { PureComponent } from 'react'
+import { TouchableWithoutFeedback, Animated } from 'react-native'
 import styled from 'styled-components'
 
 const Container = styled(Animated.View)`
@@ -30,7 +30,7 @@ class RoundedButton extends PureComponent {
   }
 
   render () {
-    const {title, style} = this.props
+    const { title, style } = this.props
     const backgroundColor = this.driver.interpolate({
       inputRange: [0, 0.7, 1],
       outputRange: ['#FFFFFF', '#48396A', '#FFFFFF']
@@ -43,8 +43,8 @@ class RoundedButton extends PureComponent {
 
     return (
       <TouchableWithoutFeedback onPress={this.onPress} >
-        <Container style={[style, {backgroundColor}]} color='#48396A'>
-          <Title style={{color: fontColor, textDecorationColor: fontColor}} color='#48396A'>{title}</Title>
+        <Container style={[style, { backgroundColor }]} color='#48396A'>
+          <Title style={{ color: fontColor, textDecorationColor: fontColor }} color='#48396A'>{title}</Title>
         </Container>
       </TouchableWithoutFeedback>
     )

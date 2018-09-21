@@ -1,11 +1,11 @@
-import React, {Component} from 'react'
-import {RefreshControl} from 'react-native'
-import styled, {withTheme} from 'styled-components'
-import {NavigationActions} from 'react-navigation'
-import {connect} from 'react-redux'
+import React, { Component } from 'react'
+import { RefreshControl } from 'react-native'
+import styled, { withTheme } from 'styled-components'
+import { NavigationActions } from 'react-navigation'
+import { connect } from 'react-redux'
 import ActivityIndicator from '../ActivityIndicator'
 import Forum from './Forum'
-import {getNotifications, batchUpdateNotification} from '../../actions/notifications'
+import { getNotifications, batchUpdateNotification } from '../../actions/notifications'
 import Subject from '../../utils/subject'
 import Header from './ForumHeader'
 import Footer from './ForumFooter'
@@ -46,29 +46,29 @@ class ForumScreen extends Component {
   }
 
   silentRefresh = () => {
-    this.setState({silentLoad: true}, this.props.getNotifications)
+    this.setState({ silentLoad: true }, this.props.getNotifications)
   }
 
   refresh = () => {
-    this.setState({silentLoad: true, refreshing: true}, this.props.getNotifications)
+    this.setState({ silentLoad: true, refreshing: true }, this.props.getNotifications)
   }
 
   goToForums = () => {
-    const {id: siteId, tools} = this.props.navigation && this.props.navigation.getParam('course', {id: null, tools: []})
-    const {navigation} = this.props
+    const { id: siteId, tools } = this.props.navigation && this.props.navigation.getParam('course', { id: null, tools: [] })
+    const { navigation } = this.props
 
     const url = `${global.urls.baseUrl}${global.urls.webUrl}/${siteId}/tool-reset/${tools['sakai.forums'].id}`
     const mainSite = `${global.urls.baseUrl}${global.urls.portal}`
 
     const openWebView = NavigationActions.navigate({
       routeName: 'TRACSWeb',
-      params: {baseUrl: siteId ? url : mainSite, transition: 'cardFromRight'}
+      params: { baseUrl: siteId ? url : mainSite, transition: 'cardFromRight' }
     })
     navigation.dispatch(openWebView)
   }
 
   onPress = (id, unread) => {
-    if (unread) this.props.batchUpdate([id], {read: true})
+    if (unread) this.props.batchUpdate([id], { read: true })
     this.goToForums()
   }
 
@@ -78,12 +78,12 @@ class ForumScreen extends Component {
       return accum
     }, [])
 
-    if (ids.length > 0) this.props.batchUpdate(ids, {seen: true})
+    if (ids.length > 0) this.props.batchUpdate(ids, { seen: true })
   }
 
   componentDidUpdate (prevProps) {
     if (prevProps.loading && !this.props.loading) {
-      this.setState({silentLoad: false, refreshing: false})
+      this.setState({ silentLoad: false, refreshing: false })
       this.markAsSeen()
     }
   }
@@ -91,8 +91,8 @@ class ForumScreen extends Component {
   renderForum = item => <Forum notification={item} onPress={this.onPress} key={item.id} />
 
   render () {
-    const {forums, loading, navigation} = this.props
-    const {silentLoad, refreshing} = this.state
+    const { forums, loading, navigation } = this.props
+    const { silentLoad, refreshing } = this.state
     const course = navigation && navigation.getParam('course', {})
 
     const forumPosts = forums.map(this.renderForum)
@@ -113,7 +113,7 @@ class ForumScreen extends Component {
 }
 
 const mapStateToProps = (state, props) => {
-  const {id: siteId} = props.navigation.getParam('course', {id: ''})
+  const { id: siteId } = props.navigation.getParam('course', { id: '' })
 
   const forums = state.notifications.forums.filter(post => {
     return ((post || {}).other_keys || {}).site_id === siteId

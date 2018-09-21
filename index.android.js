@@ -7,17 +7,17 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {AppRegistry, AppState, YellowBox, Text, Platform, PermissionsAndroid} from 'react-native'
-import React, {Component} from 'react'
-import {Provider} from 'react-redux'
-import {PersistGate} from 'redux-persist/integration/react'
-import FCM, {FCMEvent} from 'react-native-fcm'
+import { AppRegistry, AppState, YellowBox, Text, Platform, PermissionsAndroid } from 'react-native'
+import React, { Component } from 'react'
+import { Provider } from 'react-redux'
+import { PersistGate } from 'redux-persist/integration/react'
+import FCM, { FCMEvent } from 'react-native-fcm'
 import configureStore from './src/store/configureStore'
 import * as urls from './config/urls'
 import Subject from './src/utils/subject'
-import {credentials} from './src/utils/storage'
-import {Analytics} from './src/utils/analytics'
-import {login} from './src/actions/login'
+import { credentials } from './src/utils/storage'
+import { Analytics } from './src/utils/analytics'
+import { login } from './src/actions/login'
 import ThemedApp from './src/ThemedApp'
 import crashlytics from 'react-native-fabric-crashlytics'
 
@@ -25,7 +25,7 @@ crashlytics.init()
 
 YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'You are setting the style', 'Module RCTImageLoader'])
 
-const {store, persistor} = configureStore()
+const { store, persistor } = configureStore()
 
 global.urls = urls
 global.ios = Platform.OS === 'ios'

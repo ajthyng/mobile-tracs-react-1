@@ -3,11 +3,10 @@ import HomeScreen from '../components/Home/HomeScreen'
 import Header from '../components/Header/Header'
 
 import React from 'react'
-import {Easing, Platform, Animated} from 'react-native'
+import { Easing, Platform, Animated } from 'react-native'
 
-import {createSwitchNavigator, createStackNavigator} from 'react-navigation'
-import CalendarScreen from '../components/CalendarScreen/CalendarScreen'
-import {cardFromRight, cardFromBottom, cardFromLeft, cardFromTop, defaultTransition} from './Transitions'
+import { createSwitchNavigator, createStackNavigator } from 'react-navigation'
+import { cardFromRight, cardFromBottom, cardFromLeft, cardFromTop, defaultTransition } from './Transitions'
 import CourseDetailScreen from '../components/CourseDetailScreen/CourseDetailScreen'
 import SettingsScreen from '../components/Settings/SettingsScreen'
 import TRACSWebView from '../components/TRACSWebView/TRACSWebNative'
@@ -17,7 +16,7 @@ import ForumScreen from '../components/ForumScreen/ForumScreen'
 import GradebookScreen from '../components/GradebookScreen/GradebookScreen'
 
 const transitionSpec = {
-  duration: Platform.select({android: 500, ios: 500}),
+  duration: Platform.select({ android: 500, ios: 500 }),
   timing: Animated.timing,
   easing: Easing.out(Easing.poly(4)),
   useNativeDriver: true
@@ -27,9 +26,6 @@ const MainNavigator = createStackNavigator(
   {
     Home: {
       screen: HomeScreen
-    },
-    Calendar: {
-      screen: CalendarScreen
     },
     Gradebook: {
       screen: GradebookScreen
@@ -58,7 +54,7 @@ const MainNavigator = createStackNavigator(
   }, {
     initialRouteName: 'Home',
     navigationOptions: {
-      header: ({navigation}) => (<Header navigation={navigation} />),
+      header: ({ navigation }) => (<Header navigation={navigation} />),
       gesturesEnabled: true,
       headerBackTitleVisible: true
     },
@@ -67,7 +63,7 @@ const MainNavigator = createStackNavigator(
     transitionConfig: () => ({
       transitionSpec,
       screenInterpolator: (sceneProps) => {
-        const {scene} = sceneProps
+        const { scene } = sceneProps
         const params = scene.route.params || {}
         const transition = params.transition || 'default'
         return {
@@ -88,7 +84,7 @@ const AuthenticationNavigator = (props) => {
     Main: MainNavigator
   }, {
     initialRouteName: 'Login',
-    navigationOptions: {header: null},
+    navigationOptions: { header: null },
     resetOnBlur: false
   }
   )

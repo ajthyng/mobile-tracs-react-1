@@ -1,12 +1,12 @@
-import React, {Component} from 'react'
-import {Dimensions, SectionList} from 'react-native'
-import styled, {withTheme} from 'styled-components'
-import {connect} from 'react-redux'
-import {getSettings, saveSettings} from '../../actions/settings'
-import {getSiteInfo} from '../../actions/sites'
-import {setTheme} from '../../actions/theme'
-import {types} from '../../constants/notifications'
-import {darkTheme} from '../../constants/themes'
+import React, { Component } from 'react'
+import { Dimensions, SectionList } from 'react-native'
+import styled, { withTheme } from 'styled-components'
+import { connect } from 'react-redux'
+import { getSettings, saveSettings } from '../../actions/settings'
+import { getSiteInfo } from '../../actions/sites'
+import { setTheme } from '../../actions/theme'
+import { types } from '../../constants/notifications'
+import { darkTheme } from '../../constants/themes'
 import SiteSetting from './SiteSetting'
 import ActivityIndicator from '../ActivityIndicator'
 
@@ -35,15 +35,15 @@ const SettingsList = styled(SectionList)`
 
 const isSiteDisabled = (blacklist, sites) => (accum, siteId) => {
   const on = !blacklist.some(item => (item.other_keys || {}).site_id === siteId)
-  accum.push({...sites[siteId], on})
+  accum.push({ ...sites[siteId], on })
   return accum
 }
 
-const sections = ({setTheme, themeName, sites, blacklist, announcementsDisabled, forumsDisabled}, onToggle) => {
+const sections = ({ setTheme, themeName, sites, blacklist, announcementsDisabled, forumsDisabled }, onToggle) => {
   const siteList = Object.keys(sites)
     .reduce(isSiteDisabled(blacklist, sites), [])
-    .map(site => ({...site, onToggle}))
-    .map(site => ({...site, type: 'site'}))
+    .map(site => ({ ...site, onToggle }))
+    .map(site => ({ ...site, type: 'site' }))
 
   return [
     {
@@ -76,14 +76,14 @@ const sections = ({setTheme, themeName, sites, blacklist, announcementsDisabled,
         }
       ]
     },
-    {title: 'Course Notifications', data: siteList}
+    { title: 'Course Notifications', data: siteList }
   ]
 }
 
 class SettingsScreen extends Component {
   constructor (props) {
     super(props)
-    const {width, height} = Dimensions.get('window')
+    const { width, height } = Dimensions.get('window')
     this.state = {
       width,
       height,
@@ -103,19 +103,19 @@ class SettingsScreen extends Component {
   }
 
   updateWidth = (event) => {
-    const {window: {width, height}} = event
+    const { window: { width, height } } = event
     this.setState({
       width,
       height
     })
   }
 
-  renderItem = ({item}) => {
-    let {enabled} = this.state
+  renderItem = ({ item }) => {
+    let { enabled } = this.state
     if (item.name === 'Dark Mode') {
       enabled = false
     }
-    const {onToggle, on, name, id, type} = item
+    const { onToggle, on, name, id, type } = item
     return (
       <SiteSetting
         onValueChange={onToggle}
@@ -129,11 +129,11 @@ class SettingsScreen extends Component {
   }
 
   updateSettings = (setting, enabled) => {
-    this.setState({enabled: false})
+    this.setState({ enabled: false })
     let blacklist = [...this.props.blacklist]
     let dispatchSetting = {
-      keys: {...setting.keys},
-      other_keys: {...setting.other_keys}
+      keys: { ...setting.keys },
+      other_keys: { ...setting.other_keys }
     }
 
     if (enabled) {
@@ -141,23 +141,23 @@ class SettingsScreen extends Component {
     } else {
       blacklist = [...blacklist, dispatchSetting]
     }
-    this.props.saveSettings({blacklist})
+    this.props.saveSettings({ blacklist })
   }
 
   componentDidUpdate (prevProps) {
     if (prevProps.isSaving && !this.props.isSaving) {
-      this.setState({silentLoad: true}, () => {
+      this.setState({ silentLoad: true }, () => {
         this.props.getSettings()
-        this.setState({enabled: true})
+        this.setState({ enabled: true })
       })
     }
   }
 
   render () {
-    const {loading} = this.props
+    const { loading } = this.props
 
     const settings = sections(this.props, this.updateSettings)
-    const {width, silentLoad} = this.state
+    const { width, silentLoad } = this.state
 
     return (loading && !silentLoad) ? (<ActivityIndicator />) : (
       <Container>
@@ -166,7 +166,7 @@ class SettingsScreen extends Component {
           sections={settings}
           keyExtractor={item => item.id}
           renderItem={this.renderItem}
-          renderSectionHeader={({section}) => {
+          renderSectionHeader={({ section }) => {
             if (section.title.length > 0) {
               return <SectionHeader>{section.title}</SectionHeader>
             }
@@ -190,7 +190,7 @@ const mapDispatchToProps = (dispatch, props) => ({
 })
 
 const mapStateToProps = state => {
-  const {blacklist} = state.settings.userSettings
+  const { blacklist } = state.settings.userSettings
   const announcementsDisabled = blacklist.some(isNotificationDisabled(types.ANNOUNCEMENT))
   const forumsDisabled = blacklist.some(isNotificationDisabled(types.FORUM))
 

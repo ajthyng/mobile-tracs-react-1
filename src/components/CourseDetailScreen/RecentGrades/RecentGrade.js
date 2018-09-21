@@ -1,6 +1,6 @@
-import React, {Component} from 'react'
-import {Animated, View, Dimensions} from 'react-native'
-import styled, {withTheme} from 'styled-components'
+import React, { Component } from 'react'
+import { Animated, View, Dimensions } from 'react-native'
+import styled, { withTheme } from 'styled-components'
 import Comments from './Comments'
 import dayjs from 'dayjs'
 import Grade from './Grade'
@@ -42,8 +42,8 @@ class RecentGrade extends Component {
   }
 
   render () {
-    const {grade, name, points, theme, comment, postedDate} = this.props
-    const {width} = Dimensions.get('window')
+    const { grade, name, points, theme, comment, postedDate } = this.props
+    const { width } = Dimensions.get('window')
 
     const translateX = this.driver.interpolate({
       inputRange: [0, 1],
@@ -66,8 +66,8 @@ class RecentGrade extends Component {
     })
 
     return (
-      <View style={{overflow: 'hidden'}}>
-        <Container style={{transform: [{translateX: translateX}], opacity}}>
+      <View style={{ overflow: 'hidden' }}>
+        <Container style={{ transform: [{ translateX: translateX }], opacity }}>
           <Grade earned={grade} total={points} />
           <GradeInfo
             posted={postedDate}
@@ -82,7 +82,7 @@ class RecentGrade extends Component {
           onPress={this.hideComment}
           comment={comment}
           style={{
-            transform: [{translateX: translateCommentX}],
+            transform: [{ translateX: translateCommentX }],
             opacity: commentOpacity,
             position: 'absolute'
           }}

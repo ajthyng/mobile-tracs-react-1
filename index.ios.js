@@ -1,21 +1,21 @@
-import {AppRegistry, Text, Platform, AppState, YellowBox, PushNotificationIOS} from 'react-native'
-import React, {Component} from 'react'
-import {PersistGate} from 'redux-persist/integration/react'
-import {Provider} from 'react-redux'
+import { AppRegistry, Text, Platform, AppState, YellowBox, PushNotificationIOS } from 'react-native'
+import React, { Component } from 'react'
+import { PersistGate } from 'redux-persist/integration/react'
+import { Provider } from 'react-redux'
 import configureStore from './src/store/configureStore'
 import * as urls from './config/urls'
 import PushNotification from 'react-native-push-notification'
-import {credentials} from './src/utils/storage'
-import {login} from './src/actions/login'
-import {Analytics} from './src/utils/analytics'
-import {getNotifications} from './src/actions/notifications'
-import {setToken} from './src/actions/registrar'
+import { credentials } from './src/utils/storage'
+import { login } from './src/actions/login'
+import { Analytics } from './src/utils/analytics'
+import { getNotifications } from './src/actions/notifications'
+import { setToken } from './src/actions/registrar'
 import ThemedApp from './src/ThemedApp'
 import Subject from './src/utils/subject'
 import crashlytics from 'react-native-fabric-crashlytics'
 
 crashlytics.init()
-const {store, persistor} = configureStore()
+const { store, persistor } = configureStore()
 
 YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Received data was not a string', "Warning: Can't call setState (or forceUpdate)", 'You are setting the style', 'Module RCTImageLoader', 'Class RCTCxxModule', 'startLoadWithResult', 'Did not receive response to shouldStartLoad'])
 
@@ -70,7 +70,7 @@ class App extends Component {
     }
 
     PushNotification.configure({
-      onRegister: ({token, os}) => {
+      onRegister: ({ token, os }) => {
         if (token) {
           store.dispatch(setToken(token))
         }

@@ -1,5 +1,5 @@
-import React, {Component} from 'react'
-import {TouchableOpacity, Animated} from 'react-native'
+import React, { Component } from 'react'
+import { TouchableOpacity, Animated } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
 import styled from 'styled-components'
 
@@ -29,12 +29,12 @@ class Comments extends Component {
   scrollView = React.createRef()
 
   flashScrollIndicators = () => {
-    const {current: scrollView} = this.scrollView
+    const { current: scrollView } = this.scrollView
     scrollView && scrollView.flashScrollIndicators()
   }
 
   render () {
-    const {comment, onPress, style, theme} = this.props
+    const { comment, onPress, style, theme } = this.props
 
     return (
       <Container style={style}>

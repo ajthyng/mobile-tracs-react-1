@@ -1,8 +1,8 @@
-import React, {Component} from 'react'
-import {Dimensions, Platform} from 'react-native'
+import React, { Component } from 'react'
+import { Dimensions, Platform } from 'react-native'
 import styled from 'styled-components'
 import ProfileMenu from '../ProfileMenu/ProfileMenu'
-import {HeaderBackButton} from 'react-navigation'
+import { HeaderBackButton } from 'react-navigation'
 import FavoritesToggle from './FavoritesToggle'
 
 const Container = styled.View`
@@ -33,12 +33,12 @@ class Content extends Component {
   }
 
   goToCalendar = () => {
-    this.props.navigation.navigate('Calendar', {transition: 'cardFromBottom'})
+    this.props.navigation.navigate('Calendar', { transition: 'cardFromBottom' })
   }
 
-  updateScreenSize = ({screen: {width}}) => {
+  updateScreenSize = ({ screen: { width } }) => {
     console.log(width)
-    this.setState({screenWidth: width})
+    this.setState({ screenWidth: width })
   }
 
   componentDidMount () {
@@ -50,7 +50,7 @@ class Content extends Component {
   }
 
   render () {
-    const {navigation, onValueChange, allSitesFilter} = this.props
+    const { navigation, onValueChange, allSitesFilter } = this.props
     const canGoBack = navigation.state.index > 0
 
     const previousRoute = (navigation.state.routes[navigation.state.index - 1] || {}).routeName
@@ -62,7 +62,7 @@ class Content extends Component {
     if (currentParams.hasOwnProperty('siteName')) {
       title = currentParams.siteName
     }
-    const {screenWidth} = this.state
+    const { screenWidth } = this.state
     const smallScreen = screenWidth <= 400
 
     const leftButton = canGoBack

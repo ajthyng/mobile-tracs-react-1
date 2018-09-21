@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react'
+import React, { PureComponent } from 'react'
 import styled from 'styled-components'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
@@ -35,7 +35,7 @@ const Subtitle = styled.Text`
 
 class GradebookHeader extends PureComponent {
   render () {
-    const {title} = this.props
+    const { title } = this.props
     return (
       <Container>
         <TitleContainer>

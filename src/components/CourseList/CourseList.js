@@ -1,14 +1,14 @@
-import React, {Component} from 'react'
-import {Dimensions, FlatList} from 'react-native'
-import {connect} from 'react-redux'
-import {toggleStatus} from '../../constants/sites'
-import {getFavorites, updateFavorites} from '../../actions/sites'
+import React, { Component } from 'react'
+import { Dimensions, FlatList } from 'react-native'
+import { connect } from 'react-redux'
+import { toggleStatus } from '../../constants/sites'
+import { getFavorites, updateFavorites } from '../../actions/sites'
 
 import CourseCard from './CourseCard/CourseCard'
 import CourseSkeletonCard from './CourseSkeletonCard'
 import EmptyCourseList from './EmptyCourseList'
 
-const {FAVORITES} = toggleStatus
+const { FAVORITES } = toggleStatus
 
 class CourseList extends Component {
   constructor (props) {
@@ -21,7 +21,7 @@ class CourseList extends Component {
   isFavorite = (id) => this.props.favorites.includes(id)
 
   updateFavorite = (id) => () => {
-    const {favorites} = this.props
+    const { favorites } = this.props
 
     const isFavorite = this.isFavorite(id)
     if (isFavorite) {
@@ -34,7 +34,7 @@ class CourseList extends Component {
   }
 
   goToCourse = (course) => () => {
-    const {navigation: {navigate}} = this.props
+    const { navigation: { navigate } } = this.props
 
     navigate('CourseDetail', {
       transition: 'cardFromRight',
@@ -55,17 +55,17 @@ class CourseList extends Component {
         })
       }
     } else {
-      const {favorites, sites: tracsSites, favoritesFilterActive, theme} = this.props
+      const { favorites, sites: tracsSites, favoritesFilterActive, theme } = this.props
 
       if (favoritesFilterActive) {
         const colors = theme.colors.courseCard.colorBar || []
         const options = colors.length
 
         sites = tracsSites
-          .filter(({id}) => favorites.includes(id))
-          .map((site, i) => ({...site, color: colors[i % options]}))
+          .filter(({ id }) => favorites.includes(id))
+          .map((site, i) => ({ ...site, color: colors[i % options] }))
       } else {
-        sites = tracsSites.map(site => ({...site, color: theme.colors.courseCard.defaultColorBar}))
+        sites = tracsSites.map(site => ({ ...site, color: theme.colors.courseCard.defaultColorBar }))
       }
 
       sites = sites.map((course, index) => {
@@ -89,16 +89,16 @@ class CourseList extends Component {
   }
 
   setScroll = (enabled) => {
-    this.setState({scroll: enabled})
+    this.setState({ scroll: enabled })
   }
 
-  renderItem = ({item: {card}}) => {
+  renderItem = ({ item: { card } }) => {
     return card
   }
 
   render () {
-    const {refreshing, onRefresh} = this.props
-    const {scroll} = this.state
+    const { refreshing, onRefresh } = this.props
+    const { scroll } = this.state
     let data = this.makeData()
 
     return (
@@ -109,22 +109,22 @@ class CourseList extends Component {
         data={data}
         ListEmptyComponent={EmptyCourseList}
         renderItem={this.renderItem}
-        keyExtractor={({id}) => id}
+        keyExtractor={({ id }) => id}
         canCancelContentTouches={scroll}
-        contentContainerStyle={{flexGrow: 1, alignSelf: 'stretch'}}
+        contentContainerStyle={{ flexGrow: 1, alignSelf: 'stretch' }}
       />
     )
   }
 }
 
 const mapStateToProps = (state) => {
-  const {filterStatus, favorites, userSites, isUpdatingFavorites} = state.tracsSites
-  const {badgeCounts} = state.notifications
-  const {defaultColorBar} = state.theme.colors.courseCard
+  const { filterStatus, favorites, userSites, isUpdatingFavorites } = state.tracsSites
+  const { badgeCounts } = state.notifications
+  const { defaultColorBar } = state.theme.colors.courseCard
 
   const sites = Object.keys(userSites).reduce((accum, siteId) => {
     const hasNewContent = (badgeCounts[siteId] || {}).unseenCount > 0
-    const {mappedGrade, calculatedGrade} = (state.grades[siteId] || {})
+    const { mappedGrade, calculatedGrade } = (state.grades[siteId] || {})
     accum.push({
       ...userSites[siteId],
       hasNewContent,

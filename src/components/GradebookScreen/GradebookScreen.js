@@ -1,9 +1,9 @@
-import React, {Component} from 'react'
-import styled, {withTheme} from 'styled-components'
-import {ScrollView} from 'react-native'
-import {connect} from 'react-redux'
-import {getGrades} from '../../actions/grades'
-import {NavigationActions} from 'react-navigation'
+import React, { Component } from 'react'
+import styled, { withTheme } from 'styled-components'
+import { ScrollView } from 'react-native'
+import { connect } from 'react-redux'
+import { getGrades } from '../../actions/grades'
+import { NavigationActions } from 'react-navigation'
 import ActivityIndicator from '../ActivityIndicator'
 import GradebookItem from './GradebookItem'
 import Header from './GradebookHeader'
@@ -29,24 +29,24 @@ const GradeListContainer = styled.View`
 class GradebookScreen extends Component {
   constructor (props) {
     super(props)
-    this.course = this.props.navigation && this.props.navigation.getParam('course', {id: ''})
+    this.course = this.props.navigation && this.props.navigation.getParam('course', { id: '' })
   }
 
   goToWeb = () => {
-    const {id: siteId} = this.course
-    const {navigation} = this.props
+    const { id: siteId } = this.course
+    const { navigation } = this.props
 
     const url = `${global.urls.baseUrl}${global.urls.webUrl}/${siteId}`
     const mainSite = `${global.urls.baseUrl}${global.urls.portal}`
     const openWebView = NavigationActions.navigate({
       routeName: 'TRACSWeb',
-      params: {baseUrl: siteId ? url : mainSite, transition: 'cardFromRight'}
+      params: { baseUrl: siteId ? url : mainSite, transition: 'cardFromRight' }
     })
     navigation.dispatch(openWebView)
   }
 
   componentDidMount () {
-    const {getGrades, loading} = this.props
+    const { getGrades, loading } = this.props
     if (!loading) {
       getGrades && getGrades()
     }
@@ -58,7 +58,7 @@ class GradebookScreen extends Component {
   }
 
   renderContent = () => {
-    const {loading, grades} = this.props
+    const { loading, grades } = this.props
     if (loading) return <ActivityIndicator />
 
     const courseGrades = (grades[this.course.id] || {}).grades || []
@@ -74,7 +74,7 @@ class GradebookScreen extends Component {
   }
 
   render () {
-    const {name} = this.course
+    const { name } = this.course
     return (
       <Container>
         <Header title={name} />
@@ -85,7 +85,7 @@ class GradebookScreen extends Component {
 }
 
 const mapStateToProps = state => {
-  const {grades, grades: {isLoading: loading}} = state
+  const { grades, grades: { isLoading: loading } } = state
   return {
     loading,
     grades

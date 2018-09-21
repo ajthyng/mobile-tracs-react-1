@@ -1,5 +1,5 @@
-import {calendarActions} from '../constants/actions'
-import {haxios as axios} from '../utils/networking'
+import { calendarActions } from '../constants/actions'
+import { haxios as axios } from '../utils/networking'
 
 const {
   REQUEST_ASSESSMENTS,
@@ -14,9 +14,9 @@ const {
   RESET_AGGREGATE
 } = calendarActions
 
-const requestAssessments = () => ({type: REQUEST_ASSESSMENTS})
+const requestAssessments = () => ({ type: REQUEST_ASSESSMENTS })
 
-const assessmentsSuccess = (assessments) => ({type: ASSESSMENTS_SUCCESS, assessments})
+const assessmentsSuccess = (assessments) => ({ type: ASSESSMENTS_SUCCESS, assessments })
 
 const assessmentsFailure = (error) => ({
   type: ASSESSMENTS_FAILURE,
@@ -42,11 +42,11 @@ export const getAssessments = (siteId = null) => {
   }
 }
 
-const requestCalendar = () => ({type: REQUEST_CALENDAR})
+const requestCalendar = () => ({ type: REQUEST_CALENDAR })
 
-const calendarSuccess = (calendarEvents) => ({type: CALENDAR_SUCCESS, calendarEvents})
+const calendarSuccess = (calendarEvents) => ({ type: CALENDAR_SUCCESS, calendarEvents })
 
-const calendarFailure = (error) => ({type: CALENDAR_FAILURE, errorMessage: error.message || 'No calendar events found'})
+const calendarFailure = (error) => ({ type: CALENDAR_FAILURE, errorMessage: error.message || 'No calendar events found' })
 
 export const getCalendarEvents = (siteId = null) => {
   return dispatch => {
@@ -67,12 +67,11 @@ export const getCalendarEvents = (siteId = null) => {
   }
 }
 
+const requestAssignments = () => ({ type: REQUEST_ASSIGNMENTS })
 
-const requestAssignments = () => ({type: REQUEST_ASSIGNMENTS})
+const assignmentsSuccess = (assignments, siteName) => ({ type: ASSIGNMENTS_SUCCESS, assignments, siteName })
 
-const assignmentsSuccess = (assignments, siteName) => ({type: ASSIGNMENTS_SUCCESS, assignments, siteName})
-
-const assignmentsFailure = (error) => ({type: ASSIGNMENTS_FAILURE, errorMessage: error.message || 'No assignments found'})
+const assignmentsFailure = (error) => ({ type: ASSIGNMENTS_FAILURE, errorMessage: error.message || 'No assignments found' })
 
 export const getAssignments = (siteId = null, siteName = '') => {
   return dispatch => {

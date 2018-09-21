@@ -1,11 +1,11 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
-import {logout} from '../../actions/login'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { logout } from '../../actions/login'
 import * as Storage from '../../utils/storage'
 import CourseList from '../CourseList/CourseList'
-import {getSiteInfo, getFavorites} from '../../actions/sites'
-import {getGrades} from '../../actions/grades'
-import {getNotifications} from '../../actions/notifications'
+import { getSiteInfo, getFavorites } from '../../actions/sites'
+import { getGrades } from '../../actions/grades'
+import { getNotifications } from '../../actions/notifications'
 import styled from 'styled-components'
 import Subject from '../../utils/subject'
 
@@ -37,7 +37,7 @@ class HomeScreen extends Component {
   }
 
   initHomeScreen = () => {
-    const {netid} = this.props
+    const { netid } = this.props
     this.props.getSites(netid)
     this.props.getGrades()
     this.props.getFavorites()
@@ -50,14 +50,14 @@ class HomeScreen extends Component {
   }
 
   componentDidUpdate () {
-    const {refreshing} = this.state
-    const {loading} = this.props
-    if (!loading && refreshing) this.setState({refreshing: false})
+    const { refreshing } = this.state
+    const { loading } = this.props
+    if (!loading && refreshing) this.setState({ refreshing: false })
   }
 
   render () {
-    const {loadingSites, loadingFavorites} = this.props
-    const {refreshing} = this.state
+    const { loadingSites, loadingFavorites } = this.props
+    const { refreshing } = this.state
     return (
       <Home>
         <CourseList
@@ -72,10 +72,10 @@ class HomeScreen extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const {isFetchingSites: loadingSites} = state.tracsSites
-  const {isFetchingFavorites: loadingFavorites} = state.tracsSites
-  const {isLoading: loadingGrades} = state.grades
-  const {isLoading: loadingNotifications} = state.notifications
+  const { isFetchingSites: loadingSites } = state.tracsSites
+  const { isFetchingFavorites: loadingFavorites } = state.tracsSites
+  const { isLoading: loadingGrades } = state.grades
+  const { isLoading: loadingNotifications } = state.notifications
 
   const loading = loadingSites || loadingFavorites || loadingGrades || loadingNotifications
 

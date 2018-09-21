@@ -1,7 +1,7 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import styled from 'styled-components'
-import {connect} from 'react-redux'
-import {haxios as axios} from '../../utils/networking'
+import { connect } from 'react-redux'
+import { haxios as axios } from '../../utils/networking'
 
 const CancelToken = require('axios').CancelToken
 
@@ -26,16 +26,16 @@ class Profile extends Component {
   }
 
   componentDidMount () {
-    const {netid} = this.props
+    const { netid } = this.props
 
     if (!netid) return
 
     const profileImageURL = `${global.urls.baseUrl}${global.urls.profileImage(netid)}`
     const profileURL = `${global.urls.baseUrl}${global.urls.profile(netid)}`
 
-    const {source: {token}} = this.state
+    const { source: { token } } = this.state
 
-    axios(profileImageURL, {cancelToken: token})
+    axios(profileImageURL, { cancelToken: token })
       .then(res => {
         this.setState({
           profileURL: `${res.request.responseURL}?${new Date().valueOf()}`
@@ -43,10 +43,10 @@ class Profile extends Component {
       })
       .catch(err => console.log(err.request))
 
-    axios(profileURL, {cancelToken: token})
+    axios(profileURL, { cancelToken: token })
       .then(res => {
-        const {data: {displayName}} = res
-        this.setState({name: displayName})
+        const { data: { displayName } } = res
+        this.setState({ name: displayName })
       })
       .catch(err => console.log(err))
   }
@@ -56,7 +56,7 @@ class Profile extends Component {
   }
 
   renderProfileImage = () => {
-    const {diameter} = this.props
+    const { diameter } = this.props
     return (
       <ProfileImage
         diameter={diameter}
@@ -69,8 +69,8 @@ class Profile extends Component {
   }
 
   render () {
-    const {style, shouldDisplayName} = this.props
-    const {name: storedName} = this.state
+    const { style, shouldDisplayName } = this.props
+    const { name: storedName } = this.state
 
     let displayName = null
 
@@ -93,7 +93,7 @@ Profile.defaultProps = {
   diameter: 30,
   name: '',
   style: {
-    container: {flexDirection: 'row', marginLeft: 8},
+    container: { flexDirection: 'row', marginLeft: 8 },
     text: {
       color: 'white',
       fontSize: 16,

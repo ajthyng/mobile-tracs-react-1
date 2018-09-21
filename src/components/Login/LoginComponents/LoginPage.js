@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React from 'react'
 import styled from 'styled-components'
 
 const Container = styled.View`
@@ -15,7 +15,7 @@ const LoginPage = props => (
   <Container portrait={props.portrait}>
     {
       React.Children.map(props.children, child => (
-        React.cloneElement(child, {portrait: props.portrait})
+        React.cloneElement(child, { portrait: props.portrait })
       ))
     }
   </Container>

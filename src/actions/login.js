@@ -99,8 +99,7 @@ export function login (netid = '', password = '', silentLogin = false) {
           password = credentials.password
           dispatch(login(netid, password))
         }
-      }).catch(err => {
-        console.log('Storage Error: ', err.message)
+      }).catch(() => {
         dispatch(loginFailure(new Error('Could not retrieve stored credentials')))
       })
       return

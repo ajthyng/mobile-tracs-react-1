@@ -1,10 +1,10 @@
-import React, {Component} from 'react'
-import styled, {withTheme} from 'styled-components'
-import {RefreshControl} from 'react-native'
-import {connect} from 'react-redux'
-import {getAnnouncements} from '../../actions/announcements'
-import {batchUpdateNotification} from '../../actions/notifications'
-import {withNavigation, NavigationActions} from 'react-navigation'
+import React, { Component } from 'react'
+import styled, { withTheme } from 'styled-components'
+import { RefreshControl } from 'react-native'
+import { connect } from 'react-redux'
+import { getAnnouncements } from '../../actions/announcements'
+import { batchUpdateNotification } from '../../actions/notifications'
+import { withNavigation, NavigationActions } from 'react-navigation'
 import ActivityIndicator from '../ActivityIndicator'
 import Announcement from './Announcement'
 import Subject from '../../utils/subject'
@@ -45,7 +45,7 @@ class AnnouncementsScreen extends Component {
 
   componentDidUpdate (prevProps) {
     if (prevProps.loading && !this.props.loading) {
-      this.setState({silentLoad: false, refreshing: false})
+      this.setState({ silentLoad: false, refreshing: false })
       this.markAsSeen()
     }
   }
@@ -58,27 +58,27 @@ class AnnouncementsScreen extends Component {
     }, [])
 
     if (ids.length > 0) {
-      this.props.batchUpdate(ids, {seen: true})
+      this.props.batchUpdate(ids, { seen: true })
     }
   }
 
   refreshAnnouncements = () => {
-    this.setState({silentLoad: true, refreshing: true})
+    this.setState({ silentLoad: true, refreshing: true })
     this.props.getAnnouncements()
   }
 
   loadAnnouncements = () => {
-    this.setState({silentLoad: true})
+    this.setState({ silentLoad: true })
     this.props.getAnnouncements()
   }
 
   renderAnnouncement = (item) => {
     const { announcementNotifications, theme } = this.props
     const unreadAnnouncements = announcementNotifications
-      .filter(({read}) => !read).map(({keys}) => keys.object_id).filter(id => id !== null)
+      .filter(({ read }) => !read).map(({ keys }) => keys.object_id).filter(id => id !== null)
 
     const unread = unreadAnnouncements.includes(item.announcementId)
-    const notification = announcementNotifications.find(({keys}) => keys.object_id === item.announcementId)
+    const notification = announcementNotifications.find(({ keys }) => keys.object_id === item.announcementId)
 
     return (
       <Announcement
@@ -92,22 +92,22 @@ class AnnouncementsScreen extends Component {
   }
 
   goToWeb = () => {
-    const {id: siteId, tools} = this.props.navigation && this.props.navigation.getParam('course', {id: null, tools: []})
-    const {navigation} = this.props
+    const { id: siteId, tools } = this.props.navigation && this.props.navigation.getParam('course', { id: null, tools: [] })
+    const { navigation } = this.props
 
     const url = `${global.urls.baseUrl}${global.urls.webUrl}/${siteId}/tool-reset/${tools['sakai.announcements'].id}`
     const mainSite = `${global.urls.baseUrl}${global.urls.portal}`
 
     const openWebView = NavigationActions.navigate({
       routeName: 'TRACSWeb',
-      params: {baseUrl: siteId ? url : mainSite, transition: 'cardFromRight'}
+      params: { baseUrl: siteId ? url : mainSite, transition: 'cardFromRight' }
     })
     navigation.dispatch(openWebView)
   }
 
   render () {
-    const {announcements, loading} = this.props
-    const {refreshing, silentLoad} = this.state
+    const { announcements, loading } = this.props
+    const { refreshing, silentLoad } = this.state
     const course = this.props.navigation && this.props.navigation.getParam('course', {})
     const announcementList = announcements.map(this.renderAnnouncement)
 
@@ -116,7 +116,7 @@ class AnnouncementsScreen extends Component {
         <Header title={course.name} />
         <Announcements
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.refreshAnnouncements} />}
-          contentContainerStyle={{backgroundColor: 'rgb(234, 234, 234)'}}
+          contentContainerStyle={{ backgroundColor: 'rgb(234, 234, 234)' }}
         >
           <AnnouncementsContainer>
             {announcementList.length > 0 ? announcementList : <EmptyAnnouncements />}
@@ -129,11 +129,11 @@ class AnnouncementsScreen extends Component {
 }
 
 AnnouncementsScreen.defaultProps = {
-  course: {id: null}
+  course: { id: null }
 }
 
 const mapStateToProps = (state, props) => {
-  const {id} = props.navigation.getParam('course', {})
+  const { id } = props.navigation.getParam('course', {})
 
   let announcements = []
 

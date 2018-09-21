@@ -1,6 +1,5 @@
-import React, {Component} from 'react'
-import {Animated, Dimensions, Platform} from 'react-native'
-import {BoxShadow} from 'react-native-shadow'
+import React, { Component } from 'react'
+import { Animated, Platform } from 'react-native'
 import styled, { withTheme } from 'styled-components'
 
 const HEIGHT = 80
@@ -79,15 +78,15 @@ class CourseSkeletonCard extends Component {
       outputRange: [1, 1.02, 1]
     })
 
-    const scaleXY = [{scale}]
+    const scaleXY = [{ scale }]
 
     return (
       <Shadow>
         <ColorBar />
         <EmptyGrade />
         <EmptyContent>
-          <TitleBar style={{transform: scaleXY}} />
-          <SubtitleBar style={{transform: scaleXY}} />
+          <TitleBar style={{ transform: scaleXY }} />
+          <SubtitleBar style={{ transform: scaleXY }} />
         </EmptyContent>
       </Shadow>
     )

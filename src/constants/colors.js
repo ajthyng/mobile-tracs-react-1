@@ -9,59 +9,59 @@
  */
 
 module.exports = {
-	notification: {
-		background: "#fafafa",
-		unreadCircle: "#d8d8d8",
-		readCircle: "#fafafa",
-		unreadIcon: "#5b5b5b",
-		readIcon: "#b4b4b4",
-		forwardArrow: "#5b5b5b"
-	},
-	site: {
-		courseTitleBackground: '#504e4d',
-		projectTitleBackground: '#cacaca',
-		projectTitleText: '#222',
-		toolBarColor: '#501214',
-		backgroundColor: '#e8e8e8',
-		dashboardTitleBackground: "#363534",
-		dashboardTitleText: "#fefefe",
-		badgeColor: "#ff3b30"
-	},
-	workspace: {
-		textColor: "#501214",
-		backgroundColor: '#e8e3db'
-	},
-	tabBar: {
-		backgroundColor: '#501214',
-		active: '#fff',
-		inactive: 'rgba(188, 162, 164, 1)'
-	},
-	setting: {
-		settingOnColor: '#8080ff',
-		settingOffColor: '#80ff80'
-	},
-	app: {
-		backgroundColor: '#e8e8e8'
-	},
-	loginScreen: {
-		loginButton: "#00547e",
-		inputUnderline: "#00547e",
-		welcomeText: "#00547e",
-		backgroundColor: "#fff",
-		signInText: "#959595",
-		selectionColor: "#909090",
-		placeHolderText: "#000"
-	},
-	aboutPageDefaults: {
-		backgroundColor: "#202020",
-		headerColor: "#501214",
-		textColor: "#fff",
-		iconColor: "#fff"
-	},
-	aboutPage: {
-		headerColor: "#00547e",
-		backgroundColor: "#E8E3DB",
-		headerTextColor: "#fff",
-		bodyTextColor: "#363534"
-	}
-};
+  notification: {
+    background: '#fafafa',
+    unreadCircle: '#d8d8d8',
+    readCircle: '#fafafa',
+    unreadIcon: '#5b5b5b',
+    readIcon: '#b4b4b4',
+    forwardArrow: '#5b5b5b'
+  },
+  site: {
+    courseTitleBackground: '#504e4d',
+    projectTitleBackground: '#cacaca',
+    projectTitleText: '#222',
+    toolBarColor: '#501214',
+    backgroundColor: '#e8e8e8',
+    dashboardTitleBackground: '#363534',
+    dashboardTitleText: '#fefefe',
+    badgeColor: '#ff3b30'
+  },
+  workspace: {
+    textColor: '#501214',
+    backgroundColor: '#e8e3db'
+  },
+  tabBar: {
+    backgroundColor: '#501214',
+    active: '#fff',
+    inactive: 'rgba(188, 162, 164, 1)'
+  },
+  setting: {
+    settingOnColor: '#8080ff',
+    settingOffColor: '#80ff80'
+  },
+  app: {
+    backgroundColor: '#e8e8e8'
+  },
+  loginScreen: {
+    loginButton: '#00547e',
+    inputUnderline: '#00547e',
+    welcomeText: '#00547e',
+    backgroundColor: '#fff',
+    signInText: '#959595',
+    selectionColor: '#909090',
+    placeHolderText: '#000'
+  },
+  aboutPageDefaults: {
+    backgroundColor: '#202020',
+    headerColor: '#501214',
+    textColor: '#fff',
+    iconColor: '#fff'
+  },
+  aboutPage: {
+    headerColor: '#00547e',
+    backgroundColor: '#E8E3DB',
+    headerTextColor: '#fff',
+    bodyTextColor: '#363534'
+  }
+}

@@ -9,19 +9,19 @@
  */
 
 module.exports = {
-	login: 'login',
-	main: 'mainApp',
-	announcements: 'announcements',
-	announcementsTab: 'announcementsTab',
-	tracsAnnouncement: 'tracsAnnouncement',
-	tracsDashboard: 'tracsDashboard',
-	sites: 'sites',
-	dashboard: 'dashboard',
-	sitesTab: 'sitesTab',
-	settings: 'settings',
-	settingsTab: 'settingsTab',
-	notificationSettings: 'notificationSettings',
-	feedback: 'feedback',
-	support: 'support',
-	about: 'about'
-};
+  login: 'login',
+  main: 'mainApp',
+  announcements: 'announcements',
+  announcementsTab: 'announcementsTab',
+  tracsAnnouncement: 'tracsAnnouncement',
+  tracsDashboard: 'tracsDashboard',
+  sites: 'sites',
+  dashboard: 'dashboard',
+  sitesTab: 'sitesTab',
+  settings: 'settings',
+  settingsTab: 'settingsTab',
+  notificationSettings: 'notificationSettings',
+  feedback: 'feedback',
+  support: 'support',
+  about: 'about'
+}

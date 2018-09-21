@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import styled from 'styled-components'
 
 const Container = styled.View`
@@ -23,7 +23,7 @@ const Faculty = styled.Text`
 
 class CourseInfo extends Component {
   render () {
-    const {name, hasNewContent, faculty} = this.props
+    const { name, hasNewContent, faculty } = this.props
     return (
       <Container>
         <Name hasNewContent={hasNewContent} numberOfLines={1} >{name}</Name>

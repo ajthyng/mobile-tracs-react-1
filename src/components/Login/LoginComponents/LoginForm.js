@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import {Platform} from 'react-native'
+import { Platform } from 'react-native'
 import LoginButton from './LoginButton'
 
 const Container = styled.View`
@@ -55,7 +55,7 @@ const LoginForm = function (props) {
       {portrait ? null : <SignInText>{signInMessage}</SignInText>}
       <NetID
         style={underlineStyle}
-        innerRef={c => this.netid = c}
+        innerRef={c => { this.netid = c }}
         placeholder='Net ID'
         placeholderTextColor='#000000'
         underlineColorAndroid='#000000'
@@ -65,13 +65,13 @@ const LoginForm = function (props) {
         returnKeyType='next'
         keyboardType={keyboardType}
         value={netid}
-        onChangeText={text => onChangeText({netid: text})}
+        onChangeText={text => onChangeText({ netid: text })}
         onSubmitEditing={() => this.password.focus()}
       />
       <Password
         secureTextEntry
         style={underlineStyle}
-        innerRef={c => this.password = c}
+        innerRef={c => { this.password = c }}
         placeholder='Password'
         placeholderTextColor='#000000'
         underlineColorAndroid='#000000'
@@ -80,7 +80,7 @@ const LoginForm = function (props) {
         autoCorrect={false}
         returnKeyType='send'
         value={password}
-        onChangeText={text => onChangeText({password: text})}
+        onChangeText={text => onChangeText({ password: text })}
         onSubmitEditing={onSubmitEditing}
       />
       <LoginButton

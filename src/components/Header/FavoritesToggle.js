@@ -1,7 +1,7 @@
-import React, {Component} from 'react'
-import {TouchableOpacity} from 'react-native'
+import React, { Component } from 'react'
+import { TouchableOpacity } from 'react-native'
 import styled from 'styled-components'
-import {toggleStatus} from '../../constants/sites'
+import { toggleStatus } from '../../constants/sites'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 const {
@@ -54,7 +54,7 @@ class FavoritesToggle extends Component {
   render () {
     const favoritesActive = this.props.status === FAVORITES
     const allSitesActive = this.props.status === ALL_SITES
-    const {small} = this.props
+    const { small } = this.props
 
     return (
       <Container small={small}>

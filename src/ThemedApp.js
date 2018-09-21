@@ -1,22 +1,23 @@
-import React, {Component} from 'react'
-import styled, {ThemeProvider} from 'styled-components'
-import {SafeAreaView} from 'react-navigation'
-import {Scenes} from './scenes/Scenes'
-import {connect} from 'react-redux'
-import {DeviceInfo, Dimensions, NativeModules, Platform} from 'react-native'
-import {MenuProvider} from 'react-native-popup-menu'
+import React, { Component } from 'react'
+import styled, { ThemeProvider } from 'styled-components'
+import { SafeAreaView } from 'react-navigation'
+import { Scenes } from './scenes/Scenes'
+import { connect } from 'react-redux'
+import { logout } from './actions/login'
+import { DeviceInfo, Dimensions, NativeModules, Platform } from 'react-native'
+import { MenuProvider } from 'react-native-popup-menu'
 
 const SafeStyled = styled(SafeAreaView)`
-	flex: 1;
-	background-color: ${props => props.theme.header};
+  flex: 1;
+  background-color: ${props => props.theme.header};
 `
 
 const X_WIDTH = 375
 const X_HEIGHT = 812
 
-const {PlatformConstants = {}} = NativeModules
-const {height: D_HEIGHT, width: D_WIDTH} = Dimensions.get('window')
-const {minor = 0} = PlatformConstants.reactNativeVersion || {}
+const { PlatformConstants = {} } = NativeModules
+const { height: D_HEIGHT, width: D_WIDTH } = Dimensions.get('window')
+const { minor = 0 } = PlatformConstants.reactNativeVersion || {}
 
 const isIPhoneX = (() => {
   if (Platform.OS === 'web') return false
@@ -33,19 +34,21 @@ const isIPhoneX = (() => {
 })()
 
 class ThemedApp extends Component {
-  render() {
-    const {theme} = this.props
+  render () {
+    const { theme } = this.props
 
     return (
       <ThemeProvider theme={theme}>
         <MenuProvider customStyles={{
-          backdrop: {backgroundColor: '#000000', opacity: 0.5}
+          backdrop: { backgroundColor: '#000000', opacity: 0.5 }
         }}>
           {
-            (() => isIPhoneX ?
-                <SafeStyled forceInset={{bottom: 'never'}}>
+            (() => isIPhoneX
+              ? (
+                <SafeStyled forceInset={{ bottom: 'never' }}>
                   <Scenes />
-                </SafeStyled> : <Scenes />
+                </SafeStyled>
+              ) : <Scenes />
             )()
           }
         </MenuProvider>
@@ -55,7 +58,7 @@ class ThemedApp extends Component {
 }
 
 const mapStateToProps = state => ({
-	theme: state.theme.colors
+  theme: state.theme.colors
 })
 
 const mapDispatchToProps = dispatch => ({

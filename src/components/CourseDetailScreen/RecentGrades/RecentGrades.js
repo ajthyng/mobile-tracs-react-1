@@ -1,6 +1,6 @@
-import React, {PureComponent} from 'react'
-import {ActivityIndicator} from 'react-native'
-import {connect} from 'react-redux'
+import React, { PureComponent } from 'react'
+import { ActivityIndicator } from 'react-native'
+import { connect } from 'react-redux'
 import RecentGrade from './RecentGrade'
 import styled from 'styled-components'
 import RoundedButton from '../RoundedButton'
@@ -20,7 +20,7 @@ const GradebookButton = styled(RoundedButton)`
 `
 
 const renderGrades = (gradeItem, index) => {
-  const {itemName, grade, points, postedDate, comment} = gradeItem
+  const { itemName, grade, points, postedDate, comment } = gradeItem
   return (
     <RecentGrade
       key={index.toString(10)}
@@ -65,7 +65,7 @@ class RecentGrades extends PureComponent {
     this.props.goToGradebook && this.props.goToGradebook()
   }
   render () {
-    const {grades, loading} = this.props
+    const { grades, loading } = this.props
     const hasGrades = grades.length > 0
 
     let content = null

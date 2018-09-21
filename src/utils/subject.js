@@ -2,7 +2,7 @@ const _handlers = {}
 
 const checkArgs = (actual, expected) => {
   if (actual !== expected) {
-    throw new TypeError(`expected 2 arguments and received ${arguments.length}`)
+    throw new TypeError(`expected ${expected} arguments and received ${actual}`)
   }
 }
 

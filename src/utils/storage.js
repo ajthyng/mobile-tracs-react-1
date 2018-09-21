@@ -28,44 +28,6 @@ exports.credentials = {
   }
 }
 
-/**
- * The following sections are still being called.
- * All the logic is in place to make it work but it's not necessary to cache at this time.
- */
-exports.sites = {
-  async getSites (netid) {
-    return Promise.resolve({})
-  },
-  async store (sites, netid) {
-    return Promise.resolve(true)
-  },
-  async clean (siteIDs) {
-    return Promise.resolve(true)
-  }
-}
-
-exports.notifications = {
-  async getNotifications () {
-    return Promise.resolve({})
-  },
-  async store (notifications) {
-    return Promise.resolve(true)
-  },
-  async update (ids, status) {
-    return Promise.resolve(true)
-  },
-  async reset () {
-    return Promise.resolve(true)
-  },
-  async delete (id) {
-    return Promise.resolve(true)
-  }
-}
-
-exports.clear = async () => {
-  return Promise.resolve(true)
-}
-
 exports.token = {
   async getDeviceToken () {
     if (global.android) {
@@ -74,7 +36,7 @@ exports.token = {
       return new Promise((resolve, reject) => {
         if (global.simulator) return resolve('9561548f635aad3fd3361c3dfe4c345d0aa0d3a32542675563eea05a6212dc95')
         PushNotification.configure({
-          onRegister: ({token, ios}) => {
+          onRegister: ({ token, ios }) => {
             return resolve(token)
           }
         })

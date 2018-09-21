@@ -1,9 +1,9 @@
-import React, {Component} from 'react'
-import {TouchableOpacity} from 'react-native'
+import React, { Component } from 'react'
+import { TouchableOpacity } from 'react-native'
 import styled from 'styled-components'
 import dayjs from 'dayjs'
 
-const Touchable = ({children, onPress}) => <TouchableOpacity onPress={onPress} activeOpacity={0.5} >{children}</TouchableOpacity>
+const Touchable = ({ children, onPress }) => <TouchableOpacity onPress={onPress} activeOpacity={0.5} >{children}</TouchableOpacity>
 
 const Container = styled.View`
   margin: 5px;
@@ -37,8 +37,8 @@ class Forum extends Component {
   }
 
   render () {
-    const {notification} = this.props
-    const {title, createdOn} = (notification.tracs_data || {})
+    const { notification } = this.props
+    const { title, createdOn } = (notification.tracs_data || {})
     const unread = !notification.read
 
     const posted = dayjs(createdOn).format('MMMM D h:mma')

@@ -1,6 +1,6 @@
-import React, {PureComponent} from 'react'
-import styled, {withTheme} from 'styled-components'
-import {TouchableWithoutFeedback, Linking} from 'react-native'
+import React, { PureComponent } from 'react'
+import styled, { withTheme } from 'styled-components'
+import { TouchableWithoutFeedback, Linking } from 'react-native'
 import Star from './Star'
 
 const HeaderContainer = styled.View`
@@ -43,7 +43,7 @@ const Email = styled.Text`
 
 class CourseDetailHeader extends PureComponent {
   openEmail = () => {
-    const {email, title} = this.props
+    const { email, title } = this.props
     if (email) {
       Linking
         .openURL(`mailto:?to=${email}&subject=${title}`)
@@ -52,7 +52,7 @@ class CourseDetailHeader extends PureComponent {
   }
 
   render () {
-    const {title, email, isFavorite, updateFavorites} = this.props
+    const { title, email, isFavorite, updateFavorites } = this.props
 
     return (
       <HeaderContainer>

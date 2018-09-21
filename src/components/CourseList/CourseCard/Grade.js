@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react'
+import React, { PureComponent } from 'react'
 import styled from 'styled-components'
 
 const Container = styled.View`
@@ -38,7 +38,7 @@ const renderContent = (letter, percent) => {
 
 class Grade extends PureComponent {
   render () {
-    const {letterGrade, percentGrade} = this.props
+    const { letterGrade, percentGrade } = this.props
     return (
       <Container>
         {renderContent(letterGrade, percentGrade)}

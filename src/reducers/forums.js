@@ -7,7 +7,7 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {forumActions} from '../constants/actions'
+import { forumActions } from '../constants/actions'
 
 const {
   REQUEST_FORUMS,
@@ -116,7 +116,7 @@ const messagesFailure = (state, action) => {
 }
 
 export function forumReducer (state = initialState, action) {
-  switch(action.type) {
+  switch (action.type) {
     case REQUEST_FORUMS: return requestForums(state, action)
     case FORUMS_SUCCESS: return forumsSuccess(state, action)
     case FORUMS_FAILURE: return forumsFailure(state, action)

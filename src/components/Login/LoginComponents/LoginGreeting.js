@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React from 'react'
 import styled from 'styled-components'
 
 const Container = styled.View`
@@ -26,7 +26,7 @@ const SignInText = styled.Text`
 const signInMessage = 'Sign in to your account'
 
 const LoginGreeting = (props) => {
-  const {portrait} = props
+  const { portrait } = props
   return (
     <Container portrait={portrait}>
       <TracsLogo portrait={portrait} source={require('../../../../img/tracs.png')} />
