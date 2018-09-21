@@ -86,7 +86,6 @@
   "jest": {
     "preset": "react-native",
     "testMatch": [
-      "**/tests/**/*.js?(x)",
       "**/?(*.)(spec|test).js?(x)"
     ],
     "testEnvironment": "node",

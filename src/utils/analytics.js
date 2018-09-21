@@ -109,6 +109,8 @@ const methods = (reduxStore) => {
   }
 }
 
-export let Analytics = (store) => {
-  return methods(store)
+module.exports = {
+  Analytics: (store) => {
+    return methods(store)
+  }
 }

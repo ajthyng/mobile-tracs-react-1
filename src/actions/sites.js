@@ -8,10 +8,10 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {sitesActions} from '../constants/actions'
-import {Analytics} from '../utils/analytics'
-import {haxios as axios} from '../utils/networking'
-import {toggleStatus} from '../constants/sites'
+import { sitesActions } from '../constants/actions'
+import { haxios as axios } from '../utils/networking'
+import { toggleStatus } from '../constants/sites'
+const Analytics = require('../utils/analytics').Analytics
 
 const {
   FAVORITES,
@@ -62,19 +62,19 @@ export function getSiteInfo (netid) {
     const limit = 500
     const start = 0
     const sitesUrl = `${global.urls.baseUrl}${global.urls.sites(limit, start)}`
-    let res = await axios(sitesUrl, {method: 'get'}).catch(err => err)
+    let res = await axios(sitesUrl, { method: 'get' }).catch(err => err)
     if (res instanceof Error) {
       dispatch(sitesFailure(res))
     }
 
-    let sites = (res.data || {}).site_collection
+    let sites = (res.data || {}).site_collection || []
     let userSites = sites.reduce((accum, site) => {
       accum[site.id] = {
         id: site.id,
         name: site.title,
         contactInfo: {
-          name: site.props && site.props['contact-name'],
-          email: site.props && site.props['contact-email']
+          name: (site.props && site.props['contact-name']) || null,
+          email: (site.props && site.props['contact-email']) || null
         },
         tools: Object.keys(site.props || {}).reduce((accum, key) => {
           if (key.indexOf('sakai') >= 0) {
@@ -116,7 +116,7 @@ export function getFavorites () {
   return async (dispatch) => {
     dispatch(requestFavorites())
     const favoritesUrl = `${global.urls.baseUrl}${global.urls.favorites}`
-    axios(favoritesUrl, {method: 'get'}).then(({data: favorites}) => {
+    return axios(favoritesUrl, { method: 'get' }).then(({ data: favorites }) => {
       dispatch(favoritesSuccess(favorites))
     }).catch(err => {
       dispatch(favoritesFailure(err))
@@ -158,7 +158,7 @@ export function updateFavorites (ids) {
     const updateFavoritesURL = `${global.urls.baseUrl}${global.urls.updateFavorites}?favorites=${ids.join(';')}`
     axios(updateFavoritesURL, {
       method: 'post',
-      headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' }
     }).then(res => {
       return dispatch(updateFavoritesSuccess(ids))
     }).catch(err => {

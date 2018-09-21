@@ -1,4 +1,4 @@
-import configureMockStore from 'redux-mock-store'
+import configureMockStore from '../mocks/store'
 import thunk from 'redux-thunk'
 import {login} from '../../src/actions/login'
 import {credentials} from '../../src/utils/storage'
