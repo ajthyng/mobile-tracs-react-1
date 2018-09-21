@@ -1,4 +1,4 @@
-const devBaseUrl = 'http://ajt79.its.txstate.edu:8080'
+/* global __DEV__ */
 const stagingBaseUrl = 'https://staging.tracs.txstate.edu'
 const prodBaseUrl = 'https://tracs.txstate.edu'
 const dispatchQualUrl = 'https://dispatchqa1.its.qual.txstate.edu'
