@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
-import { Dimensions } from 'react-native'
 import CourseOption from './CourseOption'
 import RoundedButton from './RoundedButton'
 import { NavigationActions, withNavigation } from 'react-navigation'
@@ -84,9 +83,8 @@ class CourseOptions extends Component {
     const hasForumsTool = this.props.course.tools.hasOwnProperty('sakai.forums')
     const hasAnnouncementsTool = this.props.course.tools.hasOwnProperty('sakai.announcements')
     const hasAttendanceTool = this.props.course.tools.hasOwnProperty('sakai.attendance')
-
-    const size = Dimensions.get('window').width >= 400 ? 'large' : 'small'
     const scale = 0.94
+
     return (
       <Container>
         <ButtonContainer style={{ transform: [{ scale }] }}>
