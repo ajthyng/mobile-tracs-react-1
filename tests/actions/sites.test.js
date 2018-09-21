@@ -172,4 +172,44 @@ describe('get sites action', () => {
       })
     })
   })
+
+  it('parse two tools', () => {
+    const siteOne = {
+      id: '3423190-15',
+      title: 'siteTitle',
+      props: {
+        'sakai.announcements': '{"parsed": true}',
+        'sakai.forums': '{"parsed": true}',
+        'announcements': 'not json',
+        'contact-name': 'andrew'
+      },
+      type: 'course'
+    }
+    const site_collection = [siteOne]
+    
+    axiosMock.onGet(sitesUrl).reply(200, {site_collection})
+    return store.dispatch(getSiteInfo(netid)).then(data => {
+      const expectedActions = [
+        {type: actions.REQUEST_SITES},
+        {type: actions.SITES_SUCCESS, userSites: {
+          [siteOne.id]: {
+            id: siteOne.id,
+            name: siteOne.title,
+            contactInfo: {name: 'andrew', email: null},
+            tools: {
+              'sakai.announcements': {parsed: true},
+              'sakai.forums': {parsed: true}
+            },
+            owner: netid,
+            type: siteOne.type,
+            forumCount: 0,
+            unseenCount: 0
+          }
+        }}
+      ]
+      const receivedActions = store.getActions()
+
+      expect(receivedActions).toEqual(expectedActions)
+    })
+  })
 })
