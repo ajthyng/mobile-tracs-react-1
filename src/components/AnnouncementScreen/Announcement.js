@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
 import { batchUpdateNotification } from '../../actions/notifications'
-import { TouchableOpacity } from 'react-native'
+import { TouchableOpacity, Dimensions, ScrollView } from 'react-native'
 import HTMLView from 'react-native-htmlview'
 import dayjs from 'dayjs'
 
@@ -14,9 +14,10 @@ const Container = styled.View`
 const Body = styled(HTMLView)`
   background-color: ${props => props.theme.announcementBackground};
   overflow: hidden;
+  width: ${Dimensions.get('window').width - 30}px;
   ${props => props.showBody ? '' : 'height: 0;'}
   ${props => props.showBody ? 'opacity: 1;' : 'opacity: 0;'}
-  ${props => props.showBody ? 'padding: 15px;' : 'padding: 0;'}
+  ${props => props.showBody ? 'padding: 10px;' : 'padding: 0;'}
 `
 
 const TitleContainer = styled(TouchableOpacity)`
@@ -72,10 +73,12 @@ render () {
         <Title numberOfLines={1} ellipsizeMode='tail' unread={unread}>{title}</Title>
         <Posted>{posted}</Posted>
       </TitleContainer>
-      <Body
-        showBody={showBody}
-        value={body}
-      />
+      <ScrollView horizontal>
+        <Body
+          showBody={showBody}
+          value={body}
+        />
+      </ScrollView>
     </Container>
   )
 }
