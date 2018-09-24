@@ -14,7 +14,7 @@ const Container = styled.View`
 const Body = styled(HTMLView)`
   background-color: ${props => props.theme.announcementBackground};
   overflow: hidden;
-  width: ${Dimensions.get('window').width - 30}px;
+  width: ${props => props.width}px;
   ${props => props.showBody ? '' : 'height: 0;'}
   ${props => props.showBody ? 'opacity: 1;' : 'opacity: 0;'}
   ${props => props.showBody ? 'padding: 10px;' : 'padding: 0;'}
@@ -42,46 +42,54 @@ const Posted = styled.Text`
 `
 
 class Announcement extends PureComponent {
-state = {
-  showBody: false
-}
-webView = React.createRef()
+  state = {
+    showBody: false,
+    width: Dimensions.get('window').width - 30
+  }
 
-updateHeight = event => {
-  const { title } = event
-  this.setState({ height: Number(title) })
-}
+  updateWidth = ({ window: { width } }) => {
+    this.setState({ width: width - 30 })
+  }
 
-onPress = () => {
-  const { notification } = this.props
+  componentDidMount () {
+    Dimensions.addEventListener('change', this.updateWidth)
+  }
 
-  this.setState(prev => ({ showBody: !prev.showBody }), () => {
-    if (notification && !notification.read && this.state.showBody) {
-      this.props.markAsRead(notification.id, { read: true })
-    }
-  })
-}
+  componentWillUnmount () {
+    Dimensions.addEventListener('change', this.updateWidth)
+  }
 
-render () {
-  const { announcement: { title, body, createdOn }, unread } = this.props
-  const { showBody } = this.state
-  const posted = dayjs(createdOn).format('MMMM D hh:mma')
+  onPress = () => {
+    const { notification } = this.props
 
-  return (
-    <Container>
-      <TitleContainer activeOpacity={1} onPress={this.onPress}>
-        <Title numberOfLines={1} ellipsizeMode='tail' unread={unread}>{title}</Title>
-        <Posted>{posted}</Posted>
-      </TitleContainer>
-      <ScrollView horizontal>
-        <Body
-          showBody={showBody}
-          value={body}
-        />
-      </ScrollView>
-    </Container>
-  )
-}
+    this.setState(prev => ({ showBody: !prev.showBody }), () => {
+      if (notification && !notification.read && this.state.showBody) {
+        this.props.markAsRead(notification.id, { read: true })
+      }
+    })
+  }
+
+  render () {
+    const { announcement: { title, body, createdOn }, unread } = this.props
+    const { showBody, width } = this.state
+    const posted = dayjs(createdOn).format('MMMM D hh:mma')
+
+    return (
+      <Container>
+        <TitleContainer activeOpacity={1} onPress={this.onPress}>
+          <Title numberOfLines={1} ellipsizeMode='tail' unread={unread}>{title}</Title>
+          <Posted>{posted}</Posted>
+        </TitleContainer>
+        <ScrollView horizontal>
+          <Body
+            showBody={showBody}
+            value={body}
+            width={width}
+          />
+        </ScrollView>
+      </Container>
+    )
+  }
 }
 
 Announcement.defaultProps = {
