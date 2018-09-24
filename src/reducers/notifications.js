@@ -11,6 +11,8 @@
 import { notificationActions } from '../constants/actions'
 import { types } from '../constants/notifications'
 import PushNotification from 'react-native-push-notification'
+import FCM from 'react-native-fcm'
+import { Platform } from 'react-native'
 
 const {
   REQUEST_NOTIFICATIONS,
@@ -109,10 +111,18 @@ const updateBadgeCount = (notifs) => {
   (notifs[types.ANNOUNCEMENT] || []).forEach(countAnnouncements(badgeCounts));
   (notifs[types.FORUM] || []).forEach(countForums(badgeCounts))
 
-  if (global.ios) {
-    let appBadgeCount = (badgeCounts.announceCount || 0) + (badgeCounts.forumCount || 0)
-    PushNotification.setApplicationIconBadgeNumber(appBadgeCount || 0)
-  }
+  const setBadgeCount = Platform.select({
+    ios: (number = 0) => {
+      PushNotification.setApplicationIconBadgeNumber(number)
+    },
+    android: (number = 0) => {
+      FCM.setBadgeNumber(number)
+    }
+  })
+
+  let appBadgeCount = (badgeCounts.announceCount || 0) + (badgeCounts.forumCount || 0)
+  setBadgeCount(appBadgeCount)
+
   return badgeCounts
 }
 

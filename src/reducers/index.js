@@ -11,6 +11,7 @@ import { themeReducer } from './theme'
 import { gradesReducer } from './grades'
 import { forumReducer } from './forums'
 import { calendarReducer } from './calendar'
+import FCM from 'react-native-fcm'
 const PushNotification = require('react-native-push-notification')
 
 const appReducer = combineReducers({
@@ -28,7 +29,7 @@ const appReducer = combineReducers({
 
 const clearBadgeCount = Platform.select({
   ios: () => { PushNotification.setApplicationIconBadgeNumber(0) },
-  android: () => null
+  android: () => { FCM.setBadgeNumber(0) }
 })
 
 const rootReducer = (state, action) => {
