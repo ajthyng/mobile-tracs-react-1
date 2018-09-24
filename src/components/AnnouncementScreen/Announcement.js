@@ -56,7 +56,7 @@ class Announcement extends PureComponent {
   }
 
   componentWillUnmount () {
-    Dimensions.addEventListener('change', this.updateWidth)
+    Dimensions.removeEventListener('change', this.updateWidth)
   }
 
   onPress = () => {
