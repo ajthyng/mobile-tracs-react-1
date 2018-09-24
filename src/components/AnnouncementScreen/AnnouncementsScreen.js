@@ -20,7 +20,6 @@ const Container = styled.View`
 `
 
 const Announcements = styled.ScrollView`
-  background-color: rgb(234, 234, 234);
   align-self: stretch;
 `
 
@@ -105,24 +104,32 @@ class AnnouncementsScreen extends Component {
     navigation.dispatch(openWebView)
   }
 
-  render () {
+  renderContent = () => {
     const { announcements, loading } = this.props
     const { refreshing, silentLoad } = this.state
-    const course = this.props.navigation && this.props.navigation.getParam('course', {})
+    if (loading && !silentLoad) return <ActivityIndicator />
     const announcementList = announcements.map(this.renderAnnouncement)
 
-    return loading && !silentLoad ? (<ActivityIndicator />) : (
+    return (
+      <Announcements
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.refreshAnnouncements} />}
+        contentContainerStyle={{ backgroundColor: 'rgb(234, 234, 234)' }}
+      >
+        <AnnouncementsContainer>
+          {announcementList.length > 0 ? announcementList : <EmptyAnnouncements />}
+        </AnnouncementsContainer>
+        <Footer onPress={this.goToWeb} />
+      </Announcements>
+    )
+  }
+
+  render () {
+    const course = this.props.navigation && this.props.navigation.getParam('course', {})
+
+    return (
       <Container>
         <Header title={course.name} />
-        <Announcements
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.refreshAnnouncements} />}
-          contentContainerStyle={{ backgroundColor: 'rgb(234, 234, 234)' }}
-        >
-          <AnnouncementsContainer>
-            {announcementList.length > 0 ? announcementList : <EmptyAnnouncements />}
-          </AnnouncementsContainer>
-          <Footer onPress={this.goToWeb} />
-        </Announcements>
+        {this.renderContent()}
       </Container>
     )
   }
@@ -132,20 +139,32 @@ AnnouncementsScreen.defaultProps = {
   course: { id: null }
 }
 
-const mapStateToProps = (state, props) => {
-  const { id } = props.navigation.getParam('course', {})
+const byDate = (a, b) => {
+  const dateA = a.createdOn || 0
+  const dateB = b.createdOn || 0
+
+  if (dateA < dateB) return 1
+  if (dateA > dateB) return -1
+  return 0
+}
+
+export const mapStateToProps = (state, props) => {
+  const { navigation } = props
+  const { getParam } = navigation || {}
+  const { id } = (getParam && getParam('course', { id: null })) || { id: null }
 
   let announcements = []
 
   const announcementNotifications = state.notifications.announcements
-  announcements = state.announcements.all.filter(item => item.siteId === id).reverse()
+  announcements = state.announcements.all.filter(item => (id && item.siteId === id))
+  announcements.sort(byDate)
 
   return {
     announcements,
     announcementNotifications,
     loading: state.announcements.isLoading,
     isBatchUpdating: state.notifications.isBatchUpdating,
-    notificationErrorMessage: state.notifications.errorMessage
+    notificationErrorMessage: state.notifications.errorMessage || ''
   }
 }
 

@@ -2,20 +2,21 @@ import React, { PureComponent } from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
 import { batchUpdateNotification } from '../../actions/notifications'
-import { Dimensions, Linking, TouchableOpacity, WebView } from 'react-native'
+import { TouchableOpacity } from 'react-native'
+import HTMLView from 'react-native-htmlview'
 import dayjs from 'dayjs'
 
 const Container = styled.View`
-  background-color: ${props => props.theme.announcementBackground};
-  align-items: flex-start;
-  justify-content: center;
-  align-self: stretch;
-  elevation: 3;
+  background-color: ${props => props.theme.announcementBackground}; 
   margin: 5px;
 `
 
-const Body = styled(WebView)`
+const Body = styled(HTMLView)`
   background-color: ${props => props.theme.announcementBackground};
+  overflow: hidden;
+  ${props => props.showBody ? '' : 'height: 0;'}
+  ${props => props.showBody ? 'opacity: 1;' : 'opacity: 0;'}
+  ${props => props.showBody ? 'padding: 15px;' : 'padding: 0;'}
 `
 
 const TitleContainer = styled(TouchableOpacity)`
@@ -39,109 +40,45 @@ const Posted = styled.Text`
   color: ${props => props.theme.darkText};
 `
 
-const makeHTML = (body, theme) => (
-  `<html>
-    <head>
-      <meta name='viewport' content='width=device-width, initial-scale=1'>
-      <script>
-        const getScrollHeight = () => {
-          document.title = document.body.scrollHeight
-        }
-      </script>
-      <style>
-        body {
-            background-color: ${theme.announcementBackground};
-        }
-        a:link {
-            color: #30B1FF;
-        }
-        a:visited {
-            color: mediumpurple;        
-        }
-        a:hover {
-        
-        }
-        a:active {
-        
-        }
-      </style>
-    </head>
-    <body text=${theme.darkText} onload='getScrollHeight()'>
-      ${body}    
-    </body>
-  </html>
-  `
-)
-
 class Announcement extends PureComponent {
-  state = {
-    height: 100,
-    showBody: false,
-    html: makeHTML(this.props.announcement.body, this.props.theme),
-    width: Dimensions.get('window').width - 20
-  }
-  webView = React.createRef()
+state = {
+  showBody: false
+}
+webView = React.createRef()
 
-  updateHeight = event => {
-    const { title, jsEvaluationValue } = event
-    this.setState({ height: parseInt(jsEvaluationValue || title) })
-  }
+updateHeight = event => {
+  const { title } = event
+  this.setState({ height: Number(title) })
+}
 
-  updateWidth = ({ window: { width } }) => {
-    this.setState({ width: width - 20 })
-  }
+onPress = () => {
+  const { notification } = this.props
 
-  onPress = () => {
-    const { notification } = this.props
+  this.setState(prev => ({ showBody: !prev.showBody }), () => {
+    if (notification && !notification.read && this.state.showBody) {
+      this.props.markAsRead(notification.id, { read: true })
+    }
+  })
+}
 
-    this.setState(prev => ({ showBody: !prev.showBody }), () => {
-      if (notification && !notification.read && this.state.showBody) {
-        this.props.markAsRead(notification.id, { read: true })
-      }
-    })
-  }
+render () {
+  const { announcement: { title, body, createdOn }, unread } = this.props
+  const { showBody } = this.state
+  const posted = dayjs(createdOn).format('MMMM D hh:mma')
 
-  componentDidMount () {
-    Dimensions.addEventListener('change', this.updateWidth)
-  }
-
-  componentWillUnmount () {
-    Dimensions.removeEventListener('change', this.updateWidth)
-  }
-
-  render () {
-    const { announcement: { title, createdOn }, unread } = this.props
-    const { height, showBody, width, html } = this.state
-    const posted = dayjs(createdOn).format('MMMM D hh:mma')
-
-    return (
-      <Container>
-        <TitleContainer activeOpacity={1} onPress={this.onPress}>
-          <Title numberOfLines={1} ellipsizeMode='tail' unread={unread}>{title}</Title>
-          <Posted>{posted}</Posted>
-        </TitleContainer>
-        <Body
-          useWebKit
-          innerRef={this.webView}
-          style={{ height: showBody ? height : 0, width }}
-          mixedContentMode='compatibility'
-          startLoadWithResult={false}
-          injectedJavaScript='(() => document.body.scrollHeight)()'
-          onNavigationStateChange={(event) => {
-            if (event.url !== 'about:blank') {
-              this.webView.current.stopLoading()
-              if (Linking.canOpenURL(event.url)) {
-                Linking.openURL(event.url).then(result => console.log(result)).catch(err => console.log(err))
-              }
-              return
-            }
-            this.updateHeight(event)
-          }}
-          source={{ html }}
-        />
-      </Container>
-    )
-  }
+  return (
+    <Container>
+      <TitleContainer activeOpacity={1} onPress={this.onPress}>
+        <Title numberOfLines={1} ellipsizeMode='tail' unread={unread}>{title}</Title>
+        <Posted>{posted}</Posted>
+      </TitleContainer>
+      <Body
+        showBody={showBody}
+        value={body}
+      />
+    </Container>
+  )
+}
 }
 
 Announcement.defaultProps = {

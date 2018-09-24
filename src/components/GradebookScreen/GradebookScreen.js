@@ -17,7 +17,7 @@ const Container = styled.View`
   background-color: rgb(234, 234, 234);
 `
 
-const GradeList = styled(ScrollView)`
+const GradeList = styled.ScrollView`
   align-self: stretch;
 `
 
