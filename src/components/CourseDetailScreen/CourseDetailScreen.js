@@ -122,10 +122,12 @@ const byPostedDate = (a, b) => {
   return 0 // Times are equal or undefined
 }
 
-const mapStateToProps = (state, props) => {
+export const mapStateToProps = (state, props) => {
   const course = props.navigation && props.navigation.getParam('course', null)
   const siteId = course.id || null
-  let grades = (state.grades[siteId] || {}).grades || []
+  let grades = state?.grades?.[siteId]?.grades || []
+
+  if (!Array.isArray(grades)) { grades = [] }
 
   let filteredGrades = grades
     .filter(({ postedDate, grade }) => postedDate !== null && grade !== null)
@@ -133,6 +135,8 @@ const mapStateToProps = (state, props) => {
 
   if (filteredGrades.length === 0) {
     filteredGrades = grades.filter(({ grade }) => grade !== null).reverse()
+  } else if (filteredGrades.length === 1) {
+    filteredGrades = [...filteredGrades, ...grades.filter(({ grade, postedDate }) => grade !== null && postedDate === null).reverse()]
   }
 
   return {
