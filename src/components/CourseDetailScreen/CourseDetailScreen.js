@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react'
 import styled, { withTheme } from 'styled-components'
+import { Platform } from 'react-native'
 import CourseDetailHeader from './CourseDetailHeader'
 import CourseOptions from './CourseOptions'
 import RecentGrades from './RecentGrades/RecentGrades'
@@ -31,7 +32,7 @@ const RecentGradesSection = styled.View`
 `
 
 const Title = styled.Text`
-  font-size: 13px;
+  font-size: ${global.ios ? '13' : '11'}px;
   margin: 15px 0 5px 15px;
   font-variant: small-caps;
   color: ${props => props.theme.darkText};
@@ -46,6 +47,15 @@ const OptionsSection = styled.View`
 `
 
 class CourseDetailScreen extends PureComponent {
+  constructor (props) {
+    super(props)
+    const title = 'recently posted grades'
+    this.title = Platform.select({
+      ios: title,
+      android: title.toUpperCase()
+    })
+  }
+
   goToGradebook = () => {
     const { course, navigation } = this.props
     const openGradebook = NavigationActions.navigate({
@@ -76,7 +86,7 @@ class CourseDetailScreen extends PureComponent {
           }}
         >
           <RecentGradesSection>
-            <Title>recently posted grades</Title>
+            <Title>{this.title}</Title>
             <RecentGrades grades={grades} goToGradebook={this.goToGradebook} />
           </RecentGradesSection>
           <OptionsSection>
