@@ -117,14 +117,26 @@ class CourseList extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  const { filterStatus, favorites, userSites, isUpdatingFavorites } = state.tracsSites
-  const { badgeCounts } = state.notifications
-  const { defaultColorBar } = state.theme.colors.courseCard
+export const mapStateToProps = (state) => {
+  const {
+    tracsSites = {},
+    notifications = {},
+    theme = {}
+  } = state || {}
+
+  const {
+    filterStatus = FAVORITES,
+    favorites = [],
+    userSites = {},
+    isUpdatingFavorites = false
+  } = tracsSites
+
+  const { badgeCounts = {} } = notifications
+  const { defaultColorBar } = theme?.colors?.courseCard || {}
 
   const sites = Object.keys(userSites).reduce((accum, siteId) => {
     const hasNewContent = (badgeCounts[siteId] || {}).unseenCount > 0
-    const { mappedGrade, calculatedGrade } = (state.grades[siteId] || {})
+    const { mappedGrade = null, calculatedGrade = null } = (state.grades[siteId] || {})
     accum.push({
       ...userSites[siteId],
       hasNewContent,
@@ -141,7 +153,7 @@ const mapStateToProps = (state) => {
     favorites,
     isUpdatingFavorites,
     favoritesFilterActive: filterStatus === FAVORITES,
-    theme: state.theme
+    theme
   }
 }
 
