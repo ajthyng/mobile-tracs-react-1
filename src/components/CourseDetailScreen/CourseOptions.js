@@ -77,20 +77,42 @@ class CourseOptions extends Component {
     })
   }
 
+  goToResources = () => {
+    const { course, navigation } = this.props
+
+    const siteId = course.id
+    const pageId = (course.tools['sakai.resources'] || {}).pageId
+    const mainSite = `${global.urls.baseUrl}${global.urls.portal}`
+    const url = `${global.urls.baseUrl}${global.urls.webUrl}/${siteId}/page/${pageId}`
+
+    const openResources = NavigationActions.navigate({
+      routeName: 'TRACSWeb',
+      transition: 'cardFromRight',
+      params: {
+        baseUrl: pageId ? url : mainSite,
+        transition: 'cardFromRight'
+      }
+    })
+
+    navigation && navigation.dispatch(openResources)
+  }
+
   render () {
     const { newAnnouncements, newForumPosts } = this.props
 
     const hasForumsTool = this.props.course.tools.hasOwnProperty('sakai.forums')
     const hasAnnouncementsTool = this.props.course.tools.hasOwnProperty('sakai.announcements')
     const hasAttendanceTool = this.props.course.tools.hasOwnProperty('sakai.attendance')
+    const hasResourcesTool = this.props.course.tools.hasOwnProperty('sakai.resources')
     const scale = 0.94
 
     return (
       <Container>
         <ButtonContainer style={{ transform: [{ scale }] }}>
-          <CourseOption label='Forum Posts' name='comments' onPress={this.goToForums} newContent={newForumPosts} enabled={hasForumsTool} />
+          <CourseOption label='Forums' name='comments' onPress={this.goToForums} newContent={newForumPosts} enabled={hasForumsTool} />
           <CourseOption label='Announcements' name='bullhorn' onPress={this.goToAnnouncements} newContent={newAnnouncements} enabled={hasAnnouncementsTool} />
           <CourseOption label='Attendance' name='check-square' onPress={this.goToAttendance} enabled={hasAttendanceTool} />
+          <CourseOption label='Resources' name='folder-open' onPress={this.goToResources} enabled={hasResourcesTool} />
         </ButtonContainer>
         <CourseSiteButton title='Course Site' onPress={this.goToWeb} />
       </Container>
