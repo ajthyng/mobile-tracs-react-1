@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Dimensions, Platform } from 'react-native'
+import { Dimensions, Platform, TouchableWithoutFeedback } from 'react-native'
 import styled from 'styled-components'
 import ProfileMenu from '../ProfileMenu/ProfileMenu'
 import { HeaderBackButton } from 'react-navigation'
@@ -21,6 +21,7 @@ const Title = styled.Text`
   color: white;
   left: 50;
   position: absolute;
+  padding: 12px 12px 12px 8px;
 `
 
 const BackButton = (props) => (
@@ -77,13 +78,17 @@ class Content extends Component {
 
     const titleComponent = Platform.select({
       ios: null,
-      android: <Title>{title}</Title>
+      android: (
+        <TouchableWithoutFeedback onPress={() => this.props.navigation.navigate(previousRoute)}>
+          <Title>{title}</Title>
+        </TouchableWithoutFeedback>
+      )
     })
 
     return (
       <Container canGoBack={canGoBack}>
         {leftButton}
-        {titleComponent}
+        {canGoBack ? titleComponent : null}
         <ProfileMenu navigation={navigation} small={smallScreen} />
       </Container>
     )
