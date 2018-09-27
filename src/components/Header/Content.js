@@ -38,7 +38,6 @@ class Content extends Component {
   }
 
   updateScreenSize = ({ screen: { width } }) => {
-    console.log(width)
     this.setState({ screenWidth: width })
   }
 
@@ -48,6 +47,11 @@ class Content extends Component {
 
   componentWillUnmount () {
     Dimensions.removeEventListener('change', this.updateScreenSize)
+  }
+
+  goBack = (previousRoute) => () => {
+    const { navigation: { navigate } } = this.props
+    navigate && navigate(previousRoute)
   }
 
   render () {
@@ -70,16 +74,14 @@ class Content extends Component {
       ? <BackButton
         tintColor='white'
         title={title}
-        onPress={() => {
-          this.props.navigation.navigate(previousRoute)
-        }}
+        onPress={this.goBack(previousRoute)}
       />
       : <FavoritesToggle onValueChange={onValueChange} status={allSitesFilter} small={smallScreen} />
 
     const titleComponent = Platform.select({
       ios: null,
       android: (
-        <TouchableWithoutFeedback onPress={() => this.props.navigation.navigate(previousRoute)}>
+        <TouchableWithoutFeedback onPress={this.goBack(previousRoute)}>
           <Title>{title}</Title>
         </TouchableWithoutFeedback>
       )
