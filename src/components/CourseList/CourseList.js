@@ -7,6 +7,7 @@ import { getFavorites, updateFavorites } from '../../actions/sites'
 import CourseCard from './CourseCard/CourseCard'
 import CourseSkeletonCard from './CourseSkeletonCard'
 import EmptyCourseList from './EmptyCourseList'
+import HomeCard from './CourseCard/HomeCard'
 
 const { FAVORITES } = toggleStatus
 
@@ -84,6 +85,18 @@ class CourseList extends Component {
           id: course.id
         }
       })
+      if (favoritesFilterActive) {
+        const { tracsID } = this.props
+        const course = {
+          id: tracsID,
+          name: 'TRACS Home',
+          contactInfo: { name: '', email: '' },
+          color: '#501214'
+        }
+        sites.splice(0, 0,
+          { card: <HomeCard course={course} key='0' />, id: '0' }
+        )
+      }
     }
     return sites
   }
@@ -121,7 +134,8 @@ export const mapStateToProps = (state) => {
   const {
     tracsSites = {},
     notifications = {},
-    theme = {}
+    theme = {},
+    login = {}
   } = state || {}
 
   const {
@@ -131,6 +145,7 @@ export const mapStateToProps = (state) => {
     isUpdatingFavorites = false
   } = tracsSites
 
+  const { tracsID } = login
   const { badgeCounts = {} } = notifications
   const { defaultColorBar } = theme?.colors?.courseCard || {}
 
@@ -153,6 +168,7 @@ export const mapStateToProps = (state) => {
     favorites,
     isUpdatingFavorites,
     favoritesFilterActive: filterStatus === FAVORITES,
+    tracsID,
     theme
   }
 }

@@ -56,7 +56,7 @@ class CourseCard extends PureComponent {
         <CardBoundary color={color} new={hasNewContent} >
           <ColorBar color={color} new={hasNewContent} />
           <Grade letterGrade={mappedGrade} percentGrade={calculatedGrade} />
-          <CourseInfo name={name} instructor={faculty} hasNewContent={hasNewContent} />
+          <CourseInfo name={name} faculty={faculty} hasNewContent={hasNewContent} />
           {favoritesFilterActive ? null : <FavoriteStar active={isFavorite} onPress={onFavorite} />}
         </CardBoundary>
       </TouchableWithoutFeedback>
