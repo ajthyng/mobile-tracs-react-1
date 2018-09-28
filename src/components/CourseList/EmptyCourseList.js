@@ -42,7 +42,7 @@ class EmptyCourseList extends PureComponent {
 
   render () {
     return (
-      <Container style={this.state}>
+      <Container>
         <Arrow height={60} width={60} />
         <EmptyMessage>
           {message}

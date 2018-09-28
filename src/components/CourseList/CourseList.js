@@ -3,13 +3,15 @@ import { Dimensions, FlatList } from 'react-native'
 import { connect } from 'react-redux'
 import { toggleStatus } from '../../constants/sites'
 import { getFavorites, updateFavorites } from '../../actions/sites'
-
+import styled from 'styled-components'
 import CourseCard from './CourseCard/CourseCard'
 import CourseSkeletonCard from './CourseSkeletonCard'
 import EmptyCourseList from './EmptyCourseList'
 import HomeCard from './CourseCard/HomeCard'
 
 const { FAVORITES } = toggleStatus
+
+const Container = styled.View``
 
 class CourseList extends Component {
   constructor (props) {
@@ -113,19 +115,21 @@ class CourseList extends Component {
     const { refreshing, onRefresh } = this.props
     const { scroll } = this.state
     let data = this.makeData()
-
+    const noFavorites = data.length <= 1
     return (
-      <FlatList
-        extraData={this.props.favoritesFilterActive}
-        refreshing={refreshing}
-        onRefresh={onRefresh}
-        data={data}
-        ListEmptyComponent={EmptyCourseList}
-        renderItem={this.renderItem}
-        keyExtractor={({ id }) => id}
-        canCancelContentTouches={scroll}
-        contentContainerStyle={{ flexGrow: 1, alignSelf: 'stretch' }}
-      />
+      <Container>
+        {noFavorites ? <EmptyCourseList /> : null}
+        <FlatList
+          extraData={this.props.favoritesFilterActive}
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          data={data}
+          renderItem={this.renderItem}
+          keyExtractor={({ id }) => id}
+          canCancelContentTouches={scroll}
+          contentContainerStyle={{ flexGrow: 1, alignSelf: 'stretch' }}
+        />
+      </Container>
     )
   }
 }
