@@ -36,9 +36,8 @@
   #if TARGET_IPHONE_SIMULATOR
     isSimulator = YES;
   #endif
-
-  // jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index.ios" fallbackResource:nil];
-  // jsCodeLocation = [NSURL URLWithString:@"http://147.26.150.208:8081/index.ios.bundle?platform=ios&dev=true"];
+  
+  //  jsCodeLocation = [NSURL URLWithString:@"http://147.26.150.208:8081/index.ios.bundle?platform=ios&dev=true"];
   jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"TRACSMobile"

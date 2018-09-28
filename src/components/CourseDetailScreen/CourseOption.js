@@ -6,21 +6,21 @@ import FAIcon from 'react-native-vector-icons/FontAwesome'
 const Container = styled.View`
   height: 80px;
   border-radius: 3px;
-  margin: 3px;
+  margin: 0 10px;
   align-items: center;
   justify-content: center;
 `
 
 const Label = styled.Text`
   margin-top: 12px;
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 500;
   color: ${props => props.enabled ? '#3A6B86' : '#80808040'};
 `
 
 const Icon = styled(FAIcon)`
   color: ${props => props.enabled ? '#3A6B86' : '#80808040'};
-  font-size: 38px;
+  font-size: 28px;
 `
 
 const Dot = styled.View`
@@ -33,6 +33,7 @@ const Dot = styled.View`
   right: 30px;
   opacity: ${props => props.active ? 1 : 0};
 `
+
 class CourseOption extends PureComponent {
   onPress = () => {
     const { onPress } = this.props

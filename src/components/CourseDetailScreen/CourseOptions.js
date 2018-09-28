@@ -8,7 +8,6 @@ import { connect } from 'react-redux'
 const Container = styled.View`
   align-self: stretch;
   align-items: center;
-  justify-content: center;
   padding-bottom: 16px;
 `
 
@@ -20,6 +19,8 @@ const ButtonContainer = styled.View`
   align-items: flex-end;
   padding: 16px 0;
 `
+
+const ButtonScroll = styled.ScrollView``
 
 const CourseSiteButton = styled(RoundedButton)`
   width: 290px;
@@ -108,12 +109,14 @@ class CourseOptions extends Component {
 
     return (
       <Container>
-        <ButtonContainer style={{ transform: [{ scale }] }}>
-          <CourseOption label='Forums' name='comments' onPress={this.goToForums} newContent={newForumPosts} enabled={hasForumsTool} />
-          <CourseOption label='Announcements' name='bullhorn' onPress={this.goToAnnouncements} newContent={newAnnouncements} enabled={hasAnnouncementsTool} />
-          <CourseOption label='Attendance' name='check-square' onPress={this.goToAttendance} enabled={hasAttendanceTool} />
-          <CourseOption label='Resources' name='folder-open' onPress={this.goToResources} enabled={hasResourcesTool} />
-        </ButtonContainer>
+        <ButtonScroll horizontal contentContainerStyle={{ justifyContent: 'center', alignItems: 'flex-start' }}>
+          <ButtonContainer style={{ transform: [{ scale }] }}>
+            <CourseOption label='Forums' name='comments' onPress={this.goToForums} newContent={newForumPosts} enabled={hasForumsTool} />
+            <CourseOption label='Announcements' name='bullhorn' onPress={this.goToAnnouncements} newContent={newAnnouncements} enabled={hasAnnouncementsTool} />
+            <CourseOption label='Attendance' name='check-square' onPress={this.goToAttendance} enabled={hasAttendanceTool} />
+            <CourseOption label='Resources' name='folder-open' onPress={this.goToResources} enabled={hasResourcesTool} />
+          </ButtonContainer>
+        </ButtonScroll>
         <CourseSiteButton title='Course Site' onPress={this.goToWeb} />
       </Container>
     )

@@ -11,7 +11,9 @@ import HomeCard from './CourseCard/HomeCard'
 
 const { FAVORITES } = toggleStatus
 
-const Container = styled.View``
+const Container = styled.View`
+  flex: 1;
+`
 
 class CourseList extends Component {
   constructor (props) {
@@ -87,7 +89,7 @@ class CourseList extends Component {
           id: course.id
         }
       })
-      if (favoritesFilterActive) {
+      if (favoritesFilterActive && sites.length > 0) {
         const { tracsID } = this.props
         const course = {
           id: tracsID,

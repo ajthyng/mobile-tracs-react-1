@@ -6,7 +6,7 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "bundle-ios": "react-native bundle --dev false --entry-file index.ios.js --bundle-output ios/main.jsbundle --platform ios",
     "bundle-ios-dev": "react-native bundle --dev true --entry-file index.ios.js --bundle-output ios/main.jsbundle --platform ios",
-    "ios-release": "react-native run-ios --configuration=\"Release\" --device=\"Robot 1-X iPhone 7\"",
+    "ios-release": "npm run bundle-ios && react-native run-ios --configuration=\"Release\"",
     "android-release": "react-native run-android --variant=release",
     "test": "jest --watch"
   },
