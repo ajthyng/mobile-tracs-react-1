@@ -33,6 +33,19 @@ const HomeIcon = styled.View`
   borderRightColor: #80808030;
 `
 
+const TitleContainer = styled.View`
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+`
+
+const Name = styled.Text`
+  font-size: 20px;
+  line-height: 20px;
+  align-self: center;
+`
+
 class HomeCard extends PureComponent {
   onPress = () => {
     this.goToWeb()
@@ -61,9 +74,11 @@ class HomeCard extends PureComponent {
         <CardBoundary color={color} >
           <ColorBar color={color} />
           <HomeIcon>
-            <Icon name='home' color='#501214' size={36} />
+            <Icon name='home' color='#501214' size={29} />
           </HomeIcon>
-          <CourseInfo name={name} />
+          <TitleContainer>
+            <Name numberOfLines={1}>{name}</Name>
+          </TitleContainer>
         </CardBoundary>
       </TouchableWithoutFeedback>
     )
