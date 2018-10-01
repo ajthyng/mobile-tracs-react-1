@@ -41,7 +41,7 @@ class CourseList extends Component {
   goToCourse = (course) => () => {
     const { navigation: { navigate } } = this.props
 
-    navigate('CourseDetail', {
+    navigate('CourseDetailTab', {
       transition: 'cardFromRight',
       course,
       updateFavorites: this.updateFavorite(course.id)

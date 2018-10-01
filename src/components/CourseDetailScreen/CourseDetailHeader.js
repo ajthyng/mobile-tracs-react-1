@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import styled, { withTheme } from 'styled-components'
-import { TouchableWithoutFeedback, Linking } from 'react-native'
-import Star from './Star'
+import { TouchableWithoutFeedback, Linking, TouchableOpacity } from 'react-native'
+import Icon from 'react-native-vector-icons/FontAwesome'
 
 const HeaderContainer = styled.View`
   padding: 12px 16px;
@@ -52,7 +52,7 @@ class CourseDetailHeader extends PureComponent {
   }
 
   render () {
-    const { title, email, isFavorite, updateFavorites } = this.props
+    const { title, email, onPress } = this.props
 
     return (
       <HeaderContainer>
@@ -65,7 +65,9 @@ class CourseDetailHeader extends PureComponent {
             </TouchableWithoutFeedback>
           </Subtitle>
         </TitleContainer>
-        <Star active={isFavorite} onPress={updateFavorites} />
+        <TouchableOpacity onPress={onPress}>
+          <Icon name='external-link' color='#6C6B6A' size={26} />
+        </TouchableOpacity>
       </HeaderContainer>
     )
   }

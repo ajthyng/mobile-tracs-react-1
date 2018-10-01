@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react'
+import { TouchableOpacity } from 'react-native'
 import styled from 'styled-components'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
@@ -8,7 +9,7 @@ const Container = styled.View`
   border-bottom-width: 1px;
   border-bottom-color: #80808080;
   padding: 10px 0 10px 24px;
-  justify-content: center;
+  justify-content: space-between;
 `
 
 const TitleContainer = styled.View`
@@ -28,21 +29,31 @@ const TitleIcon = styled(Icon)`
 `
 
 const Subtitle = styled.Text`
-  font-size: 19px;
+  font-size: 17px;
   font-weight: 300;
   color: ${props => props.theme.darkText};
 `
 
+const HeaderContainer = styled.View`
+  align-items: flex-start;
+  justify-content: center;
+`
+
 class GradebookHeader extends PureComponent {
   render () {
-    const { title } = this.props
+    const { title, onPress } = this.props
     return (
       <Container>
-        <TitleContainer>
-          <TitleIcon name='bullhorn' />
-          <Title>Announcements</Title>
-        </TitleContainer>
-        <Subtitle>{title}</Subtitle>
+        <HeaderContainer>
+          <TitleContainer>
+            <TitleIcon name='bullhorn' />
+            <Title>Announcements</Title>
+          </TitleContainer>
+          <Subtitle>{title}</Subtitle>
+        </HeaderContainer>
+        <TouchableOpacity onPress={onPress}>
+          <Icon name='external-link' color='#6C6B6A' size={26} />
+        </TouchableOpacity>
       </Container>
     )
   }

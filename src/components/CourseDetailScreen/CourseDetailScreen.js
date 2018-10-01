@@ -65,6 +65,18 @@ class CourseDetailScreen extends PureComponent {
     navigation.dispatch(openGradebook)
   }
 
+  goToCourse = () => {
+    const { course: { id: siteId }, navigation } = this.props
+
+    const url = `${global.urls.baseUrl}${global.urls.webUrl}/${siteId}`
+    const mainSite = `${global.urls.baseUrl}${global.urls.portal}`
+    const openWebView = NavigationActions.navigate({
+      routeName: 'TRACSWeb',
+      params: { baseUrl: siteId ? url : mainSite, transition: 'cardFromRight' }
+    })
+    navigation.dispatch(openWebView)
+  }
+
   render () {
     const { course, grades } = this.props
     const { contactInfo: { email: facultyEmail }, name: title, isFavorite } = course
@@ -76,6 +88,7 @@ class CourseDetailScreen extends PureComponent {
           navigation={this.props.navigation}
           title={title}
           email={facultyEmail}
+          onPress={this.goToCourse}
           isFavorite={isFavorite}
           updateFavorites={updateFavorites}
         />
@@ -89,9 +102,9 @@ class CourseDetailScreen extends PureComponent {
             <Title>{this.title}</Title>
             <RecentGrades grades={grades} goToGradebook={this.goToGradebook} />
           </RecentGradesSection>
-          <OptionsSection>
+          {/* <OptionsSection>
             <CourseOptions course={course} />
-          </OptionsSection>
+          </OptionsSection> */}
         </Content>
       </Container>
     )
