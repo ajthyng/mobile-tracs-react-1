@@ -6,7 +6,6 @@ import { getSettings, saveSettings } from '../../actions/settings'
 import { getSiteInfo } from '../../actions/sites'
 import { setTheme } from '../../actions/theme'
 import { types } from '../../constants/notifications'
-import { darkTheme } from '../../constants/themes'
 import SiteSetting from './SiteSetting'
 import ActivityIndicator from '../ActivityIndicator'
 
@@ -46,17 +45,6 @@ const sections = ({ setTheme, themeName, sites, blacklist, announcementsDisabled
     .map(site => ({ ...site, type: 'site' }))
 
   return [
-    {
-      title: '',
-      data: [
-        {
-          name: 'Dark Mode',
-          onToggle: () => null,
-          on: themeName === darkTheme.NAME,
-          id: '2'
-        }
-      ]
-    },
     {
       title: 'App Notifications',
       data: [
@@ -112,9 +100,7 @@ class SettingsScreen extends Component {
 
   renderItem = ({ item }) => {
     let { enabled } = this.state
-    if (item.name === 'Dark Mode') {
-      enabled = false
-    }
+
     const { onToggle, on, name, id, type } = item
     return (
       <SiteSetting

@@ -4,13 +4,14 @@ import Toggle from '../Toggle'
 import { types } from '../../constants/notifications'
 
 const Container = styled.View`
-  height: 40px;
   align-items: center;
   justify-content: space-between;
   flex-direction: row;
+  padding: 8px 0;
 `
 
 const Label = styled.Text`
+  flex: 1
   font-size: 16px;
   text-align: left;
   color: ${props => props.theme.darkText};
@@ -29,14 +30,14 @@ const SiteSetting = ({ name, enabled, on, siteId, onValueChange, type }) => {
   }
   return (
     <Container>
-      <Label>{name}</Label>
+      <Label numberOfLines={1}>{name}</Label>
       <Toggle
         enabled={enabled}
         onValueChange={onToggle}
         on={on}
         width={42}
         height={20}
-        activeColor='dodgerblue'
+        activeColor='#3A6B86'
       />
     </Container>
   )

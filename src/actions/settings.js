@@ -55,7 +55,7 @@ export function getSettings (token) {
   return async (dispatch) => {
     dispatch(requestSettings())
     if (!token) {
-      token = TokenStore.getDeviceToken().then(deviceToken => deviceToken)
+      token = await TokenStore.getDeviceToken().then(deviceToken => deviceToken)
     }
     const settingsURL = `${global.urls.dispatchUrl}${global.urls.settings(token)}`
     return axios(settingsURL, { method: 'get' }).then(res => {
