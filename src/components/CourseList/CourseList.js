@@ -91,6 +91,12 @@ class CourseList extends Component {
       })
       if (favoritesFilterActive && sites.length > 0) {
         const { tracsID } = this.props
+        const favOrder = {}
+        for (let i = 0; i < favorites.length; i++) {
+          favOrder[favorites[i]] = i
+        }
+        sites.sort((a, b) => favOrder[a.id] - favOrder[b.id])
+
         const course = {
           id: tracsID,
           name: 'TRACS Home',
