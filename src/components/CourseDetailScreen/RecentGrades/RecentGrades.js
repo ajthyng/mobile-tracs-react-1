@@ -72,7 +72,7 @@ class RecentGrades extends PureComponent {
     if (loading && !hasGrades) {
       content = (<SpinContainer><ActivityIndicator size='large' /></SpinContainer>)
     } else if (hasGrades) {
-      content = grades.slice(0, 2).map(renderGrades)
+      content = grades.slice(0, 3).map(renderGrades)
     } else {
       content = <NoGrades />
     }
