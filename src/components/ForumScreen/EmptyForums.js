@@ -24,11 +24,16 @@ const message = Platform.select({
   ios: text
 })
 
+const fontSize = Platform.select({
+  android: 15,
+  ios: 17
+})
+
 class EmptyAnnouncements extends PureComponent {
   render () {
     return (
       <Container>
-        <Message>{message}</Message>
+        <Message style={{ fontSize }}>{message}</Message>
       </Container>
     )
   }
