@@ -21,6 +21,7 @@ const Container = styled.View`
 
 const Announcements = styled.ScrollView`
   align-self: stretch;
+  background-color: rgb(234, 234, 234);
 `
 
 const AnnouncementsContainer = styled.View`
@@ -128,7 +129,7 @@ class AnnouncementsScreen extends Component {
 
     return (
       <Container>
-        <Header title={course.name} />
+        <Header title={course.name} onPress={this.goToWeb} />
         {this.renderContent()}
       </Container>
     )

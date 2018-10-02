@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react'
-import { TouchableOpacity } from 'react-native'
 import styled from 'styled-components'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
@@ -10,6 +9,7 @@ const Container = styled.View`
   border-bottom-color: #80808080;
   padding: 10px 0 10px 24px;
   justify-content: space-between;
+  flex-direction: row;
 `
 
 const TitleContainer = styled.View`
@@ -39,7 +39,12 @@ const HeaderContainer = styled.View`
   justify-content: center;
 `
 
-class GradebookHeader extends PureComponent {
+const IconContainer = styled.TouchableOpacity`
+  justify-content: center;
+  padding-right: 16px;
+`
+
+class AnnouncementsHeader extends PureComponent {
   render () {
     const { title, onPress } = this.props
     return (
@@ -51,12 +56,12 @@ class GradebookHeader extends PureComponent {
           </TitleContainer>
           <Subtitle>{title}</Subtitle>
         </HeaderContainer>
-        <TouchableOpacity onPress={onPress}>
+        <IconContainer onPress={onPress}>
           <Icon name='external-link' color='#6C6B6A' size={26} />
-        </TouchableOpacity>
+        </IconContainer>
       </Container>
     )
   }
 }
 
-export default GradebookHeader
+export default AnnouncementsHeader

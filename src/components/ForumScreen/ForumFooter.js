@@ -6,7 +6,7 @@ const Container = styled.View`
   align-self: stretch;
   align-items: center;
   justify-content: center;
-  height: 80px;
+  padding: 16px 0;
   background-color: ${props => props.theme.viewBackground};
 `
 
@@ -15,7 +15,7 @@ const CourseSiteButton = styled(RoundedButton)`
   border-radius: 24px;
 `
 
-class GradebookFooter extends PureComponent {
+class ForumFooter extends PureComponent {
   render () {
     const { onPress } = this.props
     return (
@@ -26,4 +26,4 @@ class GradebookFooter extends PureComponent {
   }
 }
 
-export default GradebookFooter
+export default ForumFooter
