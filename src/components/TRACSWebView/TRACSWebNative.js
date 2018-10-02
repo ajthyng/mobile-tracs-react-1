@@ -65,8 +65,6 @@ class TRACSWebView extends Component {
           ref={this.webview}
           style={styles.webView}
           baseUrl={url}
-          startInLoadingState
-          renderLoading={() => <ActivityIndicator />}
           injectedJavaScript={removeHeaderJS}
         />
       )
