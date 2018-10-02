@@ -92,15 +92,16 @@ class AnnouncementsScreen extends Component {
   }
 
   goToWeb = () => {
-    const { id: siteId, tools } = this.props.navigation && this.props.navigation.getParam('course', { id: null, tools: [] })
     const { navigation } = this.props
+    const course = navigation && navigation.getParam('course', { id: null, tools: [] })
+    const { id: siteId, tools } = course
 
     const url = `${global.urls.baseUrl}${global.urls.webUrl}/${siteId}/tool-reset/${tools['sakai.announcements'].id}`
     const mainSite = `${global.urls.baseUrl}${global.urls.portal}`
 
     const openWebView = NavigationActions.navigate({
       routeName: 'TRACSWeb',
-      params: { baseUrl: siteId ? url : mainSite, transition: 'cardFromRight' }
+      params: { course, baseUrl: siteId ? url : mainSite, transition: 'cardFromRight' }
     })
     navigation.dispatch(openWebView)
   }

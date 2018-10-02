@@ -3,6 +3,7 @@ import { BackHandler, Dimensions, WebView, Platform, StyleSheet, requireNativeCo
 import WebError from './WebError'
 import { Analytics } from '../../utils/analytics'
 import { withNavigation } from 'react-navigation'
+import ActivityIndicator from '../ActivityIndicator'
 
 const styles = StyleSheet.create({
   webView: {
@@ -47,6 +48,8 @@ class TRACSWebView extends Component {
         style={styles.webView}
         injectedJavaScript={removeHeaderJS}
         source={{ url }}
+        renderLoading={() => <ActivityIndicator />}
+        startInLoadingState
         startLoadWithResult={false}
         {...this.props}
         renderError={() => <WebError refresh={this.webview.current.reload} />}
@@ -62,6 +65,8 @@ class TRACSWebView extends Component {
           ref={this.webview}
           style={styles.webView}
           baseUrl={url}
+          startInLoadingState
+          renderLoading={() => <ActivityIndicator />}
           injectedJavaScript={removeHeaderJS}
         />
       )

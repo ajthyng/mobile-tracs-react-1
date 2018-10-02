@@ -53,15 +53,16 @@ class ForumScreen extends Component {
   }
 
   goToForums = () => {
-    const { id: siteId, tools } = this.props.navigation && this.props.navigation.getParam('course', { id: null, tools: [] })
     const { navigation } = this.props
+    const course = navigation && navigation.getParam('course', { id: null, tools: [] })
+    const { id: siteId, tools } = course
 
     const url = `${global.urls.baseUrl}${global.urls.webUrl}/${siteId}/tool-reset/${tools['sakai.forums'].id}`
     const mainSite = `${global.urls.baseUrl}${global.urls.portal}`
 
     const openWebView = NavigationActions.navigate({
       routeName: 'TRACSWeb',
-      params: { baseUrl: siteId ? url : mainSite, transition: 'cardFromRight' }
+      params: { course, baseUrl: siteId ? url : mainSite, transition: 'cardFromRight' }
     })
     navigation.dispatch(openWebView)
   }
@@ -97,14 +98,14 @@ class ForumScreen extends Component {
     const forumPosts = forums.map(this.renderForum)
     return loading && !silentLoad ? <Spinner /> : (
       <Container>
-        <Header title={course.name} />
+        <Header title={course.name} onPress={this.goToForums} />
         <ForumsList
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.refresh} />}
         >
           <ForumsContainer>
             {forumPosts.length > 0 ? forumPosts : <EmptyForums />}
           </ForumsContainer>
-          <Footer />
+          <Footer onPress={this.goToForums} />
         </ForumsList>
       </Container>
     )

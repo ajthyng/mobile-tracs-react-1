@@ -8,7 +8,8 @@ const Container = styled.View`
   border-bottom-width: 1px;
   border-bottom-color: #80808080;
   padding: 10px 0 10px 24px;
-  justify-content: center;
+  justify-content: space-between;
+  flex-direction: row;
 `
 
 const TitleContainer = styled.View`
@@ -28,21 +29,36 @@ const TitleIcon = styled(Icon)`
 `
 
 const Subtitle = styled.Text`
-  font-size: 19px;
+  font-size: 17px;
   font-weight: 300;
   color: ${props => props.theme.darkText};
 `
 
+const HeaderContainer = styled.View`
+  align-items: flex-start;
+  justify-content: center;
+`
+
+const IconContainer = styled.TouchableOpacity`
+  justify-content: center;
+  padding-right: 16px;
+`
+
 class GradebookHeader extends PureComponent {
   render () {
-    const { title } = this.props
+    const { title, onPress } = this.props
     return (
       <Container>
-        <TitleContainer>
-          <TitleIcon name='comments' />
-          <Title>Recent Forum Posts</Title>
-        </TitleContainer>
-        <Subtitle>{title}</Subtitle>
+        <HeaderContainer>
+          <TitleContainer>
+            <TitleIcon name='comments' />
+            <Title>Recent Forum Posts</Title>
+          </TitleContainer>
+          <Subtitle>{title}</Subtitle>
+        </HeaderContainer>
+        <IconContainer onPress={onPress}>
+          <Icon name='external-link' color='#6C6B6A' size={26} />
+        </IconContainer>
       </Container>
     )
   }

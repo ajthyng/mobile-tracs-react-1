@@ -64,8 +64,8 @@ class Content extends Component {
 
     const routes = navigation.state.routes
     const currentParams = (routes[navigation.state.index] || {}).params || {}
-    if (currentParams.hasOwnProperty('siteName')) {
-      title = currentParams.siteName
+    if (currentParams.hasOwnProperty('course') && previousRoute === 'CourseDetailTab') {
+      title = currentParams.course.name || title
     }
     const { screenWidth } = this.state
     const smallScreen = screenWidth <= 400
