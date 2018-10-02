@@ -13,6 +13,7 @@ import SimpleWebView from '../components/SimpleWebView/SimpleWebView'
 import AnnouncementsScreen from '../components/AnnouncementScreen/AnnouncementsScreen'
 import ForumScreen from '../components/ForumScreen/ForumScreen'
 import GradebookScreen from '../components/GradebookScreen/GradebookScreen'
+import TabBarButton from './TabBarButton'
 import TabIcon from './TabIcon'
 import TabLabel from './TabLabel'
 
@@ -68,56 +69,62 @@ const goToResources = (navigation) => {
 }
 
 const namedTabIcon = (name) => props => <TabIcon iconName={name} {...props} />
+const namedTabButton = (name) => props => <TabBarButton screen={name} {...props} />
+const TabBarLabel = props => <TabLabel {...props} />
 
 const CourseDetailTab = createBottomTabNavigator({
   Forums: {
     screen: ForumScreen,
     navigationOptions: {
       tabBarIcon: namedTabIcon('comments'),
-      tabBarLabel: props => <TabLabel {...props} />
+      tabBarButtonComponent: namedTabButton('Forums'),
+      tabBarLabel: TabBarLabel
     }
   },
   Announcements: {
     screen: AnnouncementsScreen,
     navigationOptions: {
+      tabBarButtonComponent: namedTabButton('Announcements'),
       tabBarIcon: namedTabIcon('bullhorn'),
-      tabBarLabel: props => <TabLabel {...props} />
+      tabBarLabel: TabBarLabel
     }
   },
-  Course: {
+  Grades: {
     screen: CourseDetailScreen,
     navigationOptions: {
       tabBarIcon: namedTabIcon('book'),
-      tabBarLabel: props => <TabLabel {...props} />
+      tabBarButtonComponent: namedTabButton('Grades'),
+      tabBarLabel: TabBarLabel
     }
   },
   Attendance: {
     screen: TRACSWebView,
     navigationOptions: {
       tabBarIcon: namedTabIcon('check-square'),
+      tabBarButtonComponent: namedTabButton('Attendance'),
+      tabBarLabel: TabBarLabel,
       tabBarOnPress: ({ navigation }) => {
         goToAttendance(navigation)
-      },
-      tabBarLabel: props => <TabLabel {...props} />
+      }
     }
   },
   Resources: {
     screen: TRACSWebView,
     navigationOptions: {
       tabBarIcon: namedTabIcon('folder-open'),
+      tabBarButtonComponent: namedTabButton('Resources'),
+      tabBarLabel: TabBarLabel,
       tabBarOnPress: ({ navigation }) => {
         goToResources(navigation)
-      },
-      tabBarLabel: props => <TabLabel {...props} />
+      }
     }
   }
 }, {
-  initialRouteName: 'Course',
+  initialRouteName: 'Grades',
   tabBarOptions: {
-    activeTintColor: '#3A6B86',
-    inactiveTintColor: '#3A6B86',
     style: {
-      minHeight: 55
+      minHeight: 55,
+      justifyContent: 'space-evenly'
     }
   }
 })

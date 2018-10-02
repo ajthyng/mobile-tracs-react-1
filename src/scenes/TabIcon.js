@@ -11,15 +11,11 @@ const Icon = styled(FA5ProIcon)`
 class TabIcon extends PureComponent {
   render () {
     const { focused, iconName, tintColor } = this.props
+
     return (
-      <Icon name={iconName} tintColor={tintColor} solid={focused} />
+      <Icon name={iconName} solid={focused} tintColor={tintColor} />
     )
   }
-}
-
-TabIcon.defaultProps = {
-  iconName: '',
-  tintColor: '#3A6B86'
 }
 
 export default TabIcon

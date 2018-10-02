@@ -18,9 +18,4 @@ class TabLabel extends PureComponent {
   }
 }
 
-TabLabel.defaultProps = {
-  iconName: '',
-  tintColor: '#3A6B86'
-}
-
 export default TabLabel
