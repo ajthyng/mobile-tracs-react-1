@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import styled, { withTheme } from 'styled-components'
-import { ScrollView } from 'react-native'
 import { connect } from 'react-redux'
 import { getGrades } from '../../actions/grades'
 import { NavigationActions } from 'react-navigation'
@@ -33,14 +32,18 @@ class GradebookScreen extends Component {
   }
 
   goToWeb = () => {
-    const { id: siteId } = this.course
     const { navigation } = this.props
-
+    const course = navigation && navigation.getParam('course', { id: '' })
+    const { id: siteId } = course
     const url = `${global.urls.baseUrl}${global.urls.webUrl}/${siteId}`
     const mainSite = `${global.urls.baseUrl}${global.urls.portal}`
     const openWebView = NavigationActions.navigate({
       routeName: 'TRACSWeb',
-      params: { baseUrl: siteId ? url : mainSite, transition: 'cardFromRight' }
+      params: {
+        course,
+        baseUrl: siteId ? url : mainSite,
+        transition: 'cardFromRight'
+      }
     })
     navigation.dispatch(openWebView)
   }

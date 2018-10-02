@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react'
+import { Platform } from 'react-native'
 import styled from 'styled-components'
 
 const Container = styled.View`
@@ -16,11 +17,18 @@ const Message = styled.Text`
   padding: 24px 0;
 `
 
+const text = 'no recent forum posts have been made'
+
+const message = Platform.select({
+  android: text.toUpperCase(),
+  ios: text
+})
+
 class EmptyAnnouncements extends PureComponent {
   render () {
     return (
       <Container>
-        <Message>no recent forum posts have been made</Message>
+        <Message>{message}</Message>
       </Container>
     )
   }

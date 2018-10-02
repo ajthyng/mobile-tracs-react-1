@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react'
 import styled, { withTheme } from 'styled-components'
 import { Platform } from 'react-native'
 import CourseDetailHeader from './CourseDetailHeader'
-import CourseOptions from './CourseOptions'
 import RecentGrades from './RecentGrades/RecentGrades'
 import { connect } from 'react-redux'
 import { NavigationActions } from 'react-navigation'
@@ -39,13 +38,6 @@ const Title = styled.Text`
   background-color: rgb(234, 234, 234);
 `
 
-const OptionsSection = styled.View`
-  flex: 1;
-  align-self: stretch;
-  justify-content: flex-end;
-  background-color: ${props => props.theme.viewBackground};
-`
-
 class CourseDetailScreen extends PureComponent {
   constructor (props) {
     super(props)
@@ -66,13 +58,17 @@ class CourseDetailScreen extends PureComponent {
   }
 
   goToCourse = () => {
-    const { course: { id: siteId }, navigation } = this.props
+    const { course: { id: siteId }, course, navigation } = this.props
 
     const url = `${global.urls.baseUrl}${global.urls.webUrl}/${siteId}`
     const mainSite = `${global.urls.baseUrl}${global.urls.portal}`
     const openWebView = NavigationActions.navigate({
       routeName: 'TRACSWeb',
-      params: { baseUrl: siteId ? url : mainSite, transition: 'cardFromRight' }
+      params: {
+        course,
+        baseUrl: siteId ? url : mainSite,
+        transition: 'cardFromRight'
+      }
     })
     navigation.dispatch(openWebView)
   }
@@ -102,9 +98,6 @@ class CourseDetailScreen extends PureComponent {
             <Title>{this.title}</Title>
             <RecentGrades grades={grades} goToGradebook={this.goToGradebook} />
           </RecentGradesSection>
-          {/* <OptionsSection>
-            <CourseOptions course={course} />
-          </OptionsSection> */}
         </Content>
       </Container>
     )
