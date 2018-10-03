@@ -3,14 +3,19 @@ import styled, { withTheme } from 'styled-components'
 
 const Container = styled.View`
   height: 100%;
-  width: 70px;
+  flex-grow: 1;
+  flex-shrink: 0;
+  flex-basis: 30%;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
+  padding: 0 0 16px 0;
 `
 
 const Points = styled.Text`
   font-size: 28px;
   text-align: center;
+  padding-left: 4px;
   color: ${props => props.theme.darkText};
 `
 
@@ -32,7 +37,8 @@ class Grade extends PureComponent {
     } else {
       return (
         <React.Fragment>
-          <Points>{earned}</Points>
+          <Points numberOfLines={1}>{earned
+          }</Points>
           <Total>TOTAL {total}</Total>
         </React.Fragment>
       )

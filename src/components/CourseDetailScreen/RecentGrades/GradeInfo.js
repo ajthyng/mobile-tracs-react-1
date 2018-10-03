@@ -5,16 +5,17 @@ import dayjs from 'dayjs'
 
 const Container = styled.View`
   height: 100%;
-  flex: 1;
+  flex-basis: 75%;
   flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 0 16px 0;
+
 `
 
 const Info = styled.View`
-  flex: 1;
   flex-direction: column;
   align-items: flex-start;
   justify-content: space-between;
-  height: 100%;
 `
 
 const Name = styled.Text`
@@ -52,7 +53,6 @@ const Dot = styled.View`
 `
 
 const Title = styled.View`
-  flex: 1;
   align-items: flex-start;
   justify-content: flex-end;
 `

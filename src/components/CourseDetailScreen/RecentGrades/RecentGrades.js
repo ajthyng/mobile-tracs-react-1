@@ -68,11 +68,13 @@ class RecentGrades extends PureComponent {
     const { grades, loading } = this.props
     const hasGrades = grades.length > 0
 
+    const recentGrades = grades.slice(0, 3)
+
     let content = null
     if (loading && !hasGrades) {
       content = (<SpinContainer><ActivityIndicator size='large' /></SpinContainer>)
     } else if (hasGrades) {
-      content = grades.slice(0, 3).map(renderGrades)
+      content = recentGrades.map(renderGrades)
     } else {
       content = <NoGrades />
     }
