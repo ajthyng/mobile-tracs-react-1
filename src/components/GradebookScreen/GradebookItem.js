@@ -4,7 +4,6 @@ import Grade from './Grade'
 
 const Container = styled.View`
   height: 70px;
-  align-self: stretch;
   flex-direction: row;
   background-color: ${props => props.theme.viewBackground};
 `
@@ -30,8 +29,7 @@ const Info = styled.View`
 `
 
 const GradeContainer = styled.View`
-  width: 70px;
-  height: 100%;
+  flex-basis: 25%;
 `
 
 class GradebookItem extends PureComponent {

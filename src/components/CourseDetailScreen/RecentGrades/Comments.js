@@ -5,24 +5,26 @@ import styled from 'styled-components'
 
 const Container = styled(Animated.View)`
   flex-direction: row;
-  align-items: center;
   height: 80px;
+  background-color: white;
+  width: 100%;
+  margin: 3px;
 `
 
 const BackButton = styled(Icon)`
-  padding-left: 16px;
+  padding: 0 16px;
   font-size: 32px;
   color: ${props => props.theme.darkText};
 `
 
 const CommentScroll = styled.ScrollView`
-  width: 85%;
-  padding: 4px 16px;
+
 `
 
 const CommentText = styled.Text`
   color: ${props => props.theme.darkText};
   font-size: 14px;
+  padding-right: 8px;
 `
 
 class Comments extends Component {
@@ -38,23 +40,16 @@ class Comments extends Component {
 
     return (
       <Container style={style}>
-        <TouchableOpacity onPress={onPress}>
+        <TouchableOpacity onPress={onPress} style={{ alignSelf: 'stretch', justifyContent: 'center' }}>
           <BackButton name='ios-arrow-forward' />
         </TouchableOpacity>
         <CommentScroll
           innerRef={this.scrollView}
           bounces={false}
           indicatorStyle={theme.scrollIndicator}
+          contentContainerStyle={{ width: '100%' }}
         >
           <CommentText>{comment}</CommentText>
-          <TouchableOpacity style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0
-          }}
-          />
         </CommentScroll>
       </Container>
     )

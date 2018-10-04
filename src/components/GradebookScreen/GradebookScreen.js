@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { getGrades } from '../../actions/grades'
 import { NavigationActions } from 'react-navigation'
 import ActivityIndicator from '../ActivityIndicator'
-import GradebookItem from './GradebookItem'
+import GradebookItem from '../CourseDetailScreen/RecentGrades/RecentGrade'
 import Header from './GradebookHeader'
 import Footer from './GradebookFooter'
 import EmptyGrades from './EmptyGrades'
@@ -56,8 +56,19 @@ class GradebookScreen extends Component {
   }
 
   renderGrade = (item, i) => {
-    const subtitle = this.props.grades[this.course.id].name
-    return <GradebookItem key={i.toString(10)} title={item.itemName} subtitle={subtitle} earned={item.grade} total={item.points} />
+    // const subtitle = this.props.grades[this.course.id].name
+    const { theme } = this.props
+    return (
+      <GradebookItem
+        key={i.toString(10)}
+        grade={item.grade}
+        name={item.itemName}
+        points={item.points}
+        theme={theme}
+        comment={item.comment}
+        postedDate={item.postedDate}
+      />
+    )
   }
 
   renderContent = () => {

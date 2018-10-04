@@ -1,15 +1,12 @@
 import React, { PureComponent } from 'react'
-import { TouchableWithoutFeedback } from 'react-native'
 import styled from 'styled-components'
 import dayjs from 'dayjs'
 
 const Container = styled.View`
-  height: 100%;
-  flex-basis: 75%;
   flex-direction: column;
-  justify-content: flex-end;
-  padding: 0 0 16px 0;
-
+  flex: 1;
+  justify-content: flex-start;
+  margin-bottom: ${props => props.hasComment ? 16 : 0}px;
 `
 
 const Info = styled.View`
@@ -19,53 +16,19 @@ const Info = styled.View`
 `
 
 const Name = styled.Text`
-  padding-left: 8px;
-  font-size: 20px;
+  font-size: 25px;
   color: ${props => props.theme.darkText};
 `
 
 const Posted = styled.Text`
   align-self: flex-start;
-  padding-left: 8px;
   font-size: 12px;
   color: ${props => props.theme.darkText};
 `
 
-const CommentBox = styled.View`
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  padding-left: 8px;
-`
-
-const ViewComments = styled.Text`
-  font-size: 14px;
-  text-decoration: underline;
-`
-
-const Dot = styled.View`
-  background-color: #AAAAAA;
-  height: 10px;
-  width: 10px;
-  border-radius: 5px;
-  margin-left: 6px;
-  margin-top: 2px;
-`
-
 const Title = styled.View`
-  align-items: flex-start;
-  justify-content: flex-end;
+  
 `
-
-const Comment = ({ comment, onPress }) => {
-  return comment
-    ? (
-      <React.Fragment>
-        <ViewComments>View Comments</ViewComments>
-        <Dot />
-      </React.Fragment>
-    ) : null
-}
 
 class GradeInfo extends PureComponent {
   showComment = () => {
@@ -73,19 +36,14 @@ class GradeInfo extends PureComponent {
   }
 
   render () {
-    const { name, posted, comment } = this.props
+    const { name, posted, earned, hasComment } = this.props
     return (
-      <Container>
+      <Container hasComment={hasComment}>
         <Title>
           <Name numberOfLines={1} ellipsizeMode='tail'>{name}</Name>
         </Title>
         <Info>
-          {posted ? <Posted>{dayjs(posted).format('MMM D, h:mma')}</Posted> : null}
-          <TouchableWithoutFeedback onPress={this.showComment} >
-            <CommentBox>
-              <Comment comment={comment} />
-            </CommentBox>
-          </TouchableWithoutFeedback>
+          {earned ? <Posted>{posted ? dayjs(posted).format('MMM D, h:mma') : ' '}</Posted> : null}
         </Info>
       </Container>
     )

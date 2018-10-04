@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Animated, View, Dimensions } from 'react-native'
+import { Animated, View, TouchableWithoutFeedback, Dimensions } from 'react-native'
 import styled, { withTheme } from 'styled-components'
 import Comments from './Comments'
 import dayjs from 'dayjs'
@@ -8,11 +8,46 @@ import GradeInfo from './GradeInfo'
 
 const Container = styled(Animated.View)`
   height: 80px;
+  flex-basis: 80px;
+  margin: 3px;
+  align-self: stretch;
+  align-items: center;
+  flex-direction: row;
+  background-color: white;
+`
+
+const CommentBox = styled.View`
+  flex-direction: row;
   align-items: center;
   justify-content: center;
-  flex-direction: row;
-  margin: 6px 0 6px 0;
+  position: absolute;
+  bottom: 4;
+  left: 95px;
 `
+
+const ViewComments = styled.Text`
+  font-size: 14px;
+  text-decoration: underline;
+`
+
+const Dot = styled.View`
+  background-color: #AAAAAA;
+  height: 10px;
+  width: 10px;
+  border-radius: 5px;
+  margin-left: 6px;
+  margin-top: 2px;
+`
+
+const Comment = ({ comment, onPress }) => {
+  return comment
+    ? (
+      <React.Fragment>
+        <ViewComments>View Comments</ViewComments>
+        <Dot />
+      </React.Fragment>
+    ) : null
+}
 
 class RecentGrade extends Component {
   constructor (props) {
@@ -60,21 +95,22 @@ class RecentGrade extends Component {
       outputRange: [width, 0]
     })
 
-    const commentOpacity = this.driver.interpolate({
-      inputRange: [0, 1],
-      outputRange: [1, 1]
-    })
-
     return (
       <View style={{ overflow: 'hidden' }}>
         <Container style={{ transform: [{ translateX: translateX }], opacity }}>
-          <Grade earned={grade} total={points} />
+          <Grade earned={grade} total={points} hasComment={comment !== null} />
           <GradeInfo
+            earned={grade}
             posted={postedDate}
-            comment={comment}
+            hasComment={comment !== null}
             name={name}
             onShowComment={this.showComment}
           />
+          <TouchableWithoutFeedback onPress={this.showComment} >
+            <CommentBox>
+              <Comment comment={comment} />
+            </CommentBox>
+          </TouchableWithoutFeedback>
         </Container>
         <Comments
           theme={theme}
@@ -83,7 +119,6 @@ class RecentGrade extends Component {
           comment={comment}
           style={{
             transform: [{ translateX: translateCommentX }],
-            opacity: commentOpacity,
             position: 'absolute'
           }}
         />
