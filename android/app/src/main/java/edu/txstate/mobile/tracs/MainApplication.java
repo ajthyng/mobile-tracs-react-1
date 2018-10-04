@@ -6,7 +6,6 @@ import com.crashlytics.android.Crashlytics;
 import com.facebook.react.ReactApplication;
 import com.smixx.fabric.FabricPackage;
 import com.horcrux.svg.SvgPackage;
-import com.BV.LinearGradient.LinearGradientPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.oblador.keychain.KeychainPackage;
 import com.evollu.react.fcm.FIRMessagingPackage;
@@ -38,9 +37,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new FabricPackage(),
-            new SvgPackage(),
-          new LinearGradientPackage(),
+          new FabricPackage(),
+          new SvgPackage(),
           new VectorIconsPackage(),
           new KeychainPackage(),
           new FIRMessagingPackage(),

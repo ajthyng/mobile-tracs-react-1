@@ -163,10 +163,8 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-vector-icons')
     implementation project(':react-native-fabric')
     implementation project(':react-native-svg')
-    implementation project(':react-native-linear-gradient')
     implementation project(':react-native-vector-icons')
     implementation project(':react-native-keychain')
     implementation project(':react-native-fcm')
