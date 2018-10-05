@@ -19,30 +19,35 @@ const Title = styled(Animated.Text)`
 class RoundedButton extends PureComponent {
   driver = new Animated.Value(0)
 
-  onPress = () => {
-    this.props.onPress && this.props.onPress()
-    this.driver.setValue(0)
-
+  onPressIn = () => {
     Animated.timing(this.driver, {
       toValue: 1,
-      duration: 500
+      duration: 0
     }).start()
+  }
+
+  onPressOut = () => {
+    Animated.timing(this.driver, {
+      toValue: 0,
+      duration: 100
+    }).start()
+    this.props.onPress && this.props.onPress()
   }
 
   render () {
     const { title, style } = this.props
     const backgroundColor = this.driver.interpolate({
-      inputRange: [0, 0.7, 1],
-      outputRange: ['#FFFFFF', '#48396A', '#FFFFFF']
+      inputRange: [0, 1],
+      outputRange: ['#FFFFFF', '#48396A']
     })
 
     const fontColor = this.driver.interpolate({
-      inputRange: [0, 0.7, 1],
-      outputRange: ['#48396A', '#FFFFFF', '#48396A']
+      inputRange: [0, 1],
+      outputRange: ['#48396A', '#FFFFFF']
     })
 
     return (
-      <TouchableWithoutFeedback onPress={this.onPress} >
+      <TouchableWithoutFeedback onPressIn={this.onPressIn} onPressOut={this.onPressOut} >
         <Container style={[style, { backgroundColor }]} color='#48396A'>
           <Title style={{ color: fontColor, textDecorationColor: fontColor }} color='#48396A'>{title}</Title>
         </Container>

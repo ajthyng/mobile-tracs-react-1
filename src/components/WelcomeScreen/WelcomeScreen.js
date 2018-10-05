@@ -11,9 +11,11 @@ import PageThree from './PageComponents/PageThree'
 import PageFour from './PageComponents/PageFour'
 import WelcomeImage from './WelcomeImage'
 import WelcomeText from './WelcomeText'
+import Button from './Button'
 
 const Container = styled.View`
   flex: 1;
+  background-color: white;
 `
 
 const DarkWave = styled(BottomWave)`
@@ -45,11 +47,30 @@ const PageOneText = styled(WelcomeText)`
   align-self: center;
 `
 
+const Buttons = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 0 16px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+`
+
+const Skip = styled(Button)`
+  text-align: left;
+`
+const Next = styled(Button)`
+  text-align: right;
+`
+
 class WelcomeScreen extends PureComponent {
   state = {
     width: Dimensions.get('window').width,
-    viewRef: null
+    index: 0
   }
+
+  swiper = React.createRef()
 
   onPress = () => {
     const { onPress } = this.props
@@ -66,15 +87,35 @@ class WelcomeScreen extends PureComponent {
 
   updateWidth = ({ window }) => this.setState({ width: window.width })
 
+  updateIndex = index => this.setState({ index })
+
+  skip = () => {
+    const { index } = this.state
+    if (index < 3) {
+      this.swiper.current.scrollBy && this.swiper.current.scrollBy(3 - index)
+    }
+  }
+
+  nextPage = () => {
+    const { index } = this.state
+    if (index < 3) {
+      this.swiper.current.scrollBy && this.swiper.current.scrollBy(1)
+    } else {
+      this.props.onPress && this.props.onPress()
+    }
+  }
+
   render () {
-    const { width } = this.state
+    const { width, index } = this.state
 
     return (
       <Container>
         <Swiper
-          showButtons
+          loop={false}
+          ref={this.swiper}
           activeDot={<PageDot active />}
           dot={<PageDot />}
+          onIndexChanged={this.updateIndex}
         >
           <Page>
             <PageOneImage content={() => <PageOne />} />
@@ -102,6 +143,10 @@ class WelcomeScreen extends PureComponent {
           screenWidth={width}
           transforms={[{ scaleX: 1.05 }]}
         />
+        <Buttons>
+          {index >= 3 ? null : <Skip label='SKIP' onPress={this.skip} />}
+          <Next label={index >= 3 ? 'DONE' : 'NEXT'} onPress={this.nextPage} />
+        </Buttons>
       </Container>
     )
   }
