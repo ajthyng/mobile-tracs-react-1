@@ -17,13 +17,13 @@ const Info = styled.View`
 
 const Name = styled.Text`
   font-size: 25px;
-  color: ${props => props.theme.darkText};
+  color: #363534;
 `
 
 const Posted = styled.Text`
   align-self: flex-start;
   font-size: 12px;
-  color: ${props => props.theme.darkText};
+  color: #363534;
 `
 
 const Title = styled.View`

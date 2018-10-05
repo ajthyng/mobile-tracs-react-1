@@ -39,12 +39,12 @@
 		7281055D5F6E4031ABD844FC /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6A0521EDBCCD45B987F60B3F /* Roboto-Thin.ttf */; };
 		790F81B19B21445DA952AF01 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4399A0C002F14BB19E4D04E3 /* MaterialCommunityIcons.ttf */; };
 		8219AAB91F61B7DD00FC489C /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8219AAB61F61B7BC00FC489C /* libRCTPushNotification.a */; };
-		821B36DC213EE729009C5E4E /* libRNSVG.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 821B36D9213EE71D009C5E4E /* libRNSVG.a */; };
 		821B372A2147EA91009C5E4E /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 821B37282147EA90009C5E4E /* Fabric.framework */; };
 		821B372B2147EA91009C5E4E /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 821B37292147EA90009C5E4E /* Crashlytics.framework */; };
 		821B377F2147F43C009C5E4E /* libSMXCrashlytics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 821B377C2147F42C009C5E4E /* libSMXCrashlytics.a */; };
 		821B37862149BF46009C5E4E /* libRCTCameraRoll.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 821B37852149BF37009C5E4E /* libRCTCameraRoll.a */; };
 		82459BA62162A79600DC4CD3 /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8276A0CC203F2EC4009B216C /* libRNVectorIcons.a */; };
+		82459C7B2167A47500DC4CD3 /* libRNSVG.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 821B36D9213EE71D009C5E4E /* libRNSVG.a */; };
 		8276A0D6203F31D9009B216C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8276A0D5203F31D9009B216C /* GoogleService-Info.plist */; };
 		8299F00B2110F1500080D4FE /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8299EFD92110F1500080D4FE /* libReact.a */; };
 		82AA90E0207ED08400CD5ECC /* libRNCookieManagerIOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8219AA6C1F5F56D100FC489C /* libRNCookieManagerIOS.a */; };
@@ -559,11 +559,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				82459C7B2167A47500DC4CD3 /* libRNSVG.a in Frameworks */,
 				82459BA62162A79600DC4CD3 /* libRNVectorIcons.a in Frameworks */,
 				821B372A2147EA91009C5E4E /* Fabric.framework in Frameworks */,
 				821B37862149BF46009C5E4E /* libRCTCameraRoll.a in Frameworks */,
 				821B377F2147F43C009C5E4E /* libSMXCrashlytics.a in Frameworks */,
-				821B36DC213EE729009C5E4E /* libRNSVG.a in Frameworks */,
 				82B4C56220B6034600029A88 /* libRNKeychain.a in Frameworks */,
 				82B4C55B20B5FAB900029A88 /* libRNFirebase.a in Frameworks */,
 				8219AAB91F61B7DD00FC489C /* libRCTPushNotification.a in Frameworks */,

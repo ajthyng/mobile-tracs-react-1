@@ -15,6 +15,8 @@ target 'TRACSMobile' do
 
   pod 'ReactNativeFabric', :path => '../node_modules/react-native-fabric'
 
+  pod 'react-native-blur', :path => '../node_modules/react-native-blur'
+
   target 'TRACSMobileTests' do
     inherit! :search_paths
     # Pods for testing

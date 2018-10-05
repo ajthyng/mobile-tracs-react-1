@@ -14,15 +14,13 @@ const Container = styled(Animated.View)`
 const BackButton = styled(Icon)`
   padding: 0 16px;
   font-size: 32px;
-  color: ${props => props.theme.darkText};
+  color: #363534;
 `
 
-const CommentScroll = styled.ScrollView`
-
-`
+const CommentScroll = styled.ScrollView``
 
 const CommentText = styled.Text`
-  color: ${props => props.theme.darkText};
+  color: #363534;
   font-size: 14px;
   padding-right: 8px;
 `
@@ -36,7 +34,7 @@ class Comments extends Component {
   }
 
   render () {
-    const { comment, onPress, style, theme } = this.props
+    const { comment, onPress, style } = this.props
 
     return (
       <Container style={style}>
@@ -46,8 +44,8 @@ class Comments extends Component {
         <CommentScroll
           innerRef={this.scrollView}
           bounces={false}
-          indicatorStyle={theme.scrollIndicator}
-          contentContainerStyle={{ width: '100%' }}
+          indicatorStyle='black'
+          contentContainerStyle={{ width: '100%', justifyContent: 'center', flexGrow: 1 }}
         >
           <CommentText>{comment}</CommentText>
         </CommentScroll>

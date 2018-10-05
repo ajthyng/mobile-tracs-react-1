@@ -20,7 +20,8 @@ import { Analytics } from './src/utils/analytics'
 import { login } from './src/actions/login'
 import ThemedApp from './src/ThemedApp'
 import crashlytics from 'react-native-fabric-crashlytics'
-
+import { version } from './package.json'
+console.log(version)
 crashlytics.init()
 
 YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'You are setting the style', 'Module RCTImageLoader'])

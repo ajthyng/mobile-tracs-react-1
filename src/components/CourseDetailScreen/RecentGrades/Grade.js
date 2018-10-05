@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import styled, { withTheme } from 'styled-components'
+import styled from 'styled-components'
 
 const Container = styled.View`
   max-width: 95px;
@@ -11,7 +11,7 @@ const Container = styled.View`
 const Points = styled.Text`
   font-size: 25px;
   text-align: center;
-  color: ${props => props.theme.darkText};
+  color: #363534;
 `
 
 const Total = styled.Text`
@@ -51,4 +51,4 @@ Grade.defaultProps = {
   total: null
 }
 
-export default withTheme(Grade)
+export default Grade

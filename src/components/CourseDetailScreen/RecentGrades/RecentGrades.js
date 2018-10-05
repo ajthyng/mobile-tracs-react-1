@@ -8,7 +8,7 @@ import RoundedButton from '../RoundedButton'
 const RecentGradesContainer = styled.View`
   margin: 4px 15px 15px 15px;
   align-self: stretch;
-  background-color: ${props => props.theme.viewBackground};
+  background-color: white;
   border-radius: 3px;
 `
 
@@ -34,14 +34,14 @@ const renderGrades = (gradeItem, index) => {
 }
 
 const NoGradeContainer = styled.View`
-  background-color: ${props => props.theme.viewBackground};
+  background-color: #FFFFFF;
   align-items: center;
   justify-content: center;
   height: 150px;
 `
 
 const NoGradeText = styled.Text`
-  color: ${props => props.theme.darkText};
+  color: #363534;
   opacity: 0.8;
   font-size: 17px;
   text-align: center;
@@ -65,7 +65,7 @@ class RecentGrades extends PureComponent {
     this.props.goToGradebook && this.props.goToGradebook()
   }
   render () {
-    const { grades, loading } = this.props
+    const { grades, loading, style } = this.props
     const hasGrades = grades.length > 0
 
     const recentGrades = grades.slice(0, 3)
@@ -79,7 +79,7 @@ class RecentGrades extends PureComponent {
       content = <NoGrades />
     }
     return (
-      <RecentGradesContainer>
+      <RecentGradesContainer style={[style]}>
         {content}
         <GradebookButton title='All Grades' onPress={this.goToGradebook} />
       </RecentGradesContainer>

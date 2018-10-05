@@ -1,3 +1,4 @@
+/* global __DEV__ */
 import React, { Component } from 'react'
 import styled, { ThemeProvider } from 'styled-components'
 import { SafeAreaView } from 'react-navigation'
@@ -6,6 +7,9 @@ import { connect } from 'react-redux'
 import { logout } from './actions/login'
 import { DeviceInfo, Dimensions, NativeModules, Platform } from 'react-native'
 import { MenuProvider } from 'react-native-popup-menu'
+import { version } from './utils/storage'
+import { version as newVersion } from '../package.json'
+import WelcomeScreen from './components/WelcomeScreen/WelcomeScreen'
 
 const SafeStyled = styled(SafeAreaView)`
   flex: 1;
@@ -34,9 +38,23 @@ const isIPhoneX = (() => {
 })()
 
 class ThemedApp extends Component {
-  render () {
-    const { theme } = this.props
+  state = {
+    showWelcome: false
+  }
 
+  componentDidMount () {
+    version.get()
+      .then(oldVersion => {
+        this.setState({ showWelcome: oldVersion !== newVersion }, () => {
+          if (!__DEV__) version.set(newVersion)
+        })
+      })
+      .catch(err => console.log(err))
+  }
+
+  render () {
+    if (this.state.showWelcome) return <WelcomeScreen onPress={() => this.setState({ showWelcome: false })} />
+    const { theme } = this.props
     return (
       <ThemeProvider theme={theme}>
         <MenuProvider customStyles={{

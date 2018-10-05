@@ -1,6 +1,7 @@
 import * as Keychain from 'react-native-keychain'
 import FCM from 'react-native-fcm'
 import PushNotification from 'react-native-push-notification'
+import { AsyncStorage } from 'react-native'
 
 exports.credentials = {
   get () {
@@ -25,6 +26,29 @@ exports.credentials = {
       .then(result => result)
       .catch(err => console.log(err))
     return Promise.resolve(result)
+  }
+}
+
+exports.version = {
+  async get () {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const version = await AsyncStorage.getItem('VERSION')
+        resolve(version)
+      } catch (err) {
+        reject(err)
+      }
+    })
+  },
+  async set (version) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        await AsyncStorage.setItem('VERSION', version)
+        resolve()
+      } catch (err) {
+        reject(err)
+      }
+    })
   }
 }
 
