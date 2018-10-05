@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import styled from 'styled-components'
-import Star from './Star'
+import Star from '../../CourseList/CourseCard/Star'
 
 const HEIGHT = 80
 
@@ -10,7 +10,6 @@ const CardBoundary = styled.View`
   background-color: #FFFFFF;
   border-radius: 2px;
   flex-direction: row;
-  justify-content: space-between;
   shadow-color: #142945;
   shadow-offset: 0px 2px;
   shadow-opacity: 0.3;
@@ -22,39 +21,41 @@ const CardBoundary = styled.View`
 const ColorBar = styled.View`
   height: 100%;
   width: 10px;
-  background-color: #F0F0F0;
-
+  background-color: #A0A0A0;
 `
 
 const EmptyGrade = styled.View`
-  width: 80px;
+  align-items: center;
+  flex-basis: 100px;
+  justify-content: center;
   border-right-width: 1px;
   border-right-color: #F0F0F0;
 `
 
 const EmptyContent = styled.View`
   height: 100%;
-  padding-left: 16px;
-  padding-top: 16px;
+  flex-grow: 1;
+  padding-left: 12px;
+  padding-top: 12px;
 `
 
 const TitleBar = styled.View`
-  height: 20px;
-  width: 150px;
-  background-color: #F0F0F0;
-  border-radius: 3px;
+  flex: 1;
 `
 
-const SubtitleBar = styled.View`
-  height: 12px;
-  width: 120px;
-  background-color: #F0F0F0;
-  margin-top: 4px;
-  border-radius: 3px;
+const Title = styled.Text`
+  color: #363534;
+  font-size: 18px;
 `
 
 const InactiveStar = styled(Star)`
   padding: 10px;
+`
+
+const NoGrade = styled.Text`
+  font-size: 10px;
+  color: #80808080;
+  text-align: center;
 `
 
 class ExampleCourseCard extends PureComponent {
@@ -62,12 +63,15 @@ class ExampleCourseCard extends PureComponent {
     return (
       <CardBoundary>
         <ColorBar />
-        <EmptyGrade />
+        <EmptyGrade>
+          <NoGrade>{'NO FINAL\nGRADE POSTED'}</NoGrade>
+        </EmptyGrade>
         <EmptyContent>
-          <TitleBar />
-          <SubtitleBar />
+          <TitleBar>
+            <Title numberOfLines={1} >ARCHIVE OCED 4350</Title>
+          </TitleBar>
         </EmptyContent>
-        <InactiveStar />
+        <InactiveStar active />
       </CardBoundary>
     )
   }

@@ -48,7 +48,7 @@ const StyledIcon = styled(Icon)`
 
 class FavoritesToggle extends Component {
   onPress = (status) => () => {
-    this.props.onValueChange(status)
+    this.props.onValueChange && this.props.onValueChange(status)
   }
 
   render () {

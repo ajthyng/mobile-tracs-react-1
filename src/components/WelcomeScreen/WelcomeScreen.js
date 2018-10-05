@@ -7,6 +7,8 @@ import PageDot from './PageDot'
 import Page from './Page'
 import PageOne from './PageComponents/PageOne'
 import PageTwo from './PageComponents/PageTwo'
+import PageThree from './PageComponents/PageThree'
+import PageFour from './PageComponents/PageFour'
 import WelcomeImage from './WelcomeImage'
 import WelcomeText from './WelcomeText'
 
@@ -28,10 +30,10 @@ const LightWave = styled(BottomWave)`
 `
 
 const messages = [
-  'Easily find your recently posted\ngrades and any comments you have\non your course site',
-  'Quick access to the most used tools,\nget notifications when a new\nannouncement or forum post is made',
-  'You can pick which sites you want\nto see, just by adding them to your\nfavorite sites tab',
-  'To add sites to your favorites\ntap the star by your site\nand it will be moved to your favorites'
+  'Easily view recently posted grades\nand any related grade comments',
+  'Use the new course navigation bar\nto quickly access common tools',
+  'Use FAVORITES to get quick access\nto the sites you use most often',
+  'In ALL SITES, tap the star to quickly\nadd or remove sites from FAVORITES'
 ]
 
 const PageOneImage = styled(WelcomeImage)`
@@ -83,11 +85,11 @@ class WelcomeScreen extends PureComponent {
             <WelcomeText>{messages[1]}</WelcomeText>
           </Page>
           <Page>
-            <WelcomeImage />
+            <WelcomeImage content={() => <PageThree />} />
             <WelcomeText>{messages[2]}</WelcomeText>
           </Page>
           <Page>
-            <WelcomeImage />
+            <WelcomeImage content={() => <PageFour />} />
             <WelcomeText>{messages[3]}</WelcomeText>
           </Page>
         </Swiper>

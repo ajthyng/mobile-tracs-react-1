@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Animated, View, TouchableWithoutFeedback, Dimensions } from 'react-native'
-import styled, { withTheme } from 'styled-components'
+import styled from 'styled-components'
 import Comments from './Comments'
 import dayjs from 'dayjs'
 import Grade from './Grade'
@@ -77,7 +77,7 @@ class RecentGrade extends Component {
   }
 
   render () {
-    const { grade, name, points, theme, comment, postedDate } = this.props
+    const { grade, name, points, comment, postedDate } = this.props
     const { width } = Dimensions.get('window')
 
     const translateX = this.driver.interpolate({
@@ -113,7 +113,6 @@ class RecentGrade extends Component {
           </TouchableWithoutFeedback>
         </Container>
         <Comments
-          theme={theme}
           ref={this.comments}
           onPress={this.hideComment}
           comment={comment}
@@ -133,4 +132,4 @@ RecentGrade.defaultProps = {
   dateGraded: dayjs().format('MMM DD HH:mm a')
 }
 
-export default withTheme(RecentGrade)
+export default RecentGrade

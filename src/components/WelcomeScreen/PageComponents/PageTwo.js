@@ -23,7 +23,7 @@ class PageTwo extends PureComponent {
     return (
       <Container>
         <Bar>
-          <Icon name='bullhorn' label='Announcements' />
+          <Icon name='bullhorn' label='Announcements' dot />
           <Icon name='comments' label='Forums' />
           <Icon name='folder-open' label='Resources' />
           <Icon name='check-square' label='Attendance' />

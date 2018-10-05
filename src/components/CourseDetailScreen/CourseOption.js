@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import { TouchableOpacity } from 'react-native'
-import styled, { withTheme } from 'styled-components'
+import styled from 'styled-components'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 
 const Container = styled.View`
@@ -60,4 +60,4 @@ CourseOption.defaultProps = {
   label: 'Announcements'
 }
 
-export default withTheme(CourseOption)
+export default CourseOption
