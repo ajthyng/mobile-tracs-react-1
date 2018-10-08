@@ -58,11 +58,11 @@ class FavoritesToggle extends Component {
 
     return (
       <Container small={small}>
-        <Favorite active={favoritesActive} onPress={this.onPress(FAVORITES)}>
+        <Favorite active={favoritesActive} onPress={this.onPress(FAVORITES)} accessible accessibilityLabel='list favorited sites' accessibilityHint='lists only sites marked as favorite'>
           <StyledIcon name='star' active={favoritesActive} small={small} />
           <Label active={favoritesActive} small={small}>FAVORITES</Label>
         </Favorite>
-        <AllSites active={allSitesActive} onPress={this.onPress(ALL_SITES)}>
+        <AllSites active={allSitesActive} onPress={this.onPress(ALL_SITES)} accessible accessibilityLabel='list all sites' accessibilityHint='lets you favorite sites'>
           <StyledIcon name='th' active={allSitesActive} small={small} />
           <Label active={allSitesActive} small={small}>ALL SITES</Label>
         </AllSites>
