@@ -23,18 +23,6 @@ const NoGrade = styled.Text`
   text-align: center;
 `
 
-const renderContent = (letter, percent) => {
-  if (letter && percent) {
-    const gradePercent = Math.trunc(parseFloat(percent) * 100) / 100
-    return (
-      <React.Fragment>
-      </React.Fragment>
-    )
-  } else {
-
-  }
-}
-
 class Grade extends PureComponent {
   render () {
     const { letterGrade, percentGrade } = this.props
