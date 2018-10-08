@@ -15,6 +15,8 @@ const Container = styled.View`
   flex: 1;
 `
 
+// TODO: Fix course list colors
+
 class CourseList extends Component {
   constructor (props) {
     super(props)

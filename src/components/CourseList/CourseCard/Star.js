@@ -40,11 +40,11 @@ class Star extends PureComponent {
       }]
     }
 
-    const { activeColor, inactiveColor, style } = this.props
+    const { activeColor, inactiveColor, style, name } = this.props
     const { active } = this.state
 
     return (
-      <TouchableWithoutFeedback onPress={this.onPress}>
+      <TouchableWithoutFeedback onPress={this.onPress} accessibilityLabel={`favorite ${name}`}>
         <Container style={[style]}>
           <StarIcon
             style={transform}

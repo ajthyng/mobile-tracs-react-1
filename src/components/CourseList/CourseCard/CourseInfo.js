@@ -25,8 +25,8 @@ class CourseInfo extends Component {
   render () {
     const { name, hasNewContent, faculty } = this.props
     return (
-      <Container>
-        <Name hasNewContent={hasNewContent} numberOfLines={1} >{name}</Name>
+      <Container accessible accessibilityRole='text' accessibilityLabel={`${name}, faculty ${faculty}`}>
+        <Name hasNewContent={hasNewContent} numberOfLines={1}>{name}</Name>
         <Faculty>{faculty}</Faculty>
       </Container>
     )

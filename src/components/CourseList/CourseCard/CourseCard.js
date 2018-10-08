@@ -52,12 +52,12 @@ class CourseCard extends PureComponent {
     const { favoritesFilterActive, onFavorite } = this.props
 
     return (
-      <TouchableWithoutFeedback onPress={this.onPress}>
-        <CardBoundary color={color} new={hasNewContent} >
+      <TouchableWithoutFeedback {...this.props} onPress={this.onPress} accessible={false}>
+        <CardBoundary color={color} new={hasNewContent}>
           <ColorBar color={color} new={hasNewContent} />
           <Grade letterGrade={mappedGrade} percentGrade={calculatedGrade} />
           <CourseInfo name={name} faculty={faculty} hasNewContent={hasNewContent} />
-          {favoritesFilterActive ? null : <FavoriteStar active={isFavorite} onPress={onFavorite} />}
+          {favoritesFilterActive ? null : <FavoriteStar active={isFavorite} onPress={onFavorite} name={name} />}
         </CardBoundary>
       </TouchableWithoutFeedback>
     )

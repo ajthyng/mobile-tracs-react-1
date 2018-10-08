@@ -28,8 +28,8 @@ class LoginScreen extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      netid: '',
-      password: '',
+      netid: 'its-cms-testperms5',
+      password: 'db9gb^dj',
       storedCreds: {},
       checkingCredentials: true,
       view: null,

@@ -23,6 +23,7 @@ npm-debug.log
 buck-out/
 \.buckd/
 *.keystore
+ios/Index/
 
 */fastlane/report.xml
 */fastlane/Preview.html

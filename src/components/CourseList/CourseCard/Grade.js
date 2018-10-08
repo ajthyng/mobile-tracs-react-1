@@ -25,23 +25,29 @@ const NoGrade = styled.Text`
 
 const renderContent = (letter, percent) => {
   if (letter && percent) {
+    const gradePercent = Math.trunc(parseFloat(percent) * 100) / 100
     return (
       <React.Fragment>
-        <LetterGrade>{letter}</LetterGrade>
-        <PercentGrade>{Math.trunc(parseFloat(percent) * 100) / 100}</PercentGrade>
       </React.Fragment>
     )
   } else {
-    return (<NoGrade>NO FINAL{'\n'}GRADE POSTED</NoGrade>)
+
   }
 }
 
 class Grade extends PureComponent {
   render () {
     const { letterGrade, percentGrade } = this.props
-    return (
-      <Container>
-        {renderContent(letterGrade, percentGrade)}
+    const gradePercent = percentGrade ? Math.trunc(parseFloat(percentGrade) * 100) / 100 : null
+
+    return (letterGrade && percentGrade) ? (
+      <Container accessible accessibilityLabel={`final grade ${gradePercent}%, letter grade ${letterGrade.toUpperCase()}`}>
+        <LetterGrade>{letterGrade}</LetterGrade>
+        <PercentGrade>{gradePercent}</PercentGrade>
+      </Container>
+    ) : (
+      <Container accessibilityRole='text' accessible accessibilityLabel='No final grade posted'>
+        <NoGrade>NO FINAL{'\n'}GRADE POSTED</NoGrade>
       </Container>
     )
   }
