@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Alert, Keyboard, StatusBar } from 'react-native'
-import user from '../../../config/config.json'
 import ActivityIndicator from '../ActivityIndicator'
 import { clearRegisterError, register, registrationFailure } from '../../actions/registrar'
 import { credentials } from '../../utils/storage'
@@ -28,11 +27,9 @@ const displayAlert = (regErr, loginErr) => {
 class LoginScreen extends Component {
   constructor (props) {
     super(props)
-    let netid = user ? user.netid : ''
-    let password = user ? user.password : ''
     this.state = {
-      netid,
-      password,
+      netid: '',
+      password: '',
       storedCreds: {},
       checkingCredentials: true,
       view: null,
