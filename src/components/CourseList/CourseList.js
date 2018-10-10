@@ -15,8 +15,6 @@ const Container = styled.View`
   flex: 1;
 `
 
-// TODO: Fix course list colors
-
 class CourseList extends Component {
   constructor (props) {
     super(props)
@@ -68,8 +66,14 @@ class CourseList extends Component {
         const colors = theme.colors.courseCard.colorBar || []
         const options = colors.length
 
+        const favOrder = {}
+        for (let i = 0; i < favorites.length; i++) {
+          favOrder[favorites[i]] = i
+        }
+
         sites = tracsSites
           .filter(({ id }) => favorites.includes(id))
+          .sort((a, b) => favOrder[a.id] - favOrder[b.id])
           .map((site, i) => ({ ...site, color: colors[i % options] }))
       } else {
         sites = tracsSites.map(site => ({ ...site, color: theme.colors.courseCard.defaultColorBar }))
@@ -93,11 +97,6 @@ class CourseList extends Component {
       })
       if (favoritesFilterActive && sites.length > 0) {
         const { tracsID } = this.props
-        const favOrder = {}
-        for (let i = 0; i < favorites.length; i++) {
-          favOrder[favorites[i]] = i
-        }
-        sites.sort((a, b) => favOrder[a.id] - favOrder[b.id])
 
         const course = {
           id: tracsID,
