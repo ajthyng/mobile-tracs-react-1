@@ -49,14 +49,14 @@ class AnnouncementsHeader extends PureComponent {
     const { title, onPress } = this.props
     return (
       <Container>
-        <HeaderContainer>
+        <HeaderContainer accessibilityLabel={`course announcements for ${title}`} accessible>
           <TitleContainer>
             <TitleIcon name='bullhorn' />
             <Title>Announcements</Title>
           </TitleContainer>
           <Subtitle>{title}</Subtitle>
         </HeaderContainer>
-        <IconContainer onPress={onPress}>
+        <IconContainer onPress={onPress} accessibilityLabel='announcements external web link' accessibilityHint='opens announcements tool on web'>
           <Icon name='external-link' color='#6C6B6A' size={26} />
         </IconContainer>
       </Container>
