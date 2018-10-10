@@ -100,6 +100,7 @@ class App extends Component {
           store.dispatch(login(creds.username, creds.password))
         }
       })
+      Subject.fire('notification')
     }
     this.setState({
       appState: nextAppState
