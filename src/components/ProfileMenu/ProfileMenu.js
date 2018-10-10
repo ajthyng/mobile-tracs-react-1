@@ -9,7 +9,7 @@
  */
 
 import React, { Component } from 'react'
-import { View, Animated, Easing } from 'react-native'
+import { Animated, Easing } from 'react-native'
 import { connect } from 'react-redux'
 import { withTheme } from 'styled-components'
 import { Menu, MenuTrigger, MenuOptions, MenuOption } from 'react-native-popup-menu'
@@ -102,12 +102,16 @@ class ProfileMenu extends Component {
         renderer={CustomMenuRenderer}
         onSelect={this.onSelect}>
         <MenuTrigger>
-          <Profile />
+          <Profile
+            accessible
+            accessibilityLabel={'settings menu'}
+          />
         </MenuTrigger>
         <MenuOptions customStyles={optionStyles(this.props)} >
           <Profile
             diameter={50}
             shouldDisplayName
+            accessible={false}
             style={{
               container: { flexDirection: 'column', alignItems: 'center', justifyContent: 'center' },
               text: { color: theme.darkText, fontSize: 22, fontWeight: 'bold' }
