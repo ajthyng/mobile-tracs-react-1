@@ -44,7 +44,7 @@ class Star extends PureComponent {
     const { active } = this.state
 
     return (
-      <TouchableWithoutFeedback onPress={this.onPress} accessibilityLabel={`favorite ${name}`}>
+      <TouchableWithoutFeedback onPress={this.onPress} accessibilityLabel={active ? `remove ${name} from favorites` : `add ${name} to favorites`} accessibilityRole='button'>
         <Container style={[style]}>
           <StarIcon
             style={transform}
