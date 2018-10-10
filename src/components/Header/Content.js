@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { Dimensions, Platform, TouchableWithoutFeedback } from 'react-native'
 import styled from 'styled-components'
 import ProfileMenu from '../ProfileMenu/ProfileMenu'
+// import { DrawerActions } from 'react-navigation-drawer'
+
 import { HeaderBackButton } from 'react-navigation'
 import FavoritesToggle from './FavoritesToggle'
 
@@ -22,6 +24,13 @@ const Title = styled.Text`
   left: 50;
   position: absolute;
   padding: 12px 12px 12px 8px;
+`
+
+const Square = styled.TouchableOpacity`
+  width: 50px;
+  height: 50px;
+  background-color: papayawhip;
+  border-radius: 25px;
 `
 
 const BackButton = (props) => (
@@ -72,6 +81,9 @@ class Content extends Component {
 
     const leftButton = canGoBack
       ? <BackButton
+        accessible
+        accessibilityLabel='Go back'
+        accessibilityRole='button'
         tintColor='white'
         title={title}
         onPress={this.goBack(previousRoute)}
@@ -81,17 +93,25 @@ class Content extends Component {
     const titleComponent = Platform.select({
       ios: null,
       android: (
-        <TouchableWithoutFeedback onPress={this.goBack(previousRoute)}>
+        <TouchableWithoutFeedback onPress={this.goBack(previousRoute)} accessible
+          accessibilityLabel='Go back'
+          accessibilityRole='button'>
           <Title>{title}</Title>
         </TouchableWithoutFeedback>
       )
     })
 
     return (
-      <Container canGoBack={canGoBack}>
+      <Container accessible={false} canGoBack={canGoBack}>
         {leftButton}
         {canGoBack ? titleComponent : null}
-        <ProfileMenu navigation={navigation} small={smallScreen} />
+        <ProfileMenu
+          accessible
+          accessibilityLabel='Settings Menu'
+          navigation={navigation}
+          small={smallScreen}
+        />
+        {/* <Square onPress={() => navigation.navigate('Drawer')} /> */}
       </Container>
     )
   }

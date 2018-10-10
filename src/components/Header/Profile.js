@@ -69,7 +69,7 @@ class Profile extends Component {
   }
 
   render () {
-    const { style, shouldDisplayName } = this.props
+    const { style, shouldDisplayName, accessible, accessibilityLabel } = this.props
     const { name: storedName } = this.state
 
     let displayName = null
@@ -79,9 +79,9 @@ class Profile extends Component {
     }
 
     return (
-      <StyledProfile style={style.container}>
+      <StyledProfile style={style.container} accessible={accessible} accessibilityLabel={accessibilityLabel}>
         {this.renderProfileImage()}
-        <ProfileText style={style.text} numberOfLines={1} ellipsizeMode='tail'>
+        <ProfileText accessible={false} style={style.text} numberOfLines={1} ellipsizeMode='tail'>
           {shouldDisplayName ? displayName : null}
         </ProfileText>
       </StyledProfile>

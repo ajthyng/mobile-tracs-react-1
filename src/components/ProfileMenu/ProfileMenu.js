@@ -9,7 +9,7 @@
  */
 
 import React, { Component } from 'react'
-import { Animated, Easing } from 'react-native'
+import { View, Animated, Easing } from 'react-native'
 import { connect } from 'react-redux'
 import { withTheme } from 'styled-components'
 import { Menu, MenuTrigger, MenuOptions, MenuOption } from 'react-native-popup-menu'
@@ -64,7 +64,10 @@ class CustomMenuRenderer extends Component {
     }
 
     return (
-      <Animated.View {...other} style={[style, layout, animation]}>
+      <Animated.View
+        {...other}
+        style={[style, layout, animation]}
+      >
         {children}
       </Animated.View>
     )
@@ -72,21 +75,36 @@ class CustomMenuRenderer extends Component {
 }
 
 class ProfileMenu extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      open: false
+    }
+  }
+
+  onTriggerPress = () => {
+    this.setState({ open: !this.state.open })
+  }
+
+  onSelect = val => {
+    if (val === 'logout') {
+      this.props.logout && this.props.logout()
+    } else {
+      this.props.navigation && this.props.navigation.navigate(val, { transition: 'cardFromRight' })
+    }
+  }
+
   render () {
-    const { navigation: { navigate }, theme } = this.props
+    const { theme } = this.props
+
     return (
-      <Menu renderer={CustomMenuRenderer}
-        onSelect={val => {
-          if (val === 'Logout') {
-            this.props.logout()
-          } else {
-            navigate(val, { transition: 'cardFromRight' })
-          }
-        }}>
+      <Menu
+        renderer={CustomMenuRenderer}
+        onSelect={this.onSelect}>
         <MenuTrigger>
           <Profile />
         </MenuTrigger>
-        <MenuOptions customStyles={optionStyles(this.props)}>
+        <MenuOptions customStyles={optionStyles(this.props)} >
           <Profile
             diameter={50}
             shouldDisplayName
