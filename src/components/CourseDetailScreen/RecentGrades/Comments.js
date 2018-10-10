@@ -34,10 +34,13 @@ class Comments extends Component {
   }
 
   render () {
-    const { comment, onPress, style } = this.props
+    const { comment, onPress, style, visible } = this.props
 
     return (
-      <Container style={style}>
+      <Container
+        accessibilityElementsHidden={!visible}
+        style={style}
+      >
         <TouchableOpacity onPress={onPress} style={{ alignSelf: 'stretch', justifyContent: 'center' }}>
           <BackButton name='ios-arrow-forward' />
         </TouchableOpacity>

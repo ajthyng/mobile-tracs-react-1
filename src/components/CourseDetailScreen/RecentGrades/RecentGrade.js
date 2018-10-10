@@ -54,6 +54,9 @@ class RecentGrade extends Component {
     super(props)
     this.driver = new Animated.Value(0)
     this.comments = React.createRef()
+    this.state = {
+      commentVisible: false
+    }
   }
 
   showComment = () => {
@@ -70,6 +73,7 @@ class RecentGrade extends Component {
       duration: 200,
       useNativeDriver: true
     }).start(() => {
+      this.setState({ commentVisible: showComment })
       if (showComment) {
         this.comments.current && this.comments.current.flashScrollIndicators()
       }
@@ -78,6 +82,7 @@ class RecentGrade extends Component {
 
   render () {
     const { grade, name, points, comment, postedDate } = this.props
+    const { commentVisible } = this.state
     const { width } = Dimensions.get('window')
 
     const translateX = this.driver.interpolate({
@@ -97,7 +102,7 @@ class RecentGrade extends Component {
 
     return (
       <View style={{ overflow: 'hidden' }}>
-        <Container style={{ transform: [{ translateX: translateX }], opacity }}>
+        <Container accessibilityElementsHidden={commentVisible} style={{ transform: [{ translateX: translateX }], opacity }}>
           <Grade earned={grade} total={points} hasComment={comment !== null} />
           <GradeInfo
             earned={grade}
@@ -113,6 +118,7 @@ class RecentGrade extends Component {
           </TouchableWithoutFeedback>
         </Container>
         <Comments
+          visible={commentVisible}
           ref={this.comments}
           onPress={this.hideComment}
           comment={comment}
