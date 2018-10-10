@@ -41,7 +41,7 @@ class Forum extends Component {
     const { title, createdOn } = (notification.tracs_data || {})
     const unread = !notification.read
 
-    const posted = dayjs(createdOn).format('MMMM D h:mma')
+    const posted = dayjs(createdOn * 1000).format('MMMM D h:mma')
     return (
       <Touchable onPress={this.onPress(notification.id, unread)} >
         <Container>
