@@ -36,7 +36,11 @@ class Grade extends PureComponent {
         </Container>
       )
       : (
-        <Container hasComment={hasComment}>
+        <Container
+          accessible
+          accessibilityLabel={`${earned} points out of total ${total}`}
+          hasComment={hasComment}
+        >
           <Points numberOfLines={1}>
             {earned}
           </Points>

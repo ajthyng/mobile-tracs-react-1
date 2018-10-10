@@ -39,6 +39,7 @@ class Comments extends Component {
     return (
       <Container
         accessibilityElementsHidden={!visible}
+        importantForAccessibility={visible ? 'yes' : 'no-hide-descendants'}
         style={style}
       >
         <TouchableOpacity onPress={onPress} style={{ alignSelf: 'stretch', justifyContent: 'center' }}>

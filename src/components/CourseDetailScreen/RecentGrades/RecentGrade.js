@@ -43,7 +43,12 @@ const Comment = ({ comment, onPress }) => {
   return comment
     ? (
       <React.Fragment>
-        <ViewComments>View Comments</ViewComments>
+        <ViewComments
+          accessibilityLabel='read comments'
+          accessibilityHint='opens comments for grade'
+        >
+          View Comments
+        </ViewComments>
         <Dot />
       </React.Fragment>
     ) : null
@@ -102,8 +107,15 @@ class RecentGrade extends Component {
 
     return (
       <View style={{ overflow: 'hidden' }}>
-        <Container accessibilityElementsHidden={commentVisible} style={{ transform: [{ translateX: translateX }], opacity }}>
-          <Grade earned={grade} total={points} hasComment={comment !== null} />
+        <Container
+          accessibilityElementsHidden={commentVisible}
+          style={{ transform: [{ translateX: translateX }], opacity }}
+        >
+          <Grade
+            earned={grade}
+            total={points}
+            hasComment={comment !== null}
+          />
           <GradeInfo
             earned={grade}
             posted={postedDate}
@@ -111,7 +123,9 @@ class RecentGrade extends Component {
             name={name}
             onShowComment={this.showComment}
           />
-          <TouchableWithoutFeedback onPress={this.showComment} >
+          <TouchableWithoutFeedback
+            onPress={this.showComment}
+          >
             <CommentBox>
               <Comment comment={comment} />
             </CommentBox>

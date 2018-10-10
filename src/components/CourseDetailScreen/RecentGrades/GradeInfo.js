@@ -38,7 +38,11 @@ class GradeInfo extends PureComponent {
   render () {
     const { name, posted, earned, hasComment } = this.props
     return (
-      <Container hasComment={hasComment}>
+      <Container
+        accessible
+        accessibilityLabel={`${name}${posted ? `, posted on ${dayjs(posted).format('dddd MMMM D [at] h mm a')}` : ''}`}
+        hasComment={hasComment}
+      >
         <Title>
           <Name numberOfLines={1} ellipsizeMode='tail'>{name}</Name>
         </Title>
