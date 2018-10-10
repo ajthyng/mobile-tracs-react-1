@@ -17,6 +17,7 @@ const HeaderContainer = styled.View`
 const TitleContainer = styled.View`
   align-items: flex-start;
   justify-content: center;
+  flex: 1;
 `
 
 const Title = styled.Text`
@@ -57,7 +58,7 @@ class CourseDetailHeader extends PureComponent {
     return (
       <HeaderContainer>
         <TitleContainer>
-          <Title accessibilityLabel={`Course ${title}`}>{title}</Title>
+          <Title accessibilityLabel={`Course ${title}`} numberOfLines={1}>{title}</Title>
           <Subtitle accessible accessibilityLabel={`faculty email, ${email}`} accessibilityHint='opens new email to faculty'>
             Faculty: {'\t'}
             <TouchableWithoutFeedback onPress={this.openEmail} >
