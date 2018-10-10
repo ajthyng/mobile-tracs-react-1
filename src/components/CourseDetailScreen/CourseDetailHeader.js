@@ -57,15 +57,15 @@ class CourseDetailHeader extends PureComponent {
     return (
       <HeaderContainer>
         <TitleContainer>
-          <Title>{title}</Title>
-          <Subtitle>
+          <Title accessibilityLabel={`Course ${title}`}>{title}</Title>
+          <Subtitle accessible accessibilityLabel={`faculty email, ${email}`} accessibilityHint='opens new email to faculty'>
             Faculty: {'\t'}
-            <TouchableWithoutFeedback onPress={this.openEmail}>
+            <TouchableWithoutFeedback onPress={this.openEmail} >
               <Email>{email}</Email>
             </TouchableWithoutFeedback>
           </Subtitle>
         </TitleContainer>
-        <TouchableOpacity onPress={onPress}>
+        <TouchableOpacity onPress={onPress} accessibilityLabel={`course external link`} accessibilityHint='opens course web version of course'>
           <Icon name='external-link' color='#6C6B6A' size={26} />
         </TouchableOpacity>
       </HeaderContainer>
