@@ -58,7 +58,7 @@ class Toggle extends Component {
   }
 
   render () {
-    const { disabledColor, activeColor, width, height, ios, enabled } = this.props
+    const { disabledColor, activeColor, width, height, ios, enabled, accessibilityLabel, accessibilityHint } = this.props
     const { on } = this.state
 
     const diameter = height * 1.25
@@ -70,7 +70,12 @@ class Toggle extends Component {
     })
 
     return (
-      <TouchableContainer onPress={this.toggle}>
+      <TouchableContainer
+        onPress={this.toggle}
+        accessible
+        accessibilityLabel={accessibilityLabel}
+        accessibilityHint={accessibilityHint}
+      >
         <ToggleContainer
           toggleWidth={ios ? width : width + diameter}
           toggleHeight={height}
