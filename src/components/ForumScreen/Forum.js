@@ -46,8 +46,8 @@ class Forum extends Component {
       <Touchable onPress={this.onPress(notification.id, unread)} >
         <Container>
           <TitleContainer>
-            <Title unread={unread}>{title}</Title>
-            <Posted>{posted}</Posted>
+            <Title accessible accessibilityLabel={`${title}`} unread={unread}>{title}</Title>
+            <Posted accessible accessibilityLabel={`Posted on ${posted}`}>{posted}</Posted>
           </TitleContainer>
         </Container>
       </Touchable>

@@ -49,14 +49,14 @@ class GradebookHeader extends PureComponent {
     const { title, onPress } = this.props
     return (
       <Container>
-        <HeaderContainer>
+        <HeaderContainer accessible accessibilityLabel={`Recent forum posts for ${title}`}>
           <TitleContainer>
             <TitleIcon name='comments' />
             <Title>Recent Forum Posts</Title>
           </TitleContainer>
           <Subtitle>{title}</Subtitle>
         </HeaderContainer>
-        <IconContainer onPress={onPress}>
+        <IconContainer onPress={onPress} accessible accessibilityLabel='forums external web link' accessibilityHint='opens forums tool on web'>
           <Icon name='external-link' color='#6C6B6A' size={26} />
         </IconContainer>
       </Container>
