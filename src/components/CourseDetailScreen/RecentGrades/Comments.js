@@ -7,8 +7,9 @@ const Container = styled(Animated.View)`
   flex-direction: row;
   height: 80px;
   background-color: white;
-  width: 100%;
-  margin: 3px;
+  margin: 5px 0;
+  left: 5px;
+  right: 5px;
 `
 
 const BackButton = styled(Icon)`
@@ -23,6 +24,7 @@ const CommentText = styled.Text`
   color: #363534;
   font-size: 14px;
   padding-right: 8px;
+  width: 100%;
 `
 
 class Comments extends Component {

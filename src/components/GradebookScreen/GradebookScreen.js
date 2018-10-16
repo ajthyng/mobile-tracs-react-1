@@ -56,7 +56,6 @@ class GradebookScreen extends Component {
   }
 
   renderGrade = (item, i) => {
-    // const subtitle = this.props.grades[this.course.id].name
     const { theme } = this.props
     return (
       <GradebookItem

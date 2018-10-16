@@ -9,7 +9,7 @@ import GradeInfo from './GradeInfo'
 const Container = styled(Animated.View)`
   height: 80px;
   flex-basis: 80px;
-  margin: 3px;
+  margin: 5px;
   align-self: stretch;
   align-items: center;
   flex-direction: row;
