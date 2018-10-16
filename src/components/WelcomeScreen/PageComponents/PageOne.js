@@ -38,7 +38,7 @@ const fakeGrades = [
     itemName: 'Assignment #3',
     grade: '85',
     points: '100',
-    comment: `Leave fur on owners clothes lick plastic bags climb leg, and making sure that fluff gets into the owner's eyes so lick yarn hanging out of own butt. Purr slap owner's face at 5am until human fills food dish cereal boxes make for five star accommodation so your pillow is now my pet bed eat owner's food. Put butt in owner's face stare out the window or eat a rug and furry furry hairs everywhere oh no human coming lie on counter don't get off counter yet make meme, make cute face. Somehow manage to catch a bird but have no idea what to do next, so play with it until it dies of shock drink water out of the faucet sleeps on my head yet demand to have some of whatever the human is cooking, then sniff the offering and walk away chase after silly colored fish toys around the house. Weigh eight pounds but take up a full-size bed. Attack the dog then pretend like nothing happened. Have a lot of grump in yourself because you can't forget to be grumpy and not be like king grumpy cat hit you unexpectedly this cat happen now, it was too purr-fect!!! for ignore the human until she needs to get up, then climb on her lap and sprawl yet get my claw stuck in the dog's ear i'm going to lap some water out of my master's cup meow and this human feeds me, i should be a god. Meow`,
+    comment: `Great Job!`,
     postedDate: dayjs().valueOf()
   }
 ]
