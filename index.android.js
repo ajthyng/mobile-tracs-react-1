@@ -61,6 +61,7 @@ setCustomText(textFixStyle)
 class App extends Component {
   constructor (props) {
     super(props)
+    const test = Symbol('android')
     this.analytics = Analytics(store)
     this.analytics.logAppStart()
     FCM.getFCMToken().then(token => console.log(`${token}`))
