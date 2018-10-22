@@ -9,7 +9,7 @@ class WelcomeImage extends PureComponent {
   render () {
     const { content, style } = this.props
     return (
-      <Container style={[style]}>
+      <Container style={style}>
         {content && content()}
       </Container>
     )

@@ -9,8 +9,8 @@ const Container = styled.View`
 `
 
 const TracsLogo = styled.Image`
-  width: ${props => props.portrait ? '80' : '120'}px;
-  height: ${props => (props.portrait ? 80 : 120) * 1378 / 1438}px;
+  width: 120px;
+  height: 120px
   margin-bottom: 16px;
 `
 
@@ -29,7 +29,7 @@ const LoginGreeting = (props) => {
   const { portrait } = props
   return (
     <Container portrait={portrait}>
-      <TracsLogo portrait={portrait} source={require('../../../../img/tracs.png')} />
+      <TracsLogo portrait={portrait} source={require('../../../../img/small_tracs.png')} />
       <GreetingText>Welcome to TRACS</GreetingText>
       {portrait ? <SignInText>{signInMessage}</SignInText> : null}
     </Container>
