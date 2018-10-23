@@ -28,6 +28,15 @@ const Subject = {
 
     const [event] = arguments
 
+    if (event === 'back') {
+      const backHandler = _handlers[event]?.[0]
+      if (backHandler) {
+        return backHandler()
+      } else {
+        return null
+      }
+    }
+
     if (!_handlers[event]) return
     _handlers[event].forEach(handler => {
       if (typeof handler === 'function') {

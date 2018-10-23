@@ -2,8 +2,7 @@ import React, { Component } from 'react'
 import { Dimensions, Platform, TouchableWithoutFeedback } from 'react-native'
 import styled from 'styled-components'
 import ProfileMenu from '../ProfileMenu/ProfileMenu'
-// import { DrawerActions } from 'react-navigation-drawer'
-
+import Subject from '../../utils/subject'
 import { HeaderBackButton } from 'react-navigation'
 import FavoritesToggle from './FavoritesToggle'
 
@@ -24,13 +23,6 @@ const Title = styled.Text`
   left: 50;
   position: absolute;
   padding: 12px 12px 12px 8px;
-`
-
-const Square = styled.TouchableOpacity`
-  width: 50px;
-  height: 50px;
-  background-color: papayawhip;
-  border-radius: 25px;
 `
 
 const BackButton = (props) => (
@@ -60,7 +52,12 @@ class Content extends Component {
 
   goBack = (previousRoute) => () => {
     const { navigation: { navigate } } = this.props
-    navigate && navigate(previousRoute)
+    const { webView = null, canGoBack = false } = Subject.fire('back') || {}
+    if (webView && canGoBack) {
+      webView.goBack && webView.goBack()
+    } else {
+      navigate && navigate(previousRoute)
+    }
   }
 
   render () {

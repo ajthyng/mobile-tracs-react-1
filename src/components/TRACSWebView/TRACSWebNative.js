@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
-import { BackHandler, Dimensions, WebView, Platform, StyleSheet, requireNativeComponent } from 'react-native'
+import { BackHandler, Dimensions, Linking, WebView, Platform, StyleSheet, requireNativeComponent } from 'react-native'
 import WebError from './WebError'
 import { Analytics } from '../../utils/analytics'
 import { withNavigation } from 'react-navigation'
 import ActivityIndicator from '../ActivityIndicator'
+import axios from '../../utils/networking'
+import Subject from '../../utils/subject'
 
 const styles = StyleSheet.create({
   webView: {
@@ -22,15 +24,20 @@ class TRACSWebView extends Component {
   }
 
   handleBack = () => {
+    const webView = this.webView.current
+    const { canGoBack } = this.state
+    return { webView, canGoBack }
   }
 
   componentDidMount () {
     BackHandler.addEventListener(BackHandler.DEVICE_BACK_EVENT, this.handleBack)
+    Subject.subscribe('back', this.handleBack)
     Analytics().logTracsWebOpen()
     Analytics().setScreen('TRACSWeb', 'TRACSWebView')
   }
 
   componentWillUnmount () {
+    Subject.unsubscribe('back', this.handleBack)
     BackHandler.removeEventListener(BackHandler.DEVICE_BACK_EVENT, this.handleBack)
   }
 
@@ -44,14 +51,21 @@ class TRACSWebView extends Component {
 
     return Platform.select({
       ios: <WebView
-        ref={this.webview}
+        {...this.props}
+        ref={this.webView}
         style={styles.webView}
         injectedJavaScript={removeHeaderJS}
         source={{ url }}
+        onLoadStart={e => {
+          if (e?.nativeEvent?.url?.endsWith('.pdf')) {
+            axios.get(url).then(res => {
+              console.log(res.data)
+            })
+          }
+        }}
         renderLoading={() => <ActivityIndicator />}
         startInLoadingState
         startLoadWithResult={false}
-        {...this.props}
         renderError={() => <WebError refresh={this.webview.current.reload} />}
         onNavigationStateChange={({ canGoBack }) => {
           this.setState(() => {
@@ -62,7 +76,7 @@ class TRACSWebView extends Component {
       android: (
         <TRACSWeb
           {...this.props}
-          ref={this.webview}
+          ref={this.webView}
           style={styles.webView}
           baseUrl={url}
           injectedJavaScript={removeHeaderJS}
