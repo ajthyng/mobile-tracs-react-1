@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
-import { BackHandler, Dimensions, Linking, WebView, Platform, StyleSheet, requireNativeComponent } from 'react-native'
+import { BackHandler, Dimensions, WebView, Platform, StyleSheet, requireNativeComponent } from 'react-native'
 import WebError from './WebError'
 import { Analytics } from '../../utils/analytics'
 import { withNavigation } from 'react-navigation'
 import ActivityIndicator from '../ActivityIndicator'
-import axios from '../../utils/networking'
 import Subject from '../../utils/subject'
 
 const styles = StyleSheet.create({
