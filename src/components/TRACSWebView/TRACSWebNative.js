@@ -56,17 +56,10 @@ class TRACSWebView extends Component {
         style={styles.webView}
         injectedJavaScript={removeHeaderJS}
         source={{ url }}
-        onLoadStart={e => {
-          if (e?.nativeEvent?.url?.endsWith('.pdf')) {
-            axios.get(url).then(res => {
-              console.log(res.data)
-            })
-          }
-        }}
         renderLoading={() => <ActivityIndicator />}
         startInLoadingState
         startLoadWithResult={false}
-        renderError={() => <WebError refresh={this.webview.current.reload} />}
+        renderError={() => <WebError refresh={this.webView?.current?.reload} />}
         onNavigationStateChange={({ canGoBack }) => {
           this.setState(() => {
             return { canGoBack }
