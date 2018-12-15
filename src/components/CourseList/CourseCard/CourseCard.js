@@ -44,6 +44,7 @@ class CourseCard extends PureComponent {
       color,
       calculatedGrade,
       mappedGrade,
+      overrideGrade,
       hasNewContent,
       isFavorite,
       contactInfo: { name: faculty }
@@ -55,7 +56,7 @@ class CourseCard extends PureComponent {
       <TouchableWithoutFeedback {...this.props} onPress={this.onPress} accessible={false}>
         <CardBoundary color={color} new={hasNewContent}>
           <ColorBar color={color} new={hasNewContent} />
-          <Grade letterGrade={mappedGrade} percentGrade={calculatedGrade} />
+          <Grade letterGrade={overrideGrade || mappedGrade} percentGrade={calculatedGrade} />
           <CourseInfo name={name} faculty={faculty} hasNewContent={hasNewContent} />
           {favoritesFilterActive ? null : <FavoriteStar active={isFavorite} onPress={onFavorite} name={name} />}
         </CardBoundary>
@@ -76,10 +77,13 @@ CourseCard.defaultProps = {
 
 const mapStateToProps = (state, props) => {
   const { filterStatus } = state.tracsSites
-  const { calculatedGrade, mappedGrade } = state.grades[props.id] || {}
+  const { calculatedGrade, mappedGrade, overrideGrade } = state.grades[props.id] || {}
+
+  console.log(state.grades[props.id])
 
   return {
     calculatedGrade,
+    overrideGrade,
     mappedGrade,
     favoritesFilterActive: filterStatus === FAVORITES
   }

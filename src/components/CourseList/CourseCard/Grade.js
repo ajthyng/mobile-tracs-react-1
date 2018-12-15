@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import React, { Component } from 'react'
 import styled from 'styled-components'
 
 const Container = styled.View`
@@ -23,7 +23,7 @@ const NoGrade = styled.Text`
   text-align: center;
 `
 
-class Grade extends PureComponent {
+class Grade extends Component {
   render () {
     const { letterGrade, percentGrade } = this.props
     const gradePercent = percentGrade ? Math.trunc(parseFloat(percentGrade) * 100) / 100 : null

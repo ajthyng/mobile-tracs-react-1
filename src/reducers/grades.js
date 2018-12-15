@@ -33,6 +33,7 @@ const siteWithGrades = (site) => ({
   id: site.siteId || null,
   calculatedGrade: site.calculatedGrade || null,
   mappedGrade: site.mappedGrade || null,
+  overrideGrade: site.overrideGrade || null,
   grades: site.assignments || []
 })
 
