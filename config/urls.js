@@ -82,7 +82,7 @@ const endpoints = {
 
 let urls = {
   baseUrl: prodBaseUrl,
-  dispatchUrl: dispatchProdUrl,
+  dispatchUrl: dispatchQualUrl,
   feedback: feedbackUrl,
   support: supportUrl,
   ...endpoints
